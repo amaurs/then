@@ -2,6 +2,37 @@ import React, { Component } from 'react';
 import './Home.css';
 
 class Home extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      width:0,
+      height:0,
+      section:0,
+    }
+  }
+  componentDidMount(){
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions.bind(this));
+    window.addEventListener("scroll", this.handleScroll.bind(this));
+
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions.bind(this));
+    window.removeEventListener("keydown", this.add.bind(this));
+    window.removeEventListener("scroll", this.handleScroll.bind(this));
+  }
+
+  updateDimensions(){
+    let update_width  = window.innerWidth;
+    let update_height = window.innerHeight;
+    this.setState({ width: update_width, height: update_height });
+  }
+
+  handleScroll(event) {
+    this.setState({ section: Math.floor((window.scrollY + this.state.height / 2 )/ this.state.height )});
+  }
+
   render() {
     return (
       <div className="Home">
@@ -11,6 +42,9 @@ class Home extends Component {
             Home sweet home.
           </p>
         </header>
+        <div className="Home-info-container">
+          <p>{"Section " + this.state.section}</p>
+        </div>
         <section>
           <article className = "project color-7">
             <div className="description-box">
