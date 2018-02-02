@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import corrupted from './assets/corrupted.mp4'
+import emji from './assets/emji.mp4'
 import './Home.css';
 
 class Home extends Component {
@@ -33,52 +35,121 @@ class Home extends Component {
     this.setState({ section: Math.floor((window.scrollY + this.state.height / 2 )/ this.state.height )});
   }
 
+  getBackgroundContent() {
+    let content = null;
+
+          switch(this.state.section) {
+              case 0:
+                  content = <div className="Home-info-container background project-0">
+                              <p className="name">Amaury</p>
+                              <svg className="triangle-container" >
+                                <polygon className="triangle" points="90,10 75,160 193,120" />
+                              </svg>
+                              <p className="surname">Gutiérrez</p>
+                            </div>
+                  break;
+              case 1:
+                  content = <div className="Home-info-container background project-1">
+                            </div>
+                  break;
+              case 2:
+                  content = <div className="Home-info-container background project-2">
+                              <video autoPlay loop muted>
+                                <source src={corrupted} type="video/mp4"/>
+                              </video>
+                              <p className="roman roman-left">{romanize(this.state.section - 1)}</p>
+                            </div>
+                  break;
+              case 3:
+                  content = <div className="Home-info-container background project-3">
+                              <p className="roman roman-right">{romanize(this.state.section - 1)}</p>
+                            </div>
+                  break;
+              case 4:
+                  content = <div className="Home-info-container background project-4">
+                              <p className="roman roman-left">{romanize(this.state.section - 1)}</p>
+                            </div>
+                  break;
+              case 5:
+                  content = <div className="Home-info-container background project-5">
+                              <video autoPlay loop muted>
+                                <source src={emji} type="video/mp4"/>
+                              </video>
+                              <p className="roman roman-right">{romanize(this.state.section - 1)}</p>
+                            </div>
+                  break;
+              case 6:
+                  content = <div className="Home-info-container background project-6">
+                                <p className="roman roman-left">{romanize(this.state.section - 1)}</p>
+                            </div>
+                  break;
+              case 7:
+                  content = <div className="Home-info-container background project-7">
+                              <iframe scrolling="no" src="https://amaurs.com/windy-gridworld/"></iframe>
+                              <p className="roman roman-right">{romanize(this.state.section - 1)}</p>
+                            </div>
+                  break;
+              case 8:
+                  content = <div className="Home-info-container background project-0">
+                              
+                              <svg className="triangle-container triangle-contact" >
+                                <polygon className="triangle triangle-color" points="90,10 75,160 193,120" />
+                              </svg>
+                              <p className="contact">Contact</p>
+                            </div>
+                  break;
+              default:
+                  content = null;
+          }
+          return content;
+  }
+
   render() {
     return (
       <div className="Home">
-        <header className="Home-header color-14">
-          <h1 className="Home-title">Amaury Gutiérrez</h1>
-          <p className="Home-intro">
-            Home sweet home.
-          </p>
+        <header className="Home-header 4">
+          
         </header>
-        <div className="Home-info-container">
-          <p>{"Section " + this.state.section}</p>
-        </div>
+        {this.getBackgroundContent()}
         <section>
-          <article className = "project color-7">
-            <div className="description-box">
+          <article className = "project">
+            <div className="description-box left">
               <p className="courier">I was born and raised in Mexico City. I am curious by nature. The sense of awe and wonder has led me to keep learning. I appreciate design. I am thrilled with street art around the world. I like to take 3d pictures, but most of all I love reshaping them pixel-wise with my own tools.</p>
             </div>
           </article>
-          <article className = "project color-8">
-            <div className="description-box">
-              <p className="courier">An iterative algorithm is used to rearange the points taken from an acceptance rejection method. In this process, we calculate the centroids of the Voronoi cells generated by the set of initial points. We create a new Voronoi diagram with the centroids of the previous iteration and repeat the process until we are satisfied with the result.</p>
+          <article className = "project">
+            <div className = "description-box right">
+              <p className = "courier">This was about exploring the posibilities of programatically create glitches. Each individual frame is stored as a JPG and the data section is scrambled experimentally. The frames are then arranged into a video using iMovie.</p>
             </div>
           </article>
-          <article className = "project color-9">
-            <div className="description-box">
-              <p className="courier">Exploration of stereoscopic photography using diferent types of cameras. Animated gifs as a medium to capture moments. A window to the past.</p>
+          <article className = "project">
+            <div className = "description-box left">
+              <p className = "courier">In this project a visualization of the Mandelbrot set is created.</p>
             </div>
           </article>
-          <article className = "project color-10">
-            <div className="description-box">
-              <p className="courier">Having developed a way to create images that contained all the pixels. I came up with this image which maps the color cube along a hilbert curve. The idea is very simple, but strickingly beautiful. Two space filling curves are used a 3d one to touch every single color un the color cube, and then a 2d Hilbert curve to map all of the colors into a square.</p>
+          <article className = "project">
+            <div className = "description-box right">
+              <p className = "courier">An iterative algorithm is used to rearange the points taken from an acceptance rejection method. In this process, we calculate the centroids of the Voronoi cells generated by the set of initial points. We create a new Voronoi diagram with the centroids of the previous iteration and repeat the process until we are satisfied with the result.</p>
             </div>
           </article>
-          <article className = "project color-11">
-            <div className="description-box">
-              <p className="courier">An implemantation of the classic windy gridworld game for reinforcement learning. The agent learns the correct path to the goal tile. Some of the tiles push the agent up uppon the next move.</p>
+          <article className = "project">
+            <div className = "description-box left">
+              <p className = "courier">Exploration of stereoscopic photography using diferent types of cameras. Animated gifs as a medium to capture moments. A window to the past.</p>
             </div>
           </article>
-          <article className = "project color-12">
-            <div className="description-box">
-              <p className="courier">In this project a visualization of the Mandelbrot set is created.</p>
+          <article className = "project  ">
+            <div className = "description-box right">
+              <p className = "courier">Having developed a way to create images that contained all the pixels. I came up with this image which maps the color cube along a hilbert curve. The idea is very simple, but strickingly beautiful. Two space filling curves are used a 3d one to touch every single color un the color cube, and then a 2d Hilbert curve to map all of the colors into a square.</p>
             </div>
           </article>
-          <article className = "project color-13">
-            <div className="description-box">
-              <p className="courier">This was about exploring the posibilities of programatically create glitches. Each individual frame is stored as a JPG and the data section is scrambled experimentally. The frames are then arranged into a video using iMovie.</p>
+          <article className = "project">
+            <div className = "description-box left">
+              <p className = "courier">An implementation of the classic windy gridworld game for reinforcement learning. The agent learns the correct path to the goal tile. Some of the tiles push the agent up uppon the next move.</p>
+            </div>
+          </article>
+          <article className = "project">
+            <div className = "description-box right">
+              <p className = "courier">amaury.gtz@gmail.com</p>
             </div>
           </article>
         </section>
@@ -86,6 +157,18 @@ class Home extends Component {
       </div>
     );
   }
+}
+
+
+function romanize(num) {
+  var lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1},roman = '',i;
+  for ( i in lookup ) {
+    while ( num >= lookup[i] ) {
+      roman += i;
+      num -= lookup[i];
+    }
+  }
+  return roman;
 }
 
 export default Home;
