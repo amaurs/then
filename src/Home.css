@@ -33,11 +33,54 @@ header{
 }
 
 .Home-info-container{
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .Home-info-container p{
-  font-size: 10em;
+  
+}
+
+.Home-info-container ol{
+  list-style-type: decimal;
+}
+
+.underline { text-decoration: underline; }
+
+.definition {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.definition .name {
+  font-weight: bold;
+  font-size: 240px;
+}
+
+.definition .pronunciation {
+  font-style: oblique;
+  font-size: 32px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.definition .type {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.definition ol {
+
+  margin-top: 50px
+}
+
+.definition li {
+  font-style: oblique;
+}
+
+.definition p {
+  font-style: normal;
+  font-size: 20px;
 }
 
 .background{
@@ -49,24 +92,6 @@ header{
   z-index: 5;
 }
 
-.name{
-  color: black;
-  position: absolute;
-  height: 100px;
-  top: 30%;
-  left: 20%;
-  z-index: 5;
-}
-
-.surname {
-  color: black;
-  position: absolute;
-  top: 45%;
-  left: 20%;
-  right: 0;
-  bottom: 0;
-  z-index: 5;
-}
 
 .contact {
   color: black;

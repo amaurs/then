@@ -62,11 +62,16 @@ class Home extends Component {
           switch(this.state.section) {
               case 0:
                   content = <div className="Home-info-container background project-0">
-                              <p className="name">Amaury</p>
-                              <svg className="triangle-container" >
-                                <polygon className="triangle" points="90,10 75,160 193,120" />
-                              </svg>
-                              <p className="surname">Gutiérrez</p>
+                              <div className="definition">
+                                <p className="name">then</p>
+                                <p className="pronunciation">/ <span className="underline">TH</span>en /</p>
+                                <p className="type">adverb</p>
+                                <ol>
+                                  <li><p>at that time; at the time in question.</p></li>
+                                  <li><p>after that; next; afterward.</p></li>
+                                  <li><p>in that case; therefore.</p></li>
+                                </ol>
+                              </div>
                             </div>
                   break;
               case 1:
