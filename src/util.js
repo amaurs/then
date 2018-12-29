@@ -3,6 +3,8 @@ import * as d3 from 'd3';
 const RED = [255, 0, 0];
 const YELLOW = [255, 255, 0];
 const BLUE = [0, 0, 255];
+const WHITE = [255, 255, 255];
+const BLACK = [0, 0, 0];
 
 
 
@@ -66,10 +68,12 @@ function closest(red, green, blue) {
   let r = getNormSuared3d(RED[0], RED[1], RED[2], red, green, blue);
   let y = getNormSuared3d(YELLOW[0], YELLOW[1], YELLOW[2], red, green, blue);
   let b = getNormSuared3d(BLUE[0], BLUE[1], BLUE[2], red, green, blue);
-  let colors = [r, y, b];
-  let anotherColors = [RED, YELLOW, BLUE];
+  let black = getNormSuared3d(BLACK[0], BLACK[1], BLACK[2], red, green, blue);
+  let white = getNormSuared3d(WHITE[0], WHITE[1], WHITE[2], red, green, blue);
+  let colors = [r, y, b, black, white];
+  let anotherColors = [RED, YELLOW, BLUE, BLACK, WHITE];
   let min = 1000000;
-  let color = [0 , 0 ,0];
+  let color = [0 , 0, 0];
 
   colors.forEach(function(c, index) {
     if(c < min) {

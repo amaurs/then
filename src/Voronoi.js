@@ -3,8 +3,8 @@ import * as d3 from 'd3';
 import { getCentroidsNew, getRandomInt, getBrightness, getBrightnessFromXY, getColor } from './util';
 import {Delaunay} from "d3-delaunay";
 
-const xStep = 10,
-      yStep = 10;
+const xStep = 5,
+      yStep = 5;
 
 export default class Voronoi extends Component {
 

@@ -126,15 +126,6 @@ class Home extends Component {
                               <p className="roman roman-right">{romanize(this.state.section - 1)}</p>
                             </div>
                   break;
-              case 8:
-                  content = <div className="Home-info-container background project-0">
-                              
-                              <svg className="triangle-container triangle-contact" >
-                                <polygon className="triangle triangle-color" points="90,10 75,160 193,120" />
-                              </svg>
-                              <p className="contact">Contact</p>
-                            </div>
-                  break;
               default:
                   content = null;
           }
@@ -183,11 +174,6 @@ class Home extends Component {
           <article className = "project">
             <div className = "description-box left">
               <p className = "courier">An implementation of the classic windy gridworld game for reinforcement learning. The agent learns the correct path to the goal tile. Some of the tiles push the agent up uppon the next move.</p>
-            </div>
-          </article>
-          <article className = "project">
-            <div className = "description-box right">
-              <p className = "courier">amaury.gtz@gmail.com</p>
             </div>
           </article>
         </section>
