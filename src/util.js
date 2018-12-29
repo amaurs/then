@@ -47,9 +47,8 @@ export function getCentroidsNew(polygons){
 
 export function getColor(imageData, x, y){
     
-    let index = Math.round(y) * imageData.width + Math.round(x);
+    let index = Math.floor(y) * imageData.width + Math.floor(x);
     let i = index * 4;
-    let j = index << 2;
     let color = d3.rgb(imageData.data[i + 0], 
                   imageData.data[i + 1], 
                   imageData.data[i + 2]);
@@ -63,7 +62,8 @@ export function getBrightness(red, green, blue){
 }
 
 export function getBrightnessFromXY(imageData, x, y){
-    let i = (y * imageData.width + x) << 2;
+
+    let i = (Math.floor(y) * imageData.width + Math.floor(x)) << 2;
     let bright = getBrightness(imageData.data[i + 0], imageData.data[i + 1], imageData.data[i + 2]); 
     return bright;
 }

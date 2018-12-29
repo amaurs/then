@@ -87,13 +87,18 @@ class Home extends Component {
                             </div>
                   break;
               case 4:
-                  content = <div className="Home-info-container background project-4">
-                              <Voronoi imageData={this.state.imageData}
+
+                  let voronoi = null;
+                  if(this.state.imageData) {
+                    voronoi = <Voronoi imageData={this.state.imageData}
                                        width={this.state.width}
                                        height={this.state.height}
                                        imageWidth ={this.state.imageWidth  }
                                        imageHeight={this.state.imageHeight}
-                              />
+                                  />
+                  }
+                  content = <div className="Home-info-container background project-4">
+                              {voronoi}
                               <p className="roman roman-left">{romanize(this.state.section - 1)}</p>
                             </div>
                   break;
@@ -112,7 +117,7 @@ class Home extends Component {
                   break;
               case 7:
                   content = <div className="Home-info-container background project-7">
-                              <iframe scrolling="no" src="https://amaurs.com/windy-gridworld/"></iframe>
+                              <iframe title="reinforcement" scrolling="no" src="https://amaurs.com/windy-gridworld/"></iframe>
                               <p className="roman roman-right">{romanize(this.state.section - 1)}</p>
                             </div>
                   break;
@@ -132,6 +137,7 @@ class Home extends Component {
   }
 
   render() {
+
     return (
       <div className="Home">
         <header className="Home-header 4">
