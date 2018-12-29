@@ -1,5 +1,11 @@
 import * as d3 from 'd3';
 
+const RED = [255, 0, 0];
+const YELLOW = [255, 255, 0];
+const BLUE = [0, 0, 255];
+
+
+
 /** When I fell lucky I like to get a random number. **/
 export function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -49,11 +55,31 @@ export function getColor(imageData, x, y){
     
     let index = Math.floor(y) * imageData.width + Math.floor(x);
     let i = index * 4;
-    let color = d3.rgb(imageData.data[i + 0], 
+    let color = closest(imageData.data[i + 0], 
                   imageData.data[i + 1], 
                   imageData.data[i + 2]);
     
     return color;
+}
+
+function closest(red, green, blue) {
+  let r = getNormSuared3d(RED[0], RED[1], RED[2], red, green, blue);
+  let y = getNormSuared3d(YELLOW[0], YELLOW[1], YELLOW[2], red, green, blue);
+  let b = getNormSuared3d(BLUE[0], BLUE[1], BLUE[2], red, green, blue);
+  let colors = [r, y, b];
+  let anotherColors = [RED, YELLOW, BLUE];
+  let min = 1000000;
+  let color = [0 , 0 ,0];
+
+  colors.forEach(function(c, index) {
+    if(c < min) {
+      min = c;
+      color = anotherColors[index];
+    }
+  });
+
+  return d3.rgb(color[0], color[1], color[2]);
+
 }
 
 /** There are other recipies to get brigthness I just like this one. **/
@@ -74,6 +100,10 @@ function getNorm(x1, y1, x2, y2){
 
 function getNormSquared(x1, y1, x2, y2){
     return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)
+}
+
+function getNormSuared3d(x1, y1, z1, x2, y2, z2) {
+  return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1)
 }
 
 
