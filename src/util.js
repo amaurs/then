@@ -27,9 +27,27 @@ export function getCentroids(polygons){
   return points;
 }
 
+export function getCentroidsNew(polygons){
+  let points = [];
+
+  for (let polygon of polygons) {
+    let x = 0;
+    let y = 0;
+    polygon.forEach(function(point){
+      x = x + point[0];
+      y = y + point[1];
+    })
+    x = x / polygon.length;
+    y = y / polygon.length;
+    points.push([x,y]);
+
+  };
+  return points;
+}
+
 export function getColor(imageData, x, y){
     
-    let index = y * imageData.width + x;
+    let index = Math.round(y) * imageData.width + Math.round(x);
     let i = index * 4;
     let j = index << 2;
     let color = d3.rgb(imageData.data[i + 0], 

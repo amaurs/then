@@ -2,18 +2,38 @@ import React, { Component } from 'react';
 import corrupted from './assets/corrupted.mp4'
 import emji from './assets/emji.mp4'
 import Voronoi from './Voronoi.js';
+import robot from './assets/our-lady.jpg';
 import './Home.css';
 
 class Home extends Component {
   constructor(props) {
     super(props);
-
+    let image = new Image();
+    image.src = robot;
+    image.onload = this.onLoad.bind(this);
     this.state = {
       width:0,
       height:0,
       section:0,
     }
   }
+
+  onLoad(event) {
+    const image = event.target;
+    console.log(image.currentSrc);
+    let canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+    let context = canvas.getContext('2d');
+    context.drawImage(image, 0, 0);
+    let imageData = context.getImageData(0, 0, image.width, image.height);
+
+    this.setState({imageData: imageData,
+                   imageWidth: image.width,
+                   imageHeight: image.height
+                  });
+  }
+
   componentDidMount(){
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions.bind(this));
@@ -68,7 +88,12 @@ class Home extends Component {
                   break;
               case 4:
                   content = <div className="Home-info-container background project-4">
-                              <Voronoi />
+                              <Voronoi imageData={this.state.imageData}
+                                       width={this.state.width}
+                                       height={this.state.height}
+                                       imageWidth ={this.state.imageWidth  }
+                                       imageHeight={this.state.imageHeight}
+                              />
                               <p className="roman roman-left">{romanize(this.state.section - 1)}</p>
                             </div>
                   break;
