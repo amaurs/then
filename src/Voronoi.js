@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import { getCentroidsNew, getRandomInt, getBrightness, getBrightnessFromXY, getColor } from './util';
-import {Delaunay} from "d3-delaunay";
+import { getCentroidsNew, getRandomInt, getBrightness, getBrightnessFromXY, getColor, getNorm} from './util';
+import { Delaunay } from "d3-delaunay";
+import { Quadtree } from "d3-quadtree";
 
-const xStep = 5,
-      yStep = 5;
+const xStep = 20,
+      yStep = 20;
 
 export default class Voronoi extends Component {
 
@@ -126,6 +127,58 @@ export default class Voronoi extends Component {
   
     if(this.state.time > 10) {
       clearInterval(this.timerID);
+
+      console.log("final pass to get colors");
+
+      let sites = this.state.sites.slice();
+
+      let coloredSites = sites.map(function(site) {
+        let color = getColor(imageData, Math.floor(+site[0]), Math.floor(+site[1]));
+        let newSite = site.slice();
+        newSite.push(color.r);
+        newSite.push(color.g);
+        newSite.push(color.b);
+        newSite.push(false);
+        return newSite;
+      });
+
+      let tree = d3.quadtree().addAll(coloredSites);
+
+      coloredSites.forEach(function(site) {
+        console.log(site)
+
+        let treeCopy = tree.copy();
+        let current = site;
+
+        let distances = [0, 0, 0, 0].map(function(d) {
+            let distance = 1 / 10000;
+            if(typeof current !== "undefined") {
+                treeCopy.remove(current);
+                let found = treeCopy.find(site[0], site[1])
+                if(typeof found !== "undefined") {
+                    distance = 1 / getNorm(site[0], site[1], found[0], found[1]);
+                } 
+                current = found;
+            }
+            
+
+            return distance;
+        })
+
+        
+
+        
+
+        console.log(distances)
+        
+        
+        let removed = tree.remove(site);
+      });
+
+      console.log(tree.size());
+
+
+
     }
   }
 

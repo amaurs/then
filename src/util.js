@@ -57,7 +57,7 @@ export function getColor(imageData, x, y){
     
     let index = Math.floor(y) * imageData.width + Math.floor(x);
     let i = index * 4;
-    let color = closest(imageData.data[i + 0], 
+    let color = d3.rgb(imageData.data[i + 0], 
                   imageData.data[i + 1], 
                   imageData.data[i + 2]);
     
@@ -98,7 +98,7 @@ export function getBrightnessFromXY(imageData, x, y){
     return bright;
 }
 
-function getNorm(x1, y1, x2, y2){
+export function getNorm(x1, y1, x2, y2){
     return Math.sqrt(getNormSquared(x1, y1, x2, y2));
 }
 
