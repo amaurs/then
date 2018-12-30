@@ -9,12 +9,17 @@ const BLACK = [0, 0, 0];
 
 
 /** When I fell lucky I like to get a random number. **/
-export function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
+export function getRandomInt(lower, upper) {
+  let min = Math.ceil(lower);
+  let max = Math.floor(upper);
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+export function getXYfromIndex(index, width) {
+  let y = Math.floor(index / width);
+  let x = index % width;
+  return [x, y];
+}
 
 
 /** Given an array of polygons this calculates the centroids and returns them. **/

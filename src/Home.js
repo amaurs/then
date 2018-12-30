@@ -3,6 +3,7 @@ import corrupted from './assets/corrupted.mp4'
 import emji from './assets/emji.mp4'
 import Voronoi from './Voronoi.js';
 import robot from './assets/our-lady.jpg';
+import { getXYfromIndex } from './util.js';
 import './Home.css';
 
 class Home extends Component {
@@ -27,8 +28,21 @@ class Home extends Component {
     let context = canvas.getContext('2d');
     context.drawImage(image, 0, 0);
     let imageData = context.getImageData(0, 0, image.width, image.height);
+    let totalDate = [];
+    for(let index = 0; index < image.width * image.height; index++) {
+        let pixel = getXYfromIndex(index, image.width);
+        totalDate.push({
+                         x: pixel[0],
+                         y: pixel[1],
+                         r: imageData.data[index * 4],
+                         g: imageData.data[index * 4 + 1],
+                         b: imageData.data[index * 4 + 2],
+                       });
+    }
+    console.log(totalDate);
 
     this.setState({imageData: imageData,
+                   totalDate: totalDate,
                    imageWidth: image.width,
                    imageHeight: image.height
                   });
@@ -95,7 +109,7 @@ class Home extends Component {
 
                   let voronoi = null;
                   if(this.state.imageData) {
-                    voronoi = <Voronoi imageData={this.state.imageData}
+                    voronoi = <Voronoi imageData={this.state.totalDate}
                                        width={this.state.width}
                                        height={this.state.height}
                                        imageWidth ={this.state.imageWidth  }

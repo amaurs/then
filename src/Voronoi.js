@@ -4,8 +4,8 @@ import { getCentroidsNew, getRandomInt, getBrightness, getBrightnessFromXY, getC
 import { Delaunay } from "d3-delaunay";
 import { Quadtree } from "d3-quadtree";
 
-const xStep = 4,
-      yStep = 4;
+const xStep = 5,
+      yStep = 5;
 
 export default class Voronoi extends Component {
 
@@ -19,12 +19,17 @@ export default class Voronoi extends Component {
   }
 
   componentDidMount() {
+
+
+    let imageData = this.props.imageData;
+    let imageWidth = this.props.imageWidth;
+
     let sites = [];
-    let total = Math.floor((this.props.imageWidth / xStep) * (this.props.imageHeight / yStep));
+    let total = Math.floor((imageWidth / xStep) * (this.props.imageHeight / yStep));
     console.log("total:" + total)
-    let dims = this.updateDimensions(this.props.imageWidth, this.props.imageHeight);
+    let dims = this.updateDimensions(imageWidth, this.props.imageHeight);
     let xScale = d3.scaleLinear()
-              .domain([0, this.props.imageWidth])
+              .domain([0, imageWidth])
               .range([0, dims.width]);
     let yScale = d3.scaleLinear()
               .domain([0, this.props.imageHeight])
@@ -34,29 +39,34 @@ export default class Voronoi extends Component {
     let numPoints = 0;
 
     while(numPoints < total){
-      let x = getRandomInt(0, this.props.imageWidth);
-      let y = getRandomInt(0, this.props.imageHeight);
-      let i = (y * this.props.imageWidth + x) << 2;
-      let brightness = getBrightness(this.props.imageData.data[i + 0], 
-                                     this.props.imageData.data[i + 1], 
-                                     this.props.imageData.data[i + 2]);
+      let index = getRandomInt(0, imageWidth * this.props.imageHeight);
+      let site = imageData[index]
+      let brightness = getBrightness(site.r, 
+                                     site.g, 
+                                     site.b);
       if (Math.random() >= brightness ) {
-        sites.push([x, y]);
+        sites.push(site);
         numPoints++;
       }
     }
 
-    const delaunayNew = Delaunay.from(sites);
-    const voronoiNew = delaunayNew.voronoi([0, 0, this.props.imageWidth, this.props.imageHeight]);
+    const delaunayNew = Delaunay.from(sites, 
+                                      function(d) { return d.x },
+                                      function(d) { return d.y });
+    const voronoiNew = delaunayNew.voronoi([0, 0, imageWidth, this.props.imageHeight]);
     const diagramNew = voronoiNew.cellPolygons();
-    let sitesNew = getCentroidsNew(diagramNew);
-
-    let imageData = this.props.imageData;
+    
+    
+    let sitesNew = getCentroidsNew(diagramNew).map(function(centroid) {
+        let x = Math.round(centroid[0]);
+        let y = Math.round(centroid[1]);
+        let index = y * imageWidth + x;
+        return imageData[index];
+    });
 
     
     this.setState({sites:sitesNew});
    
-   /**
     this.cities = d3.select(this.svg)
                     .append("g")
                     .attr("class", "sites")
@@ -64,14 +74,13 @@ export default class Voronoi extends Component {
                     .data(sitesNew)
                     .enter()
                     .append("circle")
-                    .attr("cx", function(d) { return xScale(d[0]);})
-                    .attr("cy", function(d) { return yScale(d[1]);})
-                    .attr("r", function(d) { return 2 * getBrightnessFromXY(imageData, +d[0], +d[1]) + 2;})
+                    .attr("cx", function(d) { return xScale(+d.x);})
+                    .attr("cy", function(d) { return yScale(+d.y);})
+                    .attr("r", function(d) { return 2;})
                     .attr('opacity', function(d) { return 1;})
-                    .style("fill", function(d) { return  getColor(imageData, +d[0], +d[1]);})
-                    .style("stroke", function(d) { return  getColor(imageData, +d[0], +d[1]);});
-    
-    **/
+                    .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
+                    .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
+
     this.timerID = setInterval(() => this.tick(), 100);
   }
 
@@ -93,46 +102,53 @@ export default class Voronoi extends Component {
 
   tick(){
     //debugger;
+    let imageWidth = this.props.imageWidth;
+    let imageData = this.props.imageData;
+
     let time = this.state.time;
     this.setState({time: time + 1});
     console.log("time: " + this.state.time);
 
-    const delaunayNew = new Delaunay.from(this.state.sites);
-    const voronoiNew = delaunayNew.voronoi([0, 0, this.props.imageWidth, this.props.imageHeight]);
+    const delaunayNew = new Delaunay.from(this.state.sites, 
+                                      function(d) { return d.x },
+                                      function(d) { return d.y });
+    const voronoiNew = delaunayNew.voronoi([0, 0, imageWidth, this.props.imageHeight]);
     const diagramNew = voronoiNew.cellPolygons();
-    let sitesNew = getCentroidsNew(diagramNew);
+
+    let sitesNew = getCentroidsNew(diagramNew).map(function(centroid) {
+        let x = Math.round(centroid[0]);
+        let y = Math.round(centroid[1]);
+        let index = y * imageWidth + x;
+        return imageData[index];
+    });
+
+    console.log(sitesNew.length);
 
     this.setState({sites:sitesNew});
 
-    let dims = this.updateDimensions(this.props.imageWidth, this.props.imageHeight);
+    let dims = this.updateDimensions(imageWidth, this.props.imageHeight);
 
     let xScale = d3.scaleLinear()
-              .domain([0, this.props.imageWidth])
+              .domain([0, imageWidth])
               .range([0, dims.width]);
     let yScale = d3.scaleLinear()
               .domain([0, this.props.imageHeight])
               .range([0, dims.height]);
 
-    let imageData = this.props.imageData;
-
-
-    /**
-
     d3.select(this.svg)
       .selectAll('circle')
-      .data(this.state.sites)
+      .data(sitesNew)
       .transition()
       .duration(100)
-      .attr("cx", function(d) { return xScale(+d[0]);})
-      .attr("cy", function(d) { return yScale(+d[1]);})
-      .style("fill", function(d) { return  getColor(imageData, Math.floor(+d[0]), Math.floor(+d[1]));})
-      .style("stroke", function(d) { return  getColor(imageData, Math.floor(+d[0]), Math.floor(+d[1]));});
-  
-    **/
+      .attr("cx", function(d) { return xScale(+d.x);})
+      .attr("cy", function(d) { return yScale(+d.y);})
+      .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
+      .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
 
     if(this.state.time > 10) {
       clearInterval(this.timerID);
 
+      /**
       console.log("final pass to get colors");
 
       let sites = this.state.sites.slice();
@@ -216,12 +232,12 @@ export default class Voronoi extends Component {
                 .append("circle")
                 .attr("cx", function(d) { return xScale(d[0]);})
                 .attr("cy", function(d) { return yScale(d[1]);})
-                .attr("r", "1")
+                .attr("r", function(d) { return 2 * getBrightnessFromXY(imageData, +d[0], +d[1]) + 2;})
                 .attr('opacity', function(d) { return 1;})
                 .style("fill", function(d) { return  d3.rgb(+d[2], +d[3], +d[4]) })
                 .style("stroke", function(d) { return  d3.rgb(+d[2], +d[3], +d[4]) });
 
-
+        **/
     }
   }
 
