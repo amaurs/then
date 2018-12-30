@@ -58,15 +58,16 @@ export default class Voronoi extends Component {
     
     
     let sitesNew = getCentroidsNew(diagramNew).map(function(centroid) {
-        let x = Math.round(centroid[0]);
-        let y = Math.round(centroid[1]);
+        let x = Math.floor(centroid[0]);
+        let y = Math.floor(centroid[1]);
         let index = y * imageWidth + x;
+        if(typeof imageData[index] === "undefined") debugger;
         return imageData[index];
     });
 
     
     this.setState({sites:sitesNew});
-   
+
     this.cities = d3.select(this.svg)
                     .append("g")
                     .attr("class", "sites")
@@ -77,7 +78,6 @@ export default class Voronoi extends Component {
                     .attr("cx", function(d) { return xScale(+d.x);})
                     .attr("cy", function(d) { return yScale(+d.y);})
                     .attr("r", function(d) { return 2;})
-                    .attr('opacity', function(d) { return 1;})
                     .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
                     .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
 
@@ -106,7 +106,6 @@ export default class Voronoi extends Component {
     let imageData = this.props.imageData;
 
     let time = this.state.time;
-    this.setState({time: time + 1});
     console.log("time: " + this.state.time);
 
     const delaunayNew = new Delaunay.from(this.state.sites, 
@@ -114,17 +113,22 @@ export default class Voronoi extends Component {
                                       function(d) { return d.y });
     const voronoiNew = delaunayNew.voronoi([0, 0, imageWidth, this.props.imageHeight]);
     const diagramNew = voronoiNew.cellPolygons();
+    console.log("Polygons");
+    
 
-    let sitesNew = getCentroidsNew(diagramNew).map(function(centroid) {
-        let x = Math.round(centroid[0]);
-        let y = Math.round(centroid[1]);
+    let centroids = getCentroidsNew(diagramNew);
+    console.log(centroids.length);
+    let sitesNew = centroids.map(function(centroid) {
+        let x = Math.floor(centroid[0]);
+        let y = Math.floor(centroid[1]);
         let index = y * imageWidth + x;
+        if(typeof imageData[index] === "undefined") debugger;
         return imageData[index];
     });
 
     console.log(sitesNew.length);
 
-    this.setState({sites:sitesNew});
+    
 
     let dims = this.updateDimensions(imageWidth, this.props.imageHeight);
 
@@ -144,6 +148,9 @@ export default class Voronoi extends Component {
       .attr("cy", function(d) { return yScale(+d.y);})
       .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
       .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
+
+
+    this.setState({sites:sitesNew, time: time + 1});
 
     if(this.state.time > 10) {
       clearInterval(this.timerID);
