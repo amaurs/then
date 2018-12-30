@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import { getCentroidsNew, getRandomInt, getBrightness, getBrightnessFromXY, getColor, getNorm} from './util';
+import { getCentroidsNew, getRandomInt, getBrightness, getBrightnessFromXY, getColor, getNorm, closest} from './util';
 import { Delaunay } from "d3-delaunay";
 import { Quadtree } from "d3-quadtree";
 
-const xStep = 20,
-      yStep = 20;
+const xStep = 4,
+      yStep = 4;
 
 export default class Voronoi extends Component {
 
@@ -56,6 +56,7 @@ export default class Voronoi extends Component {
     
     this.setState({sites:sitesNew});
    
+   /**
     this.cities = d3.select(this.svg)
                     .append("g")
                     .attr("class", "sites")
@@ -70,6 +71,7 @@ export default class Voronoi extends Component {
                     .style("fill", function(d) { return  getColor(imageData, +d[0], +d[1]);})
                     .style("stroke", function(d) { return  getColor(imageData, +d[0], +d[1]);});
     
+    **/
     this.timerID = setInterval(() => this.tick(), 100);
   }
 
@@ -114,6 +116,7 @@ export default class Voronoi extends Component {
     let imageData = this.props.imageData;
 
 
+    /**
 
     d3.select(this.svg)
       .selectAll('circle')
@@ -125,6 +128,8 @@ export default class Voronoi extends Component {
       .style("fill", function(d) { return  getColor(imageData, Math.floor(+d[0]), Math.floor(+d[1]));})
       .style("stroke", function(d) { return  getColor(imageData, Math.floor(+d[0]), Math.floor(+d[1]));});
   
+    **/
+
     if(this.state.time > 10) {
       clearInterval(this.timerID);
 
@@ -144,39 +149,77 @@ export default class Voronoi extends Component {
 
       let tree = d3.quadtree().addAll(coloredSites);
 
+      let final = []
       coloredSites.forEach(function(site) {
-        console.log(site)
 
         let treeCopy = tree.copy();
+        
+
+        
+
+        let oldColor = [site[2], site[3], site[4]]
+        let newColor = closest(site[2], site[3], site[4]);
+
+        let error = [oldColor[0] - newColor[0],
+                     oldColor[1] - newColor[1],
+                     oldColor[2] - newColor[2]]
+
+
+        final.push([site[0], 
+                    site[1], 
+                    newColor[0], 
+                    newColor[1],
+                    newColor[2],
+                    true]);
+
+
         let current = site;
 
-        let distances = [0, 0, 0, 0].map(function(d) {
-            let distance = 1 / 10000;
+        [7.0/16, 5.0/16, 3.0/16, 1.0/16].forEach(function(d) {
+
             if(typeof current !== "undefined") {
                 treeCopy.remove(current);
-                let found = treeCopy.find(site[0], site[1])
+
+                let found = treeCopy.find(site[0], site[1]);
+
+
                 if(typeof found !== "undefined") {
-                    distance = 1 / getNorm(site[0], site[1], found[0], found[1]);
+
+                    found[2] = Math.round(found[2] + error[0] * d)
+                    found[3] = Math.round(found[3] + error[1] * d)
+                    found[4] = Math.round(found[4] + error[2] * d)
+                    found[5] = true;
+
+                    let newFound = treeCopy.find(site[0], site[1]);
+
+                    //debugger
                 } 
-                current = found;
+                
             }
             
+        });
 
-            return distance;
-        })
 
-        
-
-        
-
-        console.log(distances)
-        
-        
         let removed = tree.remove(site);
+        
+
       });
 
       console.log(tree.size());
-
+    
+      this.cities = d3.select(this.svg)
+                .append("g")
+                .attr("class", "sites")
+                .selectAll("circle")
+                .data(final)
+                .enter()
+                .append("circle")
+                .attr("cx", function(d) { return xScale(d[0]);})
+                .attr("cy", function(d) { return yScale(d[1]);})
+                .attr("r", "1")
+                .attr('opacity', function(d) { return 1;})
+                .style("fill", function(d) { return  d3.rgb(+d[2], +d[3], +d[4]) })
+                .style("stroke", function(d) { return  d3.rgb(+d[2], +d[3], +d[4]) });
 
 
     }

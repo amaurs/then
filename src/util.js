@@ -64,7 +64,7 @@ export function getColor(imageData, x, y){
     return color;
 }
 
-function closest(red, green, blue) {
+export function closest(red, green, blue) {
   let r = getNormSuared3d(RED[0], RED[1], RED[2], red, green, blue);
   let y = getNormSuared3d(YELLOW[0], YELLOW[1], YELLOW[2], red, green, blue);
   let b = getNormSuared3d(BLUE[0], BLUE[1], BLUE[2], red, green, blue);
@@ -82,7 +82,7 @@ function closest(red, green, blue) {
     }
   });
 
-  return d3.rgb(color[0], color[1], color[2]);
+  return [color[0], color[1], color[2]];
 
 }
 
