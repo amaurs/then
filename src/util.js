@@ -21,26 +21,24 @@ export function getXYfromIndex(index, width) {
   return [x, y];
 }
 
+export function download(filename, text) {
+    var pom = document.createElement('a');
+    pom.setAttribute('href', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(text));
+    pom.setAttribute('download', filename);
+    if (document.createEvent) {
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
+    }
+    else {
+        pom.click();
+    }
+}
+
+
 
 /** Given an array of polygons this calculates the centroids and returns them. **/
 export function getCentroids(polygons){
-  let points = [];
-
-  polygons.forEach(function(polygon){
-    let x = 0;
-    let y = 0;
-    polygon.forEach(function(point){
-      x = x + point[0];
-      y = y + point[1];
-    })
-    x = x / polygon.length;
-    y = y / polygon.length;
-    points.push([x,y]);
-  });
-  return points;
-}
-
-export function getCentroidsNew(polygons){
   let points = [];
 
   for (let polygon of polygons) {
