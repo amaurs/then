@@ -5,6 +5,29 @@ import Voronoi from './Voronoi.js';
 import robot from './assets/our-lady.jpg';
 import { getXYfromIndex } from './util.js';
 import './Home.css';
+import Cube from './Cube.js'
+
+const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
+function download(filename, text) {
+    var pom = document.createElement('a');
+
+    pom.setAttribute('href', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(text));
+    pom.setAttribute('download', filename);
+
+    if (document.createEvent) {
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
+    }
+    else {
+        pom.click();
+    }
+}
 
 class Home extends Component {
   constructor(props) {
@@ -12,6 +35,8 @@ class Home extends Component {
     let image = new Image();
     image.src = robot;
     image.onload = this.onLoad.bind(this);
+    this.cube = React.createRef();
+    this.handleSave = this.handleSave.bind(this);
     this.state = {
       width:0,
       height:0,
@@ -51,23 +76,51 @@ class Home extends Component {
   componentDidMount(){
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions.bind(this));
-    window.addEventListener("scroll", this.handleScroll.bind(this));
+    //window.addEventListener("scroll", this.handleScroll.bind(this));
+    document.addEventListener("keydown", this.handleKeyPress.bind(this));
 
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
     window.removeEventListener("keydown", this.add.bind(this));
-    window.removeEventListener("scroll", this.handleScroll.bind(this));
+    //window.removeEventListener("scroll", this.handleScroll.bind(this));
   }
 
-  updateDimensions(){
+  updateDimensions() {
     let update_width  = window.innerWidth;
     let update_height = window.innerHeight;
     this.setState({ width: update_width, height: update_height });
   }
 
+  handleKeyPress(event) {
+    console.log(event.key)
+    let section = this.state.section;
+    console.log(section)
+    if (event.key == 'ArrowDown') {
+      section = mod(section + 1, SECTIONS.length);
+      this.setState({ section: section });
+    }
+    if (event.key == 'ArrowUp') {
+      section = mod(section - 1, SECTIONS.length);
+      this.setState({ section: section });
+    }
+  };
+
   handleScroll(event) {
-    this.setState({ section: Math.floor((window.scrollY + this.state.height / 2 )/ this.state.height )});
+    let section = Math.floor((window.scrollY + this.state.height / 2 )/ this.state.height );
+    console.log("%cSection " + section, 'color: green');
+    
+  }
+
+  handleSave(event) {
+    let serializer = new XMLSerializer();
+    let container = this.cube.current.mount.childNodes[0];
+
+    let source = serializer.serializeToString(container.childNodes[0]);
+    download("cube-left.svg", source)
+    source = serializer.serializeToString(container.childNodes[1])
+    download("cube_right.svg", source)
+
   }
 
   getBackgroundContent() {
@@ -121,7 +174,7 @@ class Home extends Component {
               case 5:
                   content = <div className="Home-info-container background project-5">
                               <video autoPlay loop muted>
-                                <source src={emji} type="video/mp4"/>
+                                <source src={emji} type="video/mp4" />
                               </video>
                             </div>
                   break;
@@ -133,6 +186,16 @@ class Home extends Component {
                   content = <div className="Home-info-container background project-7">
                               <iframe title="reinforcement" scrolling="no" src="https://amaurs.com/windy-gridworld/"></iframe>
                             </div>
+                  break;
+
+              case 8:
+
+                  content = <div className="Home-info-container background project-8">
+                               <button type="button" className="App-button nes-btn is-error" onClick={this.handleSave}>
+                                   Export
+                               </button>
+                               <Cube ref={this.cube}/>
+                             </div>  
                   break;
               default:
                   content = null;
@@ -147,23 +210,7 @@ class Home extends Component {
         <header className="Home-header 4">
           
         </header>
-        {this.getBackgroundContent()}
-        <section>
-          <article className = "project">
-          </article>
-          <article className = "project">
-          </article>
-          <article className = "project">
-          </article>
-          <article className = "project">
-          </article>
-          <article className = "project">
-          </article>
-          <article className = "project  ">
-          </article>
-          <article className = "project" />
-        </section>
-        
+        {this.getBackgroundContent()}        
       </div>
     );
   }

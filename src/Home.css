@@ -219,62 +219,22 @@ header{
   overflow: hidden;
 }
 
-.color-1{
-  background-color: rgb(37, 138, 11);
+.project-8 iframe{
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: black;
+  border-color: red;
+  border-width: 1px;
+  background-color: white;
+
 }
 
-.color-2{
-  background-color:rgb(251, 190, 4);
-}
-
-.color-3{
-  background-color:rgb(255, 152, 49);
-}
-
-.color-4{
-  background-color:rgb(15, 121, 228);
-}
-
-.color-5{
-  background-color:rgb(255, 154, 154);
-}
-
-.color-6{
-  background-color:rgba(16, 160, 181, 0.75);
-}
-
-.color-7{
-  background-color: rgb(238,193,74);
-}
-
-.color-8{
-  background-color:rgb(92,125,187);
-}
-
-.color-9{
-  background-color:rgb(176,139,194);
-}
-
-.color-10{
-  background-color:rgb(254,216,217);
-}
-
-.color-11{
-  background-color:rgb(114,160,82);
-}
-
-.color-12{
-  background-color:rgb(251,108,67);
-}
-
-.color-13{
-  background-color:rgb(41,204,252);
-}
-
-.color-14{
-  background-color:rgb(249,133,100);
-}
-
-.color-15{
-  background-color:rgb(223,23,85);
+.project-8 button {
+  display:none;
+  z-index: 2;
 }
