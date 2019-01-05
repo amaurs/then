@@ -163,9 +163,6 @@ export default class Voronoi extends Component {
   }
 
   print(printSites, suffix) {
-    let _xScale = this.xScale;
-    let _yScale = this.yScale;
-
     let _svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
     d3.select(_svg)

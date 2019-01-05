@@ -8,9 +8,21 @@ import './Home.css';
 import Cube from './Cube.js'
 
 const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const apiHost = process.env.REACT_APP_API_HOST;
 
 function mod(n, m) {
   return ((n % m) + m) % m;
+}
+
+function romanize(num) {
+  var lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1},roman = '',i;
+  for ( i in lookup ) {
+    while ( num >= lookup[i] ) {
+      roman += i;
+      num -= lookup[i];
+    }
+  }
+  return roman;
 }
 
 function download(filename, text) {
@@ -32,6 +44,7 @@ function download(filename, text) {
 class Home extends Component {
   constructor(props) {
     super(props);
+    console.log("%c" + romanize(1), "color:red");
     let image = new Image();
     image.src = robot;
     image.onload = this.onLoad.bind(this);
@@ -41,6 +54,7 @@ class Home extends Component {
       width:0,
       height:0,
       section:0,
+      points: null
     }
   }
 
@@ -79,6 +93,19 @@ class Home extends Component {
     //window.addEventListener("scroll", this.handleScroll.bind(this));
     document.addEventListener("keydown", this.handleKeyPress.bind(this));
 
+    fetch(apiHost, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({point_set: "moebius", n_cities: "1000"})
+      })
+      .then(response => {
+        return  response.json();
+        
+      }).then(json => {
+        this.setState({points: json})
+      });
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
@@ -96,11 +123,11 @@ class Home extends Component {
     console.log(event.key)
     let section = this.state.section;
     console.log(section)
-    if (event.key == 'ArrowDown') {
+    if (event.key === 'ArrowDown') {
       section = mod(section + 1, SECTIONS.length);
       this.setState({ section: section });
     }
-    if (event.key == 'ArrowUp') {
+    if (event.key === 'ArrowUp') {
       section = mod(section - 1, SECTIONS.length);
       this.setState({ section: section });
     }
@@ -190,11 +217,16 @@ class Home extends Component {
 
               case 8:
 
+                  let cubeObject = null;
+
+                  if (this.state.points) {
+                    cubeObject = <Cube ref={this.cube} points={this.state.points}/>
+                  }
                   content = <div className="Home-info-container background project-8">
                                <button type="button" className="App-button nes-btn is-error" onClick={this.handleSave}>
                                    Export
                                </button>
-                               <Cube ref={this.cube}/>
+                               {cubeObject}
                              </div>  
                   break;
               default:
@@ -217,15 +249,6 @@ class Home extends Component {
 }
 
 
-function romanize(num) {
-  var lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1},roman = '',i;
-  for ( i in lookup ) {
-    while ( num >= lookup[i] ) {
-      roman += i;
-      num -= lookup[i];
-    }
-  }
-  return roman;
-}
+
 
 export default Home;
