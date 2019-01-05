@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import { getCentroids, getRandomInt, getBrightness, closest, download} from './util';
 import { Delaunay } from "d3-delaunay";
+import "./Voronoi.css";
 
-const xStep = 15,
-      yStep = 15;
+const xStep = 12,
+      yStep = 12;
 
 export default class Voronoi extends Component {
 
@@ -18,13 +19,6 @@ export default class Voronoi extends Component {
   componentDidMount() {
     let imageData = this.props.imageData;
     let imageWidth = this.props.imageWidth;
-    let dims = this.updateDimensions(imageWidth, this.props.imageHeight);
-    this.xScale = d3.scaleLinear()
-              .domain([0, imageWidth])
-              .range([0, dims.width]);
-    this.yScale = d3.scaleLinear()
-              .domain([0, this.props.imageHeight])
-              .range([0, this.props.height]);
     let sites = [];
     let total = Math.floor((imageWidth / xStep) * (this.props.imageHeight / yStep));
 
@@ -42,18 +36,18 @@ export default class Voronoi extends Component {
       }
     }
     let sitesNew = this.sitesUpdate(sites, imageData, imageWidth, this.props.imageHeight);
-    let _xScale = this.xScale;
-    let _yScale = this.yScale;
+
     this.setState({sites:sitesNew});
     this.cities = d3.select(this.svg)
+                    .attr("viewBox", "0 0 " + imageWidth + " " + this.props.imageHeight)
                     .append("g")
                     .attr("class", "sites")
                     .selectAll("circle")
                     .data(sitesNew)
                     .enter()
                     .append("circle")
-                    .attr("cx", function(d) { return _xScale(+d.x);})
-                    .attr("cy", function(d) { return _yScale(+d.y);})
+                    .attr("cx", function(d) { return +d.x })
+                    .attr("cy", function(d) { return +d.y })
                     .attr("r", function(d) { return 2 * (1 + getBrightness(d.r, d.g, d.b)) ;})
                     .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
                     .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
@@ -103,23 +97,21 @@ export default class Voronoi extends Component {
     let imageData = this.props.imageData;
     let time = this.state.time;
     let sitesNew = this.sitesUpdate(this.state.sites, imageData, imageWidth, this.props.imageHeight)
-    let dims = this.updateDimensions(imageWidth, this.props.imageHeight);
-    let _xScale = this.xScale;
-    let _yScale = this.yScale;
+
     d3.select(this.svg)
       .selectAll('circle')
       .data(sitesNew)
       .transition()
       .duration(100)
-      .attr("cx", function(d) { return _xScale(+d.x);})
-      .attr("cy", function(d) { return _yScale(+d.y);})
+      .attr("cx", function(d) { return +d.x })
+      .attr("cy", function(d) { return +d.y })
       .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
       .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
     this.setState({sites:sitesNew, time: time + 1});
 
     if(this.state.time > 15) {
       clearInterval(this.timerID);
-      this.risogrify();
+      //this.risogrify();
     }
   }
 
@@ -183,8 +175,8 @@ export default class Voronoi extends Component {
       .data(printSites)
       .enter()
       .append("circle")
-      .attr("cx", function(d) { return _xScale(+d.x);})
-      .attr("cy", function(d) { return _yScale(+d.y);})
+      .attr("cx", function(d) { return +d.x })
+      .attr("cy", function(d) { return +d.y })
       .attr("r", function(d) { return 2 * (1 + getBrightness(d.r, d.g, d.b)) ;})
       .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
       .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
@@ -193,13 +185,6 @@ export default class Voronoi extends Component {
     let name = "our-lady-" + suffix;
     let source = serializer.serializeToString(_svg);
     download(name + ".svg", source);
-  }
-
-  updateDimensions(w, h){
-    let dims = this.svg.getBoundingClientRect();
-    let finalWidth = (w / h) * dims.height;
-    return {width : finalWidth, 
-                   height : dims.height};
   }
 
   render() {
