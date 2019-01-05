@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import corrupted from './assets/corrupted.mp4'
+import corrupted from './assets/escudo.m4v'
 import emji from './assets/emji.mp4'
 import Voronoi from './Voronoi.js';
 import robot from './assets/our-lady.jpg';
@@ -97,12 +97,10 @@ class Home extends Component {
                               <video autoPlay loop muted>
                                 <source src={corrupted} type="video/mp4"/>
                               </video>
-                              <p className="roman roman-left">{romanize(this.state.section - 1)}</p>
                             </div>
                   break;
               case 3:
                   content = <div className="Home-info-container background project-3">
-                              <p className="roman roman-right">{romanize(this.state.section - 1)}</p>
                             </div>
                   break;
               case 4:
@@ -118,7 +116,6 @@ class Home extends Component {
                   }
                   content = <div className="Home-info-container background project-4">
                               {voronoi}
-                              <p className="roman roman-left">{romanize(this.state.section - 1)}</p>
                             </div>
                   break;
               case 5:
@@ -126,18 +123,15 @@ class Home extends Component {
                               <video autoPlay loop muted>
                                 <source src={emji} type="video/mp4"/>
                               </video>
-                              <p className="roman roman-right">{romanize(this.state.section - 1)}</p>
                             </div>
                   break;
               case 6:
                   content = <div className="Home-info-container background project-6">
-                                <p className="roman roman-left">{romanize(this.state.section - 1)}</p>
                             </div>
                   break;
               case 7:
                   content = <div className="Home-info-container background project-7">
                               <iframe title="reinforcement" scrolling="no" src="https://amaurs.com/windy-gridworld/"></iframe>
-                              <p className="roman roman-right">{romanize(this.state.section - 1)}</p>
                             </div>
                   break;
               default:
@@ -156,40 +150,18 @@ class Home extends Component {
         {this.getBackgroundContent()}
         <section>
           <article className = "project">
-            <div className="description-box left">
-              <p className="courier">I was born and raised in Mexico City. I am curious by nature. The sense of awe and wonder has led me to keep learning. I appreciate design. I am thrilled with street art around the world. I like to take 3d pictures, but most of all I love reshaping them pixel-wise with my own tools.</p>
-            </div>
           </article>
           <article className = "project">
-            <div className = "description-box right">
-              <p className = "courier">This was about exploring the posibilities of programatically create glitches. Each individual frame is stored as a JPG and the data section is scrambled experimentally. The frames are then arranged into a video using iMovie.</p>
-            </div>
           </article>
           <article className = "project">
-            <div className = "description-box left">
-              <p className = "courier">In this project a visualization of the Mandelbrot set is created.</p>
-            </div>
           </article>
           <article className = "project">
-            <div className = "description-box right">
-              <p className = "courier">Exploring new methods to create images that resemble Pointillism, a wave that branches from Impressionism, we developed a novel way to place the dots instead of a regular grid. With the technique of rejection sampling, we select a random collection of points from a picture. Then we create a Voronoi diagram with this dataset and rearrange the centroids of each of its cells in each iteration. Finally, the process stops when the system stabilizes. Inspired by Adrian Secord's Weighted Voronoi Stippling.</p>
-            </div>
           </article>
           <article className = "project">
-            <div className = "description-box left">
-              <p className = "courier">Exploration of stereoscopic photography using diferent types of cameras. Animated gifs as a medium to capture moments. A window to the past.</p>
-            </div>
           </article>
           <article className = "project  ">
-            <div className = "description-box right">
-              <p className = "courier">Having developed a way to create images that contained all the pixels. I came up with this image which maps the color cube along a hilbert curve. The idea is very simple, but strickingly beautiful. Two space filling curves are used a 3d one to touch every single color un the color cube, and then a 2d Hilbert curve to map all of the colors into a square.</p>
-            </div>
           </article>
-          <article className = "project">
-            <div className = "description-box left">
-              <p className = "courier">An implementation of the classic windy gridworld game for reinforcement learning. The agent learns the correct path to the goal tile. Some of the tiles push the agent up uppon the next move.</p>
-            </div>
-          </article>
+          <article className = "project" />
         </section>
         
       </div>

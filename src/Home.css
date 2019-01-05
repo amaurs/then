@@ -182,11 +182,11 @@ header{
 .project-4{
   background-repeat: no-repeat;
   background-size: cover;
-}
-
-.project-4 svg {
-  width: 100vw;
-  height: 100vh;
+  display: inline-block;
+  width: 100%;
+  padding-bottom: 100%; /* aspect ratio */
+  vertical-align: top;
+  overflow: hidden;
 }
 
 .project-5 video{
@@ -206,7 +206,7 @@ header{
 
 .project-7 iframe{
 
-  width:50vw;
+  width: 50vw;
   height: 60vh;
   position: absolute;
   top:50%;
