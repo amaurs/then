@@ -1,10 +1,19 @@
 import * as d3 from 'd3';
+import { normal } from 'color-blend';
 
 const RED = [255, 0, 0];
 const YELLOW = [255, 255, 0];
 const BLUE = [0, 0, 255];
 const WHITE = [255, 255, 255];
 const BLACK = [0, 0, 0];
+
+
+const pinkBackground  = { r: 255, g:   255, b: 0, a: .5 }
+const greenForeground = { r: 255, g: 255, b: 255, a: 1  }
+
+const help = normal(pinkBackground, greenForeground);
+
+const OTHER_YELLOW = [help.r, help.g, help.b]
 
 
 
@@ -68,24 +77,44 @@ export function getColor(imageData, x, y){
 }
 
 export function closest(red, green, blue) {
-  let r = getNormSuared3d(RED[0], RED[1], RED[2], red, green, blue);
-  let y = getNormSuared3d(YELLOW[0], YELLOW[1], YELLOW[2], red, green, blue);
-  let b = getNormSuared3d(BLUE[0], BLUE[1], BLUE[2], red, green, blue);
-  let black = getNormSuared3d(BLACK[0], BLACK[1], BLACK[2], red, green, blue);
-  let white = getNormSuared3d(WHITE[0], WHITE[1], WHITE[2], red, green, blue);
-  let colors = [r, y, b, black, white];
-  let anotherColors = [RED, YELLOW, BLUE, BLACK, WHITE];
+
+
+  let newExperiment = generateColors([RED, BLUE, YELLOW], 5);
+
+  let arrayColors = newExperiment.map(function(color) {
+    return {r: color[0],
+            g: color[1],
+            b: color[2],
+            a: color[3]/255}
+  });
+
+  let whiteBackground = { r: 255, g: 255, b: 255, a: 1 };
+
+  let flatColors = arrayColors.map(function(color) {
+    return normal(whiteBackground, color) 
+  });
+
+
+  flatColors.push(WHITE)
+
+
+  let currentColor = { r: red, g: green, b: blue, a: 1 };
+
+  let distance = flatColors.map(function(color) {
+    return colorDistance(color, currentColor);
+  });
+
   let min = 1000000;
   let color = [0 , 0, 0];
 
-  colors.forEach(function(c, index) {
+  distance.forEach(function(c, index) {
     if(c < min) {
       min = c;
-      color = anotherColors[index];
+      color = flatColors[index];
     }
   });
 
-  return [color[0], color[1], color[2]];
+  return [color.r, color.g, color.b];
 
 }
 
@@ -113,6 +142,32 @@ function getNormSuared3d(x1, y1, z1, x2, y2, z2) {
   return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1)
 }
 
+function colorDistance(colorA, colorB) {
+  return getNormSuared3d(colorA.r, colorA.g, colorA.b, colorB.r, colorB.g, colorB.b);
+}
+
+function getNormSuared4d(x1, y1, z1, w1, x2, y2, z2, w2) {
+  return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1) + (w2 - w1) * (w2 - w1)
+}
+
+
+function generateColors(baseColorArray, steps) {
+    let colors = [];
+
+    let step = 255 / steps;
+
+
+    baseColorArray.forEach(function(color) {
+        for(let i = 0; i < steps; i ++) {
+            let alpha = step * (i + 1);
+            let newColor = color.slice();
+            newColor.push(Math.round(alpha))
+            colors.push(newColor);
+        }
+    });
+
+    return colors;
+}
 
 
 

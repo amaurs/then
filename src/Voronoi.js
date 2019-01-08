@@ -4,8 +4,8 @@ import { getCentroids, getRandomInt, getBrightness, closest, download} from './u
 import { Delaunay } from "d3-delaunay";
 import "./Voronoi.css";
 
-const xStep = 12,
-      yStep = 12;
+const xStep = 5,
+      yStep = 5;
 
 export default class Voronoi extends Component {
 
@@ -48,7 +48,7 @@ export default class Voronoi extends Component {
                     .append("circle")
                     .attr("cx", function(d) { return +d.x })
                     .attr("cy", function(d) { return +d.y })
-                    .attr("r", function(d) { return 2 * (1 + getBrightness(d.r, d.g, d.b)) ;})
+                    .attr("r", function(d) { return 1 * (1 + getBrightness(d.r, d.g, d.b)) ;})
                     .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
                     .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
 
@@ -98,21 +98,27 @@ export default class Voronoi extends Component {
     let time = this.state.time;
     let sitesNew = this.sitesUpdate(this.state.sites, imageData, imageWidth, this.props.imageHeight)
 
+    
+    this.setState({sites:sitesNew, time: time + 1});
+
+    this.update(sitesNew);  
+
+    if(this.state.time > 15) {
+      clearInterval(this.timerID);
+      this.risogrify();
+    }
+  }
+
+  update(sites) {
     d3.select(this.svg)
       .selectAll('circle')
-      .data(sitesNew)
+      .data(sites)
       .transition()
       .duration(100)
       .attr("cx", function(d) { return +d.x })
       .attr("cy", function(d) { return +d.y })
       .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
       .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
-    this.setState({sites:sitesNew, time: time + 1});
-
-    if(this.state.time > 15) {
-      clearInterval(this.timerID);
-      //this.risogrify();
-    }
   }
 
   risogrify() {
@@ -155,10 +161,11 @@ export default class Voronoi extends Component {
         tree.remove(site);
       });
     console.log(tree.size());
-    this.print(final.filter(function(site) { return site.r === 255 && site.g === 0 && site.b === 0}), "red")
-    this.print(final.filter(function(site) { return site.r === 255 && site.g === 255 && site.b === 0}), "yellow")
-    this.print(final.filter(function(site) { return site.r === 0 && site.g === 0 && site.b === 255}), "blue")
-    this.print(final.filter(function(site) { return site.r === 0 && site.g === 0 && site.b === 0}), "black")
+    this.update(final);
+    //this.print(final.filter(function(site) { return site.r === 255 && site.g === 0 && site.b === 0}), "red")
+    //this.print(final.filter(function(site) { return site.r === 255 && site.g === 255 && site.b === 0}), "yellow")
+    //this.print(final.filter(function(site) { return site.r === 0 && site.g === 0 && site.b === 255}), "blue")
+    //this.print(final.filter(function(site) { return site.r === 0 && site.g === 0 && site.b === 0}), "black")
     
   }
 
@@ -174,7 +181,7 @@ export default class Voronoi extends Component {
       .append("circle")
       .attr("cx", function(d) { return +d.x })
       .attr("cy", function(d) { return +d.y })
-      .attr("r", function(d) { return 2 * (1 + getBrightness(d.r, d.g, d.b)) ;})
+      .attr("r", function(d) { return 1 * (1 + getBrightness(d.r, d.g, d.b)) ;})
       .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
       .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
 

@@ -51,9 +51,9 @@ class Home extends Component {
     this.cube = React.createRef();
     this.handleSave = this.handleSave.bind(this);
     this.state = {
-      width:0,
-      height:0,
-      section:0,
+      width: 0,
+      height: 0,
+      section: 4,
       points: null
     }
   }
