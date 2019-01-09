@@ -88,7 +88,11 @@ export function closest(colors, red, green, blue) {
   let flatColors = arrayColors.map(function(color) {
     return normal(whiteBackground, color) 
   });
-  flatColors.push(WHITE)
+  flatColors.push(WHITE);
+  arrayColors.push(WHITE);
+
+  
+
   let currentColor = { r: red, g: green, b: blue, a: 1 };
   let distance = flatColors.map(function(color) {
     return colorDistance(color, currentColor);
@@ -99,6 +103,7 @@ export function closest(colors, red, green, blue) {
     if(c < min) {
       min = c;
       color = flatColors[index];
+    
     }
   });
 

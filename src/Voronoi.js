@@ -4,8 +4,8 @@ import { BLUE, YELLOW, RED, BLACK, getCentroids, getRandomInt, getBrightness, cl
 import { Delaunay } from "d3-delaunay";
 import "./Voronoi.css";
 
-const xStep = 10,
-      yStep = 10;
+const xStep = 7,
+      yStep = 7;
 
 const colorMap = {
     "red": RED,
@@ -76,8 +76,8 @@ export default class Voronoi extends Component {
     } else {
         colorsCopy.splice( colorsCopy.indexOf(type), 1 );
     }
-    this.risogrify(this.state.sites.slice(), colorsCopy);
-    this.setState({colors: colorsCopy});
+    let final = this.risogrify(this.state.sites.slice(), colorsCopy);
+    this.setState({colors: colorsCopy, final: final});
     
   }
 
@@ -91,6 +91,19 @@ export default class Voronoi extends Component {
                     .data([])
                     .remove();
     
+  }
+
+  handleExport() {
+    
+    let final = this.state.final.slice();
+
+    let name = this.state.colors.reduce(function(a, b) { return a + "-" + b}, "");
+
+    this.print(final, name);
+    //this.print(final.filter(function(site) { console.log(site); return site.r === 255 && site.g === 0 && site.b === 0}), "red")
+    //this.print(final.filter(function(site) { return site.r === 255 && site.g === 255 && site.b === 0}), "yellow")
+    //this.print(final.filter(function(site) { return site.r === 0 && site.g === 0 && site.b === 255}), "blue")
+    //this.print(final.filter(function(site) { return site.r === 0 && site.g === 0 && site.b === 0}), "black")
   }
 
   sitesUpdate(sites, imageData, width, height) {
@@ -131,7 +144,8 @@ export default class Voronoi extends Component {
 
     if(this.state.time > 15) {
       clearInterval(this.timerID);
-      this.risogrify(this.state.sites.slice(), this.state.colors);
+      let final = this.risogrify(this.state.sites.slice(), this.state.colors);
+      this.setState({sites:sitesNew, final: final});
     }
   }
 
@@ -192,11 +206,8 @@ export default class Voronoi extends Component {
       });
     console.log(tree.size());
     this.update(final);
-    //this.print(final.filter(function(site) { return site.r === 255 && site.g === 0 && site.b === 0}), "red")
-    //this.print(final.filter(function(site) { return site.r === 255 && site.g === 255 && site.b === 0}), "yellow")
-    //this.print(final.filter(function(site) { return site.r === 0 && site.g === 0 && site.b === 255}), "blue")
-    //this.print(final.filter(function(site) { return site.r === 0 && site.g === 0 && site.b === 0}), "black")
-    
+
+    return final;
   }
 
   print(printSites, suffix) {
@@ -215,8 +226,10 @@ export default class Voronoi extends Component {
       .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
       .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
 
+    console.log("about to print")
+
     let serializer = new XMLSerializer();
-    let name = "our-lady-" + suffix;
+    let name = "our-lady" + suffix;
     let source = serializer.serializeToString(_svg);
     download(name + ".svg", source);
   }
@@ -230,6 +243,7 @@ export default class Voronoi extends Component {
                 <button className={(this.state.colors.indexOf("yellow") < 0 ? "" : "yellow")} onClick={() => this.onButtonClick("yellow")}>Yellow</button>
                 <button className={(this.state.colors.indexOf("blue") < 0 ? "" : "blue")} onClick={() => this.onButtonClick("blue")}>Blue</button>
                 <button className={(this.state.colors.indexOf("black") < 0 ? "" : "black")} onClick={() => this.onButtonClick("black")}>Black</button>
+                <button onClick={() => this.handleExport()}>Export all</button>
             </div>
            </div>;
   }
