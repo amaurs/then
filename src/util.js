@@ -1,11 +1,11 @@
 import * as d3 from 'd3';
 import { normal } from 'color-blend';
 
-const RED = [255, 0, 0];
-const YELLOW = [255, 255, 0];
-const BLUE = [0, 0, 255];
-const WHITE = [255, 255, 255];
-const BLACK = [0, 0, 0];
+export const RED = { r: 255, g: 0, b: 0, a: 1 };
+export const YELLOW = { r: 255, g: 255, b: 0, a: 1 };
+export const BLUE = { r: 0, g: 0, b: 255, a: 1 };
+export const WHITE = { r: 255, g: 255, b: 255, a: 1 };
+export const BLACK = { r: 0, g: 0, b: 0, a: 1 };
 
 
 const pinkBackground  = { r: 255, g:   255, b: 0, a: .5 }
@@ -76,37 +76,25 @@ export function getColor(imageData, x, y){
     return color;
 }
 
-export function closest(red, green, blue) {
-
-
-  let newExperiment = generateColors([RED, BLUE, YELLOW], 5);
-
+export function closest(colors, red, green, blue) {
+  let newExperiment = generateColors(colors, 5);
   let arrayColors = newExperiment.map(function(color) {
-    return {r: color[0],
-            g: color[1],
-            b: color[2],
-            a: color[3]/255}
+    return {r: color.r,
+            g: color.g,
+            b: color.b,
+            a: color.a/255}
   });
-
   let whiteBackground = { r: 255, g: 255, b: 255, a: 1 };
-
   let flatColors = arrayColors.map(function(color) {
     return normal(whiteBackground, color) 
   });
-
-
   flatColors.push(WHITE)
-
-
   let currentColor = { r: red, g: green, b: blue, a: 1 };
-
   let distance = flatColors.map(function(color) {
     return colorDistance(color, currentColor);
   });
-
   let min = 1000000;
   let color = [0 , 0, 0];
-
   distance.forEach(function(c, index) {
     if(c < min) {
       min = c;
@@ -115,7 +103,6 @@ export function closest(red, green, blue) {
   });
 
   return [color.r, color.g, color.b];
-
 }
 
 /** There are other recipies to get brigthness I just like this one. **/
@@ -153,15 +140,14 @@ function getNormSuared4d(x1, y1, z1, w1, x2, y2, z2, w2) {
 
 function generateColors(baseColorArray, steps) {
     let colors = [];
-
     let step = 255 / steps;
-
-
     baseColorArray.forEach(function(color) {
         for(let i = 0; i < steps; i ++) {
             let alpha = step * (i + 1);
-            let newColor = color.slice();
-            newColor.push(Math.round(alpha))
+            let newColor = {r: color.r, 
+                            g: color.g, 
+                            b: color.b, 
+                            a: Math.round(alpha)};
             colors.push(newColor);
         }
     });

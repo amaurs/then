@@ -2,3 +2,35 @@
 svg {
   height: 100vh;
 }
+
+.controls {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.controls button{
+  margin: 3px;
+  width: 75px;
+}
+
+
+.red {
+  background-color: red;
+  color: white;
+}
+
+.blue {
+  background-color: blue;
+  color: white;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.black {
+  background-color: black;
+  color: white;
+}

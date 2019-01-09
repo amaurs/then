@@ -1,18 +1,31 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import { getCentroids, getRandomInt, getBrightness, closest, download} from './util';
+import { BLUE, YELLOW, RED, BLACK, getCentroids, getRandomInt, getBrightness, closest, download} from './util';
 import { Delaunay } from "d3-delaunay";
 import "./Voronoi.css";
 
-const xStep = 5,
-      yStep = 5;
+const xStep = 10,
+      yStep = 10;
+
+const colorMap = {
+    "red": RED,
+    "yellow": YELLOW,
+    "blue": BLUE,
+    "black": BLACK,
+}
+
+const colorArray = [BLUE, YELLOW, RED, BLACK];
+
 
 export default class Voronoi extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      time: 0
+      time: 0,
+      sites: null,
+      steps: 5,
+      colors: ["red", "yellow", "blue", "black"]
     };
   }
 
@@ -53,6 +66,19 @@ export default class Voronoi extends Component {
                     .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
 
     this.timerID = setInterval(() => this.tick(), 100);
+  }
+
+  onButtonClick(type) {
+    console.log(type);
+    let colorsCopy = this.state.colors.slice();
+    if(colorsCopy.indexOf(type) < 0) {
+        colorsCopy.push(type);
+    } else {
+        colorsCopy.splice( colorsCopy.indexOf(type), 1 );
+    }
+    this.risogrify(this.state.sites.slice(), colorsCopy);
+    this.setState({colors: colorsCopy});
+    
   }
 
   componentWillUnmount() {
@@ -105,7 +131,7 @@ export default class Voronoi extends Component {
 
     if(this.state.time > 15) {
       clearInterval(this.timerID);
-      this.risogrify();
+      this.risogrify(this.state.sites.slice(), this.state.colors);
     }
   }
 
@@ -121,9 +147,9 @@ export default class Voronoi extends Component {
       .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
   }
 
-  risogrify() {
+  risogrify(coloredSites, colors) {
       console.log("final pass to get colors");
-      let coloredSites = this.state.sites.slice();
+      //let coloredSites = this.state.sites.slice();
 
       let tree = d3.quadtree()
         .x(function(d) { return d.x })
@@ -131,11 +157,15 @@ export default class Voronoi extends Component {
 
       
       let final = [];
+      console.log(colors)
+      let colorsNow = colors.map(function(color) {
+        return colorMap[color];
+      });
 
       coloredSites.forEach(function(site) {
         let treeCopy = tree.copy();
         let oldColor = [site.r, site.g, site.b]
-        let newColor = closest(site.r, site.g, site.b);
+        let newColor = closest(colorsNow, site.r, site.g, site.b);
         let error = [oldColor[0] - newColor[0],
                      oldColor[1] - newColor[1],
                      oldColor[2] - newColor[2]]
@@ -192,6 +222,15 @@ export default class Voronoi extends Component {
   }
 
   render() {
-    return <svg ref={ svg => this.svg = svg } />;
+    console.log(this.state.colors);
+    return <div>
+            <svg ref={ svg => this.svg = svg } />
+            <div className="controls">
+                <button className={(this.state.colors.indexOf("red") < 0 ? "" : "red")} onClick={() => this.onButtonClick("red")}>Red</button>
+                <button className={(this.state.colors.indexOf("yellow") < 0 ? "" : "yellow")} onClick={() => this.onButtonClick("yellow")}>Yellow</button>
+                <button className={(this.state.colors.indexOf("blue") < 0 ? "" : "blue")} onClick={() => this.onButtonClick("blue")}>Blue</button>
+                <button className={(this.state.colors.indexOf("black") < 0 ? "" : "black")} onClick={() => this.onButtonClick("black")}>Black</button>
+            </div>
+           </div>;
   }
 }
