@@ -77,38 +77,39 @@ export function getColor(imageData, x, y){
 }
 
 export function closest(colors, red, green, blue) {
-  let newExperiment = generateColors(colors, 5);
-  let arrayColors = newExperiment.map(function(color) {
-    return {r: color.r,
-            g: color.g,
-            b: color.b,
-            a: color.a/255}
-  });
+  let arrayColors = generateColors(colors, 5);
   let whiteBackground = { r: 255, g: 255, b: 255, a: 1 };
   let flatColors = arrayColors.map(function(color) {
-    return normal(whiteBackground, color) 
+    return normal(whiteBackground, color);
   });
   flatColors.push(WHITE);
   arrayColors.push(WHITE);
 
-  
+
 
   let currentColor = { r: red, g: green, b: blue, a: 1 };
   let distance = flatColors.map(function(color) {
     return colorDistance(color, currentColor);
   });
   let min = 1000000;
-  let color = [0 , 0, 0];
+  let colorIndex = 0;
   distance.forEach(function(c, index) {
     if(c < min) {
       min = c;
-      color = flatColors[index];
+      colorIndex = index;
     
     }
   });
 
-  return [color.r, color.g, color.b];
+  return { flat_r: flatColors[colorIndex].r,
+           flat_g: flatColors[colorIndex].g,
+           flat_b: flatColors[colorIndex].b,
+           alpha_r: arrayColors[colorIndex].r,
+           alpha_g: arrayColors[colorIndex].g,
+           alpha_b: arrayColors[colorIndex].b,
+           alpha_a: arrayColors[colorIndex].a };
 }
+
 
 /** There are other recipies to get brigthness I just like this one. **/
 export function getBrightness(red, green, blue){
@@ -152,7 +153,7 @@ function generateColors(baseColorArray, steps) {
             let newColor = {r: color.r, 
                             g: color.g, 
                             b: color.b, 
-                            a: Math.round(alpha)};
+                            a: Math.round(alpha) / 255};
             colors.push(newColor);
         }
     });

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import { BLUE, YELLOW, RED, BLACK, getCentroids, getRandomInt, getBrightness, closest, download} from './util';
+import { BLUE, YELLOW, RED, BLACK, getCentroids, getRandomInt, getBrightness, closest, download } from './util';
 import { Delaunay } from "d3-delaunay";
 import "./Voronoi.css";
 
-const xStep = 7,
-      yStep = 7;
+const xStep = 20,
+      yStep = 20;
 
 const colorMap = {
     "red": RED,
@@ -61,7 +61,7 @@ export default class Voronoi extends Component {
                     .append("circle")
                     .attr("cx", function(d) { return +d.x })
                     .attr("cy", function(d) { return +d.y })
-                    .attr("r", function(d) { return 1 * (1 + getBrightness(d.r, d.g, d.b)) ;})
+                    .attr("r", function(d) { return 2 * (1 + getBrightness(d.r, d.g, d.b)) ;})
                     .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
                     .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
 
@@ -149,7 +149,7 @@ export default class Voronoi extends Component {
     }
   }
 
-  update(sites) {
+  update(sites, alpha=false) {
     d3.select(this.svg)
       .selectAll('circle')
       .data(sites)
@@ -157,8 +157,20 @@ export default class Voronoi extends Component {
       .duration(100)
       .attr("cx", function(d) { return +d.x })
       .attr("cy", function(d) { return +d.y })
-      .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
-      .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
+      .style("fill", function(d) {
+        let color = d3.rgb(d.r, d.g, d.b)
+        if(alpha) {
+            color.opacity = d.a;
+        }
+
+        return color; })
+      .style("stroke", function(d) {
+        let color = d3.rgb(d.r, d.g, d.b)
+        if(alpha) {
+            color.opacity = d.a;
+        }
+
+        return d3.rgb(255, 255, 255); });
   }
 
   risogrify(coloredSites, colors) {
@@ -176,19 +188,22 @@ export default class Voronoi extends Component {
         return colorMap[color];
       });
 
+
+
       coloredSites.forEach(function(site) {
         let treeCopy = tree.copy();
         let oldColor = [site.r, site.g, site.b]
         let newColor = closest(colorsNow, site.r, site.g, site.b);
-        let error = [oldColor[0] - newColor[0],
-                     oldColor[1] - newColor[1],
-                     oldColor[2] - newColor[2]]
+        let error = [site.r - newColor.flat_r,
+                     site.g - newColor.flat_g,
+                     site.b - newColor.flat_b]
         final.push({
             x: site.x,
             y: site.y,
-            r: newColor[0],
-            g: newColor[1],
-            b: newColor[2]
+            r: newColor.alpha_r,
+            g: newColor.alpha_g,
+            b: newColor.alpha_b,
+            a: newColor.alpha_a
         });
         let current = site;
         [7.0/16, 5.0/16, 3.0/16, 1.0/16].forEach(function(d) {
@@ -205,7 +220,7 @@ export default class Voronoi extends Component {
         tree.remove(site);
       });
     console.log(tree.size());
-    this.update(final);
+    this.update(final, true);
 
     return final;
   }
@@ -222,7 +237,7 @@ export default class Voronoi extends Component {
       .append("circle")
       .attr("cx", function(d) { return +d.x })
       .attr("cy", function(d) { return +d.y })
-      .attr("r", function(d) { return 1 * (1 + getBrightness(d.r, d.g, d.b)) ;})
+      .attr("r", function(d) { return 2 * (1 + getBrightness(d.r, d.g, d.b)) ;})
       .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
       .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
 
