@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import corrupted from './assets/escudo.m4v'
 import emji from './assets/emji.mp4'
 import Voronoi from './Voronoi.js';
+import Mandelbrot from './Mandelbrot.js';
 import robot from './assets/our-lady.jpg';
 import { getXYfromIndex } from './util.js';
 import './Home.css';
@@ -53,7 +54,7 @@ class Home extends Component {
     this.state = {
       width: 0,
       height: 0,
-      section: 4,
+      section: 3,
       points: null
     }
   }
@@ -181,6 +182,7 @@ class Home extends Component {
                   break;
               case 3:
                   content = <div className="Home-info-container background project-3">
+                                <Mandelbrot />
                             </div>
                   break;
               case 4:

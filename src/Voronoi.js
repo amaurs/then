@@ -4,8 +4,8 @@ import { BLUE, YELLOW, RED, BLACK, getCentroids, getRandomInt, getBrightness, cl
 import { Delaunay } from "d3-delaunay";
 import "./Voronoi.css";
 
-const xStep = 20,
-      yStep = 20;
+const xStep = 7,
+      yStep = 7;
 
 const colorMap = {
     "red": RED,
@@ -170,7 +170,8 @@ export default class Voronoi extends Component {
             color.opacity = d.a;
         }
 
-        return d3.rgb(255, 255, 255); });
+        return d3.rgb(255, 255, 255); })
+      .style("stroke-width", "0");
   }
 
   risogrify(coloredSites, colors) {
@@ -206,7 +207,7 @@ export default class Voronoi extends Component {
             a: newColor.alpha_a
         });
         let current = site;
-        [7.0/16, 5.0/16, 3.0/16, 1.0/16].forEach(function(d) {
+        [ 7.0 / 16, 5.0 / 16, 3.0 / 16, 1.0 / 16 ].forEach(function(d) {
             if(typeof current !== "undefined") {
                 treeCopy.remove(current);
                 let found = treeCopy.find(site[0], site[1]);
