@@ -173,10 +173,7 @@ header{
 }
 
 .project-3{
-  filter:hue-rotate(230deg);
-  background-image: url("./assets/mandelbrot5.gif");
-  background-repeat: no-repeat;
-  background-size: cover;
+
 }
 
 .project-4{

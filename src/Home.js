@@ -10,6 +10,7 @@ import Cube from './Cube.js'
 
 const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 const apiHost = process.env.REACT_APP_API_HOST;
+const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
 
 function mod(n, m) {
   return ((n % m) + m) % m;
@@ -182,7 +183,7 @@ class Home extends Component {
                   break;
               case 3:
                   content = <div className="Home-info-container background project-3">
-                                <Mandelbrot />
+                                <Mandelbrot host={mandelbrot}/>
                             </div>
                   break;
               case 4:
