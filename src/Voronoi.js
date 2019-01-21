@@ -17,6 +17,11 @@ const colorMap = {
 const colorArray = [BLUE, YELLOW, RED, BLACK];
 
 
+function getRadius(d) {
+    return  2 * (1 + getBrightness(d.r, d.g, d.b));
+}
+
+
 export default class Voronoi extends Component {
 
   constructor(props) {
@@ -61,9 +66,9 @@ export default class Voronoi extends Component {
                     .append("circle")
                     .attr("cx", function(d) { return +d.x })
                     .attr("cy", function(d) { return +d.y })
-                    .attr("r", function(d) { return 2 * (1 + getBrightness(d.r, d.g, d.b)) ;})
+                    .attr("r", getRadius)
                     .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
-                    .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
+                    .style("stroke-width", "0");
 
     this.timerID = setInterval(() => this.tick(), 100);
   }
@@ -78,7 +83,6 @@ export default class Voronoi extends Component {
     }
     let final = this.risogrify(this.state.sites.slice(), colorsCopy);
     this.setState({colors: colorsCopy, final: final});
-    
   }
 
   componentWillUnmount() {
@@ -99,8 +103,10 @@ export default class Voronoi extends Component {
 
     let name = this.state.colors.reduce(function(a, b) { return a + "-" + b}, "");
 
-    this.print(final, name);
-    //this.print(final.filter(function(site) { console.log(site); return site.r === 255 && site.g === 0 && site.b === 0}), "red")
+
+    this.print(final.filter(function(site) { return !(site.r === 255 && site.g === 255 && site.b === 255) }), "all");
+
+    //this.print(final.filter(function(site) { return site.r === 255 && site.g === 0 && site.b === 0}), "red")
     //this.print(final.filter(function(site) { return site.r === 255 && site.g === 255 && site.b === 0}), "yellow")
     //this.print(final.filter(function(site) { return site.r === 0 && site.g === 0 && site.b === 255}), "blue")
     //this.print(final.filter(function(site) { return site.r === 0 && site.g === 0 && site.b === 0}), "black")
@@ -162,14 +168,12 @@ export default class Voronoi extends Component {
         if(alpha) {
             color.opacity = d.a;
         }
-
         return color; })
       .style("stroke", function(d) {
         let color = d3.rgb(d.r, d.g, d.b)
         if(alpha) {
             color.opacity = d.a;
         }
-
         return d3.rgb(255, 255, 255); })
       .style("stroke-width", "0");
   }
@@ -229,6 +233,15 @@ export default class Voronoi extends Component {
   print(printSites, suffix) {
     let _svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
+    let alpha = true;
+
+    let size = printSites.length;
+
+    d3.select(_svg)
+        .attr("width", this.props.imageWidth)
+        .attr("height", this.props.imageHeight);
+
+
     d3.select(_svg)
       .append("g")
       .attr("class", "sites")
@@ -238,14 +251,17 @@ export default class Voronoi extends Component {
       .append("circle")
       .attr("cx", function(d) { return +d.x })
       .attr("cy", function(d) { return +d.y })
-      .attr("r", function(d) { return 2 * (1 + getBrightness(d.r, d.g, d.b)) ;})
-      .style("fill", function(d) { return  d3.rgb(d.r, d.g, d.b) })
-      .style("stroke", function(d) { return  d3.rgb(d.r, d.g, d.b) });
+      .attr("r", getRadius)
+      .style("fill", function(d) {
+        let color = d3.rgb(d.r, d.g, d.b);
+        return color; })
+      .style("stroke-width", "0")
+      .style("opacity", function(d){ return d.a });
 
     console.log("about to print")
 
     let serializer = new XMLSerializer();
-    let name = "our-lady" + suffix;
+    let name = "our-lady-" + suffix + "-" + size;
     let source = serializer.serializeToString(_svg);
     download(name + ".svg", source);
   }

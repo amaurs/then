@@ -77,7 +77,7 @@ export function getColor(imageData, x, y){
 }
 
 export function closest(colors, red, green, blue) {
-  let arrayColors = generateColors(colors, 5);
+  let arrayColors = generateColors(colors, 10);
   let whiteBackground = { r: 255, g: 255, b: 255, a: 1 };
   let flatColors = arrayColors.map(function(color) {
     return normal(whiteBackground, color);
