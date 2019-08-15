@@ -18,7 +18,7 @@ const colorArray = [BLUE, YELLOW, RED, BLACK];
 
 
 function getRadius(d) {
-    return  2 * (1 + getBrightness(d.r, d.g, d.b));
+    return  2 + 1.5 * getBrightness(d.r, d.g, d.b);
 }
 
 
@@ -56,6 +56,7 @@ export default class Voronoi extends Component {
     let sitesNew = this.sitesUpdate(sites, imageData, imageWidth, this.props.imageHeight);
 
     this.setState({sites:sitesNew});
+
     this.cities = d3.select(this.svg)
                     .attr("viewBox", "0 0 " + imageWidth + " " + this.props.imageHeight)
                     .append("g")
@@ -163,6 +164,7 @@ export default class Voronoi extends Component {
       .duration(100)
       .attr("cx", function(d) { return +d.x })
       .attr("cy", function(d) { return +d.y })
+      .attr("r", function(d) { return d.radius? +d.radius : getRadius(d) })
       .style("fill", function(d) {
         let color = d3.rgb(d.r, d.g, d.b)
         if(alpha) {
@@ -176,6 +178,45 @@ export default class Voronoi extends Component {
         }
         return d3.rgb(255, 255, 255); })
       .style("stroke-width", "0");
+  }
+
+  print(printSites, suffix) {
+    let _svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+    let alpha = true;
+
+    let size = printSites.length;
+
+    d3.select(_svg)
+        .attr("width", this.props.imageWidth)
+        .attr("height", this.props.imageHeight);
+
+
+    d3.select(_svg)
+      .append("g")
+      .attr("class", "sites")
+      .selectAll("circle")
+      .data(printSites)
+      .enter()
+      .append("circle")
+      .attr("cx", function(d) { return +d.x })
+      .attr("cy", function(d) { return +d.y })
+      .attr("r", function(d) { return +d.radius })
+      .style("fill", function(d) {
+        let color = d3.rgb(d.r, d.g, d.b);
+        return color; })
+      .style("stroke-width", "0")
+      .style("opacity", function(d){ return d.a });
+
+    console.log("about to print")
+
+    let serializer = new XMLSerializer();
+    let name = "our-lady-" + suffix + "-" + size;
+
+    let ohter = this.svg;
+
+    let source = serializer.serializeToString(_svg);
+    download(name + ".svg", source);
   }
 
   risogrify(coloredSites, colors) {
@@ -208,7 +249,8 @@ export default class Voronoi extends Component {
             r: newColor.alpha_r,
             g: newColor.alpha_g,
             b: newColor.alpha_b,
-            a: newColor.alpha_a
+            a: newColor.alpha_a,
+            radius: getRadius(site)
         });
         let current = site;
         [ 7.0 / 16, 5.0 / 16, 3.0 / 16, 1.0 / 16 ].forEach(function(d) {
@@ -230,41 +272,7 @@ export default class Voronoi extends Component {
     return final;
   }
 
-  print(printSites, suffix) {
-    let _svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
-    let alpha = true;
-
-    let size = printSites.length;
-
-    d3.select(_svg)
-        .attr("width", this.props.imageWidth)
-        .attr("height", this.props.imageHeight);
-
-
-    d3.select(_svg)
-      .append("g")
-      .attr("class", "sites")
-      .selectAll("circle")
-      .data(printSites)
-      .enter()
-      .append("circle")
-      .attr("cx", function(d) { return +d.x })
-      .attr("cy", function(d) { return +d.y })
-      .attr("r", getRadius)
-      .style("fill", function(d) {
-        let color = d3.rgb(d.r, d.g, d.b);
-        return color; })
-      .style("stroke-width", "0")
-      .style("opacity", function(d){ return d.a });
-
-    console.log("about to print")
-
-    let serializer = new XMLSerializer();
-    let name = "our-lady-" + suffix + "-" + size;
-    let source = serializer.serializeToString(_svg);
-    download(name + ".svg", source);
-  }
 
   render() {
     console.log(this.state.colors);
