@@ -55,7 +55,7 @@ class Home extends Component {
     this.state = {
       width: 0,
       height: 0,
-      section: 4,
+      section: 0,
       points: null
     }
   }
