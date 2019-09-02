@@ -1,0 +1,38 @@
+
+svg {
+  height: 100vh;
+}
+
+.controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+.controls button{
+  margin: 3px;
+  font-size: 20px;
+  width: 100px;
+  font-family: monospace;
+}
+
+
+.red {
+  background-color: red;
+  color: white;
+}
+
+.blue {
+  background-color: blue;
+  color: white;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.black {
+  background-color: black;
+  color: white;
+}
