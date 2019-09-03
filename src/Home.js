@@ -4,13 +4,15 @@ import emji from './assets/emji.mp4'
 import Voronoi from './Voronoi.js';
 import Mandelbrot from './Mandelbrot.js';
 import robot from './assets/our-lady.jpg';
-import { getXYfromIndex } from './util.js';
+import { getXYfromIndex, getRandomIntegerArray } from './util.js';
 import './Home.css';
 import Cube from './Cube.js'
+import Colors from './Colors'
 
-const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const apiHost = process.env.REACT_APP_API_HOST;
 const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
+const numberColors = 500;
 
 function mod(n, m) {
   return ((n % m) + m) % m;
@@ -56,8 +58,15 @@ class Home extends Component {
       width: 0,
       height: 0,
       section: 0,
-      points: null
+      points: null,
+      tick: 0,
     }
+  }
+
+  tick(){
+    let newTick = this.state.tick + 1;
+    console.log(newTick);
+    this.setState({tick: newTick});
   }
 
   onLoad(event) {
@@ -94,6 +103,10 @@ class Home extends Component {
     window.addEventListener("resize", this.updateDimensions.bind(this));
     //window.addEventListener("scroll", this.handleScroll.bind(this));
     document.addEventListener("keydown", this.handleKeyPress.bind(this));
+    
+    this.timerID = setInterval(
+            () => this.tick(), 
+        250);
 
     fetch(apiHost, {
         method: 'POST',
@@ -108,6 +121,27 @@ class Home extends Component {
       }).then(json => {
         this.setState({points: json})
       });
+
+      let colors = getRandomIntegerArray(255 * 3, 0, 256);
+
+      let citiesUrl = apiHost + "/solve?cities=" + JSON.stringify(colors);
+
+      fetch(citiesUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        return  response.json();
+        
+      }).then(json => {
+        this.setState({cities: json})
+      });
+
+      
+
+
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
@@ -230,6 +264,27 @@ class Home extends Component {
                                    Export
                                </button>
                                {cubeObject}
+                             </div>  
+                  break;
+              case 9:
+
+                  let colorNumber = this.state.tick % numberColors;
+
+                  let color = [0, 0, 0]; 
+
+                  if(this.state.cities){
+                    color = [this.state.cities[colorNumber * 3],
+                             this.state.cities[colorNumber * 3 + 1],
+                             this.state.cities[colorNumber * 3 + 2]];
+                  }
+
+                  console.log(colorNumber);
+
+                  
+                  content = <div className="Home-info-container background project-9">
+                               <Colors 
+                                cities={color}
+                               />
                              </div>  
                   break;
               default:
