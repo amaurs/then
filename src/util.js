@@ -24,6 +24,15 @@ export function getRandomInt(lower, upper) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+
+export function getRandomIntegerArray(size, min, max) {
+  let integers = [];
+  for(let i = 0; i < size; i++) {
+    integers.push(getRandomInt(min, max));
+  }
+  return integers;
+}
+
 export function getXYfromIndex(index, width) {
   let y = Math.floor(index / width);
   let x = index % width;
@@ -144,6 +153,7 @@ function getNormSuared4d(x1, y1, z1, w1, x2, y2, z2, w2) {
 }
 
 
+
 function generateColors(baseColorArray, steps) {
     let colors = [];
     let step = 255 / steps;
@@ -157,7 +167,6 @@ function generateColors(baseColorArray, steps) {
             colors.push(newColor);
         }
     });
-
     return colors;
 }
 
