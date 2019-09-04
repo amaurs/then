@@ -12,7 +12,7 @@ import Colors from './Colors'
 const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const apiHost = process.env.REACT_APP_API_HOST;
 const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
-const numberColors = 500;
+const numberColors = 100;
 
 function mod(n, m) {
   return ((n % m) + m) % m;
@@ -54,6 +54,7 @@ class Home extends Component {
     image.onload = this.onLoad.bind(this);
     this.cube = React.createRef();
     this.handleSave = this.handleSave.bind(this);
+    this.updateAnimationState = this.updateAnimationState.bind(this)
     this.state = {
       width: 0,
       height: 0,
@@ -63,10 +64,11 @@ class Home extends Component {
     }
   }
 
-  tick(){
+  updateAnimationState() {
     let newTick = this.state.tick + 1;
     console.log(newTick);
     this.setState({tick: newTick});
+    this.timerID = requestAnimationFrame(this.updateAnimationState);
   }
 
   onLoad(event) {
@@ -91,6 +93,8 @@ class Home extends Component {
     }
     console.log(totalDate);
 
+    
+
     this.setState({imageData: imageData,
                    totalDate: totalDate,
                    imageWidth: image.width,
@@ -104,9 +108,7 @@ class Home extends Component {
     //window.addEventListener("scroll", this.handleScroll.bind(this));
     document.addEventListener("keydown", this.handleKeyPress.bind(this));
     
-    this.timerID = setInterval(
-            () => this.tick(), 
-        250);
+    this.timerID = requestAnimationFrame(this.updateAnimationState);
 
     fetch(apiHost, {
         method: 'POST',
@@ -122,7 +124,7 @@ class Home extends Component {
         this.setState({points: json})
       });
 
-      let colors = getRandomIntegerArray(255 * 3, 0, 256);
+      let colors = getRandomIntegerArray(numberColors * 3, 0, 256);
 
       let citiesUrl = apiHost + "/solve?cities=" + JSON.stringify(colors);
 
@@ -147,6 +149,8 @@ class Home extends Component {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
     window.removeEventListener("keydown", this.add.bind(this));
     //window.removeEventListener("scroll", this.handleScroll.bind(this));
+
+    cancelAnimationFrame(this.timerID);
   }
 
   updateDimensions() {
