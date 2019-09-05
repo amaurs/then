@@ -8,6 +8,7 @@
     import './Home.css';
     import Cube from './Cube.js'
     import Colors from './Colors'
+    import Loader from './Loader'
 
     const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     const apiHost = process.env.REACT_APP_API_HOST;
@@ -294,26 +295,30 @@
                       break;
                   case 9:
 
-                      let colorNumber = this.state.tick % (numberColors + 1);
-                      let color = [0, 0, 0]; 
-
-                      let citiesToDraw = [0, 0, 1, 1];
-                      if(this.state.colors && this.state.cities){
-                        color = [this.state.colors[colorNumber * 3],
+                      if(this.state.colors && this.state.cities) {
+                        let colorNumber = this.state.tick % (numberColors + 1);
+                        let color = [this.state.colors[colorNumber * 3],
                                  this.state.colors[colorNumber * 3 + 1],
                                  this.state.colors[colorNumber * 3 + 2]];
 
 
-                        citiesToDraw = this.state.cities.slice(0, colorNumber * 2);
-                      }
-
-                      content = <div className="Home-info-container background project-9">
+                        let citiesToDraw = this.state.cities.slice(0, colorNumber * 2);
+                        content = <div className="Home-info-container background project-9">
                                    <Colors 
                                     colors={color}
                                     cities={citiesToDraw}
                                     squareSampling={squareSampling}
                                    />
-                                 </div>  
+                                 </div> 
+                      }
+
+                      else{
+                        content = <div className="Home-info-container background project-9">
+                                    <Loader />
+                                  </div> 
+                      }
+
+                       
                       break;
                   default:
                       content = null;
