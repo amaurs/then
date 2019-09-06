@@ -68,7 +68,6 @@
 
       animate() {
         let newTick = this.state.tick + 1;
-        console.log(newTick);
         this.setState({tick: newTick});
 
 
@@ -301,13 +300,14 @@
                                  this.state.colors[colorNumber * 3 + 1],
                                  this.state.colors[colorNumber * 3 + 2]];
 
-
                         let citiesToDraw = this.state.cities.slice(0, colorNumber * 2);
                         content = <div className="Home-info-container background project-9">
                                    <Colors 
                                     colors={color}
                                     cities={citiesToDraw}
                                     squareSampling={squareSampling}
+                                    width={this.state.width}
+                                    height={this.state.height}
                                    />
                                  </div> 
                       }
