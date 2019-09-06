@@ -55,6 +55,7 @@ export default class Colors extends Component {
         const context = canvas.getContext('2d');
         const width = canvas.width;
         const height = canvas.height;
+
         context.save();
         context.clearRect(0, 0, width, height);
         context.fillStyle = "rgb(" + this.props.colors[0] + ", " + this.props.colors[1] + ", " + this.props.colors[2] + ")";
@@ -74,7 +75,7 @@ export default class Colors extends Component {
         
         let rgb = "rgb(" + this.props.colors[0] + ", " + this.props.colors[1] + ", " + this.props.colors[2] + ")";
         
-        return <canvas width="800px" height="600px" className="Colors" ref={this.canvasRef}></canvas>
+        return <canvas width={this.props.width + "px"} height={this.props.height + "px"} className="Colors" ref={this.canvasRef}></canvas>
     }
 
 }
