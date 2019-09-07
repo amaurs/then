@@ -58,12 +58,13 @@ export default class Colors extends Component {
 
         context.save();
         context.clearRect(0, 0, width, height);
-        context.fillStyle = "rgb(" + this.props.colors[0] + ", " + this.props.colors[1] + ", " + this.props.colors[2] + ")";
+        //context.fillStyle = "rgb(" + this.props.colors[0] + ", " + this.props.colors[1] + ", " + this.props.colors[2] + ")";
+        context.fillStyle = 'white';
         context.fillRect(0, 0, width, height);
 
         context.beginPath();
 
-        context.strokeStyle = invertColor(toHex(this.props.colors[0], this.props.colors[1], this.props.colors[2]));
+        //context.strokeStyle = invertColor(toHex(this.props.colors[0], this.props.colors[1], this.props.colors[2]));
         context.lineWidth = 10;
         for(let i=0; i < this.props.cities.length; i+=2) {
             context.lineTo(Math.floor(width * this.props.cities[i] / this.props.squareSampling), Math.floor(height * this.props.cities[i + 1] / this.props.squareSampling))    
