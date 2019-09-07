@@ -73,9 +73,29 @@
 
         setTimeout(function() {
             requestAnimationFrame(this.animate)
-        }.bind(this), 1000 / 60)
+        }.bind(this), 1000 / 500)
 
 
+      }
+
+      maxBound(time, size) {
+
+        let t = time % (2 * size)
+        if(t < size) {
+            return t;
+        }else {
+            return size;
+        }
+      }
+
+      minBound(time, size) {
+
+        let t = time % (2 * size)
+        if(t < size) {
+            return 0;
+        }else {
+            return time % size;
+        }
       }
 
       onLoad(event) {
@@ -300,7 +320,10 @@
                                  this.state.colors[colorNumber * 3 + 1],
                                  this.state.colors[colorNumber * 3 + 2]];
 
-                        let citiesToDraw = this.state.cities.slice(0, colorNumber * 2);
+                        let min = this.minBound(this.state.tick, numberColors + 1);
+                        let max = this.maxBound(this.state.tick, numberColors + 1);
+
+                        let citiesToDraw = this.state.cities.slice(min * 2, max * 2);
                         content = <div className="Home-info-container background project-9">
                                    <Colors 
                                     colors={color}
