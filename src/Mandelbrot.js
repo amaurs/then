@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom'
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import './Mandelbrot.css'
@@ -14,7 +13,6 @@ export default class Mandelbrot extends Component {
     }
 
     onZoomEndHandler(event) {
-        console.log(event)
         event.target.panTo({lat: 53.78905976160212, lng: 44.456461383977825});
     }
 
