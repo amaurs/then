@@ -315,6 +315,7 @@
                   case 9:
 
                       if(this.state.colors && this.state.cities) {
+                        // TODO: Maybe this logic should be handled by the component.
                         let colorNumber = this.state.tick % (numberColors + 1);
                         let color = [this.state.colors[colorNumber * 3],
                                  this.state.colors[colorNumber * 3 + 1],
