@@ -3,7 +3,6 @@ import * as THREE from 'three-full';
 import AnaglyphSVGRenderer from './AnaglyphSVGRenderer.js';
 import './Cube.css'
 
-const apiHost = process.env.REACT_APP_API_HOST;
 
 class Cube extends Component{
 
