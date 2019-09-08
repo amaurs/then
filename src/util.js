@@ -15,7 +15,19 @@ const help = normal(pinkBackground, greenForeground);
 
 const OTHER_YELLOW = [help.r, help.g, help.b]
 
+/* 
+ * This method gets the opposite color from the one given.
+ */
+export function invertColor(r, g, b) {
+    let invertedR = 255 - r,
+        invertedG = 255 - g,
+        invertedB = 255 - b;
+    return "rgb(" + invertedR + ", " + invertedG + ", " + invertedB + ")";
+}
 
+export function colorToString(r, g, b) {
+    return "rgb(" + r + ", " + g + ", " + b + ")";
+}
 
 /** When I fell lucky I like to get a random number. **/
 export function getRandomInt(lower, upper) {
