@@ -3,6 +3,10 @@ svg {
   height: 100vh;
 }
 
+.VoronoiCanvas {
+    height: 100vh;
+}
+
 .controls {
     position: fixed;
     top: 10px;
