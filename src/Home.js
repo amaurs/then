@@ -4,11 +4,12 @@
     import Voronoi from './Voronoi.js';
     import Mandelbrot from './Mandelbrot.js';
     import robot from './assets/our-lady.jpg';
-    import { getXYfromIndex, getRandomIntegerArray } from './util.js';
+    import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids } from './util.js';
     import './Home.css';
     import Cube from './Cube.js'
     import Colors from './Colors'
     import Loader from './Loader'
+    import { Delaunay } from "d3-delaunay";
 
     const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     const apiHost = process.env.REACT_APP_API_HOST;
@@ -56,26 +57,56 @@
         image.onload = this.onLoad.bind(this);
         this.cube = React.createRef();
         this.handleSave = this.handleSave.bind(this);
-        this.animate = this.animate.bind(this)
+        this.animate = this.animate.bind(this);
+        this.tick = this.tick.bind(this);
+        this.doUpdateBadName = this.doUpdateBadName.bind(this);
+
         this.state = {
           width: 0,
           height: 0,
-          section: 0,
+          section: 4,
           points: null,
           tick: 0,
+          ticks: 0,
         }
       }
 
       animate() {
         let newTick = this.state.tick + 1;
-        this.setState({tick: newTick});
 
+        if (this.state.section === 9) {
+            this.setState({tick: newTick});
+        }
 
         setTimeout(function() {
             requestAnimationFrame(this.animate)
         }.bind(this), 1000 / 500)
 
 
+      }
+
+      tick() {
+        
+
+        let newTicks = this.state.ticks + 1;
+        console.log("say hello " + this.state.ticks)
+        this.setState({ticks: newTicks});
+
+
+        
+
+
+        if (this.state.ticks > 5) {
+            clearInterval(this.ticker);
+
+        }
+      }
+
+      doUpdateBadName() {
+
+        let sitesNew = this.sitesUpdate(this.state.sites, this.state.totalDate, this.state.imageWidth, this.state.imageHeight);
+        
+        this.setState({sites: sitesNew});
       }
 
       maxBound(time, size) {
@@ -120,12 +151,34 @@
         }
         console.log(totalDate);
 
+        const xStep = 7,
+              yStep = 7;
+
+        let sites = [];
+        let total = Math.floor((image.width / xStep) * (image.height / yStep));
+                        
+        /** I use the rejection algorithm to get points with the most brightness. **/
+        let numPoints = 0;
+
+        while(numPoints < total){
+          let index = getRandomInt(0, image.width * image.height);
+          let site = totalDate[index]
+          let brightness = getBrightness(site.r, 
+                                         site.g, 
+                                         site.b);
+          if (Math.random() >= brightness ) {
+            sites.push(site);
+            numPoints++;
+          }
+        }
+        
         
 
         this.setState({imageData: imageData,
                        totalDate: totalDate,
                        imageWidth: image.width,
-                       imageHeight: image.height
+                       imageHeight: image.height,
+                       sites: sites
                       });
       }
 
@@ -232,6 +285,35 @@
 
       }
 
+
+
+
+
+  sitesUpdate(sites, imageData, width, height) {
+    const delaunay = Delaunay.from(sites, 
+                                      function(d) { return d.x },
+                                      function(d) { return d.y });
+    const voronoi = delaunay.voronoi([0, 0, width, height]);
+    const diagram = voronoi.cellPolygons();
+    let newSites = getCentroids(diagram).map(function(centroid) {
+        let closestIndex = Math.floor(centroid[1]) * width + Math.floor(centroid[0]);
+        let closestPixel = imageData[closestIndex];
+        return {
+                x: centroid[0],
+                y: centroid[1],
+                r: closestPixel.r,
+                g: closestPixel.g,
+                b: closestPixel.b
+        };
+    });
+
+    return newSites;
+  }
+
+
+
+
+
       getBackgroundContent() {
         let content = null;
 
@@ -269,12 +351,14 @@
                   case 4:
 
                       let voronoi = null;
-                      if(this.state.imageData) {
-                        voronoi = <Voronoi imageData={this.state.totalDate}
+                      if(this.state.totalDate) {
+                            voronoi = <Voronoi imageData={this.state.totalDate}
                                            width={this.state.width}
                                            height={this.state.height}
-                                           imageWidth ={this.state.imageWidth  }
+                                           imageWidth ={this.state.imageWidth}
                                            imageHeight={this.state.imageHeight}
+                                           sites={this.state.sites}
+                                           doUpdateBadName={this.doUpdateBadName}
                                       />
                       }
                       content = <div className="Home-info-container background project-4">
