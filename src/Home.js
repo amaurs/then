@@ -10,6 +10,7 @@
     import Colors from './Colors'
     import Loader from './Loader'
     import { Delaunay } from "d3-delaunay";
+    import * as d3 from 'd3';
 
     const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     const apiHost = process.env.REACT_APP_API_HOST;
@@ -102,9 +103,38 @@
         }
       }
 
-      doUpdateBadName() {
+      doUpdateBadName(duration) {
+
 
         let sitesNew = this.sitesUpdate(this.state.sites, this.state.totalDate, this.state.imageWidth, this.state.imageHeight);
+        const ease = d3.easeCubic;
+
+        let timer = d3.timer((elapsed) => {
+           // compute how far through the animation we are (0 to 1)
+           const t = Math.min(1, ease(elapsed / duration));
+
+           // update point positions (interpolate between source and target)
+           
+           let notQuiteNew = sitesNew.map(function(point) {
+                let trans = Object.assign({}, point);
+                trans.x = trans.oldX * (1 - t) + trans.x * t;
+                trans.y = trans.oldY * (1 - t) + trans.y * t;
+                trans.r = trans.oldR * (1 - t) + trans.r * t;
+                trans.g = trans.oldG * (1 - t) + trans.g * t;
+                trans.b = trans.oldB * (1 - t) + trans.b * t;
+                return trans;
+           })
+            //debugger
+           this.setState({sites: notQuiteNew});
+
+           // if this animation is over
+           if (t === 1) {
+             // stop this timer since we are done animating.
+             timer.stop();
+           }
+        });
+
+
         
         this.setState({sites: sitesNew});
       }
@@ -172,13 +202,13 @@
           }
         }
         
-        
+        let sitesNew = this.sitesUpdate(sites, totalDate, image.width, image.height);
 
         this.setState({imageData: imageData,
                        totalDate: totalDate,
                        imageWidth: image.width,
                        imageHeight: image.height,
-                       sites: sites
+                       sites: sitesNew
                       });
       }
 
@@ -295,15 +325,21 @@
                                       function(d) { return d.y });
     const voronoi = delaunay.voronoi([0, 0, width, height]);
     const diagram = voronoi.cellPolygons();
-    let newSites = getCentroids(diagram).map(function(centroid) {
+    let newSites = getCentroids(diagram).map(function(centroid, index) {
         let closestIndex = Math.floor(centroid[1]) * width + Math.floor(centroid[0]);
         let closestPixel = imageData[closestIndex];
         return {
+                oldX: sites[index].x,
+                oldY: sites[index].y,
                 x: centroid[0],
                 y: centroid[1],
                 r: closestPixel.r,
                 g: closestPixel.g,
-                b: closestPixel.b
+                b: closestPixel.b,
+
+                oldR: sites[index].r,
+                oldG: sites[index].g,
+                oldB: sites[index].b
         };
     });
 
