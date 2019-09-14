@@ -4,7 +4,14 @@ svg {
 }
 
 .VoronoiCanvas {
-    height: 100vh;
+    
+}
+
+.vertical {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
 }
 
 .controls {
