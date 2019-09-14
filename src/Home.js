@@ -60,12 +60,12 @@
         this.handleSave = this.handleSave.bind(this);
         this.animate = this.animate.bind(this);
         this.tick = this.tick.bind(this);
-        this.doUpdateBadName = this.doUpdateBadName.bind(this);
+        this.updateCities = this.updateCities.bind(this);
 
         this.state = {
           width: 0,
           height: 0,
-          section: 4,
+          section: 0,
           points: null,
           tick: 0,
           ticks: 0,
@@ -103,18 +103,11 @@
         }
       }
 
-      doUpdateBadName(duration) {
-
-
-        let sitesNew = this.sitesUpdate(this.state.sites, this.state.totalDate, this.state.imageWidth, this.state.imageHeight);
+      updateCities(duration) {
+        let sitesNew = this.sitesUpdate(this.state.sites, this.state.totalData, this.state.imageWidth, this.state.imageHeight);
         const ease = d3.easeCubic;
-
         let timer = d3.timer((elapsed) => {
-           // compute how far through the animation we are (0 to 1)
            const t = Math.min(1, ease(elapsed / duration));
-
-           // update point positions (interpolate between source and target)
-           
            let notQuiteNew = sitesNew.map(function(point) {
                 let trans = Object.assign({}, point);
                 trans.x = trans.oldX * (1 - t) + trans.x * t;
@@ -124,18 +117,11 @@
                 trans.b = trans.oldB * (1 - t) + trans.b * t;
                 return trans;
            })
-            //debugger
            this.setState({sites: notQuiteNew});
-
-           // if this animation is over
            if (t === 1) {
-             // stop this timer since we are done animating.
-             timer.stop();
+               timer.stop();
            }
         });
-
-
-        
         this.setState({sites: sitesNew});
       }
 
@@ -168,10 +154,10 @@
         let context = canvas.getContext('2d');
         context.drawImage(image, 0, 0);
         let imageData = context.getImageData(0, 0, image.width, image.height);
-        let totalDate = [];
+        let totalData = [];
         for(let index = 0; index < image.width * image.height; index++) {
             let pixel = getXYfromIndex(index, image.width);
-            totalDate.push({
+            totalData.push({
                              x: pixel[0],
                              y: pixel[1],
                              r: imageData.data[index * 4],
@@ -179,20 +165,14 @@
                              b: imageData.data[index * 4 + 2],
                            });
         }
-        console.log(totalDate);
-
-        const xStep = 7,
-              yStep = 7;
-
+        const total = 10000;
         let sites = [];
-        let total = Math.floor((image.width / xStep) * (image.height / yStep));
-                        
         /** I use the rejection algorithm to get points with the most brightness. **/
         let numPoints = 0;
 
         while(numPoints < total){
           let index = getRandomInt(0, image.width * image.height);
-          let site = totalDate[index]
+          let site = totalData[index]
           let brightness = getBrightness(site.r, 
                                          site.g, 
                                          site.b);
@@ -202,10 +182,9 @@
           }
         }
         
-        let sitesNew = this.sitesUpdate(sites, totalDate, image.width, image.height);
-
+        let sitesNew = this.sitesUpdate(sites, totalData, image.width, image.height);
         this.setState({imageData: imageData,
-                       totalDate: totalDate,
+                       totalData: totalData,
                        imageWidth: image.width,
                        imageHeight: image.height,
                        sites: sitesNew
@@ -387,15 +366,28 @@
                   case 4:
 
                       let voronoi = null;
-                      if(this.state.totalDate) {
-                            voronoi = <Voronoi imageData={this.state.totalDate}
-                                           width={this.state.width}
-                                           height={this.state.height}
-                                           imageWidth ={this.state.imageWidth}
-                                           imageHeight={this.state.imageHeight}
-                                           sites={this.state.sites}
-                                           doUpdateBadName={this.doUpdateBadName}
+                      if(this.state.totalData) {
+                            let imageRatio = this.state.imageHeight / this.state.imageWidth;
+                            let ratio = this.state.height / this.state.width;
+                            let canvasHeight = this.state.height;
+                            let canvasWidth = this.state.width;
+                            if(ratio < 1) {
+                                canvasWidth = canvasHeight * (1 / imageRatio);
+                            } else {
+                                canvasHeight = canvasWidth * imageRatio;
+                            }
+                            voronoi = <Voronoi imageData={this.state.totalData}
+                                               width={this.state.width}
+                                               height={this.state.height}
+                                               imageWidth ={this.state.imageWidth}
+                                               imageHeight={this.state.imageHeight}
+                                               sites={this.state.sites}
+                                               updateCities={this.updateCities}
+                                               canvasWidth={canvasWidth}
+                                               canvasHeight={canvasHeight}
                                       />
+                      } else {
+                        voronoi = <Loader />
                       }
                       content = <div className="Home-info-container background project-4">
                                   {voronoi}
