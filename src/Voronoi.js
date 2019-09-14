@@ -8,6 +8,7 @@ function getRadius(d) {
 }
 
 const TIME = 500;
+const UPDATE_LIMIT = 10;
 export default class Voronoi extends Component {
 
   constructor(props) {
@@ -17,11 +18,14 @@ export default class Voronoi extends Component {
     this.state = {
         ticks: 0,
     };
-    this.ticker = setInterval(() => this.tick(), TIME);
+    if(this.props.updates < UPDATE_LIMIT) {
+        this.ticker = setInterval(() => this.tick(), TIME);    
+    }
   }
 
   componentDidUpdate() {
     this.draw();
+
   }
 
   componentDidMount() {
@@ -29,6 +33,8 @@ export default class Voronoi extends Component {
   }
 
   draw() {
+
+
     let context = this.canvasRef.current.getContext('2d');
     context.clearRect(0, 0, this.props.canvasWidth, this.props.canvasHeight);
     this.props.sites.forEach(function(d){
@@ -46,7 +52,7 @@ export default class Voronoi extends Component {
       let newTicks = this.state.ticks + 1;
       this.setState({ticks: newTicks});
       this.props.updateCities(TIME);
-      if (this.state.ticks > 10) {
+      if (this.state.ticks > UPDATE_LIMIT) {
           clearInterval(this.ticker);
 
       }
