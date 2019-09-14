@@ -1,23 +1,13 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import { BLUE, YELLOW, RED, BLACK, getCentroids, getRandomInt, getBrightness, closest, download } from './util';
-import { Delaunay } from "d3-delaunay";
+import { getBrightness } from './util';
 import "./Voronoi.css";
 
-
-
-const colorMap = {
-    "red": RED,
-    "yellow": YELLOW,
-    "blue": BLUE,
-    "black": BLACK,
-}
-
 function getRadius(d) {
-    return  3 + 3 * getBrightness(d.r, d.g, d.b);
+    return  2 + 2 * getBrightness(d.r, d.g, d.b);
 }
 
-const TIME = 1000;
+const TIME = 500;
 export default class Voronoi extends Component {
 
   constructor(props) {
@@ -39,33 +29,24 @@ export default class Voronoi extends Component {
   }
 
   draw() {
-    console.log(this.props.sites.length)
-
-    let imageWidth = this.props.imageWidth;
-    let imageHeight = this.props.imageHeight;
-    let width = this.props.width;
-    let height = this.props.height;
     let context = this.canvasRef.current.getContext('2d');
-    context.clearRect(0, 0, width, height);
+    context.clearRect(0, 0, this.props.canvasWidth, this.props.canvasHeight);
     this.props.sites.forEach(function(d){
         context.beginPath();
         context.fillStyle = d3.rgb(+d.r, +d.g, +d.b);
-        let x = (+d.x / imageWidth) * width;
-        let y = (+d.y / imageHeight) * height;
-        let r = getRadius(d);
+        let x = (+d.x / this.props.imageWidth) * this.props.canvasWidth;
+        let y = (+d.y / this.props.imageHeight) * this.props.canvasHeight;
+        let r = getRadius(d) * this.props.canvasWidth / 800;
         context.arc(x, y, r, 0, 2 * Math.PI);
         context.fill();
-    })
+    }.bind(this))
   }
 
   tick() {
       let newTicks = this.state.ticks + 1;
-      console.log("say hello " + this.state.ticks)
       this.setState({ticks: newTicks});
-      
-      this.props.doUpdateBadName(TIME);
-
-      if (this.state.ticks > 5) {
+      this.props.updateCities(TIME);
+      if (this.state.ticks > 10) {
           clearInterval(this.ticker);
 
       }
@@ -76,8 +57,9 @@ export default class Voronoi extends Component {
   }
 
   render() {
+    let isVertical = this.props.height / this.props.width < 1;
     return  <div>
-             <canvas width={this.props.width + "px"} height={this.props.height + "px"} className="VoronoiCanvas" ref={this.canvasRef}></canvas>
+             <canvas className={"VoronoiCanvas" + (isVertical?"":" vertical")} width={this.props.canvasWidth + "px"} height={this.props.canvasHeight + "px"} ref={this.canvasRef}></canvas>
             </div>
   }
 }
