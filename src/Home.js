@@ -69,6 +69,7 @@
           points: null,
           tick: 0,
           ticks: 0,
+          voronoiUpdates: 0,
         }
       }
 
@@ -122,7 +123,8 @@
                timer.stop();
            }
         });
-        this.setState({sites: sitesNew});
+        let voronoiUpdates = this.state.voronoiUpdates + 1;
+        this.setState({sites: sitesNew, voronoiUpdates: voronoiUpdates});
       }
 
       maxBound(time, size) {
@@ -385,6 +387,7 @@
                                                updateCities={this.updateCities}
                                                canvasWidth={canvasWidth}
                                                canvasHeight={canvasHeight}
+                                               updates={this.state.voronoiUpdates}
                                       />
                       } else {
                         voronoi = <Loader />
