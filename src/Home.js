@@ -417,11 +417,11 @@ import './rl/board.css';
                   case 7:
 
                         const environment = new Environment(map.height, 
-                                           map.width, 
-                                           map.boardPlan,
-                                           map.wind,
-                                           map.agent,
-                                           map.goal)
+                                                            map.width, 
+                                                            map.boardPlan,
+                                                            map.wind,
+                                                            map.agent,
+                                                            map.goal)
       
                         const agent = new Agent(environment.getNumberOfActions(), environment.getNumberOfStates());
                         
