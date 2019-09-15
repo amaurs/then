@@ -40,7 +40,7 @@ export default class Reinforcement extends React.Component{
             episodeDuration : 0,})
     }
     componentDidMount() {
-
+        this.start()
     }
     tick() {
         let stepRes = this.props.controller.tick();
@@ -86,50 +86,6 @@ export default class Reinforcement extends React.Component{
         return  <div className="container">
                     <div className="board">
                         <Board board={this.props.controller.toBoard()}/>
-                    </div>
-                    <div className="controls">
-                        <div className="col-third">
-                            <div className="buttons">
-                                <button onClick={() => this.start()}>
-                                    Start
-                                </button>
-                                <button onClick={() => this.stop()}>
-                                    Stop
-                                </button>
-                                <button onClick={() => this.init()}>
-                                    Reset
-                                </button>
-                            </div>
-                            <div className="info">
-                                <p>🕹 {this.state.episodes}</p>
-                                <p>⏱ {this.state.episodeDuration}</p>
-                            </div>
-                        </div>
-                        <div className="col-third">
-                            <div className="center">
-                                <p>epsilon {this.state.epsilon}:</p>
-                                <input id="epsilon" 
-                                       type="range" 
-                                       min="0" 
-                                       max="1" 
-                                       step="0.01" value={this.state.epsilon}  
-                                       onChange={this.handleEpsilonChange} />
-                                <p>alpha {this.state.alpha}:</p>
-                                <input id="alpha" 
-                                       type="range" 
-                                       min="0" 
-                                       max="1" 
-                                       step="0.01" value={this.state.alpha}  
-                                       onChange={this.handleAlphaChange} />
-                                <p>gamma {this.state.gamma}:</p>
-                                <input id="gamma" 
-                                       type="range" 
-                                       min="0" 
-                                       max="1" 
-                                       step="0.01" value={this.state.gamma}  
-                                       onChange={this.handleGammaChange} />
-                                </div>
-                        </div>
                     </div>
                 </div>
     }
