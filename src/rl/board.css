@@ -1,0 +1,19 @@
+
+
+.grid_bg {
+
+}
+
+.grid_bg > div {
+    display: flex;
+    flex-direction: row
+}
+
+.grid_bg > div > div {
+    width: 32px;
+    height: 32px;
+    border-style: solid;
+    border: 1px solid #eee;
+    text-align: center;
+    font-size: 24px;
+}
