@@ -3,6 +3,7 @@
     import emji from './assets/emji.mp4'
     import Voronoi from './Voronoi.js';
     import Mandelbrot from './Mandelbrot.js';
+    import Reinforcement from './Reinforcement.js';
     import robot from './assets/our-lady.jpg';
     import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids } from './util.js';
     import './Home.css';
@@ -11,6 +12,12 @@
     import Loader from './Loader'
     import { Delaunay } from "d3-delaunay";
     import * as d3 from 'd3';
+
+
+import { Environment, map} from './rl/windyGridworld.js';
+import Controller from './rl/controller';
+import { Agent } from './rl/sarsaAgent.js';
+import './rl/board.css';
 
     const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     const apiHost = process.env.REACT_APP_API_HOST;
@@ -65,7 +72,7 @@
         this.state = {
           width: 0,
           height: 0,
-          section: 0,
+          section: 7,
           points: null,
           tick: 0,
           ticks: 0,
@@ -408,9 +415,20 @@
                                 </div>
                       break;
                   case 7:
-                      content = <div className="Home-info-container background project-7">
-                                  <iframe title="reinforcement" scrolling="no" src="https://amaurs.com/windy-gridworld/"></iframe>
-                                </div>
+
+                        const environment = new Environment(map.height, 
+                                           map.width, 
+                                           map.boardPlan,
+                                           map.wind,
+                                           map.agent,
+                                           map.goal)
+      
+                        const agent = new Agent(environment.getNumberOfActions(), environment.getNumberOfStates());
+                        
+                        const controller = new Controller(environment, agent)
+                        content = <div className="Home-info-container background project-7">
+                                     <Reinforcement controller={controller} />
+                                  </div>
                       break;
 
                   case 8:
