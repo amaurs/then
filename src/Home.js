@@ -72,7 +72,7 @@ import './rl/board.css';
         this.state = {
           width: 0,
           height: 0,
-          section: 70,
+          section: 0,
           points: null,
           tick: 0,
           ticks: 0,
