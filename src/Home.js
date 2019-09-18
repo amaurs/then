@@ -72,7 +72,11 @@ import './rl/board.css';
         this.state = {
           width: 0,
           height: 0,
+<<<<<<< HEAD
           section: 70,
+=======
+          section: 7,
+>>>>>>> 39b08e206a15e1073ae0a237b8a6a8d69b8062bf
           points: null,
           tick: 0,
           ticks: 0,
