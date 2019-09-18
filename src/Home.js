@@ -10,6 +10,7 @@
     import Cube from './Cube.js'
     import Colors from './Colors'
     import Loader from './Loader'
+    import Nostalgia from './Nostalgia'
     import { Delaunay } from "d3-delaunay";
     import * as d3 from 'd3';
 
@@ -19,7 +20,7 @@ import Controller from './rl/controller';
 import { Agent } from './rl/sarsaAgent.js';
 import './rl/board.css';
 
-    const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const apiHost = process.env.REACT_APP_API_HOST;
     const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
     const numberColors = 700;
@@ -477,6 +478,11 @@ import './rl/board.css';
 
                        
                       break;
+                  case 10:
+                    content = <div className="Home-info-container background project-9">
+                                <Nostalgia />
+                              </div> 
+                      break;    
                   default:
                       content = null;
               }
