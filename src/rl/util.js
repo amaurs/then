@@ -61,7 +61,7 @@ function  getIcon(key){
 function randomElement(array) 
 {
   let result = array[Math.floor(Math.random() * array.length)];
-  if(result ===     undefined){
+  if(result === undefined){
             debugger
         }
   return result;
