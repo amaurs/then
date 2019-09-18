@@ -40,8 +40,15 @@ export default class Reinforcement extends React.Component{
             episodeDuration : 0,})
     }
     componentDidMount() {
+        console.log("Did Mount")
         this.start()
     }
+
+    componentDidUpdate() {
+        console.log("Did Update")
+        
+    }
+
     tick() {
         let stepRes = this.props.controller.tick();
         this.setState({episodeDuration: this.state.episodeDuration + 1});
@@ -58,12 +65,13 @@ export default class Reinforcement extends React.Component{
     }
     componentWillUnmount() {
         clearInterval(this.timerID);
+        this.setState({started: false})
     }
     start() {
         this.setState({started: true})
         this.timerID = setInterval(
             () => this.tick(), 
-        0
+        50
         );
         this.props.controller.toActionMap()
     }
