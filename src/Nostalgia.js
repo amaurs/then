@@ -10,28 +10,19 @@ export default function Nostalgia() {
     const [delay, setDelay] = useState(100);
 
     useEffect(function() {
-    fetch(USER_SERVICE_URL)
-      .then(results => results.json())
-      .then(data => {
-        setUser(data.sentence);
-
-    });
-  }, []);
-
+        fetch(USER_SERVICE_URL)
+            .then(results => results.json())
+            .then(data => {
+                setUser(data.sentence);
+        });
+    }, []);
 
     useInterval(() => {
-        console.log(count)
-        
-
-        console.log("user length" + user.length)
-        if(0 < user.length && count > user.length ) {
+        if(count < user.length) {
             setCount(count + 1);
-            setDelay(null);
+            setDelay(100);
         }
     }, delay);
-
-    
-
     return <div>
                 <h1>{user.slice(0, count)}</h1>
            </div>
