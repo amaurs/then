@@ -1,8 +1,5 @@
 import React from 'react';
 import Board from './rl/Board.js';
-import Arrows from './rl/Arrows.js';
-import { Agent } from './rl/qLearningAgent.js';
-import { initGrid } from './rl/util.js';
 import './rl/game.css';
 
 export default class Reinforcement extends React.Component{

@@ -59,7 +59,8 @@ export default class Voronoi extends Component {
    }
 
   componentWillUnmount() {
-    clearInterval(this.timerID);    
+    clearInterval(this.timerID);
+    clearInterval(this.ticker);  
   }
 
   render() {

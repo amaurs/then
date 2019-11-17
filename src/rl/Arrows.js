@@ -1,5 +1,5 @@
 import React from 'react';
-import { Marker, SquareD3, Arrow} from './util';
+import { Marker, SquareD3 } from './util';
 
 
 class Arrows extends React.Component {

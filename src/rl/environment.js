@@ -1,6 +1,6 @@
 
 
-class Environment {
+export class Environment {
     constructor(width, height) {
         this.width = width;
         this.height = height;
@@ -49,7 +49,4 @@ class Environment {
         return this.width;
     }
 }
-
-export { Environment as Environment };
-
 

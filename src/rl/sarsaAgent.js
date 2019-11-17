@@ -1,5 +1,5 @@
 import { Agent } from './agent';
-import { argMax, randomElement, randomInt } from './util.js';
+import { randomElement, randomInt } from './util.js';
 
 
 class SarsaAgent extends Agent {
@@ -22,7 +22,7 @@ class SarsaAgent extends Agent {
 
         const actionPrime = randomElement(this.epsilonGreedyPolicy(statePrime, this.epsilon));
         
-        if(actionPrime==undefined){
+        if(actionPrime === undefined){
             debugger
         }
 
