@@ -1,8 +1,6 @@
-import {argMax, randomElement} from './util.js'
-import Vector from './vector.js'
+import {argMax} from './util.js';
 
-
-class Agent {
+export class Agent {
     constructor(numberOfActions, numberOfStates) {
         this.numberOfStates = numberOfStates;
         this.numberOfActions = numberOfActions;
@@ -38,12 +36,12 @@ class Agent {
         const argMaxActions = argMax(actionStateValue);
         if(Math.random() < epsilon) {
 
-            if(actionsIndex.length == 0) {
+            if(actionsIndex.length === 0) {
                 debugger
             }
             return actionsIndex;
         } else {
-            if(argMaxActions.length == 0) {
+            if(argMaxActions.length === 0) {
                 debugger
             }
             return argMaxActions;
@@ -81,14 +79,10 @@ class Agent {
         for(let i = 0; i < this.numberOfStates; i++) {
             // deterministic, I choose the first element of the list
             let actions = new Array(this.numberOfActions).fill(0);
-            this.epsilonGreedyPolicy(i, 0).map((element)=>{ actions[element] = 1});
+            this.epsilonGreedyPolicy(i, 0).map((element)=>{ return actions[element] = 1});
             map.push(actions);
         }
         return map;
     }
 }
-
-
-export { Agent as Agent };
-
 

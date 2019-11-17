@@ -8,12 +8,12 @@ export const WHITE = { r: 255, g: 255, b: 255, a: 1 };
 export const BLACK = { r: 0, g: 0, b: 0, a: 1 };
 
 
-const pinkBackground  = { r: 255, g:   255, b: 0, a: .5 }
-const greenForeground = { r: 255, g: 255, b: 255, a: 1  }
+// const pinkBackground  = { r: 255, g:   255, b: 0, a: .5 }
+// const greenForeground = { r: 255, g: 255, b: 255, a: 1  }
 
-const help = normal(pinkBackground, greenForeground);
+// const help = normal(pinkBackground, greenForeground);
 
-const OTHER_YELLOW = [help.r, help.g, help.b]
+// const OTHER_YELLOW = [help.r, help.g, help.b]
 
 /* 
  * This method gets the opposite color from the one given.
@@ -70,8 +70,8 @@ export function download(filename, text) {
 /** Given an array of polygons this calculates the centroids and returns them. **/
 export function getCentroids(polygons){
   let points = [];
-
-  for (let polygon of polygons) {
+  let polygon;
+  for (polygon of polygons) {
     let x = 0;
     let y = 0;
     polygon.forEach(function(point){
@@ -81,7 +81,7 @@ export function getCentroids(polygons){
     x = x / polygon.length;
     y = y / polygon.length;
     points.push([x,y]);
-
+    //console.log(polygon);
   };
   return points;
 }
@@ -160,9 +160,6 @@ function colorDistance(colorA, colorB) {
   return getNormSuared3d(colorA.r, colorA.g, colorA.b, colorB.r, colorB.g, colorB.b);
 }
 
-function getNormSuared4d(x1, y1, z1, w1, x2, y2, z2, w2) {
-  return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1) + (w2 - w1) * (w2 - w1)
-}
 
 
 

@@ -1,19 +1,19 @@
-    import React, { Component } from 'react';
-    import corrupted from './assets/escudo.m4v'
-    import emji from './assets/emji.mp4'
-    import Voronoi from './Voronoi.js';
-    import Mandelbrot from './Mandelbrot.js';
-    import Reinforcement from './Reinforcement.js';
-    import robot from './assets/our-lady.jpg';
-    import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids } from './util.js';
-    import './Home.css';
-    import Cube from './Cube.js'
-    import Colors from './Colors'
-    import Loader from './Loader'
-    import Nostalgia from './Nostalgia'
-    import { Delaunay } from "d3-delaunay";
-    import * as d3 from 'd3';
-
+import React, { Component } from 'react';
+import corrupted from './assets/escudo.m4v'
+import emji from './assets/emji.mp4'
+import Voronoi from './Voronoi.js';
+import Mandelbrot from './Mandelbrot.js';
+import Reinforcement from './Reinforcement.js';
+import robot from './assets/our-lady.jpg';
+import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids } from './util.js';
+import './Home.css';
+import Cube from './Cube.js'
+import Colors from './Colors'
+import Loader from './Loader'
+import Nostalgia from './Nostalgia'
+import { Delaunay } from "d3-delaunay";
+import * as d3 from 'd3';
+import { randomElement } from './rl/util.js';
 
 import { Environment, map} from './rl/windyGridworld.js';
 import Controller from './rl/controller';
@@ -23,12 +23,13 @@ import './rl/board.css';
     const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const apiHost = process.env.REACT_APP_API_HOST;
     const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
+    const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
     const numberColors = 700;
     const squareSampling = 100;
 
-    function mod(n, m) {
-      return ((n % m) + m) % m;
-    }
+    //function mod(n, m) {
+    //  return ((n % m) + m) % m;
+    //}
 
     function romanize(num) {
       var lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1},roman = '',i;
@@ -78,6 +79,7 @@ import './rl/board.css';
           tick: 0,
           ticks: 0,
           voronoiUpdates: 0,
+          visited: [0],
         }
       }
 
@@ -209,6 +211,8 @@ import './rl/board.css';
         
         this.timerID = requestAnimationFrame(this.animate);
 
+        // Fetch moebius.
+
         fetch(apiHost, {
             method: 'POST',
             headers: {
@@ -223,42 +227,68 @@ import './rl/board.css';
             this.setState({points: json})
           });
 
-          let colors = getRandomIntegerArray(numberColors * 3, 0, 256);
+        // Fetch colors.
 
-          let colorsUrl = apiHost + "/solve?cities=" + JSON.stringify(colors) + "&dimension=" + 3;
-
-          fetch(colorsUrl, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-          .then(response => {
-            return  response.json();
-            
-          }).then(json => {
-            this.setState({colors: json})
-          });
-
+        let colors = getRandomIntegerArray(numberColors * 3, 0, 256);
+        let colorsUrl = apiHost + "/solve?cities=" + JSON.stringify(colors) + "&dimension=" + 3;
+        fetch(colorsUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          return  response.json();
           
-          let cities = getRandomIntegerArray(numberColors * 2, 0, squareSampling);
+        }).then(json => {
+          this.setState({colors: json})
+        });
 
-          let citiesUrl = apiHost + "/solve?cities=" + JSON.stringify(cities) + "&dimension=" + 2;
+        // Fetch cities.
 
-          fetch(citiesUrl, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-          .then(response => {
-            return  response.json();
-            
-          }).then(json => {
-            this.setState({cities: json})
-          });
+        let cities = getRandomIntegerArray(numberColors * 2, 0, squareSampling);
+        let citiesUrl = apiHost + "/solve?cities=" + JSON.stringify(cities) + "&dimension=" + 2;
+        fetch(citiesUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          return  response.json();
+        }).then(json => {
+          this.setState({cities: json})
+        });
 
+        // Fetch bandit.
+
+        let bandit = {available: SECTIONS,
+                      visited: this.state.visited,
+                      state: "PAGE_3",
+                      reward: 700}
+        let banditUrl = banditHost + "/next";
+        fetch(banditUrl, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(bandit)
+        })
+        .then(response => {
+          return  response.json();
+        }).then(json => {
+          let visited = this.state.visited.slice();
+          let next;
+          if (json.state === null) {
+            next = randomElement(visited);
+          } else {
+            visited.push(json.state);
+            next = parseInt(json.state);
+          }
+          this.setState({next: next, visited:visited});
+        });
       }
+
       componentWillUnmount() {
         window.removeEventListener("resize", this.updateDimensions.bind(this));
         window.removeEventListener("keydown", this.add.bind(this));
@@ -278,13 +308,54 @@ import './rl/board.css';
         let section = this.state.section;
         console.log(section)
         if (event.key === 'ArrowDown') {
-          section = mod(section + 1, SECTIONS.length);
+          //section = mod(section + 1, SECTIONS.length);
+          section = this.state.next;
           this.setState({ section: section });
         }
         if (event.key === 'ArrowUp') {
-          section = mod(section - 1, SECTIONS.length);
+          //section = mod(section - 1, SECTIONS.length);
+          section = this.state.next;
           this.setState({ section: section });
         }
+        if (event.key === 'ArrowRight') {
+          //section = mod(section + 1, SECTIONS.length);
+          section = this.state.next;
+          this.setState({ section: section });
+        }
+        if (event.key === 'ArrowLeft') {
+          //section = mod(section - 1, SECTIONS.length);
+          section = this.state.next;
+          this.setState({ section: section });
+        }
+
+
+        let bandit = {available: SECTIONS,
+                      visited: this.state.visited,
+                      state: this.state.section,
+                      reward: 700}
+        let banditUrl = banditHost + "/next";
+
+        fetch(banditUrl, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(bandit)
+        })
+        .then(response => {
+          return  response.json();
+        }).then(json => {
+          let visited = this.state.visited.slice();
+          let next;
+          if (json.state === null) {
+            next = randomElement(visited);
+          } else {
+            visited.push(json.state);
+            next = parseInt(json.state);
+          }
+          this.setState({next: next, visited:visited});
+        });
+
       };
 
       handleScroll(event) {
