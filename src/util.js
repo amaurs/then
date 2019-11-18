@@ -36,6 +36,16 @@ export function getRandomInt(lower, upper) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+export function getIndexFromArray(array, value) {
+    let index = -1;
+    array.forEach(function(object, i) {
+        if(object === value){
+            index = i;
+        }
+    });
+    return index;
+}
+
 
 export function getRandomIntegerArray(size, min, max) {
   let integers = [];

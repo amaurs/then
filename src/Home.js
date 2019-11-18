@@ -14,6 +14,7 @@ import Nostalgia from './Nostalgia'
 import { Delaunay } from "d3-delaunay";
 import * as d3 from 'd3';
 import { randomElement } from './rl/util.js';
+import { getIndexFromArray } from './util.js';
 
 import { Environment, map} from './rl/windyGridworld.js';
 import Controller from './rl/controller';
@@ -21,15 +22,43 @@ import { Agent } from './rl/sarsaAgent.js';
 import './rl/board.css';
 
     const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    const MAPPING = {
+        "1986": 1,
+        "corrupted": 2, 
+        "mandelbrot": 3,
+        "voronoi": 4,
+        "nevado": 5,
+        "colors": 6,
+        "reinforcement": 7,
+        "anaglyph": 8,
+        "tsp": 9,
+        "nostalgia": 10
+    }
+
+    const REVERSE_MAPPING = {
+        0: "then",
+        1: "1986",
+        2: "corrupted", 
+        3: "mandelbrot",
+        4: "voronoi",
+        5: "nevado",
+        6: "colors",
+        7: "reinforcement",
+        8: "anaglyph",
+        9: "tsp",
+       10: "nostalgia"
+    }
+
     const apiHost = process.env.REACT_APP_API_HOST;
     const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
     const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
     const numberColors = 700;
     const squareSampling = 100;
 
-    //function mod(n, m) {
-    //  return ((n % m) + m) % m;
-    //}
+    function mod(n, m) {
+      return ((n % m) + m) % m;
+    }
 
     function romanize(num) {
       var lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1},roman = '',i;
@@ -80,6 +109,7 @@ import './rl/board.css';
           ticks: 0,
           voronoiUpdates: 0,
           visited: [0],
+          pointer: 0,
         }
       }
 
@@ -260,33 +290,7 @@ import './rl/board.css';
           this.setState({cities: json})
         });
 
-        // Fetch bandit.
-
-        let bandit = {available: SECTIONS,
-                      visited: this.state.visited,
-                      state: "PAGE_3",
-                      reward: 700}
-        let banditUrl = banditHost + "/next";
-        fetch(banditUrl, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(bandit)
-        })
-        .then(response => {
-          return  response.json();
-        }).then(json => {
-          let visited = this.state.visited.slice();
-          let next;
-          if (json.state === null) {
-            next = randomElement(visited);
-          } else {
-            visited.push(json.state);
-            next = parseInt(json.state);
-          }
-          this.setState({next: next, visited:visited});
-        });
+        this.getOrder();
       }
 
       componentWillUnmount() {
@@ -305,36 +309,33 @@ import './rl/board.css';
 
       handleKeyPress(event) {
         console.log(event.key)
-        let section = this.state.section;
+        let pointer = this.state.pointer;
+        let visited = this.state.visited;
+        let section;
         console.log(section)
-        if (event.key === 'ArrowDown') {
-          //section = mod(section + 1, SECTIONS.length);
-          section = this.state.next;
-          this.setState({ section: section });
-        }
-        if (event.key === 'ArrowUp') {
-          //section = mod(section - 1, SECTIONS.length);
-          section = this.state.next;
-          this.setState({ section: section });
-        }
         if (event.key === 'ArrowRight') {
           //section = mod(section + 1, SECTIONS.length);
-          section = this.state.next;
-          this.setState({ section: section });
+          if (pointer < visited.length - 1) {
+            pointer = pointer + 1;
+            section = visited[pointer];
+            this.setState({ section: section, pointer: pointer });
+          }
         }
         if (event.key === 'ArrowLeft') {
           //section = mod(section - 1, SECTIONS.length);
-          section = this.state.next;
-          this.setState({ section: section });
+          if (pointer > 0) {
+            pointer = pointer - 1;
+            section = visited[pointer];
+            this.setState({ section: section, pointer: pointer });  
+          }
         }
 
+        this.rewardSignal();
+      };
 
-        let bandit = {available: SECTIONS,
-                      visited: this.state.visited,
-                      state: this.state.section,
-                      reward: 700}
-        let banditUrl = banditHost + "/next";
-
+      getOrder() {
+        let bandit = {states: Object.keys(MAPPING)}
+        let banditUrl = banditHost + "/order";
         fetch(banditUrl, {
           method: 'POST',
           headers: {
@@ -345,18 +346,30 @@ import './rl/board.css';
         .then(response => {
           return  response.json();
         }).then(json => {
-          let visited = this.state.visited.slice();
-          let next;
-          if (json.state === null) {
-            next = randomElement(visited);
-          } else {
-            visited.push(json.state);
-            next = parseInt(json.state);
-          }
-          this.setState({next: next, visited:visited});
-        });
+            let visited = [0].concat(json.order.map(function(element) {
+                return MAPPING[element];
+            }));
 
-      };
+            this.setState({visited: visited});
+          });
+      }
+
+      rewardSignal() {
+        let bandit = {state: REVERSE_MAPPING[this.state.section],
+                      reward: 700}
+        let banditUrl = banditHost + "/metric";
+        fetch(banditUrl, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(bandit)
+        })
+        .then(response => {
+
+          console.log(response.json())
+        });
+      }
 
       handleScroll(event) {
         let section = Math.floor((window.scrollY + this.state.height / 2 )/ this.state.height );
