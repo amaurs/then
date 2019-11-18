@@ -157,8 +157,7 @@ header{
 }
 
 .project-1{
-  filter: brightness(90%) contrast(190%) saturation(190%);
-  background-image: url("./assets/mexico-city-final.jpg");
+  background-image: url("./assets/bands.jpg");
   background-repeat: repeat;
   background-size: cover;
 }
