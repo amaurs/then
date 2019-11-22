@@ -189,7 +189,9 @@ function generateColors(baseColorArray, steps) {
     return colors;
 }
 
-
+export function mod(n, m) {
+    return ((n % m) + m) % m;
+}
 
 export function getDifference(oldSites, newSites){
   let totalDiff = 0;

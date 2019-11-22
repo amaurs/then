@@ -1,7 +1,8 @@
+import { mod } from './util.js';
 const ALIVE = 1;
 const DEAD = 0;
 
-class Board {
+export default class Board {
 
     constructor(width, height) {
         this.height = height;
@@ -48,7 +49,6 @@ class Board {
     }
 
     getNeighbors(x, y) {
-        let neighbors = [];
         let directions = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
         return directions.map(function(element) {
             return this.getXY(x + element[0], y + element[1]);
@@ -90,4 +90,21 @@ class Board {
         }
         console.log("")
     }
+
+    printContext(context, squareSize) {
+        
+        for(let j = 0; j < this.height; j++) {
+            let row = ""
+            for(let i = 0; i < this.width; i++) {
+                if (this.getXY(i, j)) {
+                    context.fillStyle = "black";
+                    context.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
+                }
+            }
+            console.log(row)
+        }
+        console.log("")
+    }
+
+
 }
