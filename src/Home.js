@@ -8,6 +8,7 @@ import robot from './assets/our-lady.jpg';
 import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids } from './util.js';
 import './Home.css';
 import Cube from './Cube.js'
+import Circle from './Circle.js'
 import Colors from './Colors'
 import Loader from './Loader'
 import Nostalgia from './Nostalgia'
@@ -103,7 +104,7 @@ import './rl/board.css';
         this.state = {
           width: 0,
           height: 0,
-          section: 0,
+          section: -1,
           points: null,
           tick: 0,
           ticks: 0,
@@ -427,6 +428,11 @@ import './rl/board.css';
         let content = null;
 
               switch(this.state.section) {
+                  case -1:
+                      content = <div className="Home-info-container background project-0">
+                                    <Circle />
+                                </div>
+                      break;
                   case 0:
                       content = <div className="Home-info-container background project-0">
                                   <div className="definition">
