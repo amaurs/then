@@ -15,7 +15,7 @@ import Nostalgia from './Nostalgia'
 import { Delaunay } from "d3-delaunay";
 import * as d3 from 'd3';
 import { randomElement } from './rl/util.js';
-import { getIndexFromArray } from './util.js';
+import { getIndexFromArray, mod } from './util.js';
 
 import { Environment, map} from './rl/windyGridworld.js';
 import Controller from './rl/controller';
@@ -56,10 +56,6 @@ import './rl/board.css';
     const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
     const numberColors = 700;
     const squareSampling = 100;
-
-    function mod(n, m) {
-      return ((n % m) + m) % m;
-    }
 
     function romanize(num) {
       var lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1},roman = '',i;
