@@ -101,9 +101,9 @@ export default class Board {
                     context.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
                 }
             }
-            console.log(row)
+            //console.log(row)
         }
-        console.log("")
+        //console.log("")
     }
 
 
