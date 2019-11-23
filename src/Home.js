@@ -1,3 +1,10 @@
+// tttttt  hh  hh  eeeeee  nn   nn
+//   tt    hh  hh  ee      nnn  nn
+//   tt    hhhhhh  eeee    nn n nn
+//   tt    hh  hh  ee      nn  nnn
+//   tt    hh  hh  eeeeee  nn   nn
+
+
 import React, { Component } from 'react';
 import corrupted from './assets/escudo.m4v'
 import emji from './assets/emji.mp4'
