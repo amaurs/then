@@ -26,14 +26,50 @@ export default class Board {
         }
     }
 
-    glider() {
-        this.init();
-        this.setXY(0, 0, ALIVE);
-        this.setXY(1, 1, ALIVE);
-        this.setXY(1, 2, ALIVE);
-        this.setXY(2, 0, ALIVE);
-        this.setXY(2, 1, ALIVE);
+    glider(x, y) {
+        this.setXY(x + 0, y + 0, ALIVE);
+        this.setXY(x + 0, y + 1, ALIVE);
+        this.setXY(x + 1, y + 0, ALIVE);
+        this.setXY(x + 1, y + 2, ALIVE);
+        this.setXY(x + 2, y + 0, ALIVE);
 
+    }
+
+    glider2(x, y) {
+        this.setXY(x + 0, y + 0, ALIVE);
+        this.setXY(x + 0, y + 1, ALIVE);
+        this.setXY(x + 0, y + 2, ALIVE);
+        this.setXY(x + 1, y + 0, ALIVE);
+        this.setXY(x + 2, y + 1, ALIVE);
+
+    }
+
+    piece1(x, y) {
+        this.setXY(x + 0, y + 1, ALIVE);
+        this.setXY(x + 0, y + 2, ALIVE);
+        this.setXY(x + 1, y + 0, ALIVE);
+        this.setXY(x + 1, y + 2, ALIVE);
+        this.setXY(x + 2, y + 0, ALIVE);
+        this.setXY(x + 2, y + 1, ALIVE);
+    }
+
+    square(x, y) {
+        this.setXY(x + 0, y + 0, ALIVE);
+        this.setXY(x + 0, y + 1, ALIVE);
+        this.setXY(x + 1, y + 0, ALIVE);
+        this.setXY(x + 1, y + 1, ALIVE);
+
+    }
+    gliderGun(x, y) {
+        this.square(x + 0, y + 2);
+        this.piece1(x + 8, y + 2);
+        this.setXY(x + 11, y + 8);
+        this.setXY(x + 12, y + 5);
+        this.glider2(x + 16, y + 4);
+        this.piece1(x + 22, y + 0);
+        this.glider(x + 24, y + 12);
+        this.square(x + 34, y + 0);
+        this.glider2(x + 35, y + 7);
     }
     
     getBoard() {
@@ -93,7 +129,6 @@ export default class Board {
 
     printContext(context, squareSize, color) {
         for(let j = 0; j < this.height; j++) {
-            let row = ""
             for(let i = 0; i < this.width; i++) {
                 if (this.getXY(i, j)) {
                     context.fillStyle = color;
@@ -104,21 +139,14 @@ export default class Board {
     }
 
     highlight(context, squareSize, x, y, width, height) {
-
         let counter = 0;
-        let color = 0;
         for(let j = y; j < y + height; j++) {
-            let row = ""
             for(let i = x; i < x + width; i++) {
-
-                
                 if (this.getXY(i, j)) {
                     context.fillStyle = "white";
                 } else {
                     context.fillStyle = intToColor(1 << counter);
-;
                 }
-
                 context.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
                 counter++;
             }
@@ -129,7 +157,6 @@ export default class Board {
         let counter = 0;
         let color = 0;
         for(let j = y; j < y + height; j++) {
-            let row = ""
             for(let i = x; i < x + width; i++) {
                 if (this.getXY(i, j)) {
                     color += 1 << counter;
