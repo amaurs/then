@@ -41,7 +41,8 @@ import './rl/board.css';
         "reinforcement": 7,
         "anaglyph": 8,
         "tsp": 9,
-        "nostalgia": 10
+        "nostalgia": 10,
+        "conway": 11
     }
 
     const REVERSE_MAPPING = {
@@ -55,7 +56,8 @@ import './rl/board.css';
         7: "reinforcement",
         8: "anaglyph",
         9: "tsp",
-       10: "nostalgia"
+       10: "nostalgia",
+       11: "conway"
     }
 
     const apiHost = process.env.REACT_APP_API_HOST;
@@ -107,7 +109,7 @@ import './rl/board.css';
         this.state = {
           width: 0,
           height: 0,
-          section: -1,
+          section: 0,
           points: null,
           tick: 0,
           ticks: 0,
@@ -431,7 +433,7 @@ import './rl/board.css';
         let content = null;
 
               switch(this.state.section) {
-                  case -1:
+                  case 11:
                       content = <div className="Home-info-container background project-0">
                                     <Circle />
                                 </div>
