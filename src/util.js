@@ -189,6 +189,18 @@ function generateColors(baseColorArray, steps) {
     return colors;
 }
 
+
+export function intToColor(color) {
+
+    let b =  color & 0xFF,
+        g = (color & 0xFF00) >>> 8,
+        r = (color & 0xFF0000) >>> 16;
+
+    return "rgb(" + [r, g, b].join(",") + ")";
+
+}
+
+
 export function mod(n, m) {
     return ((n % m) + m) % m;
 }
