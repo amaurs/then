@@ -1,4 +1,4 @@
-import { mod } from './util.js';
+import { mod, intToColor } from './util.js';
 const ALIVE = 1;
 const DEAD = 0;
 
@@ -91,19 +91,54 @@ export default class Board {
         console.log("")
     }
 
-    printContext(context, squareSize) {
-        
+    printContext(context, squareSize, color) {
         for(let j = 0; j < this.height; j++) {
             let row = ""
             for(let i = 0; i < this.width; i++) {
                 if (this.getXY(i, j)) {
-                    context.fillStyle = "black";
+                    context.fillStyle = color;
                     context.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
                 }
             }
-            //console.log(row)
         }
-        //console.log("")
+    }
+
+    highlight(context, squareSize, x, y, width, height) {
+
+        let counter = 0;
+        let color = 0;
+        for(let j = y; j < y + height; j++) {
+            let row = ""
+            for(let i = x; i < x + width; i++) {
+
+                
+                if (this.getXY(i, j)) {
+                    context.fillStyle = "white";
+                } else {
+                    context.fillStyle = intToColor(1 << counter);
+;
+                }
+
+                context.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
+                counter++;
+            }
+        }
+    }
+
+    getColor(context, squareSize, x, y, width, height) {
+        let counter = 0;
+        let color = 0;
+        for(let j = y; j < y + height; j++) {
+            let row = ""
+            for(let i = x; i < x + width; i++) {
+                if (this.getXY(i, j)) {
+                    color += 1 << counter;
+                }
+                
+                counter++;
+            }
+        }
+        return intToColor(color);
     }
 
 

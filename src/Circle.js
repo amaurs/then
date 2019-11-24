@@ -17,7 +17,7 @@ const getPixelRatio = context => {
 };
 
 
-let board = new Board(50, 50);
+let board = new Board(100, 100);
 
 board.randomize();
 
@@ -56,14 +56,24 @@ const Circle = () => {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         context.fillStyle = "black";
-        board.printContext(context, squareSize);
-        context.strokeStyle = "red";
 
-        context.beginPath();
-        context.rect(position[0], position[1], square[0], square[1]); 
-        context.stroke();
+        let color = board.getColor(context, squareSize, position[0] / squareSize, 
+                                             position[1] / squareSize, 
+                                             square[0] / squareSize, 
+                                             square[1] / squareSize);
+
+        board.printContext(context, squareSize, color);
+
+        board.highlight(context, squareSize, position[0] / squareSize, 
+                                             position[1] / squareSize, 
+                                             square[0] / squareSize, 
+                                             square[1] / squareSize);
+
+        //context.beginPath();
+        //context.rect(position[0], position[1], square[0], square[1]); 
+        //context.stroke();
         setCount(count + 1);
-    }, 0);
+    }, 50);
 
     const handleOnMouseDown = (e) => {
         let rect = ref.current.getBoundingClientRect();
@@ -71,8 +81,8 @@ const Circle = () => {
         console.log("Mouse down: " + (e.pageX - rect.left) + "," + (e.pageY - rect.top));
 
 
-        let x = (e.pageX - rect.left),
-            y = (e.pageY - rect.top);
+        let x = Math.round((e.pageX - rect.left) / 10) * 10,
+            y = Math.round((e.pageY - rect.top) / 10) * 10;
 
 
         if (position[0] <= x && x <= position[0] + square[0] && 
@@ -118,8 +128,8 @@ const Circle = () => {
     return (
         <canvas
             ref={ref} 
-            width={500}
-            height={500}
+            width={1000}
+            height={1000}
             onMouseDown={handleOnMouseDown}
             onMouseUp={handleOnMouseUp}
             onMouseMove={handleOnMouseMove}
