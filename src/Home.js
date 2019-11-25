@@ -21,8 +21,9 @@ import Corrupted from './Corrupted.js';
 import Distrito from './Distrito.js';
 import Hilbert from './Hilbert.js';
 import Autostereogram from './Autostereogram';
-import Colors from './Colors'
-import Loader from './Loader'
+import Colors from './Colors';
+import Loader from './Loader';
+import Mirror from './Mirror.js';
 import Nostalgia from './Nostalgia';
 import Then from './Then.js';
 import Wigglegram from './Wigglegram.js';
@@ -50,7 +51,8 @@ import './rl/board.css';
         "tsp": 9,
         "nostalgia": 10,
         "conway": 11,
-        "autostereogram": 12
+        "autostereogram": 12,
+        "mirror": 13
     }
 
     const REVERSE_MAPPING = {
@@ -66,7 +68,8 @@ import './rl/board.css';
         9: "tsp",
        10: "nostalgia",
        11: "conway",
-       12: "autostereogram"
+       12: "autostereogram",
+       13: "mirror"
     }
 
     const apiHost = process.env.REACT_APP_API_HOST;
@@ -470,6 +473,11 @@ import './rl/board.css';
                   case 11:
                       content = <div className="Home-info-container background project-0">
                                     <Circle />
+                                </div>
+                      break;
+                  case 13:
+                      content = <div className="Home-info-container background project-0">
+                                    <Mirror />
                                 </div>
                       break;
                   case 0:
