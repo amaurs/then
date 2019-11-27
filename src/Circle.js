@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import useInterval from './Hooks.js';
+import { useInterval } from './Hooks.js';
 
 import Board from './Board.js';
 

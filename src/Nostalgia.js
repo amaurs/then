@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Nostalgia.css'
-import useInterval from './Hooks.js';
+import { useInterval } from './Hooks.js';
 
 const USER_SERVICE_URL = "https://azzhejgg0l.execute-api.us-east-1.amazonaws.com/api/boleros/en";
 
