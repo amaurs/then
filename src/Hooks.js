@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export default function useInterval(callback, delay) {
+export function useInterval(callback, delay) {
   const savedCallback = useRef();
 
   // Remember the latest callback.
@@ -10,7 +10,7 @@ export default function useInterval(callback, delay) {
 
   // Set up the interval.
   useEffect(() => {
-    function tick() {
+    const tick = () => {
       savedCallback.current();
     }
     if (delay !== null) {
@@ -18,4 +18,26 @@ export default function useInterval(callback, delay) {
       return () => clearInterval(id);
     }
   }, [delay]);
+}
+
+
+
+export function useRequestAnimationFrame(animateCallback) {
+  const requestAnimationFrameRef = useRef(animateCallback);
+
+  useEffect(() => {
+    const animate = () => {
+        animateCallback();
+        requestAnimationFrameRef.current = requestAnimationFrame(animate);
+    }
+
+    console.log("This should only run once.");
+    
+    requestAnimationFrameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+        console.log("Canceling animation.");
+        cancelAnimationFrame(requestAnimationFrameRef.current)
+    };
+  }, []);
 }

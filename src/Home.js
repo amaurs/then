@@ -16,6 +16,7 @@ import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, get
 import './Home.css';
 import Cube from './Cube.js'
 import Circle from './Circle.js'
+import Autostereogram from './Autostereogram';
 import Colors from './Colors'
 import Loader from './Loader'
 import Nostalgia from './Nostalgia'
@@ -42,7 +43,8 @@ import './rl/board.css';
         "anaglyph": 8,
         "tsp": 9,
         "nostalgia": 10,
-        "conway": 11
+        "conway": 11,
+        "autostereogram": 12
     }
 
     const REVERSE_MAPPING = {
@@ -57,7 +59,8 @@ import './rl/board.css';
         8: "anaglyph",
         9: "tsp",
        10: "nostalgia",
-       11: "conway"
+       11: "conway",
+       12: "autostereogram"
     }
 
     const apiHost = process.env.REACT_APP_API_HOST;
@@ -433,6 +436,11 @@ import './rl/board.css';
         let content = null;
 
               switch(this.state.section) {
+                  case 12:
+                      content = <div className="Home-info-container background project-0">
+                                    <Autostereogram />
+                                </div>
+                      break;
                   case 11:
                       content = <div className="Home-info-container background project-0">
                                     <Circle />
