@@ -12,6 +12,7 @@ import Voronoi from './Voronoi.js';
 import Mandelbrot from './Mandelbrot.js';
 import Reinforcement from './Reinforcement.js';
 import robot from './assets/our-lady.jpg';
+import cubeDepth from './assets/cube-depth.png';
 import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids } from './util.js';
 import './Home.css';
 import Cube from './Cube.js'
@@ -103,6 +104,12 @@ import './rl/board.css';
         let image = new Image();
         image.src = robot;
         image.onload = this.onLoad.bind(this);
+
+
+        let imageCube = new Image();
+        imageCube.src = cubeDepth;
+        imageCube.onload = this.onLoadAutostereogram.bind(this);
+
         this.cube = React.createRef();
         this.handleSave = this.handleSave.bind(this);
         this.animate = this.animate.bind(this);
@@ -119,6 +126,7 @@ import './rl/board.css';
           voronoiUpdates: 0,
           visited: [0],
           pointer: 0,
+          autostereogram: null,
         }
       }
 
@@ -194,6 +202,18 @@ import './rl/board.css';
         }else {
             return time % size;
         }
+      }
+
+
+      onLoadAutostereogram(event){
+        const image = event.target;
+        let canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        let context = canvas.getContext('2d');
+
+
+        this.setState({autostereogram: context.getImageData(0, 0, image.width, image.height)});
       }
 
       onLoad(event) {
@@ -437,8 +457,18 @@ import './rl/board.css';
 
               switch(this.state.section) {
                   case 12:
+                      let autostereogram = <h1>Loading</h1>;
+
+                      if (this.state.autostereogram !== null) {
+                        autostereogram = <Autostereogram 
+                                         data={this.state.autostereogram}
+                                         width={800}
+                                         height={450}/>
+
+                      }
+
                       content = <div className="Home-info-container background project-0">
-                                    <Autostereogram />
+                                    {autostereogram}
                                 </div>
                       break;
                   case 11:
