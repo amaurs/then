@@ -128,11 +128,15 @@ export default class Board {
     }
 
     printContext(context, squareSize, color) {
+        this.printContextOffset(context, squareSize, 0, 0, color);
+    }
+
+    printContextOffset(context, squareSize, x, y, color) {
         for(let j = 0; j < this.height; j++) {
             for(let i = 0; i < this.width; i++) {
                 if (this.getXY(i, j)) {
                     context.fillStyle = color;
-                    context.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
+                    context.fillRect((x + i) * squareSize, (y + j) * squareSize, squareSize, squareSize);
                 }
             }
         }

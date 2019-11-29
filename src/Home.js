@@ -211,9 +211,10 @@ import './rl/board.css';
         canvas.width = image.width;
         canvas.height = image.height;
         let context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0);
+        let data = context.getImageData(0, 0, image.width, image.height);
 
-
-        this.setState({autostereogram: context.getImageData(0, 0, image.width, image.height)});
+        this.setState({autostereogram: data});
       }
 
       onLoad(event) {
@@ -461,7 +462,7 @@ import './rl/board.css';
 
                       if (this.state.autostereogram !== null) {
                         autostereogram = <Autostereogram 
-                                         data={this.state.autostereogram}
+                                         frame={this.state.autostereogram}
                                          width={800}
                                          height={450}/>
 
