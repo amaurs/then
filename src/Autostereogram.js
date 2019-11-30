@@ -21,9 +21,9 @@ const Autostereogram = (props) => {
                             props.frame.width,
                             props.frame.height
                           );
-        for(let y = 0; y < props.height; y++) {
-            for(let x = 0; x < props.width; x++) {
-                let index = (y * props.width + x) * 4;
+        for(let y = 0; y < props.frame.height; y++) {
+            for(let x = 0; x < props.frame.width; x++) {
+                let index = (y * props.frame.width + x) * 4;
                 if (!(x < 100)) {
                     let average = ((frame.data[index + 0] + 
                                                frame.data[index + 1] + 
@@ -56,8 +56,8 @@ const Autostereogram = (props) => {
     return (
             <canvas
                 ref={ref}
-                width={props.width}
-                height={props.height}
+                width={props.frame.width}
+                height={props.frame.height}
         />
         );
 }
