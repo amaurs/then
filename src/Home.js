@@ -119,7 +119,7 @@ import './rl/board.css';
         this.state = {
           width: 0,
           height: 0,
-          section: 0,
+          section: -1,
           points: null,
           tick: 0,
           ticks: 0,
@@ -457,14 +457,17 @@ import './rl/board.css';
         let content = null;
 
               switch(this.state.section) {
+                  case -1:
+                      content = <div className="Home-info-container background project-0">
+                                    <Loader />
+                                </div>
+                      break;
                   case 12:
                       let autostereogram = <h1>Loading</h1>;
 
                       if (this.state.autostereogram !== null) {
                         autostereogram = <Autostereogram 
-                                         frame={this.state.autostereogram}
-                                         width={800}
-                                         height={450}/>
+                                         frame={this.state.autostereogram} />
 
                       }
 
