@@ -39,7 +39,7 @@ const Loader = () => {
         effect.setSize( width, height );
         effect.domElement.style.color = 'black';
         effect.domElement.style.backgroundColor = 'white';
-        effect.domElement.style.fontFamily = 'monospace !important';
+        effect.domElement.style.fontFamily = 'monospace';
         // Special case: append effect.domElement, instead of renderer.domElement.
         // AsciiEffect creates a custom domElement (a div container) where the ASCII elements are placed.
         theCanvas.current.appendChild( effect.domElement );

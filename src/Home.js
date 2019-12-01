@@ -6,8 +6,8 @@
 
 
 import React, { Component } from 'react';
-import corrupted from './assets/escudo.m4v'
-import emji from './assets/emji.mp4'
+
+
 import Voronoi from './Voronoi.js';
 import Mandelbrot from './Mandelbrot.js';
 import Reinforcement from './Reinforcement.js';
@@ -16,11 +16,16 @@ import cubeDepth from './assets/cube-depth.png';
 import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids } from './util.js';
 import './Home.css';
 import Cube from './Cube.js'
-import Circle from './Circle.js'
+import Circle from './Circle.js';
+import Corrupted from './Corrupted.js';
+import Distrito from './Distrito.js';
+import Hilbert from './Hilbert.js';
 import Autostereogram from './Autostereogram';
 import Colors from './Colors'
 import Loader from './Loader'
-import Nostalgia from './Nostalgia'
+import Nostalgia from './Nostalgia';
+import Then from './Then.js';
+import Wigglegram from './Wigglegram.js';
 import { Delaunay } from "d3-delaunay";
 import * as d3 from 'd3';
 import { randomElement } from './rl/util.js';
@@ -119,7 +124,7 @@ import './rl/board.css';
         this.state = {
           width: 0,
           height: 0,
-          section: -1,
+          section: 0,
           points: null,
           tick: 0,
           ticks: 0,
@@ -457,22 +462,9 @@ import './rl/board.css';
         let content = null;
 
               switch(this.state.section) {
-                  case -1:
-                      content = <div className="Home-info-container background project-0">
-                                    <Loader />
-                                </div>
-                      break;
                   case 12:
-                      let autostereogram = <h1>Loading</h1>;
-
-                      if (this.state.autostereogram !== null) {
-                        autostereogram = <Autostereogram 
-                                         frame={this.state.autostereogram} />
-
-                      }
-
                       content = <div className="Home-info-container background project-0">
-                                    {autostereogram}
+                                    <Autostereogram />
                                 </div>
                       break;
                   case 11:
@@ -482,27 +474,17 @@ import './rl/board.css';
                       break;
                   case 0:
                       content = <div className="Home-info-container background project-0">
-                                  <div className="definition">
-                                    <p className="name">then</p>
-                                    <p className="pronunciation">/ <span className="underline">TH</span>en /</p>
-                                    <p className="type">adverb</p>
-                                    <ol>
-                                      <li><p>at that time; at the time in question.</p></li>
-                                      <li><p>after that; next; afterward.</p></li>
-                                      <li><p>in that case; therefore.</p></li>
-                                    </ol>
-                                  </div>
+                                    <Then />
                                 </div>
                       break;
                   case 1:
                       content = <div className="Home-info-container background project-1">
+                                    <Distrito />
                                 </div>
                       break;
                   case 2:
                       content = <div className="Home-info-container background project-2">
-                                  <video autoPlay loop muted>
-                                    <source src={corrupted} type="video/mp4"/>
-                                  </video>
+                                    <Corrupted />
                                 </div>
                       break;
                   case 3:
@@ -543,13 +525,12 @@ import './rl/board.css';
                       break;
                   case 5:
                       content = <div className="Home-info-container background project-5">
-                                  <video autoPlay loop muted>
-                                    <source src={emji} type="video/mp4" />
-                                  </video>
+                                    <Wigglegram />
                                 </div>
                       break;
                   case 6:
                       content = <div className="Home-info-container background project-6">
+                                    <Hilbert />
                                 </div>
                       break;
                   case 7:
@@ -630,9 +611,6 @@ import './rl/board.css';
 
         return (
           <div className="Home">
-            <header className="Home-header 4">
-              
-            </header>
             {this.getBackgroundContent()}        
           </div>
         );
