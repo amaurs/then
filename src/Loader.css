@@ -2,6 +2,13 @@
     
 }
 
+
+
 .vis {
   width: 800px;
+  font-family: monospace;
+}
+
+.vis table tbody{
+  font-family: monospace;
 }
