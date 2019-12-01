@@ -83,4 +83,5 @@ class Cube extends Component{
     )
   }
 }
-export default Cube
+export default Cube;
+

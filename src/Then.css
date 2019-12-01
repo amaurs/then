@@ -1,0 +1,37 @@
+.definition {
+    font-family: "Times New Roman", Times, serif
+}
+
+.definition .name {
+    font-weight: bold;
+    font-size: 240px
+}
+
+.definition .pronunciation {
+    font-style: oblique;
+    font-size: 32px;
+    padding-top: 15px;
+    padding-bottom: 15px
+}
+
+.definition .type {
+    font-size: 24px;
+    font-weight: bold
+}
+
+.definition ol {
+    margin-top: 50px
+}
+
+.definition li {
+    font-style: oblique
+}
+
+.definition p {
+    font-style: normal;
+    font-size: 20px
+}
+
+.underline {
+    text-decoration: underline
+}
