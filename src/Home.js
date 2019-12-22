@@ -25,6 +25,7 @@ import Colors from './Colors';
 import Loader from './Loader';
 import Mirror from './Mirror.js';
 import Nostalgia from './Nostalgia';
+import Menu from './Menu';
 import Then from './Then.js';
 import Wigglegram from './Wigglegram.js';
 import { Delaunay } from "d3-delaunay";
@@ -36,6 +37,8 @@ import { Environment, map} from './rl/windyGridworld.js';
 import Controller from './rl/controller';
 import { Agent } from './rl/sarsaAgent.js';
 import './rl/board.css';
+
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
     const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -71,6 +74,37 @@ import './rl/board.css';
        12: "autostereogram",
        13: "mirror"
     }
+
+    const environment = new Environment(map.height, 
+                                        map.width, 
+                                        map.boardPlan,
+                                        map.wind,
+                                        map.agent,
+                                        map.goal)
+    
+    const agent = new Agent(environment.getNumberOfActions(), environment.getNumberOfStates());
+    
+    const controller = new Controller(environment, agent)
+
+
+    const PATH_COMPONENT_MAPPING = {
+        "/autostereogram": <Autostereogram />,
+        "/1986": <Distrito />,
+        "/corrupted": <Corrupted />,
+        "/mandelbrot": <Mandelbrot host={mandelbrot}/>,
+        //"voronoi": <
+        "/nevado": <Wigglegram />,
+        "/nostalgia": <Nostalgia />,
+        "/": <Then />,
+        "/colors": <Hilbert />,
+        "/reinforcement": <Reinforcement controller={controller} />,
+        //"/anaglyph": <Cube ref={this.cube} points={this.state.points} />
+        //"tsp": <
+        "/conway": <Circle />,
+        "/mirror": <Mirror />,
+    }
+
+
 
     const apiHost = process.env.REACT_APP_API_HOST;
     const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
@@ -127,7 +161,7 @@ import './rl/board.css';
         this.state = {
           width: 0,
           height: 0,
-          section: 0,
+          section: -1,
           points: null,
           tick: 0,
           ticks: 0,
@@ -465,6 +499,13 @@ import './rl/board.css';
         let content = null;
 
               switch(this.state.section) {
+                  case -1:
+                      content = <div className="Home-info-container background project-0">
+                                    <Menu 
+                                        items={REVERSE_MAPPING}
+                                    />
+                                </div>
+                      break;
                   case 12:
                       content = <div className="Home-info-container background project-0">
                                     <Autostereogram />
@@ -543,16 +584,7 @@ import './rl/board.css';
                       break;
                   case 7:
 
-                        const environment = new Environment(map.height, 
-                                                            map.width, 
-                                                            map.boardPlan,
-                                                            map.wind,
-                                                            map.agent,
-                                                            map.goal)
-      
-                        const agent = new Agent(environment.getNumberOfActions(), environment.getNumberOfStates());
-                        
-                        const controller = new Controller(environment, agent)
+
                         content = <div className="Home-info-container background project-7">
                                      <Reinforcement controller={controller} />
                                   </div>
@@ -615,12 +647,32 @@ import './rl/board.css';
               return content;
       }
 
+      getMenu() {
+        return <ul>{Object.entries(PATH_COMPONENT_MAPPING).map((element, index) => 
+                 <li key={index}><Link to={element[0]}>{element[0]}</Link></li>)
+            }</ul>;
+      }
+
+      getBackgroundContentRouter() {
+        return (<div className="Home-info-container background project-9">
+                {Object.entries(PATH_COMPONENT_MAPPING).map((element, index) => <Route exact path={element[0]}>
+                    {element[1]}
+                    </Route>
+                    )}
+            </div>)
+      }
+
       render() {
 
         return (
-          <div className="Home">
-            {this.getBackgroundContent()}        
-          </div>
+          <Router>
+            <div className="Home">
+              {this.getMenu()}
+              <Switch>
+                {this.getBackgroundContentRouter()}
+              </Switch>
+            </div>
+          </Router>
         );
       }
     }
