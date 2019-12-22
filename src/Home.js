@@ -25,7 +25,6 @@ import Loader from './Loader';
 import Mirror from './Mirror.js';
 import Nostalgia from './Nostalgia';
 import NotFound from './NotFound';
-import Menu from './Menu';
 import Then from './Then.js';
 import TravelingSalesman from './TravelingSalesman';
 import Voronoi from './Voronoi.js';
@@ -235,13 +234,7 @@ import { BrowserRouter as Router, Switch, Redirect, Route, Link } from 'react-ro
         let content = null;
 
               switch(this.state.section) {
-                  case -1:
-                      content = <div className="Home-info-container background project-0">
-                                    <Menu 
-                                        items={REVERSE_MAPPING}
-                                    />
-                                </div>
-                      break;
+
                   case 12:
                       content = <Autostereogram />
                       break;
