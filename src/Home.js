@@ -18,11 +18,13 @@ import Anaglyph from './Anaglyph.js';
 import Circle from './Circle.js';
 import Corrupted from './Corrupted.js';
 import Distrito from './Distrito.js';
+import Hamburger from './Hamburger';
 import Hilbert from './Hilbert.js';
 import Autostereogram from './Autostereogram';
 import Loader from './Loader';
 import Mirror from './Mirror.js';
 import Nostalgia from './Nostalgia';
+import NotFound from './NotFound';
 import Menu from './Menu';
 import Then from './Then.js';
 import TravelingSalesman from './TravelingSalesman';
@@ -35,7 +37,7 @@ import { getIndexFromArray, mod } from './util.js';
 
 import './rl/board.css';
 
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Redirect, Route, Link } from 'react-router-dom';
 
     const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -72,42 +74,13 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
        13: "mirror"
     }
 
-    const environment = new Environment(map.height, 
-                                        map.width, 
-                                        map.boardPlan,
-                                        map.wind,
-                                        map.agent,
-                                        map.goal)
-    
-    const agent = new Agent(environment.getNumberOfActions(), environment.getNumberOfStates());
-    
-    const controller = new Controller(environment, agent)
-
-
-    const PATH_COMPONENT_MAPPING = {
-        "/autostereogram": <Autostereogram />,
-        "/1986": <Distrito />,
-        "/corrupted": <Corrupted />,
-        "/mandelbrot": <Mandelbrot host={mandelbrot}/>,
-        //"voronoi": <
-        "/nevado": <Wigglegram />,
-        "/nostalgia": <Nostalgia />,
-        "/": <Then />,
-        "/colors": <Hilbert />,
-        "/reinforcement": <Reinforcement />,
-        //"/anaglyph": <Cube ref={this.cube} points={this.state.points} />
-        //"tsp": <
-        "/conway": <Circle />,
-        "/mirror": <Mirror />,
-    }
-
-
-
     const apiHost = process.env.REACT_APP_API_HOST;
     const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
     const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
     const numberColors = 700;
     const squareSampling = 100;
+    const NotFoundRedirect = () => <Redirect to='/not-found' />;
+
 
     function romanize(num) {
       var lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1},roman = '',i;
@@ -142,7 +115,6 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
         console.log("%c" + romanize(1), "color:red");
         this.cube = React.createRef();
         this.handleSave = this.handleSave.bind(this);
-
         this.state = {
           width: 0,
           height: 0,
@@ -152,6 +124,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
           visited: [0],
           pointer: 0,
           autostereogram: null,
+          isActive: false,
         }
       }
 
@@ -353,27 +326,64 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
                      </div> ;
       }
 
+      getMapping() {
+        return {
+                    "/autostereogram": <Autostereogram />,
+                    "/1986":           <Distrito />,
+                    "/corrupted":      <Corrupted />,
+                    "/mandelbrot":     <Mandelbrot host={mandelbrot}/>,
+                    "/voronoi":        <Voronoi width={this.state.width} height={this.state.height} />,
+                    "/nevado":         <Wigglegram />,
+                    "/nostalgia":      <Nostalgia />,
+                    "/":               <Then />,
+                    "/colors":         <Hilbert />,
+                    "/reinforcement":  <Reinforcement />,
+                    "/anaglyph":       <Anaglyph url={apiHost} />,
+                    "/tsp":            <TravelingSalesman url={apiHost} width={this.state.width} height={this.state.height} />,
+                    "/conway":         <Circle />,
+                    "/mirror":         <Mirror />,
+                    "/404":            <NotFound />,
+                };
+      }
+
       getMenu() {
-        return <ul>{Object.entries(PATH_COMPONENT_MAPPING).map((element, index) => 
-                 <li key={index}><Link to={element[0]}>{element[0]}</Link></li>)
+        return <ul>{Object.entries(this.getMapping()).filter((element) => 
+                  !(element[0] === "/404" || element[0] === "/")
+            ).map((element, index) => 
+                 <li key={index}><Link onClick={this.handleMenu.bind(this)} to={element[0]}>{element[0].slice(1)}</Link></li>)
             }</ul>;
       }
 
       getBackgroundContentRouter() {
-        return (<div className="Home-info-container background project-9">
-                {Object.entries(PATH_COMPONENT_MAPPING).map((element, index) => <Route exact path={element[0]}>
+
+        let routes = Object.entries(this.getMapping()).map((element, index) => <Route key={index} exact path={element[0]}>
                     {element[1]}
                     </Route>
-                    )}
-            </div>)
+                    )
+
+        routes.push(<Route key={404} component={NotFoundRedirect}><Redirect to="/404" /></Route>);
+        return routes;
+      }
+      handleMenu(){
+        const isActive = this.state.isActive;
+        console.log("Hamburger click.");
+        console.log(isActive);
+        this.setState({isActive: !isActive});
       }
 
       render() {
 
+        let menu = <div className={"Menu Home-info-container" + (this.state.isActive?" active":"")}>
+                    {this.getMenu()}
+                   </div>
+
         return (
           <Router>
-            <div className="Home">
-              {this.getMenu()}
+            <div className="MenuHamburger">
+                <Hamburger onClick={this.handleMenu.bind(this)} isActive={this.state.isActive} />
+            </div>
+            {this.state.isActive?menu:null} 
+            <div className="Home Home-info-container background">
               <Switch>
                 {this.getBackgroundContentRouter()}
               </Switch>
@@ -382,8 +392,5 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
         );
       }
     }
-
-
-
 
     export default Home;
