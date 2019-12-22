@@ -2,6 +2,21 @@ import React from 'react';
 import Board from './rl/Board.js';
 import './rl/game.css';
 
+import { Environment, map} from './rl/windyGridworld.js';
+import Controller from './rl/controller';
+import { Agent } from './rl/sarsaAgent.js';
+
+const environment = new Environment(map.height, 
+                                    map.width, 
+                                    map.boardPlan,
+                                    map.wind,
+                                    map.agent,
+                                    map.goal)
+
+const agent = new Agent(environment.getNumberOfActions(), environment.getNumberOfStates());
+
+const controller = new Controller(environment, agent)
+
 export default class Reinforcement extends React.Component{
     constructor(props) {
         super(props);
@@ -10,8 +25,8 @@ export default class Reinforcement extends React.Component{
         const gamma = 0.4;
         this.state = {
             started : false,
-            board : this.props.controller.toBoard(),
-            controller : this.props.controller,
+            board : controller.toBoard(),
+            controller : controller,
             epsilon : epsilon,
             gamma : gamma,
             alpha : alpha,
@@ -47,18 +62,18 @@ export default class Reinforcement extends React.Component{
     }
 
     tick() {
-        let stepRes = this.props.controller.tick();
+        let stepRes = controller.tick();
         this.setState({episodeDuration: this.state.episodeDuration + 1});
         if(stepRes.isDone) {
             this.setState({episodes: this.state.episodes + 1});
-            this.props.controller.initEpisode();
+            controller.initEpisode();
             let newData = this.state.data.slice();
             newData.push({episode : this.state.episodes, duration: this.state.episodeDuration});
             this.setState({data: newData});
             
             this.setState({episodeDuration: 0});
         }
-        this.setState({board: this.props.controller.toBoard()});
+        this.setState({board: controller.toBoard()});
     }
     componentWillUnmount() {
         clearInterval(this.timerID);
@@ -70,27 +85,27 @@ export default class Reinforcement extends React.Component{
             () => this.tick(), 
         50
         );
-        this.props.controller.toActionMap()
+        controller.toActionMap()
     }
     stop() {
         clearInterval(this.timerID);
     }
     handleEpsilonChange(event) {
         this.setState({epsilon: event.target.value});
-        this.props.controller.setEpsilon(this.state.epsilon);
+        controller.setEpsilon(this.state.epsilon);
     }
     handleAlphaChange(event) {
         this.setState({alpha: event.target.value});
-        this.props.controller.setAlpha(this.state.alpha);
+        controller.setAlpha(this.state.alpha);
     }
     handleGammaChange(event) {
         this.setState({gamma: event.target.value});
-        this.props.controller.setGamma(this.state.gamma);
+        controller.setGamma(this.state.gamma);
     }
     render() {
         return  <div className="container">
                     <div className="board">
-                        <Board board={this.props.controller.toBoard()}/>
+                        <Board board={controller.toBoard()}/>
                     </div>
                 </div>
     }

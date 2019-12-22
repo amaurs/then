@@ -1,72 +1,157 @@
-import React, { Component } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import robot from './assets/our-lady.jpg';
+import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids } from './util.js';
+import './Voronoi.css'
 import * as d3 from 'd3';
-import { getBrightness } from './util';
-import "./Voronoi.css";
+import { Delaunay } from "d3-delaunay";
 
-function getRadius(d) {
-    return  2 + 2 * getBrightness(d.r, d.g, d.b);
+const Voronoi = (props) => {
+
+    let mount = useRef();
+
+    let [updates, setUpdates] = useState(0);
+
+    let [imageData, setImageData] = useState({});
+
+    let [cities, setCities] = useState(null);
+
+
+    useEffect(() => {
+
+        const onLoad = (event) => {
+            const image = event.target;
+        
+            let canvas = document.createElement('canvas');
+            canvas.width = image.width;
+            canvas.height = image.height;
+            let context = canvas.getContext('2d');
+            context.drawImage(image, 0, 0);
+
+            let imageData = context.getImageData(0, 0, image.width, image.height);
+            let totalData = [];
+            for(let index = 0; index < image.width * image.height; index++) {
+                let pixel = getXYfromIndex(index, image.width);
+                totalData.push({
+                                 x: pixel[0],
+                                 y: pixel[1],
+                                 r: imageData.data[index * 4],
+                                 g: imageData.data[index * 4 + 1],
+                                 b: imageData.data[index * 4 + 2],
+                               });
+            }
+
+            const total = 10000;
+            let sites = [];
+            /** I use the rejection algorithm to get points with the most brightness. **/
+            let numPoints = 0;
+        
+            while(numPoints < total){
+              let index = getRandomInt(0, image.width * image.height);
+              let site = totalData[index]
+              let brightness = getBrightness(site.r, 
+                                             site.g, 
+                                             site.b);
+              if (Math.random() >= brightness ) {
+                sites.push(site);
+                numPoints++;
+              }
+            }
+
+            setCities({totalData: totalData,
+                       imageWidth: image.width,
+                       imageHeight: image.height,
+                       sites: sites});
+
+        }
+
+
+        let image = new Image();
+        image.src = robot;
+        image.onload = onLoad;
+
+    }, []);
+
+    useEffect(() => {
+
+        const getRadius = (d) => {
+            return  2 + 1 * getBrightness(d.r, d.g, d.b);
+        }
+
+        const draw = () => {
+            let context = mount.current.getContext('2d');
+            let canvasWidth = mount.current.width;
+            let canvasHeight = mount.current.height;
+            context.clearRect(0, 0, canvasWidth, canvasHeight);
+            cities.sites.forEach(function(d){
+                context.beginPath();
+                context.fillStyle = d3.rgb(+d.r, +d.g, +d.b);
+                let x = (+d.x / cities.imageWidth) * canvasWidth;
+                let y = (+d.y / cities.imageHeight) * canvasHeight;
+                let r = getRadius(d) * canvasWidth / 800;
+                context.arc(x, y, r, 0, 2 * Math.PI);
+                context.fill();
+            });
+        }
+
+        if (cities !== null) {
+            draw();
+            if (updates < 10) {
+                setUpdates(updates + 1);
+            }
+        }
+
+
+        
+
+    }, [cities]);
+
+
+
+    useEffect(() => {
+
+
+        const sitesUpdate = (sites, imageData, width, height) => {
+            const delaunay = Delaunay.from(sites, 
+                                              function(d) { return d.x },
+                                              function(d) { return d.y });
+            const voronoi = delaunay.voronoi([0, 0, width, height]);
+            const diagram = voronoi.cellPolygons();
+            let newSites = getCentroids(diagram).map(function(centroid, index) {
+                let closestIndex = Math.floor(centroid[1]) * width + Math.floor(centroid[0]);
+                let closestPixel = imageData[closestIndex];
+                return {
+                        oldX: sites[index].x,
+                        oldY: sites[index].y,
+                        x: centroid[0],
+                        y: centroid[1],
+                        r: closestPixel.r,
+                        g: closestPixel.g,
+                        b: closestPixel.b,
+                        oldR: sites[index].r,
+                        oldG: sites[index].g,
+                        oldB: sites[index].b
+                };
+            });
+
+            return newSites;
+        }
+        if (cities !== null) {
+            setCities({totalData: cities.totalData,
+                   imageWidth: cities.imageWidth,
+                   imageHeight: cities.imageHeight,
+                   sites: sitesUpdate(cities.sites, cities.totalData, cities.imageWidth, cities.imageHeight)});
+        }
+
+    }, [updates]);
+
+
+    let isVertical = props.height / props.width < 1;
+
+    return (<canvas className={"Voronoi" + (isVertical?"":" vertical")} 
+                    width={props.width + "px"} 
+                    height={props.height + "px"} 
+                    ref={mount} 
+                />);
 }
 
-const TIME = 500;
-const UPDATE_LIMIT = 10;
-export default class Voronoi extends Component {
-
-  constructor(props) {
-    super(props);
-    this.canvasRef = React.createRef();
-    this.tick = this.tick.bind(this);
-    this.state = {
-        ticks: 0,
-    };
-    if(this.props.updates < UPDATE_LIMIT) {
-        this.ticker = setInterval(() => this.tick(), TIME);    
-    }
-  }
-
-  componentDidUpdate() {
-    this.draw();
-
-  }
-
-  componentDidMount() {
-    this.draw();
-  }
-
-  draw() {
-
-
-    let context = this.canvasRef.current.getContext('2d');
-    context.clearRect(0, 0, this.props.canvasWidth, this.props.canvasHeight);
-    this.props.sites.forEach(function(d){
-        context.beginPath();
-        context.fillStyle = d3.rgb(+d.r, +d.g, +d.b);
-        let x = (+d.x / this.props.imageWidth) * this.props.canvasWidth;
-        let y = (+d.y / this.props.imageHeight) * this.props.canvasHeight;
-        let r = getRadius(d) * this.props.canvasWidth / 800;
-        context.arc(x, y, r, 0, 2 * Math.PI);
-        context.fill();
-    }.bind(this))
-  }
-
-  tick() {
-      let newTicks = this.state.ticks + 1;
-      this.setState({ticks: newTicks});
-      this.props.updateCities(TIME);
-      if (this.state.ticks > UPDATE_LIMIT) {
-          clearInterval(this.ticker);
-
-      }
-   }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-    clearInterval(this.ticker);  
-  }
-
-  render() {
-    let isVertical = this.props.height / this.props.width < 1;
-    return  <div>
-             <canvas className={"VoronoiCanvas" + (isVertical?"":" vertical")} width={this.props.canvasWidth + "px"} height={this.props.canvasHeight + "px"} ref={this.canvasRef}></canvas>
-            </div>
-  }
-}
+export default Voronoi;
