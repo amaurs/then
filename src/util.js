@@ -200,6 +200,12 @@ export function intToColor(color) {
 
 }
 
+export function colorToInt(r, g, b) {
+
+    return r << 16 | g << 8 | b;
+
+}
+
 
 export function mod(n, m) {
     return ((n % m) + m) % m;

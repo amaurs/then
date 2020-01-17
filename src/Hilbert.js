@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 
+import { colorToInt } from './util.js'
+
 import './Hilbert.css';
 
 import hilbert_cube from './assets/hilbert_cube_512_512.png';
@@ -8,6 +10,8 @@ import hilbert_square from './assets/hilbert_square_512_512.png';
 const Hilbert = (props) => {
 
     let mount = useRef();
+    let [color, setColor] = useState(null);
+    let [position, setPosition] = useState(null);
 
     useEffect(() => {
         console.log("First call hilbert.")
@@ -30,19 +34,53 @@ const Hilbert = (props) => {
         }
 
         getData(hilbert_cube).then(imageData => {
-            console.log(imageData)
+            setColor(imageData);
         })
 
         getData(hilbert_square).then(imageData => {
-            console.log(imageData)
+            setPosition(imageData);
         })
 
     }, []);
 
 
+    useEffect(() => {
+
+        if (color !== null && position !== null) {
+            console.log(color);
+            console.log(position);
+
+            let context = mount.current.getContext('2d');
+            let canvasWidth = mount.current.width;
+            let canvasHeight = mount.current.height;
+            context.clearRect(0, 0, canvasWidth, canvasHeight);
+            let frame = context.getImageData(0, 0, canvasWidth, canvasHeight);
+
+            let l = frame.data.length / 4;
+
+            for (let i = 0; i < l; i++) {
+
+                let r = position.data[i * 4 + 0];
+                let g = position.data[i * 4 + 1];
+                let b = position.data[i * 4 + 2];
+                let a = position.data[i * 4 + 3];
+
+                let j = colorToInt(r, g, b);
+
+                frame.data[j * 4 + 0] = color.data[i * 4 + 0];
+                frame.data[j * 4 + 1] = color.data[i * 4 + 1];
+                frame.data[j * 4 + 2] = color.data[i * 4 + 2];
+                frame.data[j * 4 + 3] = 255;
+            }
+            context.putImageData(frame, 0, 0);
+        }
+
+    }, [color, position]);
+
+
     return (<canvas className="Hilbert" 
-                width={props.width + "px"} 
-                height={props.height + "px"} 
+                width={512 + "px"} 
+                height={512 + "px"} 
                 ref={mount} 
             />);
 }
