@@ -330,6 +330,7 @@ import { BrowserRouter as Router, Switch, Redirect, Route, Link } from 'react-ro
                     "/nostalgia":      <Nostalgia />,
                     "/":               <Then />,
                     "/colors":         <Hilbert />,
+                    "/colors/:res":         <Hilbert />,
                     "/reinforcement":  <Reinforcement />,
                     "/anaglyph":       <Anaglyph url={apiHost} />,
                     "/tsp":            <TravelingSalesman url={apiHost} width={this.state.width} height={this.state.height} />,
@@ -341,7 +342,9 @@ import { BrowserRouter as Router, Switch, Redirect, Route, Link } from 'react-ro
 
       getMenu() {
         return <ul>{Object.entries(this.getMapping()).filter((element) => 
-                  !(element[0] === "/404" || element[0] === "/")
+                  !(element[0] === "/404" || 
+                    element[0] === "/" ||
+                    element[0] === "/colors/:res")
             ).map((element, index) => 
                  <li key={index}><Link onClick={this.handleMenu.bind(this)} to={element[0]}>{element[0].slice(1)}</Link></li>)
             }</ul>;

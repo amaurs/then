@@ -1,17 +1,47 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useParams} from "react-router";
 
 import { colorToInt } from './util.js'
+import { useInterval } from './Hooks.js';
 
 import './Hilbert.css';
 
-import hilbert_cube from './assets/hilbert_cube_512_512.png';
-import hilbert_square from './assets/hilbert_square_512_512.png';
+import hilbert_cube_8 from './assets/hilbert_cube_8_8.png';
+import hilbert_square_8 from './assets/hilbert_square_8_8.png';
+import hilbert_cube_64 from './assets/hilbert_cube_64_64.png';
+import hilbert_square_64 from './assets/hilbert_square_64_64.png';
+import hilbert_cube_512 from './assets/hilbert_cube_512_512.png';
+import hilbert_square_512 from './assets/hilbert_square_512_512.png';
+import hilbert_cube_4096 from './assets/hilbert_cube_4096_4096.png';
+import hilbert_square_4096 from './assets/hilbert_square_4096_4096.png';
+
+const image_cube_map = {8: hilbert_cube_8,
+                        64: hilbert_cube_64,
+                        512: hilbert_cube_512,
+                        4096: hilbert_cube_4096};
+
+const image_square_map = {8: hilbert_square_8,
+                          64: hilbert_square_64,
+                          512: hilbert_square_512,
+                          4096: hilbert_square_4096};
+
 
 const Hilbert = (props) => {
+
+    let { res } = useParams();
+
+    if(res === undefined) {
+        res = 8;
+    }
+
+    let hilbert_cube = image_cube_map[res];
+    let hilbert_square = image_square_map[res];
+
 
     let mount = useRef();
     let [color, setColor] = useState(null);
     let [position, setPosition] = useState(null);
+    const [count, setCount] = useState(0);
 
     useEffect(() => {
         console.log("First call hilbert.")
@@ -47,10 +77,9 @@ const Hilbert = (props) => {
     useEffect(() => {
 
         if (color !== null && position !== null) {
-            console.log(color);
-            console.log(position);
 
             let context = mount.current.getContext('2d');
+            context.imageSmoothingEnabled= false;
             let canvasWidth = mount.current.width;
             let canvasHeight = mount.current.height;
             context.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -60,10 +89,12 @@ const Hilbert = (props) => {
 
             for (let i = 0; i < l; i++) {
 
-                let r = position.data[i * 4 + 0];
-                let g = position.data[i * 4 + 1];
-                let b = position.data[i * 4 + 2];
-                let a = position.data[i * 4 + 3];
+                let index = (i + count) % l;
+
+                let r = position.data[index * 4 + 0];
+                let g = position.data[index * 4 + 1];
+                let b = position.data[index * 4 + 2];
+                let a = position.data[index * 4 + 3];
 
                 let j = colorToInt(r, g, b);
 
@@ -75,12 +106,19 @@ const Hilbert = (props) => {
             context.putImageData(frame, 0, 0);
         }
 
-    }, [color, position]);
+    }, [color, position, count]);
+
+
+    useInterval(() => {
+        if (color !== null && position !== null) {
+            setCount(count + 1);
+        }
+    }, 100);
 
 
     return (<canvas className="Hilbert" 
-                width={512 + "px"} 
-                height={512 + "px"} 
+                width={res + "px"} 
+                height={res + "px"} 
                 ref={mount} 
             />);
 }
