@@ -1,3 +1,7 @@
 .Distrito {
     width: 90%;
 }
+
+.DistritoPosition {
+    display: none;
+}
