@@ -7,7 +7,7 @@ import './Distrito.css';
 
 import channelsFirst from './assets/4-channels.png';
 import channelsSecond from './assets/3-channels.png';
-
+import channelMask from './assets/mask.png';
 
 
 
@@ -18,36 +18,31 @@ class MultichannelImage {
         this.height = height;
         this.width = width;
         this.channels = [];
+        this.mask = new Uint8ClampedArray(this.height * this.width).fill(255);
     }
-
 
     addChannel(channel) {
         this.channels.push(channel);
     }
 
-    getMixImageData(channels) {
+    addMask(mask) {
+        this.mask = mask;
+    }
 
-        let [red, green, blue, alpha] = channels;
+    getMixImageData(channels) {
+        let [red, green, blue] = channels;
         const arr = new Uint8ClampedArray(this.height * this.width * 4);
         for (let i = 0; i < arr.length; i++) {
             arr[i * 4 + 0] = red === -1 ? 0 : this.channels[red][i];
             arr[i * 4 + 1] = green === -1 ? 0 : this.channels[green][i];
             arr[i * 4 + 2] = blue === -1 ? 0 : this.channels[blue][i];
-            arr[i * 4 + 3] = alpha === -1 ? 255 : this.channels[alpha][i];
+            arr[i * 4 + 3] = this.mask[i];
         }
         return new ImageData(arr, this.width, this.height);
     }
 
     getGrayImageData(channel) {
-
-        const arr = new Uint8ClampedArray(this.height * this.width * 4);
-        for (let i = 0; i < arr.length; i++) {
-            arr[i * 4 + 0] = channel === -1 ? 0 : this.channels[channel][i];
-            arr[i * 4 + 1] = channel === -1 ? 0 : this.channels[channel][i];
-            arr[i * 4 + 2] = channel === -1 ? 0 : this.channels[channel][i];
-            arr[i * 4 + 3] = 255;
-        }
-        return new ImageData(arr, this.width, this.height);
+        return this.getMixImageData([channel, channel, channel]);
     }
 }
 
@@ -60,9 +55,11 @@ const Distrito = () => {
     let [multiImage, setMultiImage] = useState(null);
     let [rows, setRows] = useState(null);
 
+    const colorMap = {"red": 0, 
+                    "green": 1,
+                    "blue": 2};
 
     useEffect(() => {
-        console.log("First call hilbert.")
 
         const getData = (src) => {
             return new Promise ((resolve, reject) => {
@@ -82,8 +79,8 @@ const Distrito = () => {
         }
 
 
-        Promise.all([getData(channelsFirst), getData(channelsSecond)]).then(function(values) {
-            let [first, second] = values;
+        Promise.all([getData(channelsFirst), getData(channelsSecond), getData(channelMask)]).then(function(values) {
+            let [first, second, third] = values;
         
             let image = new MultichannelImage(first.width, first.height);
 
@@ -94,6 +91,7 @@ const Distrito = () => {
             let tm5 = new Uint8ClampedArray(first.width * first.height);
             let tm6 = new Uint8ClampedArray(first.width * first.height);
             let tm7 = new Uint8ClampedArray(first.width * first.height);
+            let mask = new Uint8ClampedArray(first.width * first.height);
 
             let l = first.data.length / 4;
 
@@ -105,6 +103,7 @@ const Distrito = () => {
                 tm5[i] = second.data[i * 4 + 0];
                 tm6[i] = second.data[i * 4 + 1];
                 tm7[i] = second.data[i * 4 + 2];
+                mask[i] = third.data[i * 4 + 0];
             }
             
 
@@ -115,81 +114,58 @@ const Distrito = () => {
             image.addChannel(tm5);
             image.addChannel(tm6);
             image.addChannel(tm7);
-
-
-            
+            image.addMask(mask);
 
             setWidth(image.width * (image.channels.length + 1));
             setHeight(image.height * 3);
             setMultiImage(image);
-            setRows([{red: {position: 2,
-                            x: 2 * image.width,
-                            y: 1 * image.height,
-                            width: image.width,
-                            height: image.height}, 
-                        green: {position: 1,
-                                x: 1 * image.width,
-                                y: 1 * image.height,
-                                width: image.width,
-                                height: image.height}, 
-                        blue: {position: 0,
-                                x: 0 * image.width,
-                                y: 1 * image.height,
-                                width: image.width,
-                                height: image.height}}, 
-                    {red: {position: 3,
-                            x: 3 * image.width,
-                            y: 2 * image.height,
-                            width: image.width,
-                            height: image.height}, 
-                        green: {position: 2,
-                                x: 2 * image.width,
-                                y: 2 * image.height,
-                                width: image.width,
-                                height: image.height}, 
-                        blue: {position: 1,
-                                x: 1 * image.width,
-                                y: 2 * image.height,
-                                width: image.width,
-                                height: image.height}}]);
+            setRows([{used: [{position: 2, color: "red"}, 
+                             {position: 1, color: "green"}, 
+                             {position: 0, color: "blue"}, 
+                             ],
+                      available: []},
+                     {used: [{position: 1, color: "red"}, 
+                             {position: 2, color: "green"}, 
+                             {position: 3, color: "blue"}, 
+                             ],
+                      available: []}]);
+
         });
-
-
-
     }, []);
+
 
 
     useEffect(() => {
         if (multiImage !== null && width !== null && height !== null && rows !== null) { 
-
-            let context = mount.current.getContext('2d');
+            let realContext = mount.current.getContext('2d');
             let canvasWidth = mount.current.width;
             let canvasHeight = mount.current.height;
+            realContext.clearRect(0, 0, canvasWidth, canvasHeight);
+            realContext.filter = 'brightness(1) saturate(100%) contrast(100%) opacity(1)';
+
+
+            const offscreen = document.createElement('canvas');
+            offscreen.width = mount.current.width;
+            offscreen.height = mount.current.height;
+
+            let context = offscreen.getContext('2d')
             context.clearRect(0, 0, canvasWidth, canvasHeight);
 
-
-            
-
             for (let i = 0; i < multiImage.channels.length; i++) {
-                context.putImageData(multiImage.getMixImageData([i, i, i, -1]), i * multiImage.width, 0);
+                context.putImageData(multiImage.getGrayImageData(i), i * multiImage.width, 0);
             }
 
             rows.forEach((row, index) => {
-                let { red, green, blue } = row;
-
-                console.table(green);
-                if (!(red.position < 0)) {
-                    context.putImageData(multiImage.getMixImageData([red.position, -1, -1, -1]), red.x, red.y);
-                }
-                if (!(green.position < 0)) {
-                    context.putImageData(multiImage.getMixImageData([-1, green.position, -1, -1]), green.x, green.y);
-                }
-                if (!(blue.position < 0)) {
-                    context.putImageData(multiImage.getMixImageData([-1, -1, blue.position, -1]), blue.x, blue.y);
-                }
-                context.putImageData(multiImage.getMixImageData([red.position, green.position, blue.position, -1]), multiImage.channels.length * multiImage.width, (1 + index) * multiImage.height);
-            })
- 
+                let mergedBands = [-1, -1, -1];
+                row.used.forEach((colorObject) => {
+                    let bands = [-1, -1, -1];
+                    bands[colorMap[colorObject.color]] = colorObject.position;
+                    mergedBands[colorMap[colorObject.color]] = colorObject.position;
+                    context.putImageData(multiImage.getMixImageData(bands), colorObject.position * multiImage.width, (1 + index) * multiImage.height);
+                });
+                context.putImageData(multiImage.getMixImageData(mergedBands), multiImage.channels.length * multiImage.width, (1 + index) * multiImage.height);
+            });
+            realContext.drawImage(offscreen, 0, 0);
         }
         
     }, [multiImage, width, height, rows]);
@@ -199,91 +175,40 @@ const Distrito = () => {
         let rect = mount.current.getBoundingClientRect();
         let x = Math.floor((e.pageX - rect.left) / rect.width * width),
             y = Math.floor((e.pageY - rect.top) / rect.height * height);
-
-        console.log(x, y);
-
-        console.log("row: " + Math.floor(y / multiImage.height));
-        console.log("col: " + Math.floor(x / multiImage.width));
-
         let row = Math.floor(y / multiImage.height) - 1;
         let column = Math.floor(x / multiImage.width);
 
-        if (!(row < 0) && column < multiImage.channels.length) {
-            let newRows = [...rows];
+        
+        let newRows = [...rows];
 
 
-            let changed = false;
+        let active = false;
 
-            if (x >= newRows[row].red.x && x < newRows[row].red.x + newRows[row].red.width && 
-                y >= newRows[row].red.y && y < newRows[row].red.y + newRows[row].red.height) {
-                
-                if (newRows[row].red.position < 0) {
-                    newRows[row].red.position = column;
-                } else {
-                    newRows[row].red.position = -1;
-                }
-                changed = true;
+        let newUsed = [];
+        let newAvailable = [...newRows[row].available];
+        
+        // First I check if they clicked on an assigned space.
+
+        newRows[row].used.forEach(colorObject => {
+            if (colorObject.position === column) {
+                newAvailable.unshift({color: colorObject.color, position: -1});
+                active = true;
+            } else {
+                newUsed.push({...colorObject});
             }
+        });
 
-            if (x >= newRows[row].green.x && x < newRows[row].green.x + newRows[row].green.width && 
-                y >= newRows[row].green.y && y < newRows[row].green.y + newRows[row].green.height) {
-                if (newRows[row].green.position < 0) {
-                    newRows[row].green.position = column;
-                } else {
-                    newRows[row].green.position = -1;
-                }
-                changed = true;
-            }
+        // If they didn't, I get the last color that was unassigned and put in in place.
 
-
-            if (x >= newRows[row].blue.x && x < newRows[row].blue.x + newRows[row].blue.width && 
-                y >= newRows[row].blue.y && y < newRows[row].blue.y + newRows[row].blue.height) {
-                if (newRows[row].blue.position < 0) {
-                    newRows[row].blue.position = column;
-                } else {
-                    newRows[row].blue.position = -1;
-                }
-                changed = true;
-            }
-
-
-
-            if (!changed && (newRows[row].red.position < 0 || newRows[row].green.position < 0 || newRows[row].blue.position < 0)) {
-                
-                // Some slot is open, we can assign
-                console.log("Some slot is open, we can assign");
-                if (newRows[row].red.position < 0) {
-                    
-                    newRows[row].red.position = column;
-                    newRows[row].red.x = column * multiImage.width;
-                    newRows[row].red.y = (row + 1) * multiImage.height;
-                    newRows[row].red.width = multiImage.width;
-                    newRows[row].red.height = multiImage.height;
-                }
-                if (newRows[row].green.position < 0) {
-                    
-                    newRows[row].green.position = column;
-                    newRows[row].green.x = column * multiImage.width;
-                    newRows[row].green.y = (row + 1) * multiImage.height;
-                    newRows[row].green.width = multiImage.width;
-                    newRows[row].green.height = multiImage.height;
-                }
-                if (newRows[row].blue.position < 0) {
-                    
-                    newRows[row].blue.position = column;
-                    newRows[row].blue.x = column * multiImage.width;
-                    newRows[row].blue.y = (row + 1) * multiImage.height;
-                    newRows[row].blue.width = multiImage.width;
-                    newRows[row].blue.height = multiImage.height;
-                }
-
-
-            }
-
-
-            setRows(newRows);
+        if (!active && newAvailable.length > 0) {
+            let colorObject = newAvailable.shift();
+            colorObject.position = column;
+            newUsed.push(colorObject);
         }
-    
+
+        newRows[row].used = newUsed;
+        newRows[row].available = newAvailable;
+        setRows(newRows);
     }
 
     return (<canvas className="Distrito"
