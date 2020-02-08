@@ -8,8 +8,6 @@
 import React, { Component } from 'react';
 
 
-import ReactGA from 'react-ga';
-
 import Mandelbrot from './Mandelbrot.js';
 import Reinforcement from './Reinforcement.js';
 import cubeDepth from './assets/cube-depth.png';
@@ -34,7 +32,7 @@ import * as d3 from 'd3';
 import { randomElement } from './rl/util.js';
 import { getIndexFromArray, mod } from './util.js';
 
-import { createBrowserHistory } from "history";
+import GA from './GoogleAnalytics.js';
 
 
 import './rl/board.css';
@@ -42,15 +40,20 @@ import './rl/board.css';
 import { BrowserRouter as Router, Switch, Redirect, Route, Link } from 'react-router-dom';
 
 
-ReactGA.initialize(process.env.REACT_APP_GA_ID);
+/**
 
-const history = createBrowserHistory();
+This will be the preferable approach once this is made a functional component.
+function usePageViews() {
+  let location = useLocation()
 
+  useEffect(() => {
+      debugger;
+      ReactGA.set({ page: location.pathname }); 
+      ReactGA.pageview(location.pathname);
+    }, [location]);
+}
 
-history.listen(location => {
-  ReactGA.set({ page: location.pathname }); 
-  ReactGA.pageview(location.pathname); 
-});
+**/
 
     const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -389,6 +392,7 @@ history.listen(location => {
 
         return (
           <Router>
+             { GA.init() && <GA.RouteTracker /> }
             <div className="MenuHamburger">
                 <Hamburger onClick={this.handleMenu.bind(this)} isActive={this.state.isActive} />
             </div>
