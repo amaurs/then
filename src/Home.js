@@ -8,6 +8,7 @@
 import React, { Component } from 'react';
 
 
+import ReactGA from 'react-ga';
 
 import Mandelbrot from './Mandelbrot.js';
 import Reinforcement from './Reinforcement.js';
@@ -33,10 +34,23 @@ import * as d3 from 'd3';
 import { randomElement } from './rl/util.js';
 import { getIndexFromArray, mod } from './util.js';
 
+import { createBrowserHistory } from "history";
+
 
 import './rl/board.css';
 
 import { BrowserRouter as Router, Switch, Redirect, Route, Link } from 'react-router-dom';
+
+
+ReactGA.initialize(process.env.REACT_APP_GA_ID);
+
+const history = createBrowserHistory();
+
+
+history.listen(location => {
+  ReactGA.set({ page: location.pathname }); 
+  ReactGA.pageview(location.pathname); 
+});
 
     const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
