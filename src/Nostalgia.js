@@ -7,24 +7,35 @@ const USER_SERVICE_URL = "https://azzhejgg0l.execute-api.us-east-1.amazonaws.com
 export default function Nostalgia() {
     const [user, setUser] = useState("");
     const [count, setCount] = useState(0);
-    const [delay, setDelay] = useState(100);
+    const [delay, setDelay] = useState(null);
 
-    useEffect(function() {
+    const getPhrase = () => {
         fetch(USER_SERVICE_URL)
             .then(results => results.json())
             .then(data => {
-                setUser(data.sentence);
+                setUser(data.sentence.split(" ").filter(word => "" !== word)
+                                                    .map(word => word === "i"? "I": word)
+                                                    .map((word, index) => index === 0? word.charAt(0).toUpperCase() + word.slice(1): word)
+                                                    .reduce((a, b) => a + " " + b, ""));
+                setCount(0);
+                setDelay(0);
         });
+    }
+
+    useEffect(function() {
+        getPhrase();
     }, []);
 
     useInterval(() => {
         if(count < user.length) {
             setCount(count + 1);
             setDelay(100);
+        } else {
+            getPhrase();
         }
     }, delay);
-    return <div>
-                <h1>{user.slice(0, count)}</h1>
-           </div>
 
+    return (<div>
+            <h1>{user.slice(0, count)}</h1>
+           </div>);
 }
