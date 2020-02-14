@@ -17,13 +17,14 @@ export default function Nostalgia() {
                                                     .map(word => word === "i"? "I": word)
                                                     .map((word, index) => index === 0? word.charAt(0).toUpperCase() + word.slice(1): word)
                                                     .reduce((a, b) => a + " " + b, ""));
-                setCount(0);
-                setDelay(0);
+                
         });
     }
 
     useEffect(function() {
         getPhrase();
+        setCount(0);
+        setDelay(0);
     }, []);
 
     useInterval(() => {
@@ -32,6 +33,8 @@ export default function Nostalgia() {
             setDelay(100);
         } else {
             getPhrase();
+            setCount(0);
+            setDelay(100);
         }
     }, delay);
 
