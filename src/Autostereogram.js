@@ -12,6 +12,17 @@ const Autostereogram = () => {
 
     let autostereogramCanvas = useRef();
 
+    let [show, setShow] = useState(true);
+
+    const handleOnMouseDown = (e) => {
+        setShow(false);
+    } 
+
+    const handleOnMouseUp = (e) => {
+        setShow(true);
+    } 
+
+
     useEffect(() => {
         let width = autostereogramCanvas.current.clientWidth;
         let height = autostereogramCanvas.current.clientHeight;
@@ -37,39 +48,41 @@ const Autostereogram = () => {
             let realContext = realCanvas.getContext("2d");
             realContext.clearRect(0, 0, width, height);
             realContext.drawImage(virtualCanvas, 0, 0, width, height);
-            let frame = realContext.getImageData(0, 0, width, height);
-            
+            if (show) {
+                let frame = realContext.getImageData(0, 0, width, height);
 
-            let strip_width =  width / AUTOSTEREOGRAM_STRIPS;
-
-            let board = new Board(strip_width, height);
-            board.init();    
-            board.randomize();
+                let strip_width =  width / AUTOSTEREOGRAM_STRIPS;
     
-            for (let y = 0; y < frame.height; y++) {
-                for (let x = 0; x < frame.width; x++) {
-                    let index = (y * frame.width + x) * 4;
-                    if (!(x < strip_width)) {
-                        let average = ((frame.data[index + 0] + 
-                                        frame.data[index + 1] + 
-                                        frame.data[index + 2]) / 3) / 255;
-                        let offset = Math.floor(average * (64 - 1));
-                        if (offset > 0) {
-                            board.setXY((x % strip_width), y, board.getXY((x % strip_width) + offset, y));
+                let board = new Board(strip_width, height);
+                board.init();    
+                board.randomize();
+        
+                for (let y = 0; y < frame.height; y++) {
+                    for (let x = 0; x < frame.width; x++) {
+                        let index = (y * frame.width + x) * 4;
+                        if (!(x < strip_width)) {
+                            let average = ((frame.data[index + 0] + 
+                                            frame.data[index + 1] + 
+                                            frame.data[index + 2]) / 3) / 255;
+                            let offset = Math.floor(average * (64 - 1));
+                            if (offset > 0) {
+                                board.setXY((x % strip_width), y, board.getXY((x % strip_width) + offset, y));
+                            }
+                        }
+                        if (board.getXY((x % strip_width), y)) {
+                            frame.data[index + 0] = 0; 
+                            frame.data[index + 1] = 0; 
+                            frame.data[index + 2] = 0;
+                        } else {
+                            frame.data[index + 0] = 255; 
+                            frame.data[index + 1] = 255; 
+                            frame.data[index + 2] = 255;
                         }
                     }
-                    if (board.getXY((x % strip_width), y)) {
-                        frame.data[index + 0] = 0; 
-                        frame.data[index + 1] = 0; 
-                        frame.data[index + 2] = 0;
-                    } else {
-                        frame.data[index + 0] = 255; 
-                        frame.data[index + 1] = 255; 
-                        frame.data[index + 2] = 255;
-                    }
                 }
+                realContext.putImageData(frame, 0, 0);
             }
-            realContext.putImageData(frame, 0, 0);
+
         }
 
         const animate = () => {
@@ -88,7 +101,8 @@ const Autostereogram = () => {
             geometry.dispose();
             material.dispose();
         }
-    }, []);
+    }, [show]);
+
 
     return (
         <canvas
@@ -96,6 +110,8 @@ const Autostereogram = () => {
             ref={autostereogramCanvas}
             width={800}
             height={400}
+            onMouseDown={handleOnMouseDown}
+            onMouseUp={handleOnMouseUp}
         />
     );
 }
