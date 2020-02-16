@@ -90,7 +90,6 @@ const Corrupted = () => {
             scene.remove(mesh);
             geometry.dispose();
             material.dispose();
-            mesh.dispose();
         }
 
     }, []);

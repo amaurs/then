@@ -22,6 +22,10 @@ const Autostereogram = () => {
         setShow(true);
     } 
 
+    const handleToggle = (e) => {
+        setShow(!show);
+    }
+
 
     useEffect(() => {
         let width = autostereogramCanvas.current.clientWidth;
@@ -104,14 +108,14 @@ const Autostereogram = () => {
     }, [show]);
 
 
+
     return (
         <canvas
             className="vis"
             ref={autostereogramCanvas}
             width={800}
             height={400}
-            onMouseDown={handleOnMouseDown}
-            onMouseUp={handleOnMouseUp}
+            onClick={handleToggle}
         />
     );
 }
