@@ -5,6 +5,30 @@ import './Voronoi.css'
 import * as d3 from 'd3';
 import { Delaunay } from "d3-delaunay";
 
+
+/**
+let imageRatio = this.state.imageHeight / this.state.imageWidth;
+let ratio = this.state.height / this.state.width;
+let canvasHeight = this.state.height;
+let canvasWidth = this.state.width;
+if(ratio < 1) {
+    canvasWidth = canvasHeight * (1 / imageRatio);
+} else {
+    canvasHeight = canvasWidth * imageRatio;
+}
+voronoi = <Voronoi imageData={this.state.totalData}
+                   width={this.state.width}
+                   height={this.state.height}
+                   imageWidth ={this.state.imageWidth}
+                   imageHeight={this.state.imageHeight}
+                   sites={this.state.sites}
+                   updateCities={this.updateCities}
+                   canvasWidth={canvasWidth}
+                   canvasHeight={canvasHeight}
+                   updates={this.state.voronoiUpdates}
+          />
+**/
+
 const Voronoi = (props) => {
 
     let mount = useRef();
