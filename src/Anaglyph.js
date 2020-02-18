@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useRequestAnimationFrame } from './Hooks.js';
 
 import * as THREE from 'three-full';
-import Board from './Board.js';
 
 import AnaglyphSVGRenderer from './AnaglyphSVGRenderer.js';
 import './Anaglyph.css'
@@ -31,7 +29,7 @@ const Anaglyph = (props) => {
             setData({points: json, hasFetched: true})
           });
 
-    }, []);
+    }, [props]);
     
 
     useEffect(() => {
@@ -54,10 +52,7 @@ const Anaglyph = (props) => {
     
             let line = new THREE.Line( geometry, material );
                   
-            scene.add( line );
-    
-            let controls = new THREE.OrbitControls( camera, renderer.domElement );
-    
+            scene.add(line);
     
             const renderScene = () => {
                 renderer.render(scene, camera);

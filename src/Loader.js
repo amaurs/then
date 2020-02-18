@@ -1,8 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { useRequestAnimationFrame } from './Hooks.js';
+import React, { useRef, useEffect } from 'react';
 
 import * as THREE from 'three-full';
-import Board from './Board.js';
 
 import './Loader.css'
 
@@ -12,11 +10,12 @@ const Loader = () => {
 
     let theCanvas = useRef();
 
-    let canvas = document.createElement( "canvas" );
+    
 
     useEffect(() => {
         let width = 800;
         let height = 400;
+        let canvas = document.createElement( "canvas" );
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: canvas.current, antialias: true });

@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useRequestAnimationFrame } from './Hooks.js';
 import * as THREE from 'three-full';
 import Board from './Board.js';
 
@@ -8,12 +7,13 @@ const AUTOSTEREOGRAM_STRIPS = 8
 
 const Autostereogram = () => {
 
-    let canvas = document.createElement( "canvas" );
+    
 
     let autostereogramCanvas = useRef();
 
     let [show, setShow] = useState(true);
 
+    /**
     const handleOnMouseDown = (e) => {
         setShow(false);
     } 
@@ -21,6 +21,7 @@ const Autostereogram = () => {
     const handleOnMouseUp = (e) => {
         setShow(true);
     } 
+    **/
 
     const handleToggle = (e) => {
         setShow(!show);
@@ -28,6 +29,7 @@ const Autostereogram = () => {
 
 
     useEffect(() => {
+        let canvas = document.createElement( "canvas" );
         let width = autostereogramCanvas.current.clientWidth;
         let height = autostereogramCanvas.current.clientHeight;
         const scene = new THREE.Scene();

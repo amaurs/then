@@ -1,8 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useParams} from "react-router";
 
-import { colorToInt } from './util.js'
-import { useInterval } from './Hooks.js';
 import './Distrito.css';
 
 import channelsFirst from './assets/first-channels-small.png';
@@ -66,9 +63,6 @@ const Distrito = () => {
     let [rows, setRows] = useState(null);
     let [hold, setHold] = useState(null);
 
-    const colorMap = {"red": 0, 
-                    "green": 1,
-                    "blue": 2};
 
     useEffect(() => {
 
@@ -147,6 +141,9 @@ const Distrito = () => {
 
 
     useEffect(() => {
+        const colorMap = {"red": 0, 
+                    "green": 1,
+                    "blue": 2};
         if (multiImage !== null && width !== null && height !== null && rows !== null) { 
             let realContext = mount.current.getContext('2d');
             let canvasWidth = mount.current.width;
@@ -188,7 +185,7 @@ const Distrito = () => {
         
     }, [multiImage, width, height, rows, hold]);
 
-
+    /**
     const handleOnClick = (e) => {
         let rect = mount.current.getBoundingClientRect();
         let x = Math.floor((e.pageX - rect.left) / rect.width * width),
@@ -229,7 +226,7 @@ const Distrito = () => {
             setRows(newRows);
         }
     }
-
+    **/
 
     const handleOnMouseDown = (e) => {
         let rect = mount.current.getBoundingClientRect();
@@ -248,8 +245,6 @@ const Distrito = () => {
 
         if (!(row < 0) ) {
             let newRows = [...rows];
-            let active = false;
-            let hold = null;
             let newAvailable = [...newRows[row].available];
             let newUsed = [];
 
@@ -282,11 +277,6 @@ const Distrito = () => {
             let row = Math.floor(y / multiImage.height) - 1;
             let column = Math.floor(x / multiImage.width);
     
-    
-            let xOffset = x - column * multiImage.width,
-                yOffset = y - (row + 1) * multiImage.height;
-            console.log(column);
-            console.log(row);
     
             // First I check if they clicked on an assigned space.
     

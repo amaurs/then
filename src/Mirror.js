@@ -1,8 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { useRequestAnimationFrame } from './Hooks.js';
+import React, { useRef, useEffect } from 'react';
 
 import * as THREE from 'three-full';
-import { useInterval } from './Hooks.js';
 
 import betty from './assets/betty.mp4'
 
@@ -17,7 +15,6 @@ const Mirror = (props) => {
     useEffect(() => {
 
         let AMOUNT = 5;
-        let ASPECT_RATIO = window.innerWidth / window.innerHeight;
 
         let WIDTH = ( window.innerWidth / AMOUNT ) * window.devicePixelRatio;
         let HEIGHT = ( window.innerHeight / AMOUNT ) * window.devicePixelRatio;

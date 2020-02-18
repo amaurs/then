@@ -1,9 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useRequestAnimationFrame, useInterval } from './Hooks.js';
-import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids, colorToString, invertColor } from './util.js';
-
-import * as THREE from 'three-full';
-
+import { useInterval } from './Hooks.js';
+import { getRandomIntegerArray, colorToString, invertColor } from './util.js';
 
 import './TravelingSalesman.css'
 
@@ -20,14 +17,13 @@ const TravelingSalesman = (props) => {
     const numberColors = 700;
 
 
-    const colors = getRandomIntegerArray(numberColors * 3, 0, 256);
-    const cityPoints = getRandomIntegerArray(numberColors * 3, 0, 256);
+    
 
     useEffect(() => {
          // TODO: This function needs memoizing. Right now it is calling the service on every mount.
-         
-         let colorsUrl = props.url + "/solve?cities=" + JSON.stringify(colors) + "&dimension=" + 3;
-         fetch(colorsUrl, {
+        const colors = getRandomIntegerArray(numberColors * 3, 0, 256);
+        let colorsUrl = props.url + "/solve?cities=" + JSON.stringify(colors) + "&dimension=" + 3;
+        fetch(colorsUrl, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json'
@@ -38,7 +34,7 @@ const TravelingSalesman = (props) => {
           }).then(json => {
             setData({cities: json, hasFetched: true});
           });
-    }, []);
+    }, [props]);
 
 
     useEffect(() => {
@@ -57,7 +53,7 @@ const TravelingSalesman = (props) => {
         }).then(json => {
           setCities({cities: json, hasFetched: true})
         });
-    }, []);
+    }, [props]);
 
     useEffect(() => {
         if (citiesToDraw.length > 0) {
@@ -80,7 +76,7 @@ const TravelingSalesman = (props) => {
 
         }
 
-    }, [data, cities, citiesToDraw]);
+    }, [data, cities, citiesToDraw, color]);
 
     useInterval(() => {
         const maxBound = (time, size) => {
