@@ -5,6 +5,8 @@ import * as THREE from 'three-full';
 import AnaglyphSVGRenderer from './AnaglyphSVGRenderer.js';
 import './Anaglyph.css'
 
+import Loader from './Loader.js'
+
 const Anaglyph = (props) => {
 
     let mount = useRef();
@@ -29,7 +31,8 @@ const Anaglyph = (props) => {
             setData({points: json, hasFetched: true})
           });
 
-    }, [props]);
+
+    }, [props.url]);
     
 
     useEffect(() => {
@@ -77,13 +80,20 @@ const Anaglyph = (props) => {
 
     }, [data]);
 
-    return (
+
+    if (data.points.length > 0) {
+        return (
             <div
                 className="Anaglyph"
                 ref={mount}
             >
             </div>
-    );
+        );
+    } else {
+        return <Loader />
+    }
+
+    
 }
 
 export default Anaglyph;

@@ -2,7 +2,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useInterval } from './Hooks.js';
 import { getRandomIntegerArray, colorToString, invertColor } from './util.js';
 
-import './TravelingSalesman.css'
+import Loader from './Loader.js';
+
+import './TravelingSalesman.css';
 
 const TravelingSalesman = (props) => {
 
@@ -34,7 +36,7 @@ const TravelingSalesman = (props) => {
           }).then(json => {
             setData({cities: json, hasFetched: true});
           });
-    }, [props]);
+    }, [props.url]);
 
 
     useEffect(() => {
@@ -109,13 +111,18 @@ const TravelingSalesman = (props) => {
         setTick(tick + 1);
         setDelay(24);
     }, delay);
-
-    return (<canvas
+    if (citiesToDraw.length > 0) {
+        return (<canvas
                 ref={mount}
                 width={props.width + "px"}
                 height={props.height + "px"}
                 className="TravelingSalesman"
             />);
+    } else {
+        return <Loader />
+    }
+
+    
 }
 
 export default TravelingSalesman;
