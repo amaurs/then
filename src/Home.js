@@ -10,8 +10,6 @@ import React, { Component } from 'react';
 
 import Mandelbrot from './Mandelbrot.js';
 import Reinforcement from './Reinforcement.js';
-import cubeDepth from './assets/cube-depth.png';
-import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids } from './util.js';
 import './Home.css';
 import Anaglyph from './Anaglyph.js';
 import Circle from './Circle.js';
@@ -20,7 +18,6 @@ import Distrito from './Distrito.js';
 import Hamburger from './Hamburger';
 import Hilbert from './Hilbert.js';
 import Autostereogram from './Autostereogram';
-import Loader from './Loader';
 import Mirror from './Mirror.js';
 import Nostalgia from './Nostalgia';
 import NotFound from './NotFound';
@@ -28,9 +25,6 @@ import Then from './Then.js';
 import TravelingSalesman from './TravelingSalesman';
 import Voronoi from './Voronoi.js';
 import Wigglegram from './Wigglegram.js';
-import * as d3 from 'd3';
-import { randomElement } from './rl/util.js';
-import { getIndexFromArray, mod } from './util.js';
 
 import GA from './GoogleAnalytics.js';
 
@@ -55,7 +49,6 @@ function usePageViews() {
 
 **/
 
-    const SECTIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
     const MAPPING = {
         "1986": 1,
@@ -93,8 +86,6 @@ function usePageViews() {
     const apiHost = process.env.REACT_APP_API_HOST;
     const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
     const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
-    const numberColors = 700;
-    const squareSampling = 100;
     const NotFoundRedirect = () => <Redirect to='/not-found' />;
 
 

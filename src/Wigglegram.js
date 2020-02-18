@@ -1,5 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
-import video from './assets/emji.mp4'
+import React, { useState, useEffect } from 'react';
 import './Wigglegram.css'
 
 import Loader from './Loader';
@@ -9,7 +8,6 @@ import { getRandomInt } from './util.js';
 
 const Wigglegram = (props) => {
 
-    let image = useRef();
     const [data, setData] = useState(null);
     const [current, setCurrent] =  useState(null);
     const [delay, setDelay] = useState(null);
@@ -28,11 +26,10 @@ const Wigglegram = (props) => {
             return response.json();
           }).then(json => {
             setData(json["images"]);
-            let selected = json["images"];
             setDelay(0);
           });
 
-    }, []);
+    }, [props]);
 
     useInterval(() => {
         if(data !== null) {
@@ -44,7 +41,7 @@ const Wigglegram = (props) => {
 
 
     return (<div>
-                {current === null ? <Loader /> : <img src={current} />}                
+                {current === null ? <Loader /> : <img alt="" src={current} />}                
             </div>);
 }
 

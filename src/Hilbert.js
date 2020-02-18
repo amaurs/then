@@ -28,14 +28,12 @@ const image_square_map = {8: hilbert_square_8,
 
 const Hilbert = (props) => {
 
-    let { res } = useParams();
+    
 
+    let { res } = useParams();
     if(res === undefined) {
         res = 8;
     }
-
-    let hilbert_cube = image_cube_map[res];
-    let hilbert_square = image_square_map[res];
 
 
     let mount = useRef();
@@ -44,7 +42,9 @@ const Hilbert = (props) => {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        console.log("First call hilbert.")
+        
+        let hilbert_cube = image_cube_map[res];
+        let hilbert_square = image_square_map[res];
 
         const getData = (src) => {
             return new Promise ((resolve, reject) => {
@@ -71,7 +71,7 @@ const Hilbert = (props) => {
             setPosition(imageData);
         })
 
-    }, []);
+    }, [res]);
 
 
     useEffect(() => {
@@ -94,7 +94,7 @@ const Hilbert = (props) => {
                 let r = position.data[index * 4 + 0];
                 let g = position.data[index * 4 + 1];
                 let b = position.data[index * 4 + 2];
-                let a = position.data[index * 4 + 3];
+                //let a = position.data[index * 4 + 3];
 
                 let j = colorToInt(r, g, b);
 

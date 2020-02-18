@@ -39,5 +39,5 @@ export function useRequestAnimationFrame(animateCallback) {
         console.log("Canceling animation.");
         cancelAnimationFrame(requestAnimationFrameRef.current)
     };
-  }, []);
+  }, [animateCallback]);
 }

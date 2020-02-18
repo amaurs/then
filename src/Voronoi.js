@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import robot from './assets/our-lady.jpg';
-import { getXYfromIndex, getRandomIntegerArray, getRandomInt, getBrightness, getCentroids } from './util.js';
+import { getXYfromIndex, getRandomInt, getBrightness, getCentroids } from './util.js';
 import './Voronoi.css'
 import * as d3 from 'd3';
 import { Delaunay } from "d3-delaunay";
@@ -10,8 +10,6 @@ const Voronoi = (props) => {
     let mount = useRef();
 
     let [updates, setUpdates] = useState(0);
-
-    let [imageData, setImageData] = useState({});
 
     let [cities, setCities] = useState(null);
 

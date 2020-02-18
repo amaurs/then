@@ -1,5 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { useRequestAnimationFrame } from './Hooks.js';
+import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three-full';
 
 import escudo from './assets/escudo.png';
