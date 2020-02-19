@@ -32,15 +32,16 @@ import './Home.css';
 import { Switch, Redirect, Route, Link, useLocation } from 'react-router-dom';
 
 
-const isGAEnabled = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
-if (isGAEnabled) {
+if (isProduction) {
     ReactGA.initialize(process.env.REACT_APP_GA_ID);
 }
 
 const apiHost = process.env.REACT_APP_API_HOST;
 const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
+const delay = 15000;
 const NotFoundRedirect = () => <Redirect to='/not-found' />;
 
 
@@ -48,12 +49,33 @@ const usePageViews = () => {
     let location = useLocation();
 
     useEffect(() => {
-        if (isGAEnabled) {
+        if (isProduction) {
             ReactGA.set({ page: location.pathname }); 
             ReactGA.pageview(location.pathname);
-        }
         
-    }, [location, isGAEnabled]);
+            let id = setTimeout(() => { 
+                console.log("User has been in " + location.pathname + " for " + delay + " milliseconds.")
+                let bandit = {state: location.pathname,
+                          reward: delay}
+                let banditUrl = banditHost + "/metric";
+                fetch(banditUrl, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                  body: JSON.stringify(bandit)
+                })
+                .then(response => {
+            
+                  console.log(response.json())
+                });
+            }, delay);
+
+
+            return () => clearTimeout(id);
+        }
+    }, [location]);
+
 }
 
 
