@@ -64,14 +64,9 @@ const Home = (props) => {
     const [isActive, setIsActive] = useState(false);
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
+    const [names, setNames] = useState([]);
 
-    useEffect(() => {
-        setWidth(window.innerWidth);
-        setHeight(window.innerHeight);
-
-    }, []);
-
-    const getMapping = () =>  {
+    const getMapping = () => {
         return {
                 "/autostereogram": <Autostereogram />,
                 "/1986":           <Distrito />,
@@ -92,16 +87,48 @@ const Home = (props) => {
             };
     }
 
+    const getNames = () => {
+        return Object.entries(getMapping()).filter((element) => 
+              !(element[0] === "/404" || 
+                element[0] === "/" ||
+                element[0] === "/colors/:res")
+        );
+    }
+
+    useEffect(() => {
+        setWidth(window.innerWidth);
+        setHeight(window.innerHeight);
+
+        let bandit = {states: getNames()}
+        let banditUrl = banditHost + "/order";
+        fetch(banditUrl, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(bandit)
+        })
+        .then(response => {
+            return  response.json();
+        }).then(json => {
+
+            setNames(json.order)
+          });
+
+
+    }, []);
+
+
+
     const handleMenu = () => {
         setIsActive(!isActive);
     }
 
+
+
     const getMenu = () => {
-        return <ul>{Object.entries(getMapping()).filter((element) => 
-              !(element[0] === "/404" || 
-                element[0] === "/" ||
-                element[0] === "/colors/:res")
-        ).map((element, index) => 
+
+        return <ul>{names.map((element, index) => 
              <li key={index}><Link onClick={handleMenu} to={element[0]}>{element[0].slice(1)}</Link></li>)
         }</ul>;
     }
@@ -117,6 +144,8 @@ const Home = (props) => {
         routes.push(<Route key={404} component={NotFoundRedirect}><Redirect to="/404" /></Route>);
         return routes;
     }
+
+
 
 
 
