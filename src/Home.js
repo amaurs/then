@@ -90,22 +90,22 @@ const Home = (props) => {
 
     const getMapping = () => {
         return {
-                "/autostereogram": <Autostereogram />,
-                "/1986":           <Distrito />,
-                "/corrupted":      <Corrupted />,
-                "/mandelbrot":     <Mandelbrot host={mandelbrot}/>,
-                "/voronoi":        <Voronoi width={width} height={height} />,
-                "/nevado":         <Wigglegram url={banditHost} />,
-                "/nostalgia":      <Nostalgia />,
-                "/":               <Then />,
-                "/colors":         <Hilbert />,
-                "/colors/:res":    <Hilbert />,
-                "/reinforcement":  <Reinforcement />,
-                "/anaglyph":       <Anaglyph url={apiHost} />,
-                "/tsp":            <TravelingSalesman url={apiHost} width={width} height={height} />,
-                "/conway":         <Circle />,
-                "/mirror":         <Mirror />,
-                "/404":            <NotFound />,
+                "/autostereogram":          <Autostereogram />,
+                "/1986":                    <Distrito />,
+                "/corrupt":                 <Corrupted />,
+                "/mandelbrot":              <Mandelbrot host={mandelbrot}/>,
+                "/voronoi":                 <Voronoi width={width} height={height} />,
+                "/stereo-photography":      <Wigglegram url={banditHost} />,
+                "/bolero":                  <Nostalgia />,
+                "/":                        <Then />,
+                "/hilbert":                 <Hilbert />,
+                "/hilbert/:res":            <Hilbert />,
+                "/reinforcement-learning":  <Reinforcement />,
+                "/anaglyph":                <Anaglyph url={apiHost} />,
+                "/traveling-salesman":      <TravelingSalesman url={apiHost} width={width} height={height} />,
+                "/conway":                  <Circle />,
+                "/kaleidoscope":            <Mirror />,
+                "/404":                     <NotFound />,
             };
     }
 
