@@ -113,7 +113,7 @@ const Home = (props) => {
         return Object.entries(getMapping()).filter((element) => 
               !(element[0] === "/404" || 
                 element[0] === "/" ||
-                element[0] === "/colors/:res")
+                element[0] === "/hilbert/:res")
         );
     }
 
@@ -151,7 +151,7 @@ const Home = (props) => {
     const getMenu = () => {
 
         return <ul>{names.map((element, index) => 
-             <li key={index}><Link onClick={handleMenu} to={element[0]}>{element[0].slice(1)}</Link></li>)
+             <li key={index}><Link onClick={handleMenu} to={element[0]}>{element[0].slice(1).replace("-", " ")}</Link></li>)
         }</ul>;
     }
 
