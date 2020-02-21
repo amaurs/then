@@ -149,9 +149,8 @@ const Home = (props) => {
 
 
     const getMenu = () => {
-
         return <ul>{names.map((element, index) => 
-             <li key={index}><Link onClick={handleMenu} to={element[0]}>{element[0].slice(1).replace("-", " ")}</Link></li>)
+             <li key={index}><Link onClick={handleMenu} to={element}>{element.slice(1).replace("-", " ")}</Link></li>)
         }</ul>;
     }
 
