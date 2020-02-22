@@ -13,7 +13,8 @@ import Corrupted from './Corrupted.js';
 import Distrito from './Distrito.js';
 import Hamburger from './Hamburger';
 import Hilbert from './Hilbert.js';
-import Autostereogram from './Autostereogram';
+import Autostereogram from './Autostereogram.js';
+import Loader from './Loader.js'
 import Mandelbrot from './Mandelbrot.js';
 import Mirror from './Mirror.js';
 import Nostalgia from './Nostalgia';
@@ -88,6 +89,8 @@ const Home = (props) => {
     const [height, setHeight] = useState(0);
     const [names, setNames] = useState([]);
 
+    const [first, setFirst] = useState("/");
+
     const getMapping = () => {
         return {
                 "/autostereogram":          <Autostereogram />,
@@ -95,9 +98,9 @@ const Home = (props) => {
                 "/corrupt":                 <Corrupted />,
                 "/mandelbrot":              <Mandelbrot host={mandelbrot}/>,
                 "/voronoi":                 <Voronoi width={width} height={height} />,
-                "/stereo-photography":      <Wigglegram url={banditHost} />,
+                "/stereo-photography":      <Wigglegram url={banditHost + "/wigglegrams/gif"} delay={1000}/>,
                 "/bolero":                  <Nostalgia />,
-                "/":                        <Then />,
+                "/":                        null,
                 "/hilbert":                 <Hilbert />,
                 "/hilbert/:res":            <Hilbert />,
                 "/reinforcement-learning":  <Reinforcement />,
@@ -107,6 +110,12 @@ const Home = (props) => {
                 "/kaleidoscope":            <Mirror />,
                 "/404":                     <NotFound />,
             };
+    }
+
+    const getMappingDecorated = (home) => {
+
+        return { ...getMapping(), "/": getMapping()[home]};
+
     }
 
     const getNames = () => {
@@ -134,7 +143,8 @@ const Home = (props) => {
             return  response.json();
         }).then(json => {
 
-            setNames(json.order)
+            setNames(json.order);
+            setFirst(json.order[0]);
           });
 
 
@@ -157,7 +167,7 @@ const Home = (props) => {
 
     const getBackgroundContentRouter = () => {
 
-        let routes = Object.entries(getMapping()).map((element, index) => <Route key={index} exact path={element[0]}>
+        let routes = Object.entries(getMappingDecorated(first)).map((element, index) => <Route key={index} exact path={element[0]}>
                 {element[1]}
                 </Route>
                 )

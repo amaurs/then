@@ -15,7 +15,7 @@ const Wigglegram = (props) => {
     useEffect(() => {
          // TODO: This function needs memoizing. Right now it is calling the service on every mount.
          console.log("Fetching...");
-         fetch(props.url + "/wigglegrams", {
+         fetch(props.url, {
 
             method: 'GET',
             headers: {
@@ -29,13 +29,13 @@ const Wigglegram = (props) => {
             setDelay(0);
           });
 
-    }, [props]);
+    }, [props.url]);
 
     useInterval(() => {
         if(data !== null) {
             let selected = data[getRandomInt(0, data.length)];
             setCurrent(selected.url);
-            setDelay(1000);
+            setDelay(props.delay);
         }
     }, delay);
 
