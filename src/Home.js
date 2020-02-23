@@ -89,7 +89,7 @@ const Home = (props) => {
     const [height, setHeight] = useState(0);
     const [names, setNames] = useState([]);
 
-    const [first, setFirst] = useState("/");
+    const [first, setFirst] = useState(["/"]);
 
     const getMapping = () => {
         return {
@@ -114,7 +114,7 @@ const Home = (props) => {
 
     const getMappingDecorated = (home) => {
 
-        return { ...getMapping(), "/": getMapping()[home]};
+        return { ...getMapping(), "/": getMapping()[home[0]]};
 
     }
 
@@ -144,6 +144,8 @@ const Home = (props) => {
         }).then(json => {
 
             setNames(json.order);
+
+            
             setFirst(json.order[0]);
           });
 
@@ -159,8 +161,7 @@ const Home = (props) => {
 
 
     const getMenu = () => {
-        return <ul>{names.map((element, index) => 
-             <li key={index}><Link onClick={handleMenu} to={element}>{element.slice(1).replace("-", " ")}</Link></li>)
+        return <ul>{names.map((element, index) => <li key={index}><Link onClick={handleMenu} to={element[0]}>{element[0].slice(1).replace("-", " ")}</Link></li>)
         }</ul>;
     }
 
