@@ -16,6 +16,7 @@ import Hilbert from './Hilbert.js';
 import Autostereogram from './Autostereogram.js';
 import Loader from './Loader.js'
 import Mandelbrot from './Mandelbrot.js';
+import Masonry from './Masonry.js';
 import Mirror from './Mirror.js';
 import Nostalgia from './Nostalgia';
 import NotFound from './NotFound';
@@ -98,7 +99,7 @@ const Home = (props) => {
                 "/corrupt":                 <Corrupted />,
                 "/mandelbrot":              <Mandelbrot host={mandelbrot}/>,
                 "/voronoi":                 <Voronoi width={width} height={height} />,
-                "/stereo-photography":      <Wigglegram url={banditHost + "/wigglegrams/gif"} delay={1000}/>,
+                "/stereo-photography":      <Masonry url={banditHost + "/wigglegrams/gif"} rows={3} width={width} height={height} />,
                 "/bolero":                  <Nostalgia />,
                 "/":                        null,
                 "/hilbert":                 <Hilbert />,
@@ -108,6 +109,7 @@ const Home = (props) => {
                 "/traveling-salesman":      <TravelingSalesman url={apiHost} width={width} height={height} />,
                 "/conway":                  <Circle />,
                 "/kaleidoscope":            <Mirror />,
+                "/film":                    <Masonry url={banditHost + "/wigglegrams/jpg"} rows={1} width={width} height={height} />,
                 "/404":                     <NotFound />,
             };
     }
