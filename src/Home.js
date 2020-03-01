@@ -129,9 +129,10 @@ const Home = (props) => {
     }
 
     useEffect(() => {
+        
         setWidth(window.innerWidth);
         setHeight(window.innerHeight);
-
+        
         let bandit = {states: getNames()}
         let banditUrl = banditHost + "/order";
         fetch(banditUrl, {

@@ -36,62 +36,85 @@ const Voronoi = (props) => {
     let [updates, setUpdates] = useState(0);
 
     let [cities, setCities] = useState(null);
-
+    const [canvasWidth, setCanvasWidth] = useState(0);
+    const [canvasHeight, setCanvasHeight] = useState(0);
 
     useEffect(() => {
 
-        const onLoad = (event) => {
-            const image = event.target;
+            
+
+
+
+        if (props.width > 0 && props.height > 0) {
+
+
+            const onLoad = (event) => {
+                const image = event.target;
+            
+                let canvas = document.createElement('canvas');
+                canvas.width = image.width;
+                canvas.height = image.height;
+                let context = canvas.getContext('2d');
+                context.drawImage(image, 0, 0);
+    
+                let imageData = context.getImageData(0, 0, image.width, image.height);
+                let totalData = [];
+                for(let index = 0; index < image.width * image.height; index++) {
+                    let pixel = getXYfromIndex(index, image.width);
+                    totalData.push({
+                                     x: pixel[0],
+                                     y: pixel[1],
+                                     r: imageData.data[index * 4],
+                                     g: imageData.data[index * 4 + 1],
+                                     b: imageData.data[index * 4 + 2],
+                                   });
+                }
+    
+                const total = 10000;
+                let sites = [];
+                /** I use the rejection algorithm to get points with the most brightness. **/
+                let numPoints = 0;
+            
+                while(numPoints < total){
+                  let index = getRandomInt(0, image.width * image.height);
+                  let site = totalData[index]
+                  let brightness = getBrightness(site.r, 
+                                                 site.g, 
+                                                 site.b);
+                  if (Math.random() >= brightness ) {
+                    sites.push(site);
+                    numPoints++;
+                  }
+                }
+
+                let imageAspectRatio = image.width / image.height;
+                let windowAspectRatio = props.width / props.height;
+                let box
+                if (windowAspectRatio < 1) {
         
-            let canvas = document.createElement('canvas');
-            canvas.width = image.width;
-            canvas.height = image.height;
-            let context = canvas.getContext('2d');
-            context.drawImage(image, 0, 0);
-
-            let imageData = context.getImageData(0, 0, image.width, image.height);
-            let totalData = [];
-            for(let index = 0; index < image.width * image.height; index++) {
-                let pixel = getXYfromIndex(index, image.width);
-                totalData.push({
-                                 x: pixel[0],
-                                 y: pixel[1],
-                                 r: imageData.data[index * 4],
-                                 g: imageData.data[index * 4 + 1],
-                                 b: imageData.data[index * 4 + 2],
-                               });
+                    box = [imageAspectRatio * props.height, props.height];
+                } else {
+                    box = [props.width, props.width / imageAspectRatio];
+            
+                }
+    
+                setCities({totalData: totalData,
+                           imageWidth: image.width,
+                           imageHeight: image.height,
+                           sites: sites});
+                setCanvasWidth(box[0]);
+                setCanvasHeight(box[1]);
             }
+    
+    
+            let image = new Image();
+            image.src = robot;
+            image.onload = onLoad;
 
-            const total = 10000;
-            let sites = [];
-            /** I use the rejection algorithm to get points with the most brightness. **/
-            let numPoints = 0;
-        
-            while(numPoints < total){
-              let index = getRandomInt(0, image.width * image.height);
-              let site = totalData[index]
-              let brightness = getBrightness(site.r, 
-                                             site.g, 
-                                             site.b);
-              if (Math.random() >= brightness ) {
-                sites.push(site);
-                numPoints++;
-              }
-            }
-
-            setCities({totalData: totalData,
-                       imageWidth: image.width,
-                       imageHeight: image.height,
-                       sites: sites});
 
         }
 
-
-        let image = new Image();
-        image.src = robot;
-        image.onload = onLoad;
-
-    }, []);
+    }, [props.width, props.height]);
 
     useEffect(() => {
 
@@ -169,9 +192,9 @@ const Voronoi = (props) => {
 
     let isVertical = props.height / props.width < 1;
 
-    return (<canvas className={"Voronoi" + (isVertical?"":" vertical")} 
-                    width={props.width + "px"} 
-                    height={props.height + "px"} 
+    return (<canvas className={"Voronoi"} 
+                    width={canvasWidth + "px"} 
+                    height={canvasHeight + "px"} 
                     ref={mount} 
                 />);
 }
