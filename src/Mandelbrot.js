@@ -3,37 +3,35 @@ import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import './Mandelbrot.css'
 
-const position = [53.78905976160202, 44.45646138397791]
+const position = [53.78905976160202, 44.45646138397791];
 
-export default class Mandelbrot extends Component {
-
-    constructor(props) {
-        super(props);
-        console.log("%c"+this.props.host, "color:green")
+const Mandelbrot = (props) => {
+    const onZoomEndHandler = (event) => {
+        event.target.panTo({lat: position[0], lng: position[1]});
     }
 
-    onZoomEndHandler(event) {
-        event.target.panTo({lat: 53.78905976160212, lng: 44.456461383977825});
+    let style = {height: Math.min(props.width, props.height) + "px", width: Math.min(props.width, props.height) + "px"};
+
+    if (props.width === 0 && props.height === 0) {
+        return null;
     }
 
-    render() {
-        return <Map className="map-container" 
+    return <div style={style}>
+               <Map className="Mandelbrot" 
                     center={position} 
                     zoom={3}
-                    minZoom={4}
+                    minZoom={3}
                     maxZoom={42}
                     scrollWheelZoom="center"
                     doubleClickZoom="center"
                     touchZoom="center"
                     dragging={false}
-                    onZoomend={(e) => this.onZoomEndHandler(e)}>
-                 <TileLayer
-                   url={this.props.host}
-                 />
-                 <Marker position={position}>
-                   <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
-                 </Marker>
+                    onZoomend={onZoomEndHandler}>
+                <TileLayer
+                  url={props.host}
+                />
                </Map>
-    }
-
+           </div>;
 }
+
+export default Mandelbrot;
