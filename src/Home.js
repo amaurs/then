@@ -97,7 +97,7 @@ const Home = (props) => {
                 "/autostereogram":          <Autostereogram />,
                 "/1986":                    <Distrito />,
                 "/corrupt":                 <Corrupted />,
-                "/mandelbrot":              <Mandelbrot host={mandelbrot}/>,
+                "/mandelbrot":              <Mandelbrot width={width} height={height} host={mandelbrot}/>,
                 "/voronoi":                 <Voronoi width={width} height={height} />,
                 "/stereo-photography":      <Masonry url={banditHost + "/wigglegrams/gif"} rows={3} width={width} height={height} />,
                 "/bolero":                  <Nostalgia />,
