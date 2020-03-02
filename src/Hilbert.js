@@ -115,12 +115,18 @@ const Hilbert = (props) => {
         }
     }, 100);
 
+    let style = {};
+    if (props.width > 0 && props.height > 0) {
+        style = props.width/props.height<1?{width: "100%"}:{height: "100%"};
+    }
+    
 
-    return (<canvas className="Hilbert" 
+    return <canvas className="Hilbert" 
+                style={style}
                 width={res + "px"} 
                 height={res + "px"} 
                 ref={mount} 
-            />);
+            />;
 }
 
 export default Hilbert;
