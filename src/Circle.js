@@ -13,12 +13,12 @@ board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)
 board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
 
 
-const Circle = () => {
+const Circle = (props) => {
     let ref = useRef();
     const squareSize = 10;
     const [count, setCount] = useState(0);
     const [drag, setDrag] = useState(false);
-    const [position, setPosition] = useState([48 * squareSize,48 * squareSize]);
+    const [position, setPosition] = useState([48 * squareSize, 48 * squareSize]);
     const [offset, setOffset] = useState([0,0]);
     const square = [8 * squareSize, 3 * squareSize];
 
@@ -74,12 +74,18 @@ const Circle = () => {
         board.setXY(x, y, 1);
 
     }
+
+    let size = Math.min(props.width, props.height) + "px";
+
+    if (props.width === 0 && props.height === 0) {
+        return null;
+    }
     
     return (
         <canvas
             ref={ref} 
-            width={1000}
-            height={1000}
+            width={size}
+            height={size}
             onMouseDown={handleOnMouseDown}
             onMouseUp={handleOnMouseUp}
             onMouseMove={handleOnMouseMove}
