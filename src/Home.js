@@ -107,7 +107,7 @@ const Home = (props) => {
                 "/reinforcement-learning":  <Reinforcement />,
                 "/anaglyph":                <Anaglyph url={apiHost} />,
                 "/traveling-salesman":      <TravelingSalesman url={apiHost} width={width} height={height} />,
-                "/conway":                  <Circle />,
+                "/conway":                  <Circle width={width} height={height} />,
                 "/kaleidoscope":            <Mirror />,
                 "/film":                    <Masonry url={banditHost + "/wigglegrams/jpg"} rows={1} width={width} height={height} />,
                 "/404":                     <NotFound />,
