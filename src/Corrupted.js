@@ -4,14 +4,14 @@ import * as THREE from 'three-full';
 import escudo from './assets/escudo.png';
 
 
-const Corrupted = () => {
+const Corrupted = (props) => {
 
 
     let canvas = useRef();
     
     useEffect(() => {
         
-        const camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
+        const camera = new THREE.PerspectiveCamera( 70, props.width / props.height, 1, 1000 );
         camera.position.z = 1.5;
 
         const scene = new THREE.Scene();
@@ -35,8 +35,8 @@ const Corrupted = () => {
 
         renderer.setClearColor( 0xffffff, 1);
 
-        renderer.setPixelRatio( window.devicePixelRatio );
-        renderer.setSize( window.innerWidth, window.innerHeight );
+        //renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( props.width, props.height );
 
 
         const composer = new THREE.EffectComposer( renderer );
@@ -59,11 +59,11 @@ const Corrupted = () => {
 
         const  onWindowResize = () => {
     
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = props.width / props.height;
             camera.updateProjectionMatrix();
     
-            renderer.setSize( window.innerWidth, window.innerHeight );
-            composer.setSize( window.innerWidth, window.innerHeight );
+            renderer.setSize( props.width, props.height );
+            composer.setSize( props.width, props.height );
     
     
         }
@@ -91,7 +91,7 @@ const Corrupted = () => {
             material.dispose();
         }
 
-    }, []);
+    }, [props.width, props.height]);
 
 
 
