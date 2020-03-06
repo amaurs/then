@@ -75,17 +75,18 @@ const Circle = (props) => {
 
     }
 
-    let size = Math.min(props.width, props.height) + "px";
-
-    if (props.width === 0 && props.height === 0) {
-        return null;
+    let style = {};
+    if (props.width > 0 && props.height > 0) {
+        style = props.width/props.height<1?{width: "100%"}:{height: "100%"};
     }
+    
     
     return (
         <canvas
             ref={ref} 
-            width={size}
-            height={size}
+            style={style}
+            width={1000}
+            height={1000}
             onMouseDown={handleOnMouseDown}
             onMouseUp={handleOnMouseUp}
             onMouseMove={handleOnMouseMove}
