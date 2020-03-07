@@ -94,7 +94,7 @@ const Home = (props) => {
 
     const getMapping = () => {
         return {
-                "/autostereogram":          <Autostereogram />,
+                "/autostereogram":          <Autostereogram width={width} height={height} />,
                 "/1986":                    <Distrito width={width} height={height} />,
                 "/corrupt":                 <Corrupted width={width} height={height} />,
                 "/mandelbrot":              <Mandelbrot width={width} height={height} host={mandelbrot}/>,
@@ -106,10 +106,10 @@ const Home = (props) => {
                 "/hilbert/:res":            <Hilbert width={width} height={height} />,
                 "/reinforcement-learning":  <Reinforcement />,
                 "/anaglyph":                <Anaglyph url={apiHost} />,
-                "/traveling-salesman":      <TravelingSalesman url={apiHost} width={width} height={height} />,
+                "/traveling-salesman":      <TravelingSalesman width={width} height={height} url={apiHost} />,
                 "/conway":                  <Circle width={width} height={height} />,
                 "/kaleidoscope":            <Mirror />,
-                "/film":                    <Masonry url={banditHost + "/wigglegrams/jpg"} rows={1} width={width} height={height} />,
+                "/film":                    <Masonry width={width} height={height} url={banditHost + "/wigglegrams/jpg"} rows={1} />,
                 "/404":                     <NotFound />,
             };
     }

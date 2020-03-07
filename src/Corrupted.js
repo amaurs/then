@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three-full';
+import './Corrupted.css';
 
 import escudo from './assets/escudo.png';
 
