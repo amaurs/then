@@ -54,7 +54,7 @@ class MultichannelImage {
 }
 
 
-const Distrito = () => {
+const Distrito = (props) => {
 
     let mount = useRef();
     let [width, setWidth] = useState(0);
@@ -331,8 +331,15 @@ const Distrito = () => {
         }
     }
 
+    let style = {width: props.width + "px"};
+
+    if (props.width === 0 && props.height === 0) {
+        return null;
+    }
+
     return (<canvas className="Distrito"
                 ref={mount} 
+                style={style}
                 width={width + "px"}
                 height={height + "px"}
                 onMouseDown={handleOnMouseDown}

@@ -95,7 +95,7 @@ const Home = (props) => {
     const getMapping = () => {
         return {
                 "/autostereogram":          <Autostereogram />,
-                "/1986":                    <Distrito />,
+                "/1986":                    <Distrito width={width} height={height} />,
                 "/corrupt":                 <Corrupted width={width} height={height} />,
                 "/mandelbrot":              <Mandelbrot width={width} height={height} host={mandelbrot}/>,
                 "/voronoi":                 <Voronoi width={width} height={height} />,
