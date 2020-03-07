@@ -4,7 +4,7 @@ import { useInterval } from './Hooks.js';
 
 const USER_SERVICE_URL = "https://azzhejgg0l.execute-api.us-east-1.amazonaws.com/api/boleros/en";
 
-export default function Nostalgia() {
+export default function Nostalgia(props) {
     const [user, setUser] = useState("");
     const [count, setCount] = useState(0);
     const [delay, setDelay] = useState(null);
