@@ -36,10 +36,10 @@ const Anaglyph = (props) => {
     
 
     useEffect(() => {
-        if (data.points.length > 0) {
+        if (data.points.length > 0 && props.width > 0 && props.height > 0) {
             const vertices = data.points;
-            const width = mount.current.clientWidth;
-            const height = mount.current.clientHeight;
+            const width = props.width;
+            const height =props.height;
             const material = new THREE.LineBasicMaterial({ color: 0x000000, 
                                                            linewidth: 2,
                                                            opacity: 1 });
@@ -78,8 +78,7 @@ const Anaglyph = (props) => {
             }  
         }
 
-    }, [data]);
-
+    }, [data, props.width, props.height]);
 
     if (data.points.length > 0) {
         return (
