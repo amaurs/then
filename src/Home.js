@@ -28,7 +28,6 @@ import Wigglegram from './Wigglegram.js';
 
 import ReactGA from 'react-ga';
 
-import './rl/board.css';
 import './Home.css';
 
 import { Switch, Redirect, Route, Link, useLocation } from 'react-router-dom';
@@ -104,7 +103,7 @@ const Home = (props) => {
                 "/":                        null,
                 "/hilbert":                 <Hilbert width={width} height={height} />,
                 "/hilbert/:res":            <Hilbert width={width} height={height} />,
-                "/reinforcement-learning":  <Reinforcement />,
+                "/reinforcement-learning":  <Reinforcement width={width} height={height} />,
                 "/anaglyph":                <Anaglyph width={width} height={height} url={apiHost} />,
                 "/traveling-salesman":      <TravelingSalesman width={width} height={height} url={apiHost} />,
                 "/conway":                  <Circle width={width} height={height} />,
