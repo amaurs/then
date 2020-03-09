@@ -16,8 +16,8 @@ const Mirror = (props) => {
 
         let AMOUNT = 5;
 
-        let WIDTH = ( window.innerWidth / AMOUNT ) * window.devicePixelRatio;
-        let HEIGHT = ( window.innerHeight / AMOUNT ) * window.devicePixelRatio;
+        let WIDTH = ( props.width / AMOUNT ); // * window.devicePixelRatio;
+        let HEIGHT = ( props.height / AMOUNT ); // * window.devicePixelRatio;
 
         let cameras = [];
 
@@ -25,7 +25,7 @@ const Mirror = (props) => {
 
             for ( let x = 0; x < AMOUNT; x ++ ) {
 
-                let subcamera = new THREE.PerspectiveCamera( 130, window.innerWidth / window.innerHeight, 1, 100 );
+                let subcamera = new THREE.PerspectiveCamera( 130, props.width / props.height, 1, 100 );
                 subcamera.viewport = new THREE.Vector4( Math.floor( x * WIDTH ), Math.floor( y * HEIGHT ), Math.ceil( WIDTH ), Math.ceil( HEIGHT ) );
                 subcamera.position.x = 0;
                 subcamera.position.y = 0;
@@ -67,8 +67,8 @@ const Mirror = (props) => {
 
         renderer.setClearColor( 0xffffff, 1);
 
-        renderer.setPixelRatio( window.devicePixelRatio );
-        renderer.setSize( window.innerWidth, window.innerHeight );
+        //renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(props.width, props.height);
             
     
         const animate = () => {
@@ -87,7 +87,7 @@ const Mirror = (props) => {
         }  
         
 
-    }, []);
+    }, [props.width, props.height]);
 
     return (
         <>
