@@ -1,0 +1,16 @@
+.Reinforcement {
+    display: flex;
+    flex-direction: column;
+}
+
+.Reinforcement > div {
+    display: flex;
+    flex-direction: row;
+}
+
+.Reinforcement > div > div {
+    border-style: solid;
+    border: 1px solid #eee;
+    text-align: center;
+    font-size: 48px;
+}
