@@ -107,7 +107,7 @@ const Home = (props) => {
                 "/anaglyph":                <Anaglyph width={width} height={height} url={apiHost} />,
                 "/traveling-salesman":      <TravelingSalesman width={width} height={height} url={apiHost} />,
                 "/conway":                  <Circle width={width} height={height} />,
-                "/kaleidoscope":            <Mirror />,
+                "/kaleidoscope":            <Mirror width={width} height={height} />,
                 "/film":                    <Masonry width={width} height={height} url={banditHost + "/wigglegrams/jpg"} rows={1} />,
                 "/404":                     <NotFound />,
             };
