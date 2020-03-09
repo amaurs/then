@@ -57,20 +57,6 @@ const Corrupted = (props) => {
 
         composer.addPass( copyPass );
 
-
-        const  onWindowResize = () => {
-    
-            camera.aspect = props.width / props.height;
-            camera.updateProjectionMatrix();
-    
-            renderer.setSize( props.width, props.height );
-            composer.setSize( props.width, props.height );
-    
-    
-        }
-
-        
-
         const animate = () => {
             requestAnimationFrame( animate );
 
@@ -78,14 +64,13 @@ const Corrupted = (props) => {
             composer.render();
         }
 
-        window.addEventListener( 'resize', onWindowResize, false );
+        
 
 
         let frameId = requestAnimationFrame(animate);
         
         return () => {
             cancelAnimationFrame(frameId);
-            window.removeEventListener("resize", onWindowResize, false);
             frameId = null;
             scene.remove(mesh);
             geometry.dispose();

@@ -127,10 +127,19 @@ const Home = (props) => {
         );
     }
 
+
+
     useEffect(() => {
-        
+
+        const onWindowResize = () => {
+            setWidth(window.innerWidth);
+            setHeight(window.innerHeight);
+        }
+
         setWidth(window.innerWidth);
         setHeight(window.innerHeight);
+        
+        window.addEventListener("resize", onWindowResize);
         
         let bandit = {states: getNames()}
         let banditUrl = banditHost + "/order";
@@ -150,7 +159,7 @@ const Home = (props) => {
             
             setFirst(json.order[0]);
           });
-
+        return () => window.removeEventListener("resize", onWindowResize);
 
     }, []);
 
