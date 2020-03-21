@@ -1,21 +1,33 @@
 .Masonry {
+    position: relative;
+    width: 100%;
+}
+
+.Masonry-sticky {
+    position: sticky;
     display: flex;
-    flex-direction: column;
-    overflow-x: auto;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.Masonry-horizontal {
+    align-self: center;
+    top: 0;
+    will-change: transform;
 }
 
 .Masonry-row {
-    height: 50%;
-    width: 100%;
     display: flex;
     flex-direction: row;
 }
 
-.Masonry-row::-webkit-scrollbar {
-    display: none;
-}
-
-
 .Masonry-image {
     
+}
+
+.red {
+    background-color: red;
+    height: 100px;
 }
