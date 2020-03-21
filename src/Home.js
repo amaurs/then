@@ -98,7 +98,7 @@ const Home = (props) => {
                 "/corrupt":                 <Corrupted width={width} height={height} />,
                 "/mandelbrot":              <Mandelbrot width={width} height={height} host={mandelbrot}/>,
                 "/voronoi":                 <Voronoi width={width} height={height} />,
-                "/stereo-photography":      <Masonry width={width} height={height} url={banditHost + "/wigglegrams/gif"} rows={3} />,
+                "/stereo-photography":      <Masonry width={width} height={height} url={banditHost + "/wigglegrams/gif"} rows={2} />,
                 "/bolero":                  <Nostalgia width={width} height={height} />,
                 "/":                        null,
                 "/hilbert":                 <Hilbert width={width} height={height} />,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Masonry.css'
 
 import Loader from './Loader';
@@ -12,11 +12,17 @@ const Masonry = (props) => {
     const [current, setCurrent] =  useState(null);
     const [delay, setDelay] = useState(null);
 
+    const [dynamicHeight, setDynamicHeight] = useState(5546)
+    const [translateX, setTranslateX] = useState(0)
+
+    const horizontalContainerRef = useRef(null);
+    const verticalContainerRef = useRef(null);
+
+
     useEffect(() => {
          // TODO: This function needs memoizing. Right now it is calling the service on every mount.
          console.log("Fetching...");
          fetch(props.url, {
-
             method: 'GET',
             headers: {
               'Content-Type': 'application/json'
@@ -25,31 +31,48 @@ const Masonry = (props) => {
           .then(response => {
             return response.json();
           }).then(json => {
-
             let rows = [...Array(props.rows)].map(() => []);
-
-
             json["images"].map((image, index) => {
                 rows[index % props.rows].push(image);
             });
-
-
             setData(rows);
           });
 
     }, [props.url, props.rows]);
 
+
+    useEffect(() => {
+
+        const setOffsetHander = () => {
+            const offsetTop = -verticalContainerRef.current.offsetTop;
+            const objectWidth = horizontalContainerRef.current.scrollWidth;
+            let dynamicHeight = objectWidth - window.innerWidth + window.innerHeight;
+            setDynamicHeight(dynamicHeight);
+            setTranslateX(offsetTop);
+        }
+
+        window.addEventListener("scroll", setOffsetHander);
+        return () => { 
+            window.removeEventListener("scroll", setOffsetHander);
+        }
+    }, [props.width, props.height]);
+
     const createRow = (images) => {
-        return images.map((image, index) => <img className="Masonry-image" style={{ height: (props.height * 0.75) / props.rows }} src={image.url} key={index} />);
+        return images.map((image, index) => <img className="Masonry-image" style={{ height: (props.height *.75) / props.rows }} src={image.url} key={index} />);
     }
 
-    const masStyle = { height: (100 / props.rows) + "%" };
+    let rows = data.map((row, index) => <div className="Masonry-row" key={index}>{createRow(row)}</div>); 
 
-    let rows = data.map((row, index) => <div className="Masonry-row" style={masStyle} key={index}>{createRow(row)}</div>); 
+    if (rows.length === 0) {
+        return <Loader />
+    }
 
-
-    return (<div className="Masonry" >
-                {rows.length === 0 ? <Loader /> : rows}                
+    return (<div className="Masonry" style={{height: dynamicHeight + "px"}}>
+                <div className="Masonry-sticky" ref={verticalContainerRef}>
+                    <div className="Masonry-horizontal" style={{ transform: "translateX(" + translateX +"px)" }} ref={horizontalContainerRef}>
+                        {rows}
+                    </div>
+                </div>
             </div>);
 }
 
