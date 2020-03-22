@@ -68,7 +68,7 @@ const Loader = () => {
 
     return (
         <div
-            className="vis"
+            className="Loader"
             ref={theCanvas}
             width={800}
             height={400}

@@ -1,6 +1,7 @@
 .Mandelbrot {
-    height: 100%;
-    width: 100%;
+    align-self: center;
+    margin: 0 auto;
+    z-index: 5;
 }
 
 .leaflet-control-container {

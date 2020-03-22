@@ -3,6 +3,8 @@ import { useInterval } from './Hooks.js';
 
 import Board from './Board.js';
 
+import './Conway.css';
+
 let board = new Board(100, 100);
 
 board.init();
@@ -83,6 +85,7 @@ const Circle = (props) => {
     
     return (
         <canvas
+            className="Conway"
             ref={ref} 
             style={style}
             width={1000}

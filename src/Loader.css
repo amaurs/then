@@ -1,14 +1,9 @@
 .Loader {
-    
+    align-self: center;
+    margin: 0 auto;
+    width: 800px;
 }
 
-
-
-.vis {
-  width: 800px;
-  font-family: monospace;
-}
-
-.vis table tbody{
+.Loader table tbody{
   font-family: monospace;
 }

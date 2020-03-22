@@ -1,6 +1,6 @@
 .TravelingSalesman {
-    width: 100vw;
-    height: 100vh;
+    align-self: center;
+    margin: 0 auto;
 }
 
 .TravelingSalesman h1{
