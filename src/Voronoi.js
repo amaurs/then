@@ -192,7 +192,7 @@ const Voronoi = (props) => {
 
     let isVertical = props.height / props.width < 1;
 
-    return (<canvas className={"Voronoi"} 
+    return (<canvas className="Voronoi"
                     width={canvasWidth + "px"} 
                     height={canvasHeight + "px"} 
                     ref={mount} 

@@ -38,7 +38,7 @@ export default function Nostalgia(props) {
         }
     }, delay);
 
-    return (<div>
-            <h1>{user.slice(0, count)}</h1>
+    return (<div className="Nostalgia">
+                <h1>{user.slice(0, count)}</h1>
            </div>);
 }

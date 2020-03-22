@@ -16,8 +16,8 @@ const Mandelbrot = (props) => {
         return null;
     }
 
-    return <div style={style}>
-               <Map className="Mandelbrot" 
+    return (<Map className="Mandelbrot" 
+                    style={style}
                     center={position} 
                     zoom={3}
                     minZoom={3}
@@ -30,8 +30,7 @@ const Mandelbrot = (props) => {
                 <TileLayer
                   url={props.host}
                 />
-               </Map>
-           </div>;
+               </Map>);
 }
 
 export default Mandelbrot;

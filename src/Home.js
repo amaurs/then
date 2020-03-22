@@ -203,7 +203,7 @@ const Home = (props) => {
                   <Hamburger onClick={handleMenu} isActive={isActive} />
               </div>
               {isActive?menu:null} 
-              <div className="Home Home-info-container background">
+              <div className="Home Home-info-container">
                 <Switch>
                   {getBackgroundContentRouter()}
                 </Switch>

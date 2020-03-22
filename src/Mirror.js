@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three-full';
 
 import betty from './assets/betty.mp4'
-
+import './Kaleidoscope.css';
 
 
 const Mirror = (props) => {
@@ -90,12 +90,12 @@ const Mirror = (props) => {
     }, [props.width, props.height]);
 
     return (
-        <>
+        <div className="Kaleidoscope">
         <video style={{"display":"none"}} ref={video} autoPlay loop muted>
             <source src={betty} type="video/mp4" />
         </video>
         <canvas ref={canvas} width="480" height="360"></canvas>
-        </>
+        </div>
         );
 }
 
