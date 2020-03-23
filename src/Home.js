@@ -39,7 +39,6 @@ if (isProduction) {
     ReactGA.initialize(process.env.REACT_APP_GA_ID);
 }
 
-const apiHost = process.env.REACT_APP_API_HOST;
 const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 const delay = 15000;
@@ -104,8 +103,8 @@ const Home = (props) => {
                 "/hilbert":                 <Hilbert width={width} height={height} />,
                 "/hilbert/:res":            <Hilbert width={width} height={height} />,
                 "/reinforcement-learning":  <Reinforcement width={width} height={height} />,
-                "/anaglyph":                <Anaglyph width={width} height={height} url={apiHost} />,
-                "/traveling-salesman":      <TravelingSalesman width={width} height={height} url={apiHost} />,
+                "/anaglyph":                <Anaglyph width={width} height={height} url={banditHost} />,
+                "/traveling-salesman":      <TravelingSalesman width={width} height={height} url={banditHost} />,
                 "/conway":                  <Circle width={width} height={height} />,
                 "/kaleidoscope":            <Mirror width={width} height={height} />,
                 "/film":                    <Masonry width={width} height={height} url={banditHost + "/wigglegrams/jpg"} rows={1} />,
