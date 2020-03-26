@@ -7,8 +7,8 @@ export default function Nostalgia(props) {
     const [count, setCount] = useState(0);
     const [delay, setDelay] = useState(null);
 
-    const getPhrase = () => {
-        fetch(props.url)
+    const getPhrase = (url) => {
+        fetch(url)
             .then(results => results.json())
             .then(data => {
                 setUser(data.sentence.split(" ").filter(word => "" !== word)
@@ -20,18 +20,14 @@ export default function Nostalgia(props) {
     }
 
     useEffect(function() {
-        getPhrase();
+        getPhrase(props.url);
         setCount(0);
         setDelay(0);
-    }, []);
+    }, [props.url]);
 
     useInterval(() => {
         if(count < user.length) {
             setCount(count + 1);
-            setDelay(100);
-        } else {
-            getPhrase();
-            setCount(0);
             setDelay(100);
         }
     }, delay);
