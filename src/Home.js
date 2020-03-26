@@ -98,7 +98,7 @@ const Home = (props) => {
                 "/mandelbrot":              <Mandelbrot width={width} height={height} host={mandelbrot}/>,
                 "/voronoi":                 <Voronoi width={width} height={height} />,
                 "/stereo-photography":      <Masonry width={width} height={height} url={banditHost + "/wigglegrams/gif"} rows={2} />,
-                "/bolero":                  <Nostalgia width={width} height={height} />,
+                "/bolero":                  <Nostalgia width={width} height={height} url={banditHost + "/boleros/en"} />,
                 "/":                        null,
                 "/hilbert":                 <Hilbert width={width} height={height} />,
                 "/hilbert/:res":            <Hilbert width={width} height={height} />,
