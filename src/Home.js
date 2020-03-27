@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import Anaglyph from './Anaglyph.js';
 import Circle from './Circle.js';
 import Corrupted from './Corrupted.js';
+import Colors from './Colors.js';
 import Distrito from './Distrito.js';
 import Hamburger from './Hamburger';
 import Hilbert from './Hilbert.js';
@@ -95,6 +96,7 @@ const Home = (props) => {
                 "/autostereogram":          <Autostereogram width={width} height={height} />,
                 "/1986":                    <Distrito width={width} height={height} />,
                 "/corrupt":                 <Corrupted width={width} height={height} />,
+                "/colors":                  <Colors width={width} height={height}  url={banditHost} />,
                 "/mandelbrot":              <Mandelbrot width={width} height={height} host={mandelbrot}/>,
                 "/voronoi":                 <Voronoi width={width} height={height} />,
                 "/stereo-photography":      <Masonry width={width} height={height} url={banditHost + "/wigglegrams/gif"} rows={2} />,
