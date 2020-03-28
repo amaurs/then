@@ -50,6 +50,12 @@ const Colors = (props) => {
             context.clearRect(0, 0, width, height);
             context.fillStyle = colorToString(color[0], color[1], color[2]);
             context.fillRect(0, 0, width, height);
+
+            context.fillStyle = invertColor(color[0], color[1], color[2]);
+            context.fillRect(width * (1 - Math.sqrt(2) / 2) / 2, height * (1 - Math.sqrt(2) / 2) / 2, width / Math.sqrt(2), height / Math.sqrt(2));
+
+
+
         }
     }, [colors, tick]);
 
