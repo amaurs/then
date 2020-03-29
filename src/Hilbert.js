@@ -117,7 +117,7 @@ const Hilbert = (props) => {
 
     let style = {};
     if (props.width > 0 && props.height > 0) {
-        style = props.width/props.height<1?{width: "100%"}:{height: "100%"};
+        style = props.width/props.height<1?{width: "100vw"}:{height: "100vh"};
     }
     
 
