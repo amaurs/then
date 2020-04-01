@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import { Environment, map} from './rl/windyGridworld.js';
 import Controller from './rl/controller';
@@ -31,24 +31,26 @@ export default function Reinforcement(props) {
                    fontSize: (squareSize * 0.75) + "px"};
     const [board, setBoard] = useState(null);
 
+    const requestRef = useRef();
+
     useEffect(() => {
         const animate = () => {
-            requestAnimationFrame(animate);
+            requestRef.current = requestAnimationFrame(animate);
             controller.tick();
             setBoard(controller.toBoard());
         }
-        let frameId = requestAnimationFrame(animate);
+        requestRef.current = requestAnimationFrame(animate);
         return () => {
-            cancelAnimationFrame(frameId);
+            cancelAnimationFrame(requestRef.current);
         }
-    });
+    }, []);
 
     if (board !== null) {
         const rows = board.map((row, rowIndex) => 
             <div key={rowIndex}>{row.map((cell, cellIndex) => <div style={style} key={cellIndex}>{getIcon(cell)}</div>)}</div>
         );
 
-        return (<div class="Reinforcement">
+        return (<div className="Reinforcement">
                     {rows}
                 </div>);
     } else {
