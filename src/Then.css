@@ -1,33 +1,37 @@
-.definition {
-    font-family: "Times New Roman", Times, serif
+
+.Then {
+    font-family: "Times New Roman", Times, serif;
+    image-rendering: pixelated;
+    align-self: center;
+    margin: 0 auto;
 }
 
-.definition .name {
+.Then .name {
     font-weight: bold;
     font-size: 240px
 }
 
-.definition .pronunciation {
+.Then .pronunciation {
     font-style: oblique;
     font-size: 32px;
     padding-top: 15px;
     padding-bottom: 15px
 }
 
-.definition .type {
+.Then .type {
     font-size: 24px;
     font-weight: bold
 }
 
-.definition ol {
+.Then ol {
     margin-top: 50px
 }
 
-.definition li {
+.Then li {
     font-style: oblique
 }
 
-.definition p {
+.Then p {
     font-style: normal;
     font-size: 20px
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import './Then.css'
 
 const Then = () => {
-    return (<div className="definition">
+    return (<div className="Then">
               <p className="name">then</p>
               <p className="pronunciation">/ <span className="underline">TH</span>en /</p>
               <p className="type">adverb</p>
