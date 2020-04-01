@@ -11,6 +11,7 @@ import Anaglyph from './Anaglyph.js';
 import Circle from './Circle.js';
 import Corrupted from './Corrupted.js';
 import Colors from './Colors.js';
+import Cube from './Cube.js';
 import Distrito from './Distrito.js';
 import Hamburger from './Hamburger';
 import Hilbert from './Hilbert.js';
@@ -31,7 +32,7 @@ import ReactGA from 'react-ga';
 
 import './Home.css';
 
-import { Switch, Redirect, Route, Link, useLocation } from 'react-router-dom';
+import { Switch, Redirect, Route, Link, useLocation, useHistory } from 'react-router-dom';
 
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -48,6 +49,7 @@ const NotFoundRedirect = () => <Redirect to='/not-found' />;
 
 const usePageViews = () => {
     let location = useLocation();
+    
 
     useEffect(() => {
         if (isProduction) {
@@ -88,11 +90,15 @@ const Home = (props) => {
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
     const [names, setNames] = useState([]);
+    const [current, setCurrent] = useState("/");
 
-    const [first, setFirst] = useState(["/"]);
+    const [pointer, setPointer] = useState(0);
+
+    let history = useHistory();
 
     const getMapping = () => {
         return {
+                "/":                        <Then />,
                 "/autostereogram":          <Autostereogram width={width} height={height} />,
                 "/1986":                    <Distrito width={width} height={height} />,
                 "/corrupt":                 <Corrupted width={width} height={height} />,
@@ -101,7 +107,6 @@ const Home = (props) => {
                 "/voronoi":                 <Voronoi width={width} height={height} />,
                 "/stereo-photography":      <Masonry width={width} height={height} url={banditHost + "/wigglegrams/gif"} rows={2} />,
                 "/bolero":                  <Nostalgia width={width} height={height} url={banditHost + "/boleros/en"} />,
-                "/":                        null,
                 "/hilbert":                 <Hilbert width={width} height={height} />,
                 "/hilbert/:res":            <Hilbert width={width} height={height} />,
                 "/reinforcement-learning":  <Reinforcement width={width} height={height} />,
@@ -122,13 +127,14 @@ const Home = (props) => {
 
     const getNames = () => {
         return Object.entries(getMapping()).filter((element) => 
-              !(element[0] === "/404" || 
-                element[0] === "/" ||
+              !(element[0] === "/404" ||
                 element[0] === "/hilbert/:res")
         );
     }
 
+    
 
+    let location = useLocation();
 
     useEffect(() => {
 
@@ -137,10 +143,10 @@ const Home = (props) => {
             setHeight(window.innerHeight);
         }
 
+
+
         setWidth(window.innerWidth);
         setHeight(window.innerHeight);
-        
-        window.addEventListener("resize", onWindowResize);
         
         let bandit = {states: getNames()}
         let banditUrl = banditHost + "/order";
@@ -154,16 +160,52 @@ const Home = (props) => {
         .then(response => {
             return  response.json();
         }).then(json => {
-
             setNames(json.order);
-
+            window.addEventListener("resize", onWindowResize);
             
-            setFirst(json.order[0]);
-          });
-        return () => window.removeEventListener("resize", onWindowResize);
-
+        });
+        return () => {
+            window.removeEventListener("resize", onWindowResize);
+        }
     }, []);
 
+
+    useEffect(() => {
+        const handleKeyPress = (event) => {
+            if (names.length > 0) {
+    
+                console.log(names);
+    
+                let current = names.map((element, index) =>{ return {name: element[0], index: index}}).filter(element => {
+                    return element.name == location.pathname;
+                })[0];
+    
+                if (event.key === 'ArrowRight' && current.index < names.length - 1) {
+                    let next = names[current.index + 1];
+                    setCurrent(next[0])
+                }
+                if (event.key === 'ArrowLeft'  && current.index > 0) {
+                    let prev = names[current.index - 1];
+                    setCurrent(prev[0])
+                }
+            }
+        }
+        
+        window.addEventListener("keydown", handleKeyPress);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyPress);
+        }
+    }, [names, location.pathname]);
+
+
+
+    useEffect(() => {
+        if (current !== null) {
+            history.push(current);
+        }
+    }, [current]);
+        
 
 
     const handleMenu = () => {
@@ -180,7 +222,7 @@ const Home = (props) => {
 
     const getBackgroundContentRouter = () => {
 
-        let routes = Object.entries(getMappingDecorated(first)).map((element, index) => <Route key={index} exact path={element[0]}>
+        let routes = Object.entries(getMapping()).map((element, index) => <Route key={index} exact path={element[0]}>
                 {element[1]}
                 </Route>
                 )
