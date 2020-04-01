@@ -11,7 +11,6 @@ import Anaglyph from './Anaglyph.js';
 import Circle from './Circle.js';
 import Corrupted from './Corrupted.js';
 import Colors from './Colors.js';
-import Cube from './Cube.js';
 import Distrito from './Distrito.js';
 import Hamburger from './Hamburger';
 import Hilbert from './Hilbert.js';
