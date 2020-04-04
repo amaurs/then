@@ -30,23 +30,31 @@ const Colors = (props) => {
     }, props.delay)
 
     useEffect(() => {
-         // TODO: This function needs memoizing. Right now it is calling the service on every mount.
-        const colorsArray = getRandomIntegerArray(numberColors * 3, 0, 256);
-        let colorsUrl = props.url + "/solve?cities=" + JSON.stringify(colorsArray) + "&dimension=" + 3;
-        fetch(colorsUrl, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
+        let cancel = false;
+        const fetchColorsSolution = async (url, numberColors) => {
+            try {
+                let payload = {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                };
+
+                let colorsArray = getRandomIntegerArray(numberColors * 3, 0, 256);
+                let colorsUrl = props.url + "/solve?cities=" + JSON.stringify(colorsArray) + "&dimension=" + 3;
+
+                let response = await fetch(colorsUrl, payload);
+                let json = await response.json();
+                if (!cancel) {
+                    setColors(json);
+                }  
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error)
             }
-          })
-          .then(response => {
-            return response.json();
-          }).then(json => {
-            setColors(json);
-          });
+        }
+        fetchColorsSolution(props.url, numberColors);
+        return () => cancel=true;
     }, [props.url]);
-
-
 
     useEffect(() => {
            
@@ -65,8 +73,6 @@ const Colors = (props) => {
 
             context.fillStyle = invertColor(color[0], color[1], color[2]);
             context.fillRect(width * (1 - Math.sqrt(2) / 2) / 2, height * (1 - Math.sqrt(2) / 2) / 2, width / Math.sqrt(2), height / Math.sqrt(2));
-
-
 
         }
     }, [colors, tick, presenting]);
