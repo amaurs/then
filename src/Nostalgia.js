@@ -15,22 +15,33 @@ export default function Nostalgia(props) {
         setDelay(100);
     }, props.delay);
 
-    const getPhrase = (url) => {
-        fetch(url)
-            .then(results => results.json())
-            .then(data => {
-                setUser(data.sentence.split(" ").filter(word => "" !== word)
+    useEffect(() => {
+        let cancel = false;
+        const getPhrase = async (url) => {
+            try {
+                let payload = {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                };
+
+                let response = await fetch(url, payload);
+                let json = await response.json();
+                if (!cancel) {
+                    setUser(json.sentence.split(" ").filter(word => "" !== word)
                                                     .map(word => word === "i"? "I": word)
                                                     .map((word, index) => index === 0? word.charAt(0).toUpperCase() + word.slice(1): word)
                                                     .reduce((a, b) => a + " " + b, ""));
-                
-        });
-    }
-
-    useEffect(function() {
+                }  
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error)
+            }
+        }
         getPhrase(props.url);
-        setCount(0);
+        return () => cancel=true;
     }, [props.url]);
+
 
     useInterval(() => {
         if(count < user.length) {
