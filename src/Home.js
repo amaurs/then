@@ -89,10 +89,8 @@ const Home = (props) => {
     const [height, setHeight] = useState(0);
     const [names, setNames] = useState([]);
     const [current, setCurrent] = useState("/");
-
     const [pointer, setPointer] = useState(0);
-
-    let history = useHistory();
+    const history = useHistory();
 
     const getMapping = () => {
         return {
@@ -130,54 +128,51 @@ const Home = (props) => {
         );
     }
 
-    
-
     let location = useLocation();
 
     useEffect(() => {
-
         const onWindowResize = () => {
             setWidth(window.innerWidth);
             setHeight(window.innerHeight);
         }
-
-
-
         setWidth(window.innerWidth);
         setHeight(window.innerHeight);
-        
-        let bandit = {states: getNames()}
-        let banditUrl = banditHost + "/order";
-        fetch(banditUrl, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(bandit)
-        })
-        .then(response => {
-            return  response.json();
-        }).then(json => {
-            setNames(json.order);
-            window.addEventListener("resize", onWindowResize);
-            
-        });
-        return () => {
-            window.removeEventListener("resize", onWindowResize);
+        window.addEventListener("resize", onWindowResize);
+        return () => window.removeEventListener("resize", onWindowResize);
+    }, []);
+
+    useEffect(() => {
+        let cancel = false;
+        const fetchOrder = async () => {
+            try {
+                let payload = {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({states: getNames()})
+                };
+                let response = await fetch(banditHost + "/order", payload);
+                let json = await response.json();
+                if (!cancel) {
+                    setNames(json.order);
+                }  
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error)
+            }
+ 
         }
+        fetchOrder();
+        return () => cancel=true;
     }, []);
 
 
     useEffect(() => {
         const handleKeyPress = (event) => {
             if (names.length > 0) {
-    
-                console.log(names);
-    
                 let current = names.map((element, index) =>{ return {name: element[0], index: index}}).filter(element => {
                     return element.name == location.pathname;
                 })[0];
-    
                 if (event.key === 'ArrowRight' && current.index < names.length - 1) {
                     let next = names[current.index + 1];
                     setCurrent(next[0])
@@ -188,14 +183,11 @@ const Home = (props) => {
                 }
             }
         }
-        
         window.addEventListener("keydown", handleKeyPress);
-
         return () => {
             window.removeEventListener("keydown", handleKeyPress);
         }
     }, [names, location.pathname]);
-
 
 
     useEffect(() => {
@@ -210,13 +202,10 @@ const Home = (props) => {
         setIsActive(!isActive);
     }
 
-
-
     const getMenu = () => {
         return <ul>{names.map((element, index) => <li key={index}><Link onClick={handleMenu} to={element[0]}>{element[0].slice(1).replace("-", " ")}</Link></li>)
         }</ul>;
     }
-
 
     const getBackgroundContentRouter = () => {
 
@@ -228,11 +217,6 @@ const Home = (props) => {
         routes.push(<Route key={404} component={NotFoundRedirect}><Redirect to="/404" /></Route>);
         return routes;
     }
-
-
-
-
-
 
     let menu = <div className={"Menu Home-info-container" + (isActive?" active":"")}>
                 {getMenu()}
@@ -250,7 +234,6 @@ const Home = (props) => {
                 </Switch>
               </div>
             </div>);
-
 }
 
 export default Home;
