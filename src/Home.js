@@ -43,7 +43,7 @@ if (isProduction) {
 const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 const delay = 15000;
-const presentationTime = 0;
+const presentationTime = 2000;
 const NotFoundRedirect = () => <Redirect to='/not-found' />;
 
 
@@ -88,7 +88,7 @@ const Home = (props) => {
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
     const [names, setNames] = useState([]);
-    const [current, setCurrent] = useState("/");
+    const [current, setCurrent] = useState(null);
     const [pointer, setPointer] = useState(0);
     const history = useHistory();
 
