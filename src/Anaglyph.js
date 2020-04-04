@@ -21,26 +21,31 @@ const Anaglyph = (props) => {
 
     const [data, setData] = useState({points: [], hasFetched: true});
 
+
     useEffect(() => {
-         // TODO: This function needs memoizing. Right now it is calling the service on every mount.
-         console.log("Fetching...");
-         fetch(props.url, {
+        let cancel = false;
+        const fetchCitiesSolution = async (url) => {
+            try {
+                let payload = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({point_set: "moebius", n_cities: "1000"})
+                };
 
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({point_set: "moebius", n_cities: "1000"})
-          })
-          .then(response => {
-            return response.json();
-          }).then(json => {
-            setData({points: json, hasFetched: true})
-          });
-
-
+                let response = await fetch(url, payload);
+                let json = await response.json();
+                if (!cancel) {
+                    setData({points: json, hasFetched: true})
+                }  
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error)
+            }
+        }
+        fetchCitiesSolution(props.url);
+        return () => cancel=true;
     }, [props.url]);
-    
 
     useEffect(() => {
         if (data.points.length > 0 && props.width > 0 && props.height > 0 && !presenting) {
