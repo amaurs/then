@@ -23,26 +23,31 @@ const Masonry = (props) => {
     const horizontalContainerRef = useRef(null);
     const verticalContainerRef = useRef(null);
 
-
     useEffect(() => {
-         // TODO: This function needs memoizing. Right now it is calling the service on every mount.
-         console.log("Fetching...");
-         fetch(props.url, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
+        let cancel = false;
+        const fetchImages = async (url, rowNumber) => {
+            try {
+                let payload = {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                };
+                let response = await fetch(url, payload);
+                let json = await response.json();
+                if (!cancel) {
+                    let rows = [...Array(rowNumber)].map(() => []);
+                    json["images"].map((image, index) => {
+                        rows[index % rowNumber].push(image);
+                    });
+                    setData(rows);
+                }  
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error)
             }
-          })
-          .then(response => {
-            return response.json();
-          }).then(json => {
-            let rows = [...Array(props.rows)].map(() => []);
-            json["images"].map((image, index) => {
-                rows[index % props.rows].push(image);
-            });
-            setData(rows);
-          });
-
+        }
+        fetchImages(props.url, props.rows);
+        return () => cancel=true;
     }, [props.url, props.rows]);
 
 
