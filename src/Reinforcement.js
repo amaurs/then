@@ -4,7 +4,10 @@ import { Environment, map} from './rl/windyGridworld.js';
 import Controller from './rl/controller';
 import { Agent } from './rl/sarsaAgent.js';
 
-import './Reinforcement.css'
+import './Reinforcement.css';
+
+import { useTimeout } from './Hooks.js';
+import Loader from './Loader.js';
 
 const environment = new Environment(map.height, 
                                     map.width, 
@@ -33,19 +36,27 @@ export default function Reinforcement(props) {
 
     const requestRef = useRef();
 
-    useEffect(() => {
-        const animate = () => {
-            requestRef.current = requestAnimationFrame(animate);
-            controller.tick();
-            setBoard(controller.toBoard());
-        }
-        requestRef.current = requestAnimationFrame(animate);
-        return () => {
-            cancelAnimationFrame(requestRef.current);
-        }
-    }, []);
+    const [presenting, setPresenting] = useState(true);
 
-    if (board !== null) {
+    useTimeout(() => {
+        setPresenting(false);
+    }, props.delay);
+
+    useEffect(() => {
+        if (!presenting) {
+            const animate = () => {
+                requestRef.current = requestAnimationFrame(animate);
+                controller.tick();
+                setBoard(controller.toBoard());
+            }
+            requestRef.current = requestAnimationFrame(animate);
+            return () => {
+                cancelAnimationFrame(requestRef.current);
+            }
+        }
+    }, [presenting]);
+
+    if (board !== null && !presenting) {
         const rows = board.map((row, rowIndex) => 
             <div key={rowIndex}>{row.map((cell, cellIndex) => <div style={style} key={cellIndex}>{getIcon(cell)}</div>)}</div>
         );
@@ -54,6 +65,6 @@ export default function Reinforcement(props) {
                     {rows}
                 </div>);
     } else {
-        return board
+        return <Loader />
     }
 }

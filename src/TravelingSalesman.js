@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useInterval } from './Hooks.js';
+import { useInterval, useTimeout } from './Hooks.js';
 import { getRandomIntegerArray, colorToString, invertColor } from './util.js';
 
 import Loader from './Loader.js';
@@ -10,11 +10,18 @@ const TravelingSalesman = (props) => {
 
     let mount = useRef();
     const [tick, setTick] = useState(0);
-    const [delay, setDelay] = useState(10);
+    const [delay, setDelay] = useState(null);
     const [cities, setCities] = useState({cities: [], hasFetched: true});
     const [citiesToDraw, setCitiesToDraw] = useState([]);
     const squareSampling = 100;
     const numberColors = 500;
+
+    let [presenting, setPresenting] = useState(true);
+
+    useTimeout(() => {
+        setPresenting(false);
+        setDelay(10);
+    }, props.delay);
 
     useEffect(() => {
         // TODO: This function needs memoizing. Right now it is calling the service on every mount.
@@ -35,7 +42,7 @@ const TravelingSalesman = (props) => {
     }, []);
 
     useEffect(() => {
-        if (citiesToDraw.length > 0) {
+        if (citiesToDraw.length > 0 && !presenting) {
             const context = mount.current.getContext('2d');
             const width = mount.current.width;
             const height = mount.current.height;
@@ -50,7 +57,7 @@ const TravelingSalesman = (props) => {
             context.stroke();
         }
 
-    }, [citiesToDraw]);
+    }, [citiesToDraw, presenting]);
 
     useInterval(() => {
         const maxBound = (time, size) => {
@@ -86,7 +93,7 @@ const TravelingSalesman = (props) => {
                                                  props.height;
     
 
-    if (citiesToDraw.length > 0) {
+    if (citiesToDraw.length > 0 && !presenting) {
         return (<canvas
                 ref={mount}
                 width={minSize}

@@ -5,6 +5,9 @@ import './Voronoi.css'
 import * as d3 from 'd3';
 import { Delaunay } from "d3-delaunay";
 
+import { useTimeout } from './Hooks.js';
+import Loader from './Loader.js';
+
 
 /**
 let imageRatio = this.state.imageHeight / this.state.imageWidth;
@@ -38,6 +41,12 @@ const Voronoi = (props) => {
     let [cities, setCities] = useState(null);
     const [canvasWidth, setCanvasWidth] = useState(0);
     const [canvasHeight, setCanvasHeight] = useState(0);
+
+    let [presenting, setPresenting] = useState(true);
+
+    useTimeout(() => {
+        setPresenting(false);
+    }, props.delay);
 
     useEffect(() => {
 
@@ -118,37 +127,36 @@ const Voronoi = (props) => {
 
     useEffect(() => {
 
-        const getRadius = (d) => {
-            return  2 + 1 * getBrightness(d.r, d.g, d.b);
-        }
+        if (!presenting) {
+            const getRadius = (d) => {
+                return  2 + 1 * getBrightness(d.r, d.g, d.b);
+            }
 
-        const draw = () => {
-            let context = mount.current.getContext('2d');
-            let canvasWidth = mount.current.width;
-            let canvasHeight = mount.current.height;
-            context.clearRect(0, 0, canvasWidth, canvasHeight);
-            cities.sites.forEach(function(d){
-                context.beginPath();
-                context.fillStyle = d3.rgb(+d.r, +d.g, +d.b);
-                let x = (+d.x / cities.imageWidth) * canvasWidth;
-                let y = (+d.y / cities.imageHeight) * canvasHeight;
-                let r = getRadius(d) * canvasWidth / 800;
-                context.arc(x, y, r, 0, 2 * Math.PI);
-                context.fill();
-            });
-        }
+            const draw = () => {
+                let context = mount.current.getContext('2d');
+                let canvasWidth = mount.current.width;
+                let canvasHeight = mount.current.height;
+                context.clearRect(0, 0, canvasWidth, canvasHeight);
+                cities.sites.forEach(function(d){
+                    context.beginPath();
+                    context.fillStyle = d3.rgb(+d.r, +d.g, +d.b);
+                    let x = (+d.x / cities.imageWidth) * canvasWidth;
+                    let y = (+d.y / cities.imageHeight) * canvasHeight;
+                    let r = getRadius(d) * canvasWidth / 800;
+                    context.arc(x, y, r, 0, 2 * Math.PI);
+                    context.fill();
+                });
+            }
 
-        if (cities !== null) {
-            draw();
-            if (updates < 10) {
-                setUpdates(updates + 1);
+            if (cities !== null) {
+                draw();
+                if (updates < 10) {
+                    setUpdates(updates + 1);
+                }
             }
         }
 
-
-        
-
-    }, [cities]);
+    }, [cities, presenting]);
 
 
 
@@ -192,11 +200,15 @@ const Voronoi = (props) => {
 
     let isVertical = props.height / props.width < 1;
 
-    return (<canvas className="Voronoi"
+    if (presenting) {
+        return <Loader />
+    } else {
+        return (<canvas className="Voronoi"
                     width={canvasWidth + "px"} 
                     height={canvasHeight + "px"} 
                     ref={mount} 
                 />);
+    }
 }
 
 export default Voronoi;

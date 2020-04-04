@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import './Nostalgia.css'
-import { useInterval } from './Hooks.js';
+import { useInterval, useTimeout } from './Hooks.js';
+import Loader from './Loader.js';
+
 
 export default function Nostalgia(props) {
     const [user, setUser] = useState("");
     const [count, setCount] = useState(0);
     const [delay, setDelay] = useState(null);
+    const [presenting, setPresenting] = useState(true);
+
+    useTimeout(() => {
+        setPresenting(false);
+        setDelay(100);
+    }, props.delay);
 
     const getPhrase = (url) => {
         fetch(url)
@@ -22,7 +30,6 @@ export default function Nostalgia(props) {
     useEffect(function() {
         getPhrase(props.url);
         setCount(0);
-        setDelay(0);
     }, [props.url]);
 
     useInterval(() => {
@@ -32,7 +39,11 @@ export default function Nostalgia(props) {
         }
     }, delay);
 
-    return (<div className="Nostalgia">
+    if (presenting) {
+        return <Loader />
+    } else {
+        return (<div className="Nostalgia">
                     <h1>{user.slice(0, count)}</h1>
            </div>);
+    }
 }

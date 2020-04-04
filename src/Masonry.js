@@ -3,14 +3,19 @@ import './Masonry.css'
 
 import Loader from './Loader';
 
-import { useInterval } from './Hooks.js';
+import { useTimeout } from './Hooks.js';
 import { getRandomInt } from './util.js';
+
 
 const Masonry = (props) => {
 
     const [data, setData] = useState([]);
     const [current, setCurrent] =  useState(null);
-    const [delay, setDelay] = useState(null);
+    let [presenting, setPresenting] = useState(true);
+
+    useTimeout(() => {
+        setPresenting(false);
+    }, props.delay);
 
     const [dynamicHeight, setDynamicHeight] = useState(5546)
     const [translateX, setTranslateX] = useState(0)
@@ -42,20 +47,21 @@ const Masonry = (props) => {
 
 
     useEffect(() => {
-
-        const setOffsetHander = () => {
-            const offsetTop = -verticalContainerRef.current.offsetTop;
-            const objectWidth = horizontalContainerRef.current.scrollWidth;
-            let dynamicHeight = objectWidth - window.innerWidth + window.innerHeight;
-            setDynamicHeight(dynamicHeight);
-            setTranslateX(offsetTop);
+        if (!presenting) {
+            const setOffsetHander = () => {
+                const offsetTop = -verticalContainerRef.current.offsetTop;
+                const objectWidth = horizontalContainerRef.current.scrollWidth;
+                let dynamicHeight = objectWidth - window.innerWidth + window.innerHeight;
+                setDynamicHeight(dynamicHeight);
+                setTranslateX(offsetTop);
+            }
+    
+            window.addEventListener("scroll", setOffsetHander);
+            return () => { 
+                window.removeEventListener("scroll", setOffsetHander);
+            }
         }
-
-        window.addEventListener("scroll", setOffsetHander);
-        return () => { 
-            window.removeEventListener("scroll", setOffsetHander);
-        }
-    }, [props.width, props.height]);
+    }, [props.width, props.height, presenting]);
 
     const createRow = (images) => {
         return images.map((image, index) => <img className="Masonry-image" style={{ height: (props.height *.75) / props.rows }} src={image.url} key={index} />);
@@ -63,17 +69,17 @@ const Masonry = (props) => {
 
     let rows = data.map((row, index) => <div className="Masonry-row" key={index}>{createRow(row)}</div>); 
 
-    if (rows.length === 0) {
+    if (rows.length === 0 || presenting) {
         return <Loader />
-    }
-
-    return (<div className="Masonry" style={{height: dynamicHeight + "px"}}>
+    } else {
+        return (<div className="Masonry" style={{height: dynamicHeight + "px"}}>
                 <div className="Masonry-sticky" ref={verticalContainerRef}>
                     <div className="Masonry-horizontal" style={{ transform: "translateX(" + translateX +"px)" }} ref={horizontalContainerRef}>
                         {rows}
                     </div>
                 </div>
             </div>);
+    }
 }
 
 export default Masonry;

@@ -4,6 +4,10 @@ import Board from './Board.js';
 
 import './Autostereogram.css';
 
+import { useTimeout } from './Hooks.js';
+
+import Loader from './Loader.js';
+
 const AUTOSTEREOGRAM_STRIPS = 8
 
 const Autostereogram = (props) => {
@@ -14,15 +18,12 @@ const Autostereogram = (props) => {
 
     let [show, setShow] = useState(true);
 
-    /**
-    const handleOnMouseDown = (e) => {
-        setShow(false);
-    } 
+    let [presenting, setPresenting] = useState(true);
 
-    const handleOnMouseUp = (e) => {
-        setShow(true);
-    } 
-    **/
+    useTimeout(() => {
+        setPresenting(false);
+    }, props.delay);
+
 
     const handleToggle = (e) => {
         setShow(!show);
@@ -30,7 +31,7 @@ const Autostereogram = (props) => {
 
 
     useEffect(() => {
-        if (props.width > 0 && props.height > 0) {
+        if (props.width > 0 && props.height > 0 && !presenting) {
             let canvas = document.createElement( "canvas" );
             let width = autostereogramCanvas.current.clientWidth;
             let height = autostereogramCanvas.current.clientHeight;
@@ -110,19 +111,23 @@ const Autostereogram = (props) => {
                 material.dispose();
             }
         }
-    }, [show, props.width, props.height]);
+    }, [show, props.width, props.height, presenting]);
 
 
+    if (presenting) {
+        return <Loader />
+    } else {
 
-    return (
-        <canvas
-            className="Autostereogram"
-            ref={autostereogramCanvas}
-            width={props.width}
-            height={props.width / 2}
-            onClick={handleToggle}
-        />
-    );
+        return (
+            <canvas
+                className="Autostereogram"
+                ref={autostereogramCanvas}
+                width={props.width}
+                height={props.width / 2}
+                onClick={handleToggle}
+            />
+        );
+    }
 }
 
 export default Autostereogram;

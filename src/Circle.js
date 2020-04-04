@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { useInterval } from './Hooks.js';
+import { useInterval, useTimeout } from './Hooks.js';
 
 import Board from './Board.js';
 
 import './Conway.css';
+
+import Loader from './Loader.js';
 
 let board = new Board(100, 100);
 
@@ -24,6 +26,16 @@ const Circle = (props) => {
     const [offset, setOffset] = useState([0,0]);
     const square = [8 * squareSize, 3 * squareSize];
 
+    const [tick, setTick] = useState(null);
+
+    const [presenting, setPresenting] = useState(true);
+
+    useTimeout(() => {
+        setPresenting(false);
+        setTick(50);
+    }, props.delay)
+
+
     useInterval(() => {
         board = board.getNextGeneration();
         let canvas = ref.current;
@@ -41,7 +53,7 @@ const Circle = (props) => {
         //                                     square[0] / squareSize, 
         //                                     square[1] / squareSize);
         setCount(count + 1);
-    }, 50);
+    }, tick);
 
     const handleOnMouseDown = (e) => {
         let rect = ref.current.getBoundingClientRect();
@@ -82,20 +94,23 @@ const Circle = (props) => {
         style = props.width/props.height<1?{width: "100%"}:{height: "100%"};
     }
     
-    
-    return (
-        <canvas
-            className="Conway"
-            ref={ref} 
-            style={style}
-            width={1000}
-            height={1000}
-            onMouseDown={handleOnMouseDown}
-            onMouseUp={handleOnMouseUp}
-            onMouseMove={handleOnMouseMove}
-            onClick={handleOnClick}
-        />
-    );
+    if (presenting) {
+        return <Loader />
+    } else {
+        return (
+            <canvas
+                className="Conway"
+                ref={ref} 
+                style={style}
+                width={1000}
+                height={1000}
+                onMouseDown={handleOnMouseDown}
+                onMouseUp={handleOnMouseUp}
+                onMouseMove={handleOnMouseMove}
+                onClick={handleOnClick}
+            />
+        );
+    }
 };
 
 export default Circle;
