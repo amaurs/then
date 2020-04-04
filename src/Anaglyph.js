@@ -5,11 +5,18 @@ import * as THREE from 'three-full';
 import AnaglyphSVGRenderer from './AnaglyphSVGRenderer.js';
 import './Anaglyph.css'
 
-import Loader from './Loader.js'
+import { useTimeout } from './Hooks.js';
+
+import Loader from './Loader.js';
 
 const Anaglyph = (props) => {
 
     let mount = useRef();
+    let [presenting, setPresenting] = useState(true);
+
+    useTimeout(() => {
+        setPresenting(false);
+    }, props.delay);
 
 
     const [data, setData] = useState({points: [], hasFetched: true});
@@ -36,7 +43,7 @@ const Anaglyph = (props) => {
     
 
     useEffect(() => {
-        if (data.points.length > 0 && props.width > 0 && props.height > 0) {
+        if (data.points.length > 0 && props.width > 0 && props.height > 0 && !presenting) {
             const vertices = data.points;
             const width = props.width;
             const height =props.height;
@@ -78,9 +85,11 @@ const Anaglyph = (props) => {
             }  
         }
 
-    }, [data, props.width, props.height]);
+    }, [data, props.width, props.height, presenting]);
 
-    if (data.points.length > 0) {
+    if (presenting) {
+        return <Loader />
+    } else {
         return (
             <div
                 className="Anaglyph"
@@ -88,8 +97,6 @@ const Anaglyph = (props) => {
             >
             </div>
         );
-    } else {
-        return <Loader />
     }
 
     

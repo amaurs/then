@@ -6,6 +6,9 @@ import { useInterval } from './Hooks.js';
 
 import './Hilbert.css';
 
+import { useTimeout } from './Hooks.js';
+import Loader from './Loader.js';
+
 import hilbert_cube_8 from './assets/hilbert_cube_8_8.png';
 import hilbert_square_8 from './assets/hilbert_square_8_8.png';
 import hilbert_cube_64 from './assets/hilbert_cube_64_64.png';
@@ -40,6 +43,14 @@ const Hilbert = (props) => {
     let [color, setColor] = useState(null);
     let [position, setPosition] = useState(null);
     const [count, setCount] = useState(0);
+
+    const [tick, setTick] = useState(null);
+    const [presenting, setPresenting] = useState(true);
+
+    useTimeout(() => {
+        setPresenting(false);
+        setTick(100);
+    }, props.delay);
 
     useEffect(() => {
         
@@ -76,7 +87,7 @@ const Hilbert = (props) => {
 
     useEffect(() => {
 
-        if (color !== null && position !== null) {
+        if (color !== null && position !== null && !presenting) {
 
             let context = mount.current.getContext('2d');
             context.imageSmoothingEnabled= false;
@@ -106,14 +117,14 @@ const Hilbert = (props) => {
             context.putImageData(frame, 0, 0);
         }
 
-    }, [color, position, count]);
+    }, [color, position, count, presenting]);
 
 
     useInterval(() => {
         if (color !== null && position !== null) {
             setCount(count + 1);
         }
-    }, 100);
+    }, tick);
 
     let style = {};
     if (props.width > 0 && props.height > 0) {
@@ -121,12 +132,16 @@ const Hilbert = (props) => {
     }
     
 
-    return <canvas className="Hilbert" 
+    if (presenting) {
+        return <Loader />
+    } else {
+        return <canvas className="Hilbert" 
                 style={style}
                 width={res + "px"} 
                 height={res + "px"} 
                 ref={mount} 
             />;
+    }
 }
 
 export default Hilbert;

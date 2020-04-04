@@ -43,6 +43,7 @@ if (isProduction) {
 const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 const delay = 15000;
+const presentationTime = 3000;
 const NotFoundRedirect = () => <Redirect to='/not-found' />;
 
 
@@ -98,22 +99,22 @@ const Home = (props) => {
     const getMapping = () => {
         return {
                 "/":                        <Then />,
-                "/autostereogram":          <Autostereogram width={width} height={height} />,
-                "/1986":                    <Distrito width={width} height={height} />,
-                "/corrupt":                 <Corrupted width={width} height={height} />,
-                "/colors":                  <Colors width={width} height={height}  url={banditHost} />,
-                "/mandelbrot":              <Mandelbrot width={width} height={height} host={mandelbrot}/>,
-                "/voronoi":                 <Voronoi width={width} height={height} />,
-                "/stereo-photography":      <Masonry width={width} height={height} url={banditHost + "/wigglegrams/gif"} rows={2} />,
-                "/bolero":                  <Nostalgia width={width} height={height} url={banditHost + "/boleros/en"} />,
-                "/hilbert":                 <Hilbert width={width} height={height} />,
-                "/hilbert/:res":            <Hilbert width={width} height={height} />,
-                "/reinforcement-learning":  <Reinforcement width={width} height={height} />,
-                "/anaglyph":                <Anaglyph width={width} height={height} url={banditHost} />,
-                "/traveling-salesman":      <TravelingSalesman width={width} height={height} url={banditHost} />,
-                "/conway":                  <Circle width={width} height={height} />,
-                "/kaleidoscope":            <Mirror width={width} height={height} />,
-                "/film":                    <Masonry width={width} height={height} url={banditHost + "/wigglegrams/jpg"} rows={1} />,
+                "/autostereogram":          <Autostereogram delay={presentationTime}  width={width} height={height} />,
+                "/1986":                    <Distrito delay={presentationTime}  width={width} height={height} />,
+                "/corrupt":                 <Corrupted delay={presentationTime}  width={width} height={height} />,
+                "/colors":                  <Colors delay={presentationTime}  width={width} height={height}  url={banditHost} />,
+                "/mandelbrot":              <Mandelbrot delay={presentationTime}  width={width} height={height} host={mandelbrot}/>,
+                "/voronoi":                 <Voronoi delay={presentationTime}  width={width} height={height} />,
+                "/stereo-photography":      <Masonry delay={presentationTime}  width={width} height={height} url={banditHost + "/wigglegrams/gif"} rows={2} />,
+                "/bolero":                  <Nostalgia delay={presentationTime}  width={width} height={height} url={banditHost + "/boleros/en"} />,
+                "/hilbert":                 <Hilbert delay={presentationTime}  width={width} height={height} />,
+                "/hilbert/:res":            <Hilbert delay={presentationTime}  width={width} height={height} />,
+                "/reinforcement-learning":  <Reinforcement delay={presentationTime}  width={width} height={height} />,
+                "/anaglyph":                <Anaglyph delay={presentationTime} width={width} height={height} url={banditHost} />,
+                "/traveling-salesman":      <TravelingSalesman delay={presentationTime}  width={width} height={height} url={banditHost} />,
+                "/conway":                  <Circle delay={presentationTime}  width={width} height={height} />,
+                "/kaleidoscope":            <Mirror delay={presentationTime}  width={width} height={height} />,
+                "/film":                    <Masonry delay={presentationTime}  width={width} height={height} url={banditHost + "/wigglegrams/jpg"} rows={1} />,
                 "/404":                     <NotFound />,
             };
     }

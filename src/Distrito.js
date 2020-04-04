@@ -7,7 +7,8 @@ import channelsSecond from './assets/second-channels-small.png';
 import channelsThird from './assets/third-channels-small.png';
 import channelMask from './assets/mask-small.png';
 
-
+import { useTimeout } from './Hooks.js';
+import Loader from './Loader.js';
 
 
 class MultichannelImage {
@@ -62,6 +63,12 @@ const Distrito = (props) => {
     let [multiImage, setMultiImage] = useState(null);
     let [rows, setRows] = useState(null);
     let [hold, setHold] = useState(null);
+
+    const [presenting, setPresenting] = useState(true);
+
+    useTimeout(() => {
+        setPresenting(false);
+    }, props.delay);
 
 
     useEffect(() => {
@@ -142,9 +149,9 @@ const Distrito = (props) => {
 
     useEffect(() => {
         const colorMap = {"red": 0, 
-                    "green": 1,
-                    "blue": 2};
-        if (multiImage !== null && width !== null && height !== null && rows !== null) { 
+                          "green": 1,
+                          "blue": 2};
+        if (multiImage !== null && width !== null && height !== null && rows !== null && !presenting) { 
             let realContext = mount.current.getContext('2d');
             let canvasWidth = mount.current.width;
             let canvasHeight = mount.current.height;
@@ -183,7 +190,7 @@ const Distrito = (props) => {
             realContext.drawImage(offscreen, 0, 0);
         }
         
-    }, [multiImage, width, height, rows, hold]);
+    }, [multiImage, width, height, rows, hold, presenting]);
 
     /**
     const handleOnClick = (e) => {
@@ -337,7 +344,10 @@ const Distrito = (props) => {
         return null;
     }
 
-    return (<canvas className="Distrito"
+    if (presenting) {
+        return <Loader />
+    } else {
+        return (<canvas className="Distrito"
                 ref={mount} 
                 style={style}
                 width={width + "px"}
@@ -347,6 +357,9 @@ const Distrito = (props) => {
                 onMouseMove={handleOnMouseMove}
                 //onClick={handleOnClick}
             />);
+    }
+
+    
 }
 
 export default Distrito;

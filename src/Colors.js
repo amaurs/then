@@ -5,6 +5,9 @@ import { colorToInt } from './util.js'
 import { useInterval } from './Hooks.js';
 import { getRandomIntegerArray, colorToString, invertColor } from './util.js';
 
+import { useTimeout } from './Hooks.js';
+
+import Loader from './Loader.js'
 
 import './Colors.css';
 
@@ -14,8 +17,17 @@ const Colors = (props) => {
 
     let mount = useRef();
     const [tick, setTick] = useState(0);
-
     const [colors, setColors] = useState([]);
+
+
+    const [delay, setDelay] = useState(null);
+    const [presenting, setPresenting] = useState(true);
+
+
+    useTimeout(() => {
+        setPresenting(false);
+        setDelay(100);
+    }, props.delay)
 
     useEffect(() => {
          // TODO: This function needs memoizing. Right now it is calling the service on every mount.
@@ -38,7 +50,7 @@ const Colors = (props) => {
 
     useEffect(() => {
            
-        if (colors.length > 0) {
+        if (colors.length > 0 && !presenting) {
             let color = [colors[(tick % (colors.length / 3)) * 3],
                          colors[(tick % (colors.length / 3)) * 3 + 1],
                          colors[(tick % (colors.length / 3)) * 3 + 2]];
@@ -57,14 +69,14 @@ const Colors = (props) => {
 
 
         }
-    }, [colors, tick]);
+    }, [colors, tick, presenting]);
 
 
     useInterval(() => {
         if (colors.length > 0) {
             setTick(tick + 1);
         }
-    }, 100);
+    }, delay);
 
     let style = {};
     if (props.width > 0 && props.height > 0) {
@@ -72,11 +84,14 @@ const Colors = (props) => {
                                             : {width: props.height + "px", height: props.height + "px"};
     }
     
-
-    return <canvas className="Colors" 
-                style={style}
-                ref={mount} 
-            />;
+    if (presenting) {
+        return <Loader />
+    } else {
+        return <canvas className="Colors" 
+                       style={style}
+                       ref={mount} 
+                        />;
+    }
 }
 
 export default Colors;

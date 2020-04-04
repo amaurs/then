@@ -1,11 +1,21 @@
-import React, { Component } from 'react';
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import './Mandelbrot.css'
+import React, { useState } from 'react';
+import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import './Mandelbrot.css';
+
+import { useTimeout } from './Hooks.js';
+import Loader from './Loader.js';
 
 const position = [53.78905976160202, 44.45646138397791];
 
 const Mandelbrot = (props) => {
+
+    let [presenting, setPresenting] = useState(true);
+
+    useTimeout(() => {
+        setPresenting(false);
+    }, props.delay);
+
     const onZoomEndHandler = (event) => {
         event.target.panTo({lat: position[0], lng: position[1]});
     }
@@ -16,7 +26,11 @@ const Mandelbrot = (props) => {
         return null;
     }
 
-    return (<Map className="Mandelbrot" 
+    if (presenting) {
+        return <Loader />
+    } else {
+        return (
+            <Map className="Mandelbrot" 
                     style={style}
                     center={position} 
                     zoom={3}
@@ -30,7 +44,9 @@ const Mandelbrot = (props) => {
                 <TileLayer
                   url={props.host}
                 />
-               </Map>);
+            </Map>
+        );
+    }
 }
 
 export default Mandelbrot;
