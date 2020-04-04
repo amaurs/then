@@ -24,22 +24,32 @@ const TravelingSalesman = (props) => {
     }, props.delay);
 
     useEffect(() => {
-        // TODO: This function needs memoizing. Right now it is calling the service on every mount.
-        let cityPoints = getRandomIntegerArray(numberColors * 2, 1, squareSampling);
+        let cancel = false;
+        const fetchCitiesSolution = async (url, numberColors, squareSampling) => {
+            try {
+                let payload = {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                };
 
-        let citiesUrl = props.url + "/solve?cities=" + JSON.stringify(cityPoints) + "&dimension=" + 2;
-        fetch(citiesUrl, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(response => {
-          return  response.json();
-        }).then(json => {
-          setCities({cities: json, hasFetched: true})
-        });
-    }, []);
+                let cityPoints = getRandomIntegerArray(numberColors * 2, 1, squareSampling);
+                let citiesUrl = url + "/solve?cities=" + JSON.stringify(cityPoints) + "&dimension=" + 2;
+
+                let response = await fetch(citiesUrl, payload);
+                let json = await response.json();
+                if (!cancel) {
+                    setCities({cities: json, hasFetched: true})
+                }  
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error)
+            }
+        }
+        fetchCitiesSolution(props.url, numberColors, squareSampling);
+        return () => cancel=true;
+    }, [props.url]);
+
 
     useEffect(() => {
         if (citiesToDraw.length > 0 && !presenting) {
