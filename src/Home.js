@@ -43,46 +43,44 @@ if (isProduction) {
 const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 const delay = 15000;
-const presentationTime = 3000;
+const presentationTime = 0;
 const NotFoundRedirect = () => <Redirect to='/not-found' />;
 
 
-const usePageViews = () => {
+const usePageViews = (pathname) => {
     let location = useLocation();
-    
 
     useEffect(() => {
         if (isProduction) {
+
             ReactGA.set({ page: location.pathname }); 
             ReactGA.pageview(location.pathname);
-        
+
+            const fetchMetrics = async () => {
+                try {
+                    let payload = {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                          body: JSON.stringify({state: location.pathname, reward: delay})
+                        }
+                    const response = await fetch(banditHost + "/metric", payload);
+                    console.log(await response.json());
+                } catch (error) {
+                    console.err("Call to metrics endpoint failed.", error)
+                }
+            }
+
             let id = setTimeout(() => { 
                 console.log("User has been in " + location.pathname + " for " + delay + " milliseconds.")
-                let bandit = {state: location.pathname,
-                          reward: delay}
-                let banditUrl = banditHost + "/metric";
-                fetch(banditUrl, {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                  body: JSON.stringify(bandit)
-                })
-                .then(response => {
-            
-                  console.log(response.json())
-                });
+                fetchMetrics();
             }, delay);
-
-
             return () => clearTimeout(id);
         }
     }, [location]);
 
 }
-
-
-
 
 const Home = (props) => {
 
