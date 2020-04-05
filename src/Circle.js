@@ -5,7 +5,7 @@ import Board from './Board.js';
 
 import './Conway.css';
 
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 let board = new Board(100, 100);
 
@@ -95,7 +95,7 @@ const Circle = (props) => {
     }
     
     if (presenting) {
-        return <Loader />
+        return <Loader title={props.title}/>
     } else {
         return (
             <canvas

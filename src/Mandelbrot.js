@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import './Mandelbrot.css';
 
 import { useTimeout } from './Hooks.js';
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 const position = [53.78905976160202, 44.45646138397791];
 
@@ -27,7 +27,7 @@ const Mandelbrot = (props) => {
     }
 
     if (presenting) {
-        return <Loader />
+        return <Loader title={props.title}/>
     } else {
         return (
             <Map className="Mandelbrot" 

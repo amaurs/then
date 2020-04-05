@@ -7,7 +7,7 @@ import { useInterval } from './Hooks.js';
 import './Hilbert.css';
 
 import { useTimeout } from './Hooks.js';
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 import hilbert_cube_8 from './assets/hilbert_cube_8_8.png';
 import hilbert_square_8 from './assets/hilbert_square_8_8.png';
@@ -133,7 +133,7 @@ const Hilbert = (props) => {
     
 
     if (presenting) {
-        return <Loader />
+        return <Loader title={props.title}/>
     } else {
         return <canvas className="Hilbert" 
                 style={style}

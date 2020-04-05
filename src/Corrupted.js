@@ -5,7 +5,7 @@ import './Corrupted.css';
 import escudo from './assets/escudo.png';
 
 import { useTimeout } from './Hooks.js';
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 
 const Corrupted = (props) => {
@@ -91,7 +91,7 @@ const Corrupted = (props) => {
 
 
     if (presenting) {
-        return <Loader />
+        return <Loader title={props.title}/>
     } else {
         return (
             <canvas

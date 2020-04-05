@@ -2,9 +2,8 @@ import React from 'react';
 
 import './Then.css'
 
-const Then = () => {
-    return (<div className="Then">
-              <p className="name">then</p>
+
+/**
               <p className="pronunciation">/ <span className="underline">TH</span>en /</p>
               <p className="type">adverb</p>
               <ol>
@@ -12,6 +11,13 @@ const Then = () => {
                 <li><p>after that; next; afterward.</p></li>
                 <li><p>in that case; therefore.</p></li>
               </ol>
+
+**/
+
+
+const Then = () => {
+    return (<div className="Then">
+              <h1 className="name">then</h1>
             </div>);
 }
 

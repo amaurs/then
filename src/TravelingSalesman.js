@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useInterval, useTimeout } from './Hooks.js';
 import { getRandomIntegerArray, colorToString, invertColor } from './util.js';
 
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 import './TravelingSalesman.css';
 
@@ -111,7 +111,7 @@ const TravelingSalesman = (props) => {
                 className="TravelingSalesman"
             />);
     } else {
-        return <Loader />
+        return <Loader title={props.title}/>;
     }
 
     
