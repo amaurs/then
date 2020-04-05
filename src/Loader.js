@@ -14,7 +14,7 @@ const Loader = () => {
 
     useEffect(() => {
         let width = 800;
-        let height = 400;
+        let height = 450;
         let canvas = document.createElement( "canvas" );
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
@@ -33,12 +33,11 @@ const Loader = () => {
 
         
         //let effect = new THREE.AsciiEffect( renderer, ' .:-+*=%@#', { invert: true } );
-        let effect = new THREE.AsciiEffect( renderer, ' LOADING...', { invert: true } );
+        let effect = new THREE.AsciiEffect( renderer, '>LOADING..', { invert: true } );
         
         effect.setSize( width, height );
         effect.domElement.style.color = 'black';
         effect.domElement.style.backgroundColor = 'white';
-        effect.domElement.style.fontFamily = 'monospace';
         // Special case: append effect.domElement, instead of renderer.domElement.
         // AsciiEffect creates a custom domElement (a div container) where the ASCII elements are placed.
         theCanvas.current.appendChild( effect.domElement );
@@ -71,7 +70,7 @@ const Loader = () => {
             className="Loader"
             ref={theCanvas}
             width={800}
-            height={400}
+            height={450}
         >
         </div>
     );
