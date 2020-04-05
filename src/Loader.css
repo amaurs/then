@@ -1,9 +1,10 @@
 .Loader {
     align-self: center;
     margin: 0 auto;
-    width: 800px;
 }
 
 .Loader table tbody{
-  font-family: monospace;
+font-family: ocr-a-std, monospace;
+font-weight: 400;
+font-style: normal;
 }
