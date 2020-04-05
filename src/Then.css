@@ -1,4 +1,5 @@
 
+
 .Then {
     align-self: center;
     margin: 0 auto;
@@ -6,7 +7,7 @@
 
 .Then .name {
     font-weight: bold;
-    font-size: 240px
+    font-size: 72px;
 }
 
 .Then .pronunciation {
@@ -36,4 +37,11 @@
 
 .underline {
     text-decoration: underline
+}
+
+
+@media only screen and (min-width: 600px) {
+    .Then .name {
+        font-size: 240px;
+    }  
 }
