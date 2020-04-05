@@ -1,49 +1,50 @@
 
 body {
-font-family: rig-solid-bold-fill, sans-serif;
-font-weight: 700;
-font-style: normal;
+    font-family: rig-solid-bold-halftone, sans-serif;
+    font-weight: 700;
+    font-style: normal;
 }
 
 .Home-info-container{
-  display: flex;
-  min-height: 100vh;
+    display: flex;
+    min-height: 100vh;
 }
 
 .Home-info-container p {
 }
 
 .Home-info-container ol{
-  list-style-type: decimal;
+    list-style-type: decimal;
 }
 
 .MenuHamburger {
-  position: fixed;
-  right: 0;
-  top:0;
-  z-index: 200;
-  width: 100px;
-  height: 100px;
+    position: fixed;
+    right: 0;
+    top:0;
+    z-index: 200;
+    width: 100px;
+    height: 100px;
 }
 
 .Menu {
-  position: fixed;
-  background: white;
-  transition: .5s;
-  width: 100vw;
-  transform:translateX(100vw);
-  box-sizing: border-box;
-  z-index: 100;
+    position: fixed;
+    background: white;
+    transition: .5s;
+    width: 100vw;
+    transform:translateX(100vw);
+    box-sizing: border-box;
+    z-index: 100;
 }
 
 .Menu.active {
-  transform: translateX(0);
+    transform: translateX(0);
 }
 
 .Menu ul {
     list-style: none;
     align-self: center;
     margin: 0 auto;
+    cursor: pointer;
 }
 
 .Menu a {
