@@ -91,6 +91,7 @@ const Home = (props) => {
     const [names, setNames] = useState([]);
     const [current, setCurrent] = useState(null);
     const [pointer, setPointer] = useState(0);
+    const [font, setFont] = useState(null);
     const history = useHistory();
     let config = {
                   delta: 30,                             // min distance(px) before a swipe starts
@@ -99,6 +100,41 @@ const Home = (props) => {
                   trackMouse: false,                     // track mouse input
                   rotationAngle: 0,                      // set a rotation angle
                 }
+
+
+    let fonts = {'OCR-B Std':{fontFamily: 'ocr-b-std, monospace',
+                                                fontWeight: 400,
+                                                fontStyle: 'normal'},
+                    'OCR-A Std':{fontFamily: 'ocr-a-std, monospace',
+                                                fontWeight: 400,
+                                                fontStyle: 'normal'},
+                    'Rig Shaded Bold Extrude':{fontFamily: 'rig-shaded-bold-extrude, sans-serif',
+                                                fontWeight: 700,
+                                                fontStyle: 'normal'},
+                    'Rig Solid Bold Fill':{fontFamily: 'rig-solid-bold-fill, sans-serif',
+                                                fontWeight: 700,
+                                                fontStyle: 'normal'},
+                    'Rig Solid Bold Halftone':{fontFamily: 'rig-solid-bold-halftone, sans-serif',
+                                                fontWeight: 700,
+                                                fontStyle: 'normal'}};
+    useEffect(() => {
+        
+        if (font !== null) {
+            let body = document.getElementsByTagName("body")[0];
+            body.style.fontFamily = fonts[font].fontFamily;
+            body.style.fontWeight = fonts[font].fontWeight;
+            body.style.fontStyle = fonts[font].fontStyle;
+            setCurrent("/");
+            setIsActive(!isActive);
+        }
+
+    }, [font]);
+
+    const getFontMenu = () => {
+
+        return <ul>{Object.keys(fonts).map((element, index) => <li key={index} onClick={handleFontMenu}>{element}</li>)
+                }</ul>;
+    }
 
 
     const getMapping = () => {
@@ -181,11 +217,11 @@ const Home = (props) => {
             let current = names.map((element, index) =>{ return {name: element[0], index: index}}).filter(element => {
                 return element.name == location.pathname;
             })[0];
-            if (eventData.dir === 'Right' && current.index < names.length - 1) {
+            if (eventData.dir === 'Left' && current.index < names.length - 1) {
                 let next = names[current.index + 1];
                 setCurrent(next[0])
             }
-            if (eventData.dir === 'Left'  && current.index > 0) {
+            if (eventData.dir === 'Right'  && current.index > 0) {
                 let prev = names[current.index - 1];
                 setCurrent(prev[0])
             }
@@ -229,6 +265,10 @@ const Home = (props) => {
         setIsActive(!isActive);
     }
 
+    const handleFontMenu = (event) => {
+        setFont(event.target.innerHTML)
+    }
+
     const getMenu = () => {
         return <ul>{names.map((element, index) => <li key={index}><Link onClick={handleMenu} to={element[0]}>{element[0].slice(1).replace("-", " ")}</Link></li>)
         }</ul>;
@@ -246,7 +286,7 @@ const Home = (props) => {
     }
 
     let menu = <div className={"Menu Home-info-container" + (isActive?" active":"")}>
-                {getMenu()}
+                {getFontMenu()}
                </div>;
 
     return (<div {...handlers}>
@@ -254,7 +294,7 @@ const Home = (props) => {
               <div className="MenuHamburger">
                   <Hamburger onClick={handleMenu} isActive={isActive} />
               </div>
-              {isActive?menu:null} 
+                  {isActive?menu:null} 
               <div className="Home Home-info-container">
                 <Switch>
                   {getBackgroundContentRouter()}
