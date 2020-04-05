@@ -28,6 +28,7 @@ import Voronoi from './Voronoi.js';
 import Wigglegram from './Wigglegram.js';
 
 import ReactGA from 'react-ga';
+import { useSwipeable } from 'react-swipeable';
 
 import './Home.css';
 
@@ -91,6 +92,14 @@ const Home = (props) => {
     const [current, setCurrent] = useState(null);
     const [pointer, setPointer] = useState(0);
     const history = useHistory();
+    let config = {
+                  delta: 30,                             // min distance(px) before a swipe starts
+                  preventDefaultTouchmoveEvent: false,   // preventDefault on touchmove, *See Details*
+                  trackTouch: true,                      // track touch input
+                  trackMouse: false,                     // track mouse input
+                  rotationAngle: 0,                      // set a rotation angle
+                }
+
 
     const getMapping = () => {
         return {
@@ -166,6 +175,24 @@ const Home = (props) => {
         return () => cancel=true;
     }, []);
 
+    const handlers = useSwipeable({ onSwiped: (eventData) => {
+        
+        if (names.length > 0) {
+            let current = names.map((element, index) =>{ return {name: element[0], index: index}}).filter(element => {
+                return element.name == location.pathname;
+            })[0];
+            if (eventData.dir === 'Right' && current.index < names.length - 1) {
+                let next = names[current.index + 1];
+                setCurrent(next[0])
+            }
+            if (eventData.dir === 'Left'  && current.index > 0) {
+                let prev = names[current.index - 1];
+                setCurrent(prev[0])
+            }
+        }
+
+    }, ...config });
+
 
     useEffect(() => {
         const handleKeyPress = (event) => {
@@ -222,7 +249,7 @@ const Home = (props) => {
                 {getMenu()}
                </div>;
 
-    return (<div>
+    return (<div {...handlers}>
               {usePageViews()}
               <div className="MenuHamburger">
                   <Hamburger onClick={handleMenu} isActive={isActive} />
