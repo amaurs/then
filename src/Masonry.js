@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Masonry.css'
 
-import Loader from './Loader';
+import Loader from './Presentation.js';
 
 import { useTimeout } from './Hooks.js';
 import { getRandomInt } from './util.js';
@@ -75,7 +75,7 @@ const Masonry = (props) => {
     let rows = data.map((row, index) => <div className="Masonry-row" key={index}>{createRow(row)}</div>); 
 
     if (rows.length === 0 || presenting) {
-        return <Loader />
+        return <Loader title={props.title}/>
     } else {
         return (<div className="Masonry" style={{height: dynamicHeight + "px"}}>
                 <div className="Masonry-sticky" ref={verticalContainerRef}>

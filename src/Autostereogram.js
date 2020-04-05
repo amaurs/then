@@ -6,7 +6,7 @@ import './Autostereogram.css';
 
 import { useTimeout } from './Hooks.js';
 
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 const AUTOSTEREOGRAM_STRIPS = 8
 
@@ -115,7 +115,7 @@ const Autostereogram = (props) => {
 
 
     if (presenting) {
-        return <Loader />
+        return <Loader title={props.title}/>;
     } else {
 
         return (

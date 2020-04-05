@@ -7,7 +7,7 @@ import './Anaglyph.css'
 
 import { useTimeout } from './Hooks.js';
 
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 const Anaglyph = (props) => {
 
@@ -93,7 +93,7 @@ const Anaglyph = (props) => {
     }, [data, props.width, props.height, presenting]);
 
     if (presenting) {
-        return <Loader />
+        return <Loader title={props.title}/>
     } else {
         return (
             <div

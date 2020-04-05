@@ -8,7 +8,7 @@ import channelsThird from './assets/third-channels-small.png';
 import channelMask from './assets/mask-small.png';
 
 import { useTimeout } from './Hooks.js';
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 
 class MultichannelImage {
@@ -345,7 +345,7 @@ const Distrito = (props) => {
     }
 
     if (presenting) {
-        return <Loader />
+        return <Loader title={props.title}/>
     } else {
         return (<canvas className="Distrito"
                 ref={mount} 

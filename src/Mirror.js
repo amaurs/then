@@ -6,7 +6,7 @@ import betty from './assets/betty.mp4'
 import './Kaleidoscope.css';
 
 import { useTimeout } from './Hooks.js';
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 const Mirror = (props) => {
 
@@ -95,7 +95,7 @@ const Mirror = (props) => {
         }
     }, [props.width, props.height, presenting]);
     if (presenting) {
-        return <Loader />
+        return <Loader title={props.title} />;
     } else {
         return (
         <div className="Kaleidoscope">

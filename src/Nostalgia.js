@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Nostalgia.css'
 import { useInterval, useTimeout } from './Hooks.js';
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 
 export default function Nostalgia(props) {
@@ -51,7 +51,7 @@ export default function Nostalgia(props) {
     }, delay);
 
     if (presenting) {
-        return <Loader />
+        return <Loader title={props.title}/>
     } else {
         return (<div className="Nostalgia">
                     <h1>{user.slice(0, count)}</h1>

@@ -7,7 +7,7 @@ import { getRandomIntegerArray, colorToString, invertColor } from './util.js';
 
 import { useTimeout } from './Hooks.js';
 
-import Loader from './Loader.js'
+import Loader from './Presentation.js';
 
 import './Colors.css';
 
@@ -91,7 +91,7 @@ const Colors = (props) => {
     }
     
     if (presenting) {
-        return <Loader />
+        return <Loader title={props.title}/>
     } else {
         return <canvas className="Colors" 
                        style={style}

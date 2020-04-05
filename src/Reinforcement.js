@@ -7,7 +7,7 @@ import { Agent } from './rl/sarsaAgent.js';
 import './Reinforcement.css';
 
 import { useTimeout } from './Hooks.js';
-import Loader from './Loader.js';
+import Loader from './Presentation.js';
 
 const environment = new Environment(map.height, 
                                     map.width, 
@@ -65,6 +65,6 @@ export default function Reinforcement(props) {
                     {rows}
                 </div>);
     } else {
-        return <Loader />
+        return <Loader title={props.title}/>;
     }
 }
