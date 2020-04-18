@@ -1,4 +1,18 @@
 .Mandelbrot {
+    position: relative;
+    width: 100%;
+}
+
+.Mandelbrot-sticky {
+    position: sticky;
+    display: flex;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.Mandelbrot-map {
     align-self: center;
     margin: 0 auto;
     z-index: 5;
