@@ -1,14 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useParams} from "react-router";
-
 import { colorToInt } from './util.js'
 import { useInterval } from './Hooks.js';
-
 import './Hilbert.css';
-
 import { useTimeout } from './Hooks.js';
 import Loader from './Presentation.js';
-
 import hilbert_cube_8 from './assets/hilbert_cube_8_8.png';
 import hilbert_square_8 from './assets/hilbert_square_8_8.png';
 import hilbert_cube_64 from './assets/hilbert_cube_64_64.png';
@@ -28,22 +24,16 @@ const image_square_map = {8: hilbert_square_8,
                           512: hilbert_square_512,
                           4096: hilbert_square_4096};
 
-
 const Hilbert = (props) => {
-
-    
-
     let { res } = useParams();
     if(res === undefined) {
         res = 8;
     }
 
-
     let mount = useRef();
     let [color, setColor] = useState(null);
     let [position, setPosition] = useState(null);
     const [count, setCount] = useState(0);
-
     const [tick, setTick] = useState(null);
     const [presenting, setPresenting] = useState(true);
 
@@ -105,8 +95,6 @@ const Hilbert = (props) => {
                 let r = position.data[index * 4 + 0];
                 let g = position.data[index * 4 + 1];
                 let b = position.data[index * 4 + 2];
-                //let a = position.data[index * 4 + 3];
-
                 let j = colorToInt(r, g, b);
 
                 frame.data[j * 4 + 0] = color.data[i * 4 + 0];
@@ -135,12 +123,14 @@ const Hilbert = (props) => {
     if (presenting) {
         return <Loader title={props.title}/>
     } else {
-        return <canvas className="Hilbert" 
-                style={style}
-                width={res + "px"} 
-                height={res + "px"} 
-                ref={mount} 
-            />;
+        return (
+            <canvas className="Hilbert" 
+                    style={style}
+                    width={res + "px"} 
+                    height={res + "px"} 
+                    ref={mount} 
+            />
+        );
     }
 }
 

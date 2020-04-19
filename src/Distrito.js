@@ -1,15 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
-
-import './Distrito.css';
-
 import channelsFirst from './assets/first-channels-small.png';
 import channelsSecond from './assets/second-channels-small.png';
 import channelsThird from './assets/third-channels-small.png';
 import channelMask from './assets/mask-small.png';
-
 import { useTimeout } from './Hooks.js';
 import Loader from './Presentation.js';
-
+import './Distrito.css';
 
 class MultichannelImage {
 
@@ -63,16 +59,13 @@ const Distrito = (props) => {
     let [multiImage, setMultiImage] = useState(null);
     let [rows, setRows] = useState(null);
     let [hold, setHold] = useState(null);
-
     const [presenting, setPresenting] = useState(true);
 
     useTimeout(() => {
         setPresenting(false);
     }, props.delay);
 
-
     useEffect(() => {
-
         const getData = (src) => {
             return new Promise ((resolve, reject) => {
                 let img = new Image();
@@ -90,12 +83,9 @@ const Distrito = (props) => {
             });
         }
 
-
         Promise.all([getData(channelsFirst), getData(channelsSecond), getData(channelsThird), getData(channelMask)]).then(function(values) {
             let [first, second, third, fourth] = values;
-        
             let image = new MultichannelImage(first.width, first.height);
-
             let tm1 = new Uint8ClampedArray(first.width * first.height);
             let tm2 = new Uint8ClampedArray(first.width * first.height);
             let tm3 = new Uint8ClampedArray(first.width * first.height);
@@ -118,7 +108,6 @@ const Distrito = (props) => {
                 mask[i] = fourth.data[i * 4 + 0];
             }
             
-
             image.addChannel(tm1);
             image.addChannel(tm2);
             image.addChannel(tm3);
@@ -141,7 +130,6 @@ const Distrito = (props) => {
                              {position: 1, color: "blue"}, 
                              ],
                       available: []}]);
-
         });
     }, []);
 
@@ -247,8 +235,6 @@ const Distrito = (props) => {
 
         let xOffset = x - column * multiImage.width,
             yOffset = y - (row + 1) * multiImage.height;
-        console.log(row);
-        console.log(column);
 
         if (!(row < 0) ) {
             let newRows = [...rows];
@@ -309,10 +295,8 @@ const Distrito = (props) => {
             
             if (invalid) {
                 newRows[hold.row].used.push({color: hold.color, position: hold.position});
-                console.log("Invalid")
             } else {
                 newRows[hold.row].used.push({color: hold.color, position: column});
-                console.log("Valid")
             }
             setHold(null);
             setRows(newRows);
@@ -320,8 +304,6 @@ const Distrito = (props) => {
     } 
 
     const handleOnMouseMove = (e) => {
-        
-        
         if (hold !== null) {
             let rect = mount.current.getBoundingClientRect();
             let x = Math.floor((e.pageX - rect.left) / rect.width * width),
@@ -334,7 +316,6 @@ const Distrito = (props) => {
 
 
             setHold({...hold, x: x - xOffset, y: y - yOffset});
-            console.log("UPDATING hold");
         }
     }
 
@@ -345,9 +326,10 @@ const Distrito = (props) => {
     }
 
     if (presenting) {
-        return <Loader title={props.title}/>
+        return <Loader title={props.title}/>;
     } else {
-        return (<canvas className="Distrito"
+        return (
+            <canvas className="Distrito"
                 ref={mount} 
                 style={style}
                 width={width + "px"}
@@ -355,11 +337,9 @@ const Distrito = (props) => {
                 onMouseDown={handleOnMouseDown}
                 onMouseUp={handleOnMouseUp}
                 onMouseMove={handleOnMouseMove}
-                //onClick={handleOnClick}
-            />);
+            />
+        );
     }
-
-    
 }
 
 export default Distrito;

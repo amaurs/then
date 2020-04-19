@@ -1,16 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { useInterval, useTimeout } from './Hooks.js';
-
 import Board from './Board.js';
-
 import './Conway.css';
-
 import Loader from './Presentation.js';
 
 let board = new Board(100, 100);
 
 board.init();
-
 board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
 board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
 board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
@@ -25,16 +21,13 @@ const Circle = (props) => {
     const [position, setPosition] = useState([48 * squareSize, 48 * squareSize]);
     const [offset, setOffset] = useState([0,0]);
     const square = [8 * squareSize, 3 * squareSize];
-
     const [tick, setTick] = useState(null);
-
     const [presenting, setPresenting] = useState(true);
 
     useTimeout(() => {
         setPresenting(false);
         setTick(50);
     }, props.delay)
-
 
     useInterval(() => {
         board = board.getNextGeneration();
@@ -48,10 +41,6 @@ const Circle = (props) => {
                                              square[0] / squareSize, 
                                              square[1] / squareSize);
         board.printContext(context, squareSize, color);
-        //board.highlight(context, squareSize, position[0] / squareSize, 
-        //                                     position[1] / squareSize, 
-        //                                     square[0] / squareSize, 
-        //                                     square[1] / squareSize);
         setCount(count + 1);
     }, tick);
 

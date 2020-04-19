@@ -11,24 +11,17 @@ import Loader from './Presentation.js';
 const AUTOSTEREOGRAM_STRIPS = 8
 
 const Autostereogram = (props) => {
-
-    
-
     let autostereogramCanvas = useRef();
-
     let [show, setShow] = useState(true);
-
     let [presenting, setPresenting] = useState(true);
 
     useTimeout(() => {
         setPresenting(false);
     }, props.delay);
 
-
     const handleToggle = (e) => {
         setShow(!show);
     }
-
 
     useEffect(() => {
         if (props.width > 0 && props.height > 0 && !presenting) {
@@ -91,7 +84,6 @@ const Autostereogram = (props) => {
                     }
                     realContext.putImageData(frame, 0, 0);
                 }
-    
             }
     
             const animate = () => {
@@ -113,11 +105,9 @@ const Autostereogram = (props) => {
         }
     }, [show, props.width, props.height, presenting]);
 
-
     if (presenting) {
         return <Loader title={props.title}/>;
     } else {
-
         return (
             <canvas
                 className="Autostereogram"

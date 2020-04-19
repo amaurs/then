@@ -3,7 +3,6 @@ import './Nostalgia.css'
 import { useInterval, useTimeout } from './Hooks.js';
 import Loader from './Presentation.js';
 
-
 export default function Nostalgia(props) {
     const [user, setUser] = useState("");
     const [count, setCount] = useState(0);
@@ -42,7 +41,6 @@ export default function Nostalgia(props) {
         return () => cancel=true;
     }, [props.url]);
 
-
     useInterval(() => {
         if(count < user.length) {
             setCount(count + 1);
@@ -53,8 +51,10 @@ export default function Nostalgia(props) {
     if (presenting) {
         return <Loader title={props.title}/>
     } else {
-        return (<div className="Nostalgia">
-                    <h1>{user.slice(0, count)}</h1>
-           </div>);
+        return (
+            <div className="Nostalgia">
+                <h1>{user.slice(0, count)}</h1>
+            </div>
+        );
     }
 }

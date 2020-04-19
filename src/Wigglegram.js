@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Wigglegram.css'
-
 import Loader from './Loader';
-
 import { useInterval } from './Hooks.js';
 import { getRandomInt } from './util.js';
 
@@ -39,10 +37,11 @@ const Wigglegram = (props) => {
         }
     }, delay);
 
-
-    return (<div>
-                {current === null ? <Loader /> : <img alt="" src={current} />}                
-            </div>);
+    return (
+        <div>
+            {current === null ? <Loader /> : <img alt="" src={current} />}                
+        </div>
+    );
 }
 
 export default Wigglegram;

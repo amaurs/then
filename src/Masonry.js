@@ -77,13 +77,15 @@ const Masonry = (props) => {
     if (rows.length === 0 || presenting) {
         return <Loader title={props.title}/>
     } else {
-        return (<div className="Masonry" style={{height: dynamicHeight + "px"}}>
+        return (
+            <div className="Masonry" style={{height: dynamicHeight + "px"}}>
                 <div className="Masonry-sticky" ref={verticalContainerRef}>
                     <div className="Masonry-horizontal" style={{ transform: "translateX(" + translateX +"px)" }} ref={horizontalContainerRef}>
                         {rows}
                     </div>
                 </div>
-            </div>);
+            </div>
+        );
     }
 }
 

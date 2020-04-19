@@ -1,17 +1,9 @@
 import React, { useRef, useEffect } from 'react';
-
 import * as THREE from 'three-full';
-
 import './Loader.css'
 
-
 const Loader = () => {
-
-
     let theCanvas = useRef();
-
-    
-
     useEffect(() => {
         let width = 800;
         let height = 450;
@@ -21,7 +13,6 @@ const Loader = () => {
         const renderer = new THREE.WebGLRenderer({ canvas: canvas.current, antialias: true });
         //const geometry = new THREE.TorusKnotGeometry(10, 1, 64, 8, 2, 3, 1);
         const geometry = new THREE.TorusKnotGeometry(10, 1, 64, 8, 2, 3, 1);
-        
         const material = new THREE.MeshNormalMaterial();
         const cube = new THREE.Mesh(geometry, material);
         const needResize = canvas.width !== width || canvas.height !== height;
@@ -31,22 +22,18 @@ const Loader = () => {
         camera.position.z = 10;
         scene.add(cube);
 
-        
         //let effect = new THREE.AsciiEffect( renderer, ' .:-+*=%@#', { invert: true } );
         let effect = new THREE.AsciiEffect( renderer, '>LOADING..', { invert: true } );
         
         effect.setSize( width, height );
         effect.domElement.style.color = 'black';
         effect.domElement.style.backgroundColor = 'white';
-        // Special case: append effect.domElement, instead of renderer.domElement.
-        // AsciiEffect creates a custom domElement (a div container) where the ASCII elements are placed.
         theCanvas.current.appendChild( effect.domElement );
-
 
         const renderScene = () => {
             effect.render(scene, camera);
         }
-
+        
         const animate = () => {
             cube.rotation.x += 0.01;
             cube.rotation.y += 0.01;

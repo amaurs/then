@@ -1,26 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react';
-
 import * as THREE from 'three-full';
-
 import AnaglyphSVGRenderer from './AnaglyphSVGRenderer.js';
 import './Anaglyph.css'
-
 import { useTimeout } from './Hooks.js';
-
 import Loader from './Presentation.js';
 
 const Anaglyph = (props) => {
-
     let mount = useRef();
     let [presenting, setPresenting] = useState(true);
+    const [data, setData] = useState({points: [], hasFetched: true});
 
     useTimeout(() => {
         setPresenting(false);
     }, props.delay);
-
-
-    const [data, setData] = useState({points: [], hasFetched: true});
-
 
     useEffect(() => {
         let cancel = false;
@@ -96,15 +88,11 @@ const Anaglyph = (props) => {
         return <Loader title={props.title}/>
     } else {
         return (
-            <div
-                className="Anaglyph"
-                ref={mount}
-            >
+            <div className="Anaglyph"
+                 ref={mount} >
             </div>
         );
-    }
-
-    
+    }    
 }
 
 export default Anaglyph;

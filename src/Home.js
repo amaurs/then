@@ -4,7 +4,6 @@
 //   tt    hh  hh  ee      nn  nnn
 //   tt    hh  hh  eeeeee  nn   nn
 
-
 import React, { useEffect, useState } from 'react';
 
 import Anaglyph from './Anaglyph.js';
@@ -26,12 +25,9 @@ import Then from './Then.js';
 import TravelingSalesman from './TravelingSalesman';
 import Voronoi from './Voronoi.js';
 import Wigglegram from './Wigglegram.js';
-
 import ReactGA from 'react-ga';
 import { useSwipeable } from 'react-swipeable';
-
 import './Home.css';
-
 import { Switch, Redirect, Route, Link, useLocation, useHistory } from 'react-router-dom';
 
 
@@ -94,31 +90,30 @@ const Home = (props) => {
     const [font, setFont] = useState(null);
     const history = useHistory();
     let config = {
-                  delta: 30,                             // min distance(px) before a swipe starts
-                  preventDefaultTouchmoveEvent: false,   // preventDefault on touchmove, *See Details*
-                  trackTouch: true,                      // track touch input
-                  trackMouse: false,                     // track mouse input
-                  rotationAngle: 0,                      // set a rotation angle
+                  delta: 30,                             
+                  preventDefaultTouchmoveEvent: false,   
+                  trackTouch: true,                      
+                  trackMouse: false,                     
+                  rotationAngle: 0,                      
                 }
 
 
-    let fonts = {'OCR-B Std':{fontFamily: 'ocr-b-std, monospace',
-                                                fontWeight: 400,
-                                                fontStyle: 'normal'},
-                    'OCR-A Std':{fontFamily: 'ocr-a-std, monospace',
-                                                fontWeight: 400,
-                                                fontStyle: 'normal'},
-                    'Rig Shaded Bold Extrude':{fontFamily: 'rig-shaded-bold-extrude, sans-serif',
-                                                fontWeight: 700,
-                                                fontStyle: 'normal'},
-                    'Rig Solid Bold Fill':{fontFamily: 'rig-solid-bold-fill, sans-serif',
-                                                fontWeight: 700,
-                                                fontStyle: 'normal'},
-                    'Rig Solid Bold Halftone':{fontFamily: 'rig-solid-bold-halftone, sans-serif',
-                                                fontWeight: 700,
-                                                fontStyle: 'normal'}};
-    useEffect(() => {
-        
+    let fonts = {'OCR-B Std': {fontFamily: 'ocr-b-std, monospace',
+                               fontWeight: 400,
+                               fontStyle: 'normal'},
+                 'OCR-A Std': {fontFamily: 'ocr-a-std, monospace',
+                               fontWeight: 400,
+                               fontStyle: 'normal'},
+                 'Rig Shaded Bold Extrude': {fontFamily: 'rig-shaded-bold-extrude, sans-serif',
+                                             fontWeight: 700,
+                                             fontStyle: 'normal'},
+                 'Rig Solid Bold Fill': {fontFamily: 'rig-solid-bold-fill, sans-serif',
+                                         fontWeight: 700,
+                                         fontStyle: 'normal'},
+                 'Rig Solid Bold Halftone': {fontFamily: 'rig-solid-bold-halftone, sans-serif',
+                                             fontWeight: 700,
+                                             fontStyle: 'normal'}};
+    useEffect(() => {        
         if (font !== null) {
             let body = document.getElementsByTagName("body")[0];
             body.style.fontFamily = fonts[font].fontFamily;
@@ -131,9 +126,7 @@ const Home = (props) => {
     }, [font]);
 
     const getFontMenu = () => {
-
-        return <ul>{Object.keys(fonts).map((element, index) => <li key={index} onClick={handleFontMenu}>{element}</li>)
-                }</ul>;
+        return <ul>{Object.keys(fonts).map((element, index) => <li key={index} onClick={handleFontMenu}>{element}</li>)}</ul>;
     }
 
 
@@ -161,9 +154,7 @@ const Home = (props) => {
     }
 
     const getMappingDecorated = (home) => {
-
         return { ...getMapping(), "/": getMapping()[home[0]]};
-
     }
 
     const getNames = () => {
@@ -252,14 +243,11 @@ const Home = (props) => {
         }
     }, [names, location.pathname]);
 
-
     useEffect(() => {
         if (current !== null) {
             history.push(current);
         }
     }, [current]);
-        
-
 
     const handleMenu = () => {
         setIsActive(!isActive);
@@ -289,18 +277,20 @@ const Home = (props) => {
                 {getFontMenu()}
                </div>;
 
-    return (<div {...handlers}>
-              {usePageViews()}
-              <div className="MenuHamburger">
-                  <Hamburger onClick={handleMenu} isActive={isActive} />
-              </div>
-                  {isActive?menu:null} 
-              <div className="Home Home-info-container">
+    return (
+        <div {...handlers}>
+            {usePageViews()}
+            <div className="MenuHamburger">
+                <Hamburger onClick={handleMenu} isActive={isActive} />
+            </div>
+                {isActive?menu:null} 
+            <div className="Home Home-info-container">
                 <Switch>
-                  {getBackgroundContentRouter()}
+                    {getBackgroundContentRouter()}
                 </Switch>
-              </div>
-            </div>);
+            </div>
+        </div>
+    );
 }
 
 export default Home;

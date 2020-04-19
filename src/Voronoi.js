@@ -4,44 +4,16 @@ import { getXYfromIndex, getRandomInt, getBrightness, getCentroids } from './uti
 import './Voronoi.css'
 import * as d3 from 'd3';
 import { Delaunay } from "d3-delaunay";
-
 import { useTimeout } from './Hooks.js';
 import Loader from './Presentation.js';
-
-
-/**
-let imageRatio = this.state.imageHeight / this.state.imageWidth;
-let ratio = this.state.height / this.state.width;
-let canvasHeight = this.state.height;
-let canvasWidth = this.state.width;
-if(ratio < 1) {
-    canvasWidth = canvasHeight * (1 / imageRatio);
-} else {
-    canvasHeight = canvasWidth * imageRatio;
-}
-voronoi = <Voronoi imageData={this.state.totalData}
-                   width={this.state.width}
-                   height={this.state.height}
-                   imageWidth ={this.state.imageWidth}
-                   imageHeight={this.state.imageHeight}
-                   sites={this.state.sites}
-                   updateCities={this.updateCities}
-                   canvasWidth={canvasWidth}
-                   canvasHeight={canvasHeight}
-                   updates={this.state.voronoiUpdates}
-          />
-**/
 
 const Voronoi = (props) => {
 
     let mount = useRef();
-
     let [updates, setUpdates] = useState(0);
-
     let [cities, setCities] = useState(null);
     const [canvasWidth, setCanvasWidth] = useState(0);
     const [canvasHeight, setCanvasHeight] = useState(0);
-
     let [presenting, setPresenting] = useState(true);
 
     useTimeout(() => {
@@ -49,23 +21,14 @@ const Voronoi = (props) => {
     }, props.delay);
 
     useEffect(() => {
-
-            
-
-
-
         if (props.width > 0 && props.height > 0) {
-
-
             const onLoad = (event) => {
                 const image = event.target;
-            
                 let canvas = document.createElement('canvas');
                 canvas.width = image.width;
                 canvas.height = image.height;
                 let context = canvas.getContext('2d');
                 context.drawImage(image, 0, 0);
-    
                 let imageData = context.getImageData(0, 0, image.width, image.height);
                 let totalData = [];
                 for(let index = 0; index < image.width * image.height; index++) {
@@ -78,12 +41,10 @@ const Voronoi = (props) => {
                                      b: imageData.data[index * 4 + 2],
                                    });
                 }
-    
                 const total = 10000;
                 let sites = [];
                 /** I use the rejection algorithm to get points with the most brightness. **/
                 let numPoints = 0;
-            
                 while(numPoints < total){
                   let index = getRandomInt(0, image.width * image.height);
                   let site = totalData[index]
@@ -126,7 +87,6 @@ const Voronoi = (props) => {
     }, [props.width, props.height]);
 
     useEffect(() => {
-
         if (!presenting) {
             const getRadius = (d) => {
                 return  2 + 1 * getBrightness(d.r, d.g, d.b);
@@ -155,14 +115,9 @@ const Voronoi = (props) => {
                 }
             }
         }
-
     }, [cities, presenting]);
 
-
-
     useEffect(() => {
-
-
         const sitesUpdate = (sites, imageData, width, height) => {
             const delaunay = Delaunay.from(sites, 
                                               function(d) { return d.x },
@@ -203,11 +158,12 @@ const Voronoi = (props) => {
     if (presenting) {
         return <Loader title={props.title}/>
     } else {
-        return (<canvas className="Voronoi"
+        return (
+            <canvas className="Voronoi"
                     width={canvasWidth + "px"} 
                     height={canvasHeight + "px"} 
-                    ref={mount} 
-                />);
+                    ref={mount} />
+        );
     }
 }
 

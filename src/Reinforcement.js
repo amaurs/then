@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-
 import { Environment, map} from './rl/windyGridworld.js';
 import Controller from './rl/controller';
 import { Agent } from './rl/sarsaAgent.js';
-
 import './Reinforcement.css';
-
 import { useTimeout } from './Hooks.js';
 import Loader from './Presentation.js';
 
@@ -27,15 +24,12 @@ function  getIcon(key){
 }
 
 export default function Reinforcement(props) {
-
     const squareSize = props.width / map.width;
     const style = {height: squareSize + "px", 
                    width: squareSize + "px", 
                    fontSize: (squareSize * 0.75) + "px"};
     const [board, setBoard] = useState(null);
-
     const requestRef = useRef();
-
     const [presenting, setPresenting] = useState(true);
 
     useTimeout(() => {
@@ -61,9 +55,11 @@ export default function Reinforcement(props) {
             <div key={rowIndex}>{row.map((cell, cellIndex) => <div style={style} key={cellIndex}>{getIcon(cell)}</div>)}</div>
         );
 
-        return (<div className="Reinforcement">
-                    {rows}
-                </div>);
+        return (
+            <div className="Reinforcement">
+                {rows}
+            </div>
+        );
     } else {
         return <Loader title={props.title}/>;
     }

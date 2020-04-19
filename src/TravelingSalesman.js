@@ -1,13 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useInterval, useTimeout } from './Hooks.js';
 import { getRandomIntegerArray, colorToString, invertColor } from './util.js';
-
 import Loader from './Presentation.js';
-
 import './TravelingSalesman.css';
 
 const TravelingSalesman = (props) => {
-
     let mount = useRef();
     const [tick, setTick] = useState(0);
     const [delay, setDelay] = useState(null);
@@ -15,7 +12,6 @@ const TravelingSalesman = (props) => {
     const [citiesToDraw, setCitiesToDraw] = useState([]);
     const squareSampling = 100;
     const numberColors = 500;
-
     let [presenting, setPresenting] = useState(true);
 
     useTimeout(() => {
@@ -49,7 +45,6 @@ const TravelingSalesman = (props) => {
         fetchCitiesSolution(props.url, numberColors, squareSampling);
         return () => cancel=true;
     }, [props.url]);
-
 
     useEffect(() => {
         if (citiesToDraw.length > 0 && !presenting) {
@@ -94,6 +89,7 @@ const TravelingSalesman = (props) => {
     }, delay);
 
     let style = {};
+
     if (props.width > 0 && props.height > 0) {
         style = props.width/props.height< 1 ? {width: "100%"}
                                             : {height: "100%"};
@@ -102,7 +98,6 @@ const TravelingSalesman = (props) => {
     let minSize = props.width/props.height < 1 ? props.width:
                                                  props.height;
     
-
     if (citiesToDraw.length > 0 && !presenting) {
         return (<canvas
                 ref={mount}
@@ -113,8 +108,6 @@ const TravelingSalesman = (props) => {
     } else {
         return <Loader title={props.title}/>;
     }
-
-    
 }
 
 export default TravelingSalesman;

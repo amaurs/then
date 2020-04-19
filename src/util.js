@@ -7,7 +7,6 @@ export const BLUE = { r: 0, g: 0, b: 255, a: 1 };
 export const WHITE = { r: 255, g: 255, b: 255, a: 1 };
 export const BLACK = { r: 0, g: 0, b: 0, a: 1 };
 
-
 // const pinkBackground  = { r: 255, g:   255, b: 0, a: .5 }
 // const greenForeground = { r: 255, g: 255, b: 255, a: 1  }
 
@@ -46,7 +45,6 @@ export function getIndexFromArray(array, value) {
     return index;
 }
 
-
 export function getRandomIntegerArray(size, min, max) {
   let integers = [];
   for(let i = 0; i < size; i++) {
@@ -74,8 +72,6 @@ export function download(filename, text) {
         pom.click();
     }
 }
-
-
 
 /** Given an array of polygons this calculates the centroids and returns them. **/
 export function getCentroids(polygons){
@@ -115,9 +111,6 @@ export function closest(colors, red, green, blue) {
   });
   flatColors.push(WHITE);
   arrayColors.push(WHITE);
-
-
-
   let currentColor = { r: red, g: green, b: blue, a: 1 };
   let distance = flatColors.map(function(color) {
     return colorDistance(color, currentColor);
@@ -140,7 +133,6 @@ export function closest(colors, red, green, blue) {
            alpha_b: arrayColors[colorIndex].b,
            alpha_a: arrayColors[colorIndex].a };
 }
-
 
 /** There are other recipies to get brigthness I just like this one. **/
 export function getBrightness(red, green, blue){
@@ -170,9 +162,6 @@ function colorDistance(colorA, colorB) {
   return getNormSuared3d(colorA.r, colorA.g, colorA.b, colorB.r, colorB.g, colorB.b);
 }
 
-
-
-
 function generateColors(baseColorArray, steps) {
     let colors = [];
     let step = 255 / steps;
@@ -200,7 +189,6 @@ export function romanize(num) {
     return roman;
 }
 
-
 export function intToColor(color) {
 
     let b =  color & 0xFF,
@@ -216,7 +204,6 @@ export function colorToInt(r, g, b) {
     return (r << 16) | (g << 8) | b;
 
 }
-
 
 export function mod(n, m) {
     return ((n % m) + m) % m;

@@ -16,7 +16,6 @@ class GoogleAnalytics extends Component {
         const { location: { pathname, search } } = this.props;
         const isDifferentPathname = pathname !== prevLocation.pathname;
         const isDifferentSearch = search !== prevLocation.search;
-debugger
         if (isDifferentPathname || isDifferentSearch) {
             this.logPageChange(pathname, search);
         }

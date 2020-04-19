@@ -171,6 +171,4 @@ export default class Board {
         }
         return intToColor(color);
     }
-
-
 }

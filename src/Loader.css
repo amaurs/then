@@ -3,8 +3,8 @@
     margin: 0 auto;
 }
 
-.Loader table tbody{
-font-family: ocr-a-std, monospace;
-font-weight: 400;
-font-style: normal;
+.Loader table tbody {
+    font-family: ocr-a-std, monospace;
+    font-weight: 400;
+    font-style: normal;
 }
