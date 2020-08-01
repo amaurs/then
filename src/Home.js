@@ -280,10 +280,6 @@ const Home = (props) => {
     return (
         <div {...handlers}>
             {usePageViews()}
-            <div className="MenuHamburger">
-                <Hamburger onClick={handleMenu} isActive={isActive} />
-            </div>
-                {isActive?menu:null} 
             <div className="Home Home-info-container">
                 <Switch>
                     {getBackgroundContentRouter()}

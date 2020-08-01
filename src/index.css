@@ -1,3 +1,7 @@
+@import url("//hello.myfonts.net/count/3bfee5");
+  
+
+
 * {
     margin: 0;
     padding: 0;
@@ -15,6 +19,9 @@ code {
     monospace;
 }
 
-html, body, pre, code, kbd, samp, button{
-    font-family: "Press Start 2P";
+  
+
+@font-face {
+  font-family: 'LubalinGraphStd-Medium';
+  src: url('fonts/LubalinGraphStd-Medium/font.woff2') format('woff2'), url('fonts/LubalinGraphStd-Medium/font.woff') format('woff');
 }

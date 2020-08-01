@@ -1,8 +1,9 @@
 
 body {
-    font-family: rig-solid-bold-halftone, sans-serif;
+    font-family: 'LubalinGraphStd-Medium', serif;
     font-weight: 700;
     font-style: normal;
+    text-transform: capitalize;
 }
 
 .Home-info-container{
