@@ -98,13 +98,13 @@ const Distrito = (props) => {
             let l = first.data.length / 4;
 
             for (let i = 0; i < l; i++) {
-                tm1[i] = first.data[i * 4 + 2];
+                tm1[i] = first.data[i * 4 + 0];
                 tm2[i] = first.data[i * 4 + 1];
-                tm3[i] = first.data[i * 4 + 0];
-                tm4[i] = second.data[i * 4 + 2];
+                tm3[i] = first.data[i * 4 + 2];
+                tm4[i] = second.data[i * 4 + 0];
                 tm5[i] = second.data[i * 4 + 1];
-                tm7[i] = second.data[i * 4 + 0];
-                tm6[i] = third.data[i * 4 + 0];
+                tm6[i] = second.data[i * 4 + 2];
+                tm7[i] = third.data[i * 4 + 0];             
                 mask[i] = fourth.data[i * 4 + 0];
             }
             
