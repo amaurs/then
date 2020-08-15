@@ -115,7 +115,7 @@ const Home = (props) => {
                 "/anaglyph":                <Anaglyph title="anaglyph" delay={presentationTime} width={width} height={height} url={banditHost} />,
                 "/traveling-salesman":      <TravelingSalesman title="traveling salesman" delay={presentationTime}  width={width} height={height} url={banditHost} />,
                 "/conway":                  <Circle title="conway" delay={presentationTime}  width={width} height={height} />,
-                "/kaleidoscope":            <Mirror title="kaleidoscope" delay={presentationTime}  width={width} height={height} />,
+                //"/kaleidoscope":            <Mirror title="kaleidoscope" delay={presentationTime}  width={width} height={height} />,
                 "/film":                    <Masonry title="film" delay={presentationTime}  width={width} height={height} url={banditHost + "/wigglegrams/jpg"} rows={1} />,
                 "/404":                     <Loader />,
             };
