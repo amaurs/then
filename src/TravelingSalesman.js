@@ -53,8 +53,10 @@ const TravelingSalesman = (props) => {
             const height = mount.current.height;
             context.save();
             context.clearRect(0, 0, width, height);
+            context.fillStyle = '#161011';
+            context.fillRect(0, 0, width, height);
             context.beginPath();
-            context.strokeStyle = invertColor(255, 255, 255);
+            context.strokeStyle = '#f0a5a3';
             context.lineWidth = 5;
             for(let i=0; i < citiesToDraw.length; i+=2) {
                 context.lineTo(Math.floor(width * citiesToDraw[i] / squareSampling), Math.floor(height * citiesToDraw[i + 1] / squareSampling))    
@@ -98,7 +100,7 @@ const TravelingSalesman = (props) => {
     let minSize = props.width/props.height < 1 ? props.width:
                                                  props.height;
     
-    if (citiesToDraw.length > 0 && !presenting) {
+    if (citiesToDraw.length >= 0 && !presenting) {
         return (<canvas
                 ref={mount}
                 width={minSize}
