@@ -21,6 +21,7 @@ import Mirror from './Mirror.js';
 import Nostalgia from './Nostalgia';
 import NotFound from './NotFound';
 import Reinforcement from './Reinforcement.js';
+import Slider from './Slider.js';
 import Then from './Then.js';
 import TravelingSalesman from './TravelingSalesman';
 import Voronoi from './Voronoi.js';
@@ -268,12 +269,16 @@ const Home = (props) => {
                 <div className="MenuHamburger">
                     <Hamburger onClick={handleMenu} isActive={isActive} />
                 </div>
+                <div className="Home-slider">
+                    <Slider onClick={theme.toggleTheme} />
+                </div>
                     {isActive?menu:null} 
                 <div className="Home Home-info-container">
                     <Switch>
                         {getBackgroundContentRouter()}
                     </Switch>
                 </div>
+                
             </div>
         
     );
