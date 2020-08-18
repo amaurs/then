@@ -1,12 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import './Hamburger.css';
 
-export default class Hamburger extends Component {
-    render() {
+import { ThemeContext } from './ThemeContext.js';
+
+
+const Hamburger = (props) => {
+
+    const theme = useContext(ThemeContext);
+
+
+    
         return (
-            <div onClick={this.props.onClick} className={"Hamburger" + (this.props.isActive?" active":"")}>
-                <div className="Hamburger-hamburger"></div>
+            <div onClick={props.onClick} className={"Hamburger" + (props.isActive?" active":"")}
+                >
+
+                <div className="Hamburger-hamburger" style={{background: theme.theme.foreground}}></div>
             </div>
         );
-    }
 }
+
+export default Hamburger;

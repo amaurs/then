@@ -16,6 +16,7 @@ import './Then.css'
 
 
 const Then = () => {
+
     return (<div className="Then">
               <h1 className="name">then</h1>
             </div>);

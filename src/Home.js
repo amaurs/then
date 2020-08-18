@@ -4,7 +4,7 @@
 //   tt    hh  hh  ee      nn  nnn
 //   tt    hh  hh  eeeeee  nn   nn
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import Anaglyph from './Anaglyph.js';
 import Circle from './Circle.js';
@@ -29,6 +29,9 @@ import ReactGA from 'react-ga';
 import { useSwipeable } from 'react-swipeable';
 import './Home.css';
 import { Switch, Redirect, Route, Link, useLocation, useHistory } from 'react-router-dom';
+
+import { ThemeContext } from './ThemeContext.js';
+
 
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -79,6 +82,9 @@ const usePageViews = (pathname) => {
 
 }
 
+
+
+
 const Home = (props) => {
 
     const [isActive, setIsActive] = useState(false);
@@ -89,6 +95,11 @@ const Home = (props) => {
     const [pointer, setPointer] = useState(0);
     const [font, setFont] = useState(null);
     const history = useHistory();
+    
+
+    const theme = useContext(ThemeContext);
+
+
     let config = {
                   delta: 30,                             
                   preventDefaultTouchmoveEvent: false,   
@@ -203,13 +214,19 @@ const Home = (props) => {
                     let prev = names[current.index - 1];
                     setCurrent(prev[0])
                 }
+                if (event.key === 't') {
+                    console.log(event.key);
+                    //setTheme(theme === themes.dark?themes.light:themes.dark);
+                    theme.toggleTheme()
+
+                }
             }
         }
         window.addEventListener("keydown", handleKeyPress);
         return () => {
             window.removeEventListener("keydown", handleKeyPress);
         }
-    }, [names, location.pathname]);
+    }, [names, location.pathname, theme.theme]);
 
     useEffect(() => {
         if (current !== null) {
@@ -237,23 +254,28 @@ const Home = (props) => {
         return routes;
     }
 
-    let menu = <div className={"Menu Home-info-container" + (isActive?" active":"")}>
+    let menu = <div className={"Menu Home-info-container" + (isActive?" active":"")}
+                    style={{ background: theme.theme.background, color: theme.theme.foreground }}>
                 {getMenu()}
                </div>;
 
+    
+
     return (
-        <div {...handlers}>
-            {usePageViews()}
-            <div className="MenuHamburger">
-                <Hamburger onClick={handleMenu} isActive={isActive} />
+        
+            <div {...handlers} style={{ background: theme.theme.background, color: theme.theme.foreground }}>
+                {usePageViews()}
+                <div className="MenuHamburger">
+                    <Hamburger onClick={handleMenu} isActive={isActive} />
+                </div>
+                    {isActive?menu:null} 
+                <div className="Home Home-info-container">
+                    <Switch>
+                        {getBackgroundContentRouter()}
+                    </Switch>
+                </div>
             </div>
-                {isActive?menu:null} 
-            <div className="Home Home-info-container">
-                <Switch>
-                    {getBackgroundContentRouter()}
-                </Switch>
-            </div>
-        </div>
+        
     );
 }
 

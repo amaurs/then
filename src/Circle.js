@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { useInterval, useTimeout } from './Hooks.js';
 import Board from './Board.js';
 import './Conway.css';
 import Loader from './Presentation.js';
+
+import { ThemeContext } from './ThemeContext.js';
 
 let board = new Board(100, 100);
 
@@ -15,6 +17,7 @@ board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)
 
 const Circle = (props) => {
     let ref = useRef();
+    const theme = useContext(ThemeContext);
     const squareSize = 10;
     const [count, setCount] = useState(0);
     const [drag, setDrag] = useState(false);
@@ -35,12 +38,12 @@ const Circle = (props) => {
         let context = canvas.getContext('2d');
         
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.fillStyle = "black";
-        let color = board.getColor(context, squareSize, position[0] / squareSize, 
-                                             position[1] / squareSize, 
-                                             square[0] / squareSize, 
-                                             square[1] / squareSize);
-        board.printContext(context, squareSize, color);
+        //context.fillStyle = theme.theme.foreground;
+        //let color = board.getColor(context, squareSize, position[0] / squareSize, 
+        //                                     position[1] / squareSize, 
+        //                                     square[0] / squareSize, 
+        //                                     square[1] / squareSize);
+        board.printContext(context, squareSize, theme.theme.foreground);
         setCount(count + 1);
     }, tick);
 
