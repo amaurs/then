@@ -15,7 +15,7 @@ board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100)
 board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
 
 
-const Circle = (props) => {
+const Conway = (props) => {
     let ref = useRef();
     const theme = useContext(ThemeContext);
     const squareSize = 10;
@@ -105,4 +105,4 @@ const Circle = (props) => {
     }
 };
 
-export default Circle;
+export default Conway;

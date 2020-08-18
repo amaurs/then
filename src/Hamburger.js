@@ -10,13 +10,13 @@ const Hamburger = (props) => {
 
 
     
-        return (
-            <div onClick={props.onClick} className={"Hamburger" + (props.isActive?" active":"")}
-                >
+    return (
+        <div onClick={props.onClick} className={"Hamburger" + (props.isActive?" active":"")}
+            >
 
-                <div className="Hamburger-hamburger" style={{background: theme.theme.foreground}}></div>
-            </div>
-        );
+            <div className="Hamburger-hamburger" style={{background: theme.theme.foreground}}></div>
+        </div>
+    );
 }
 
 export default Hamburger;

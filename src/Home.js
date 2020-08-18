@@ -7,7 +7,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 
 import Anaglyph from './Anaglyph.js';
-import Circle from './Circle.js';
+import Conway from './Conway.js';
 import Corrupted from './Corrupted.js';
 import Colors from './Colors.js';
 import Distrito from './Distrito.js';
@@ -126,7 +126,7 @@ const Home = (props) => {
                 "/reinforcement-learning":  <Reinforcement title="reinforcement learning" delay={presentationTime}  width={width} height={height} />,
                 "/anaglyph":                <Anaglyph title="anaglyph" delay={presentationTime} width={width} height={height} url={banditHost} />,
                 "/traveling-salesman":      <TravelingSalesman title="traveling salesman" delay={presentationTime}  width={width} height={height} url={banditHost} />,
-                "/conway":                  <Circle title="conway" delay={presentationTime}  width={width} height={height} />,
+                "/conway":                  <Conway title="conway" delay={presentationTime}  width={width} height={height} />,
                 //"/kaleidoscope":            <Mirror title="kaleidoscope" delay={presentationTime}  width={width} height={height} />,
                 "/film":                    <Masonry title="film" delay={presentationTime}  width={width} height={height} url={banditHost + "/wigglegrams/jpg"} rows={1} />,
                 "/404":                     <Loader />,

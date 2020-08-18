@@ -1,8 +1,5 @@
-
 body {
     font-family: 'LubalinGraphStd-Medium', serif;
-    font-weight: 700;
-    font-style: normal;
     text-transform: capitalize;
 }
 
@@ -11,12 +8,7 @@ body {
     min-height: 100vh;
 }
 
-.Home-info-container p {
-}
 
-.Home-info-container ol{
-    list-style-type: decimal;
-}
 
 .MenuHamburger {
     position: fixed;
@@ -42,20 +34,19 @@ body {
 }
 
 .Menu ul {
+    margin: 25px;
     list-style: none;
     align-self: center;
-    margin: 0 auto;
     cursor: pointer;
 }
 
 .Menu a {
     font-weight: bold;
-    font-size: 24px;
+    font-size: 28px;
     color: inherit;
     text-decoration: inherit;
     text-transform: capitalize;
 }
-
 
 .Home-slider {
     position: fixed;
@@ -63,4 +54,12 @@ body {
     bottom: 0;
     z-index: 200;
     margin: 25px;
+}
+
+
+
+@media only screen and (min-width: 600px) {
+    .Menu a {
+        font-size: 56px;
+    } 
 }

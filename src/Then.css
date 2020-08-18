@@ -4,8 +4,7 @@
 }
 
 .Then .name {
-    font-weight: bold;
-    font-size: 72px;
+    font-size: 130px;
 }
 
 .Then .pronunciation {
@@ -39,6 +38,6 @@
 
 @media only screen and (min-width: 600px) {
     .Then .name {
-        font-size: 240px;
+        font-size: 360px;
     }  
 }
