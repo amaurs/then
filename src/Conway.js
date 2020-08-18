@@ -8,11 +8,11 @@ import { ThemeContext } from './ThemeContext.js';
 
 let board = new Board(100, 100);
 
-board.init();
-board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
-board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
-board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
-board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
+board.randomize();
+//board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
+//board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
+//board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
+//board.gliderGun(Math.floor(Math.random() * 100), Math.floor(Math.random() * 100), );
 
 
 const Conway = (props) => {
@@ -83,7 +83,7 @@ const Conway = (props) => {
 
     let style = {};
     if (props.width > 0 && props.height > 0) {
-        style = props.width/props.height<1?{width: "100%"}:{height: "100%"};
+        style = props.width/props.height<1?{width: "100vw"}:{height: "100vh"};
     }
     
     if (presenting) {
