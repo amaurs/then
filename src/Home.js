@@ -18,7 +18,7 @@ import Loader from './Loader.js'
 import Mandelbrot from './Mandelbrot.js';
 import Masonry from './Masonry.js';
 import Mirror from './Mirror.js';
-import Nostalgia from './Nostalgia';
+import Bolero from './Bolero.js';
 import NotFound from './NotFound';
 import Reinforcement from './Reinforcement.js';
 import Slider from './Slider.js';
@@ -120,7 +120,7 @@ const Home = (props) => {
                 "/mandelbrot":              <Mandelbrot title="mandelbrot" delay={presentationTime}  width={width} height={height} host={mandelbrot}/>,
                 "/voronoi":                 <Voronoi title="voronoi" delay={presentationTime}  width={width} height={height} />,
                 "/stereo-photography":      <Masonry title="stereo photography" delay={presentationTime}  width={width} height={height} url={banditHost + "/wigglegrams/gif"} rows={2} />,
-                "/bolero":                  <Nostalgia title="bolero" delay={presentationTime}  width={width} height={height} url={banditHost + "/boleros/en"} />,
+                "/bolero":                  <Bolero title="bolero" delay={presentationTime}  width={width} height={height} url={banditHost + "/boleros/en"} />,
                 "/hilbert":                 <Hilbert title="hilbert" delay={presentationTime}  width={width} height={height} />,
                 "/hilbert/:res":            <Hilbert title="hilbert" delay={presentationTime}  width={width} height={height} />,
                 "/reinforcement-learning":  <Reinforcement title="reinforcement learning" delay={presentationTime}  width={width} height={height} />,

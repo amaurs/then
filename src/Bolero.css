@@ -1,0 +1,15 @@
+.Bolero {
+    align-self: center;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
+
+@media only screen and (min-width: 600px) {
+    .Bolero {
+        font-size: 72px;
+    }  
+}

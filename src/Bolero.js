@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import './Nostalgia.css'
+import './Bolero.css'
 import { useInterval, useTimeout } from './Hooks.js';
 import Loader from './Presentation.js';
 
-export default function Nostalgia(props) {
+export default function Bolero(props) {
     const [user, setUser] = useState("");
     const [count, setCount] = useState(0);
     const [delay, setDelay] = useState(null);
@@ -52,7 +52,7 @@ export default function Nostalgia(props) {
         return <Loader title={props.title}/>
     } else {
         return (
-            <div className="Nostalgia">
+            <div className="Bolero">
                 <h1>{user.slice(0, count)}</h1>
             </div>
         );

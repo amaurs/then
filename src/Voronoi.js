@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import robot from './assets/our-lady.jpg';
+import robot from './assets/robot.jpg';
 import { getXYfromIndex, getRandomInt, getBrightness, getCentroids } from './util.js';
 import './Voronoi.css'
 import * as d3 from 'd3';
@@ -41,7 +41,7 @@ const Voronoi = (props) => {
                                      b: imageData.data[index * 4 + 2],
                                    });
                 }
-                const total = 10000;
+                const total = 5000;
                 let sites = [];
                 /** I use the rejection algorithm to get points with the most brightness. **/
                 let numPoints = 0;
