@@ -10,6 +10,7 @@ import Anaglyph from './Anaglyph.js';
 import Conway from './Conway.js';
 import Corrupted from './Corrupted.js';
 import Colors from './Colors.js';
+import Dense from './Dense.js';
 import Distrito from './Distrito.js';
 import Hamburger from './Hamburger';
 import Hilbert from './Hilbert.js';
@@ -117,6 +118,7 @@ const Home = (props) => {
                 "/1986":                    <Distrito title="1986" delay={presentationTime}  width={width} height={height} />,
                 "/corrupt":                 <Corrupted title="corrupt" delay={presentationTime}  width={width} height={height} />,
                 "/colors":                  <Colors title="colors" delay={presentationTime}  width={width} height={height}  url={banditHost} />,
+                "/dense":                   <Dense title="dense" delay={presentationTime}  width={width} height={height} url={banditHost} />,
                 "/mandelbrot":              <Mandelbrot title="mandelbrot" delay={presentationTime}  width={width} height={height} host={mandelbrot}/>,
                 "/voronoi":                 <Voronoi title="voronoi" delay={presentationTime}  width={width} height={height} />,
                 "/stereo-photography":      <Masonry title="stereo photography" delay={presentationTime}  width={width} height={height} url={banditHost + "/wigglegrams/gif"} rows={2} />,
