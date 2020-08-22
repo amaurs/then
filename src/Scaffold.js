@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocalStorage } from './Hooks.js'; 
 import Home from './Home.js';
 
@@ -10,11 +10,8 @@ const Then = () => {
 
     const [theme, setTheme] = useLocalStorage('theme', themes.light);
 
-
     const toggleTheme = () => {
-
-        setTheme(theme === themes.dark?themes.light:themes.dark);
-
+        setTheme(theme.name === "dark"?themes.light:themes.dark);
     }
 
     return (

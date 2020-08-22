@@ -272,7 +272,7 @@ const Home = (props) => {
                     <Hamburger onClick={handleMenu} isActive={isActive} />
                 </div>
                 <div className="Home-slider">
-                    <Slider onClick={theme.toggleTheme} />
+                    <Slider />
                 </div>
                     {isActive?menu:null} 
                 <div className="Home Home-info-container">
