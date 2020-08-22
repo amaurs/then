@@ -7,7 +7,7 @@ const themes = {
   },
   dark: {
     foreground: "#f0a5a3",
-    background: "#161011"
+    background: "#000000"
   }
 };
 

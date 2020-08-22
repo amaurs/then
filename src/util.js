@@ -189,6 +189,7 @@ export function romanize(num) {
     return roman;
 }
 
+
 export function intToColor(color) {
 
     let b =  color & 0xFF,
@@ -198,6 +199,12 @@ export function intToColor(color) {
     return "rgb(" + [r, g, b].join(",") + ")";
 
 }
+
+export function randomColor() {
+
+    return intToColor(getRandomInt(0, Math.pow(2, 24)));
+}
+
 
 export function colorToInt(r, g, b) {
 
