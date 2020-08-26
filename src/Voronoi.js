@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import robot from './assets/robot.jpg';
+import robot from './assets/our-lady.jpg';
 import { getXYfromIndex, getRandomInt, getBrightness, getCentroids } from './util.js';
 import './Voronoi.css'
 import * as d3 from 'd3';
@@ -80,77 +80,81 @@ const Voronoi = (props) => {
             let image = new Image();
             image.src = robot;
             image.onload = onLoad;
-
-
         }
 
     }, [props.width, props.height]);
 
     useEffect(() => {
-        if (!presenting) {
+        if (cities !== null && !presenting) {
             const getRadius = (d) => {
                 return  2 + 1 * getBrightness(d.r, d.g, d.b);
             }
 
-            const draw = () => {
-                let context = mount.current.getContext('2d');
-                let canvasWidth = mount.current.width;
-                let canvasHeight = mount.current.height;
-                context.clearRect(0, 0, canvasWidth, canvasHeight);
-                cities.sites.forEach(function(d){
-                    context.beginPath();
-                    context.fillStyle = d3.rgb(+d.r, +d.g, +d.b);
-                    let x = (+d.x / cities.imageWidth) * canvasWidth;
-                    let y = (+d.y / cities.imageHeight) * canvasHeight;
-                    let r = getRadius(d) * canvasWidth / 800;
-                    context.arc(x, y, r, 0, 2 * Math.PI);
-                    context.fill();
+            const sitesUpdate = (sites, imageData, width, height) => {
+                const delaunay = Delaunay.from(sites, 
+                                                  function(d) { return d.x },
+                                                  function(d) { return d.y });
+                const voronoi = delaunay.voronoi([0, 0, width, height]);
+                const diagram = voronoi.cellPolygons();
+                let newSites = getCentroids(diagram).map(function(centroid, index) {
+                    let closestIndex = Math.floor(centroid[1]) * width + Math.floor(centroid[0]);
+                    let closestPixel = imageData[closestIndex];
+                    return {
+                            oldX: sites[index].x,
+                            oldY: sites[index].y,
+                            x: centroid[0],
+                            y: centroid[1],
+                            r: closestPixel.r,
+                            g: closestPixel.g,
+                            b: closestPixel.b,
+                            oldR: sites[index].r,
+                            oldG: sites[index].g,
+                            oldB: sites[index].b
+                    };
                 });
+                return newSites;
             }
 
-            if (cities !== null) {
-                draw();
-                if (updates < 10) {
-                    setUpdates(updates + 1);
-                }
+            let updates = 0;  
+            let timeoutId;
+            let citiesCopy = JSON.parse(JSON.stringify(cities));
+
+            const animate = () => {
+                // Wrapping the animation function wiht a timeout makes it
+                // possible to control the fps, without losing the benefits of
+                // requestAnimationFrame.
+                timeoutId = setTimeout(function() {
+                    let context = mount.current.getContext('2d');
+                    let canvasWidth = mount.current.width;
+                    let canvasHeight = mount.current.height;
+                    context.clearRect(0, 0, canvasWidth, canvasHeight);
+
+                    citiesCopy.sites.forEach(function(d){
+                        context.beginPath();
+                        context.fillStyle = d3.rgb(+d.r, +d.g, +d.b);
+                        let x = (+d.x / citiesCopy.imageWidth) * canvasWidth;
+                        let y = (+d.y / citiesCopy.imageHeight) * canvasHeight;
+                        let r = getRadius(d) * canvasWidth / 800;
+                        context.arc(x, y, r, 0, 2 * Math.PI);
+                        context.fill();
+                    });
+                    if (updates < 10) {
+                        citiesCopy.sites = sitesUpdate(citiesCopy.sites, citiesCopy.totalData, citiesCopy.imageWidth, citiesCopy.imageHeight);
+                        updates += 1;
+                        frameId = requestAnimationFrame(animate);
+                    }
+                }, 1000 / 10);
+            }
+
+            let frameId = requestAnimationFrame(animate);
+            return () => {
+                cancelAnimationFrame(frameId);
+                // It is important to clean up after the component unmounts.
+                clearTimeout(timeoutId);
+                frameId = null;
             }
         }
     }, [cities, presenting]);
-
-    useEffect(() => {
-        const sitesUpdate = (sites, imageData, width, height) => {
-            const delaunay = Delaunay.from(sites, 
-                                              function(d) { return d.x },
-                                              function(d) { return d.y });
-            const voronoi = delaunay.voronoi([0, 0, width, height]);
-            const diagram = voronoi.cellPolygons();
-            let newSites = getCentroids(diagram).map(function(centroid, index) {
-                let closestIndex = Math.floor(centroid[1]) * width + Math.floor(centroid[0]);
-                let closestPixel = imageData[closestIndex];
-                return {
-                        oldX: sites[index].x,
-                        oldY: sites[index].y,
-                        x: centroid[0],
-                        y: centroid[1],
-                        r: closestPixel.r,
-                        g: closestPixel.g,
-                        b: closestPixel.b,
-                        oldR: sites[index].r,
-                        oldG: sites[index].g,
-                        oldB: sites[index].b
-                };
-            });
-
-            return newSites;
-        }
-        if (cities !== null) {
-            setCities({totalData: cities.totalData,
-                   imageWidth: cities.imageWidth,
-                   imageHeight: cities.imageHeight,
-                   sites: sitesUpdate(cities.sites, cities.totalData, cities.imageWidth, cities.imageHeight)});
-        }
-
-    }, [updates]);
 
 
     let isVertical = props.height / props.width < 1;
