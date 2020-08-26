@@ -37,15 +37,24 @@ export default function Reinforcement(props) {
     }, props.delay);
 
     useEffect(() => {
+        let timeoutId;
+        let n = 0;
         if (!presenting) {
             const animate = () => {
-                requestRef.current = requestAnimationFrame(animate);
-                controller.tick();
-                setBoard(controller.toBoard());
+                timeoutId = setTimeout(function() {
+                    controller.tick();
+                    setBoard(controller.toBoard());
+                    n += 1;
+                    requestRef.current = requestAnimationFrame(animate);
+                    console.log("One tick: " + n)
+
+                }, 1000 / 10);
             }
             requestRef.current = requestAnimationFrame(animate);
             return () => {
                 cancelAnimationFrame(requestRef.current);
+                // It is important to clean up after the component unmounts.
+                clearTimeout(timeoutId);
             }
         }
     }, [presenting]);
