@@ -11,14 +11,11 @@ const numberColors = 750;
 
 const Colors = (props) => {
     let mount = useRef();
-    const [tick, setTick] = useState(0);
     const [colors, setColors] = useState([]);
-    const [delay, setDelay] = useState(null);
     const [presenting, setPresenting] = useState(true);
 
     useTimeout(() => {
         setPresenting(false);
-        setDelay(100);
     }, props.delay)
 
     useEffect(() => {
@@ -49,28 +46,44 @@ const Colors = (props) => {
 
     useEffect(() => {  
         if (colors.length > 0 && !presenting) {
-            let color = [colors[(tick % (colors.length / 3)) * 3],
-                         colors[(tick % (colors.length / 3)) * 3 + 1],
-                         colors[(tick % (colors.length / 3)) * 3 + 2]];
 
-            const context = mount.current.getContext('2d');
-            const width = mount.current.width;
-            const height = mount.current.height;
-            context.save();
-            context.clearRect(0, 0, width, height);
-            context.fillStyle = colorToString(color[0], color[1], color[2]);
-            context.fillRect(0, 0, width, height);
-            context.fillStyle = invertColor(color[0], color[1], color[2]);
-            context.fillRect(width * (1 - Math.sqrt(2) / 2) / 2, height * (1 - Math.sqrt(2) / 2) / 2, width / Math.sqrt(2), height / Math.sqrt(2));
+            let n = 0;
+            let timeoutId;
 
-        }
-    }, [colors, tick, presenting]);
+            const animate = () => {
+                // Wrapping the animation function wiht a timeout makes it
+                // possible to control the fps, without losing the benefits of
+                // requestAnimationFrame.
+                timeoutId = setTimeout(function() {
+                    let color = [colors[(n % (colors.length / 3)) * 3],
+                                 colors[(n % (colors.length / 3)) * 3 + 1],
+                                 colors[(n % (colors.length / 3)) * 3 + 2]];
+        
+                    const context = mount.current.getContext('2d');
+                    const width = mount.current.width;
+                    const height = mount.current.height;
+                    context.save();
+                    context.clearRect(0, 0, width, height);
+                    context.fillStyle = colorToString(color[0], color[1], color[2]);
+                    context.fillRect(0, 0, width, height);
+                    context.fillStyle = invertColor(color[0], color[1], color[2]);
+                    context.fillRect(width * (1 - Math.sqrt(2) / 2) / 2, height * (1 - Math.sqrt(2) / 2) / 2, width / Math.sqrt(2), height / Math.sqrt(2));
+                    n += 1;
+                    frameId = requestAnimationFrame(animate);
+                }, 1000 / 10);
+                
+             }
 
-    useInterval(() => {
-        if (colors.length > 0) {
-            setTick(tick + 1);
-        }
-    }, delay);
+            let frameId = requestAnimationFrame(animate);
+            return () => {
+                cancelAnimationFrame(frameId);
+                // It is important to clean up after the component unmounts.
+                clearTimeout(timeoutId);
+                frameId = null;
+            }
+        } 
+    }, [colors, presenting]);
+
 
     let style = {};
 
