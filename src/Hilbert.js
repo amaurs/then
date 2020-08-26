@@ -33,13 +33,10 @@ const Hilbert = (props) => {
     let mount = useRef();
     let [color, setColor] = useState(null);
     let [position, setPosition] = useState(null);
-    const [count, setCount] = useState(0);
-    const [tick, setTick] = useState(null);
     const [presenting, setPresenting] = useState(true);
 
     useTimeout(() => {
         setPresenting(false);
-        setTick(100);
     }, props.delay);
 
     useEffect(() => {
@@ -78,41 +75,56 @@ const Hilbert = (props) => {
     useEffect(() => {
 
         if (color !== null && position !== null && !presenting) {
+            let count = 0;
+            let timeoutId;
 
-            let context = mount.current.getContext('2d');
-            context.imageSmoothingEnabled= false;
-            let canvasWidth = mount.current.width;
-            let canvasHeight = mount.current.height;
-            context.clearRect(0, 0, canvasWidth, canvasHeight);
-            let frame = context.getImageData(0, 0, canvasWidth, canvasHeight);
+            const animate = () => {
+                // Wrapping the animation function wiht a timeout makes it
+                // possible to control the fps, without losing the benefits of
+                // requestAnimationFrame.
+                timeoutId = setTimeout(function() {
+                    let context = mount.current.getContext('2d');
+                    context.imageSmoothingEnabled= false;
+                    let canvasWidth = mount.current.width;
+                    let canvasHeight = mount.current.height;
+                    context.clearRect(0, 0, canvasWidth, canvasHeight);
+                    let frame = context.getImageData(0, 0, canvasWidth, canvasHeight);
+        
+                    let l = frame.data.length / 4;
+        
+                    for (let i = 0; i < l; i++) {
+        
+                        let index = (i + count) % l;
+        
+                        let r = position.data[index * 4 + 0];
+                        let g = position.data[index * 4 + 1];
+                        let b = position.data[index * 4 + 2];
+                        let j = colorToInt(r, g, b);
+        
+                        frame.data[j * 4 + 0] = color.data[i * 4 + 0];
+                        frame.data[j * 4 + 1] = color.data[i * 4 + 1];
+                        frame.data[j * 4 + 2] = color.data[i * 4 + 2];
+                        frame.data[j * 4 + 3] = 255;
+                    }
+                    context.putImageData(frame, 0, 0);
 
-            let l = frame.data.length / 4;
-
-            for (let i = 0; i < l; i++) {
-
-                let index = (i + count) % l;
-
-                let r = position.data[index * 4 + 0];
-                let g = position.data[index * 4 + 1];
-                let b = position.data[index * 4 + 2];
-                let j = colorToInt(r, g, b);
-
-                frame.data[j * 4 + 0] = color.data[i * 4 + 0];
-                frame.data[j * 4 + 1] = color.data[i * 4 + 1];
-                frame.data[j * 4 + 2] = color.data[i * 4 + 2];
-                frame.data[j * 4 + 3] = 255;
+                    frameId = requestAnimationFrame(animate);
+                    count += 1;
+                }, 1000 / 5);
             }
-            context.putImageData(frame, 0, 0);
+    
+            let frameId = requestAnimationFrame(animate);
+            return () => {
+                cancelAnimationFrame(frameId);
+                // It is important to clean up after the component unmounts.
+                clearTimeout(timeoutId);
+                frameId = null;
+            }   
         }
 
-    }, [color, position, count, presenting]);
+    }, [color, position, presenting]);
 
 
-    useInterval(() => {
-        if (color !== null && position !== null) {
-            setCount(count + 1);
-        }
-    }, tick);
 
     let style = {};
     if (props.width > 0 && props.height > 0) {
