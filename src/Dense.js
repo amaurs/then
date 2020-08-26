@@ -28,7 +28,6 @@ import { ThemeContext } from './ThemeContext.js';
 const Dense = (props) => {
     let mount = useRef();
     const theme = useContext(ThemeContext);
-    const [tick, setTick] = useState(0);
     //let [color, setColor] = useState(null);
     const [delay, setDelay] = useState(null);
     const squareSampling = 100;
@@ -41,80 +40,63 @@ const Dense = (props) => {
     }, props.delay);
 
 
-
-    //useEffect(() => {
-    //    
-    //    let hilbert_cube = image_cube_map[64];
-    //    const getData = (src) => {
-    //        return new Promise ((resolve, reject) => {
-    //            let img = new Image();
-    //            img.onload = (event) => {
-    //                let image = event.target;
-    //                let canvas = document.createElement('canvas');
-    //                canvas.width = image.width;
-    //                canvas.height = image.height;
-    //                let context = canvas.getContext('2d');
-    //                context.drawImage(image, 0, 0);
-    //                resolve(context.getImageData(0, 0, image.width, image.height))
-    //            }
-    //            img.onerror = reject
-    //            img.src = src
-    //        });
-    //    }
-    //    getData(hilbert_cube).then(imageData => {
-    //        setColor(imageData);
-    //    })
-    //}, []);
-
-
-
-
     useEffect(() => {
         if (!presenting) {
-            const context = mount.current.getContext('2d');
-            const width = mount.current.width;
-            const height = mount.current.height;
+
             
+            let n = 0;
 
+            const animate = () => {
 
-            context.beginPath();
-            context.strokeStyle = randomColor();
-            //context.strokeStyle = intToColor(tick*10000);
-            //context.strokeStyle = theme.theme.foreground;
-            
-            //let index = (tick * 4) % color.data.length;
-            //context.strokeStyle = intToColor(colorToInt(color.data[index + 0], color.data[index + 1], color.data[index + 2])); //
+                const context = mount.current.getContext('2d');
+                const width = mount.current.width;
+                const height = mount.current.height;
+        
+                context.beginPath();
+                context.strokeStyle = randomColor();
+                //context.strokeStyle = intToColor(n*10000);
+                //context.strokeStyle = theme.theme.foreground;
+                
+                //let index = (n * 4) % color.data.length;
+                //context.strokeStyle = intToColor(colorToInt(color.data[index + 0], color.data[index + 1], color.data[index + 2])); //
+        
+                context.lineWidth = 10;
+                context.globalAlpha = 0.5;
+                
+                context.moveTo(Math.floor(width / 2), Math.floor(height / 2));
+        
+        
+                context.lineTo(Math.floor(width / 2) + Math.floor((width) * 0.95 * Math.cos(n) / 2), 
+                               Math.floor(height / 2) + Math.floor((height) * 0.95 * Math.sin(n) / 2));    
+                
+        
+                context.closePath();
+                //context.stroke();
+                //context.lineWidth = 50;
+                //context.globalAlpha = 1;
+                //context.strokeStyle = theme.theme.background;
+                //context.beginPath();
+                //
+                //
+                //context.arc(Math.floor(width / 2), 
+                //            Math.floor(height / 2), 
+                //            Math.floor(width / 2), 0, 2 * Math.PI);
+                //context.closePath();
+                context.stroke();
+                n += 1;
+                frameId = requestAnimationFrame(animate);
+                
+             }
 
-            context.lineWidth = 10;
-            context.globalAlpha = 0.5;
-            
-            context.moveTo(Math.floor(width / 2), Math.floor(height / 2));
-
-
-            context.lineTo(Math.floor(width / 2) + Math.floor((width) * 0.95 * Math.cos(tick) / 2), 
-                           Math.floor(height / 2) + Math.floor((height) * 0.95 * Math.sin(tick) / 2));    
-            
-
-            context.closePath();
-            //context.stroke();
-            //context.lineWidth = 50;
-            //context.globalAlpha = 1;
-            //context.strokeStyle = theme.theme.background;
-            //context.beginPath();
-            //
-            //
-            //context.arc(Math.floor(width / 2), 
-            //            Math.floor(height / 2), 
-            //            Math.floor(width / 2), 0, 2 * Math.PI);
-            //context.closePath();
-            context.stroke();
+            let frameId = requestAnimationFrame(animate);
+            return () => {
+                cancelAnimationFrame(frameId);
+                frameId = null;
+            } 
         }
 
-    }, [presenting, tick]); //, color]);
+    }, [presenting]); //, color]);
 
-    useInterval(() => {
-        setTick(tick + 1);
-    }, delay);
 
     let style = {};
 
