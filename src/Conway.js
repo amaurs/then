@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useInterval, useTimeout } from './Hooks.js';
 import Board from './Board.js';
 import './Conway.css';
@@ -19,33 +19,58 @@ const Conway = (props) => {
     let ref = useRef();
     const theme = useContext(ThemeContext);
     const squareSize = 10;
-    const [count, setCount] = useState(0);
     const [drag, setDrag] = useState(false);
     const [position, setPosition] = useState([48 * squareSize, 48 * squareSize]);
     const [offset, setOffset] = useState([0,0]);
     const square = [8 * squareSize, 3 * squareSize];
-    const [tick, setTick] = useState(null);
     const [presenting, setPresenting] = useState(true);
 
     useTimeout(() => {
         setPresenting(false);
-        setTick(50);
     }, props.delay)
 
-    useInterval(() => {
-        board = board.getNextGeneration();
-        let canvas = ref.current;
-        let context = canvas.getContext('2d');
-        
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        //context.fillStyle = theme.theme.foreground;
-        //let color = board.getColor(context, squareSize, position[0] / squareSize, 
-        //                                     position[1] / squareSize, 
-        //                                     square[0] / squareSize, 
-        //                                     square[1] / squareSize);
-        board.printContext(context, squareSize, theme.theme.foreground);
-        setCount(count + 1);
-    }, tick);
+
+    useEffect(() => {
+
+        if (!presenting){
+            let timeoutId;
+    
+            const animate = () => {
+                // Wrapping the animation function wiht a timeout makes it
+                // possible to control the fps, without losing the benefits of
+                // requestAnimationFrame.
+                timeoutId = setTimeout(function() {
+                    board = board.getNextGeneration();
+                    let canvas = ref.current;
+                    let context = canvas.getContext('2d');
+                    
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    //context.fillStyle = theme.theme.foreground;
+                    //let color = board.getColor(context, squareSize, position[0] / squareSize, 
+                    //                                     position[1] / squareSize, 
+                    //                                     square[0] / squareSize, 
+                    //                                     square[1] / squareSize);
+                    board.printContext(context, squareSize, theme.theme.foreground);
+                    frameId = requestAnimationFrame(animate);
+                }, 1000 / 60);
+            }
+    
+            let frameId = requestAnimationFrame(animate);
+            return () => {
+                cancelAnimationFrame(frameId);
+                // It is important to clean up after the component unmounts.
+                clearTimeout(timeoutId);
+                frameId = null;
+            }             
+        }
+ 
+
+    }, [presenting])
+
+
+
+
+
 
     const handleOnMouseDown = (e) => {
         let rect = ref.current.getBoundingClientRect();
