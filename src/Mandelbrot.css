@@ -1,23 +1,9 @@
 .Mandelbrot {
-    position: relative;
-    width: 100%;
-}
-
-.Mandelbrot-sticky {
-    position: sticky;
-    display: flex;
-    top: 0;
-    height: 100vh;
-    width: 100%;
-    overflow-x: hidden;
-}
-
-.Mandelbrot-map {
+    image-rendering: pixelated;
     align-self: center;
     margin: 0 auto;
-    z-index: 5;
 }
 
-.leaflet-control-container {
-    display: none;
+.Mandelbrot h1{
+    color: white;
 }
