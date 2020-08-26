@@ -6,10 +6,8 @@ import './TravelingSalesman.css';
 
 const TravelingSalesman = (props) => {
     let mount = useRef();
-    const [tick, setTick] = useState(0);
     const [delay, setDelay] = useState(null);
     const [cities, setCities] = useState({cities: [], hasFetched: true});
-    const [citiesToDraw, setCitiesToDraw] = useState([]);
     const squareSampling = 100;
     const numberColors = 500;
     let [presenting, setPresenting] = useState(true);
@@ -47,48 +45,68 @@ const TravelingSalesman = (props) => {
     }, [props.url]);
 
     useEffect(() => {
-        if (citiesToDraw.length > 0 && !presenting) {
-            const context = mount.current.getContext('2d');
-            const width = mount.current.width;
-            const height = mount.current.height;
-            context.save();
-            context.clearRect(0, 0, width, height);
-            context.fillStyle = '#161011';
-            context.fillRect(0, 0, width, height);
-            context.beginPath();
-            context.strokeStyle = '#f0a5a3';
-            context.lineWidth = 5;
-            for(let i=0; i < citiesToDraw.length; i+=2) {
-                context.lineTo(Math.floor(width * citiesToDraw[i] / squareSampling), Math.floor(height * citiesToDraw[i + 1] / squareSampling))    
+        if (cities.cities.length > 0 && !presenting) {
+
+            let n = 0;
+            let timeoutId;
+
+            const animate = () => {
+                // Wrapping the animation function wiht a timeout makes it
+                // possible to control the fps, without losing the benefits of
+                // requestAnimationFrame.
+                timeoutId = setTimeout(function() {
+
+                    const maxBound = (time, size) => {
+                        let t = time % (2 * size)
+                        if (t < size) {
+                            return t;
+                        }else {
+                            return size;
+                        }
+                    }
+                    const minBound = (time, size) => {
+                        let t = time % (2 * size)
+                        if (t < size) {
+                            return 0;
+                        } else {
+                            return time % size;
+                        }
+                    }
+                    let min = minBound(n, numberColors + 1);
+                    let max = maxBound(n, numberColors + 1);
+                    let citiesToDraw = cities.cities.slice(min * 2, max * 2);
+        
+        
+                    const context = mount.current.getContext('2d');
+                    const width = mount.current.width;
+                    const height = mount.current.height;
+                    context.save();
+                    context.clearRect(0, 0, width, height);
+                    context.fillStyle = '#161011';
+                    context.fillRect(0, 0, width, height);
+                    context.beginPath();
+                    context.strokeStyle = '#f0a5a3';
+                    context.lineWidth = 5;
+                    for(let i=0; i < citiesToDraw.length; i+=2) {
+                        context.lineTo(Math.floor(width * citiesToDraw[i] / squareSampling), Math.floor(height * citiesToDraw[i + 1] / squareSampling))    
+                    }
+                    context.stroke();
+                    n += 1;
+                    frameId = requestAnimationFrame(animate);
+                }, 1000 / 60);
+                
+             }
+
+            let frameId = requestAnimationFrame(animate);
+            return () => {
+                cancelAnimationFrame(frameId);
+                // It is important to clean up after the component unmounts.
+                clearTimeout(timeoutId);
+                frameId = null;
             }
-            context.stroke();
         }
 
-    }, [citiesToDraw, presenting]);
-
-    useInterval(() => {
-        const maxBound = (time, size) => {
-            let t = time % (2 * size)
-            if (t < size) {
-                return t;
-            }else {
-                return size;
-            }
-        }
-        const minBound = (time, size) => {
-            let t = time % (2 * size)
-            if (t < size) {
-                return 0;
-            } else {
-                return time % size;
-            }
-        }
-        let min = minBound(tick, numberColors + 1);
-        let max = maxBound(tick, numberColors + 1);
-        let citiesToDraw = cities.cities.slice(min * 2, max * 2);
-        setCitiesToDraw(citiesToDraw);
-        setTick(tick + 1);
-    }, delay);
+    }, [cities, presenting]);
 
     let style = {};
 
@@ -100,7 +118,7 @@ const TravelingSalesman = (props) => {
     let minSize = props.width/props.height < 1 ? props.width:
                                                  props.height;
     
-    if (citiesToDraw.length >= 0 && !presenting) {
+    if (cities.cities.length >= 0 && !presenting) {
         return (<canvas
                 ref={mount}
                 width={minSize}
