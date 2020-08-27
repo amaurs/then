@@ -121,7 +121,7 @@ const Home = (props) => {
                 "/dense":                   <Dense title="dense" delay={presentationTime}  width={width} height={height} url={banditHost} />,
                 "/mandelbrot":              <Mandelbrot title="mandelbrot" delay={presentationTime}  width={width} height={height} host={mandelbrot}/>,
                 "/voronoi":                 <Voronoi title="voronoi" delay={presentationTime}  width={width} height={height} />,
-                "/stereo-photography":      <Masonry title="stereo photography" delay={presentationTime}  width={width} height={height} url={banditHost + "/wigglegrams/gif"} rows={2} />,
+                "/stereo-photography":      <Wigglegram title="stereo photography" delay={presentationTime}  width={width} height={height} />,
                 "/bolero":                  <Bolero title="bolero" delay={presentationTime}  width={width} height={height} url={banditHost + "/boleros/en"} />,
                 "/hilbert":                 <Hilbert title="hilbert" delay={presentationTime}  width={width} height={height} />,
                 "/hilbert/:res":            <Hilbert title="hilbert" delay={presentationTime}  width={width} height={height} />,
