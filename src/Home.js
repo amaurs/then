@@ -33,7 +33,7 @@ import './Home.css';
 import { Switch, Redirect, Route, Link, useLocation, useHistory } from 'react-router-dom';
 
 import { ThemeContext } from './ThemeContext.js';
-
+import { useInterval } from './Hooks.js' 
 import {getRandomInt } from './util.js';
 
 
@@ -98,19 +98,6 @@ const Home = (props) => {
     const [pointer, setPointer] = useState(0);
     const [font, setFont] = useState(null);
     const history = useHistory();
-    
-
-    const theme = useContext(ThemeContext);
-
-
-    let config = {
-                  delta: 30,                             
-                  preventDefaultTouchmoveEvent: false,   
-                  trackTouch: true,                      
-                  trackMouse: false,                     
-                  rotationAngle: 0,                      
-                }
-
 
     const getMapping = () => {
         return {
@@ -135,10 +122,30 @@ const Home = (props) => {
             };
     }
 
+
+    let backgrounds = Object.values(getMapping());
+    const [indexBackground, setIndexBackground] = useState(0);
+
+    const theme = useContext(ThemeContext);
+
+
+    let config = {
+                  delta: 30,                             
+                  preventDefaultTouchmoveEvent: false,   
+                  trackTouch: true,                      
+                  trackMouse: false,                     
+                  rotationAngle: 0,                      
+                }
+
+    useInterval(() => {
+        setIndexBackground((indexBackground + 1) % backgrounds.length);
+    }, 10000);
+
+
     const getMappingDecorated = () => {
-        let backgrounds = Object.values(getMapping());
-        let index = getRandomInt(0, backgrounds.length)
-        let home = <Then content={backgrounds[index]} />;
+        
+        // let index = getRandomInt(0, backgrounds.length)
+        let home = <Then content={backgrounds[indexBackground]} />;
         return { "/": home, ...getMapping() };
     }
 
