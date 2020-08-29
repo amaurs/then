@@ -1,13 +1,16 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import * as THREE from 'three-full';
 import './Corrupted.css';
 import escudo from './assets/escudo.png';
 import { useTimeout } from './Hooks.js';
 import Loader from './Presentation.js';
 
+import { ThemeContext } from './ThemeContext.js';
+
 const Corrupted = (props) => {
     let canvas = useRef();
     const [presenting, setPresenting] = useState(props.delay>0);
+    const theme = useContext(ThemeContext);
 
     useTimeout(() => {
         setPresenting(false);

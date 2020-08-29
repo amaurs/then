@@ -118,7 +118,6 @@ const Home = (props) => {
                 "/conway":                  <Conway title="conway" delay={presentationTime}  width={width} height={height} />,
                 //"/kaleidoscope":            <Mirror title="kaleidoscope" delay={presentationTime}  width={width} height={height} />,
                 "/film":                    <Masonry title="film" delay={presentationTime}  width={width} height={height} url={banditHost + "/wigglegrams/jpg"} rows={1} />,
-                "/404":                     <Loader />,
             };
     }
 
@@ -139,6 +138,7 @@ const Home = (props) => {
 
     useInterval(() => {
         setIndexBackground((indexBackground + 1) % backgrounds.length);
+
     }, 10000);
 
 
@@ -150,9 +150,8 @@ const Home = (props) => {
     }
 
     const getNames = () => {
-        return Object.entries(getMappingDecorated()).filter((element) => 
-              !(element[0] === "/404" ||
-                element[0] === "/hilbert/:res")
+        return Object.entries(getMapping()).filter((element) => 
+              !(element[0] === "/hilbert/:res")
         );
     }
 
@@ -265,8 +264,8 @@ const Home = (props) => {
                 {element[1]}
                 </Route>
                 )
-
-        routes.push(<Route key={404} component={NotFoundRedirect}><Redirect to="/404" /></Route>);
+        routes.push(<Route key={404} component={Loader} exact path="/404" ></Route>);
+        routes.push(<Route key={405} component={NotFoundRedirect}><Redirect to="/404" /></Route>);
         return routes;
     }
 
@@ -279,7 +278,8 @@ const Home = (props) => {
 
     return (
             
-            <div style={{ background: theme.theme.background, color: theme.theme.foreground }}>
+            <div style={{ background: theme.theme.background, 
+                          color: theme.theme.foreground }}>
                 {usePageViews()}
                 <div className="MenuHamburger">
                     <Hamburger onClick={handleMenu} isActive={isActive} />

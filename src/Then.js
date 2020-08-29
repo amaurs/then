@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ThemeContext } from './ThemeContext.js';
 
 import './Then.css'
 
@@ -17,10 +18,13 @@ import './Then.css'
 
 const Then = (props) => {
 
+    const theme = useContext(ThemeContext);
+
     return (
             <>
             {props.content}
-            <div className="Then">
+            <div className="Then" style={{color: theme.theme.foreground, 
+                                          mixBlendMode: theme.theme.mixBlendMode}}>
               <h1 className="name">then</h1>
             </div>
             </>);

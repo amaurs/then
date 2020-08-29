@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
+import { ThemeContext } from './ThemeContext.js';
 import './Bolero.css'
 import { useInterval, useTimeout } from './Hooks.js';
 import Loader from './Presentation.js';
@@ -6,6 +7,7 @@ import Loader from './Presentation.js';
 export default function Bolero(props) {
 
     let mount = useRef();
+    const theme = useContext(ThemeContext);
     const [sentence, setSentence] = useState("");
     const [count, setCount] = useState(0);
     const [total, setTotal] = useState(0);
@@ -80,7 +82,8 @@ export default function Bolero(props) {
         return <Loader title={props.title}/>
     } else {
         return (
-            <div className="Bolero">
+            <div className="Bolero" style={{color: theme.theme.foreground, 
+                                          mixBlendMode: theme.theme.mixBlendMode}}>
                 <h1 ref={mount}></h1>
             </div>
         );
