@@ -7,7 +7,7 @@ import Loader from './Presentation.js';
 
 const Corrupted = (props) => {
     let canvas = useRef();
-    const [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);

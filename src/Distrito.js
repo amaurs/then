@@ -59,7 +59,7 @@ const Distrito = (props) => {
     let [multiImage, setMultiImage] = useState(null);
     let [rows, setRows] = useState(null);
     let [hold, setHold] = useState(null);
-    const [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);

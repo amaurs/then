@@ -23,7 +23,7 @@ const Conway = (props) => {
     const [position, setPosition] = useState([48 * squareSize, 48 * squareSize]);
     const [offset, setOffset] = useState([0,0]);
     const square = [8 * squareSize, 3 * squareSize];
-    const [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);

@@ -10,7 +10,7 @@ export default function Bolero(props) {
     const [count, setCount] = useState(0);
     const [total, setTotal] = useState(0);
     const [delay, setDelay] = useState(null);
-    const [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);
@@ -42,7 +42,7 @@ export default function Bolero(props) {
             }
         }
         getPhrase(props.url);
-        return () => cancel=true;
+        return () => cancel = true;
     }, [props.url, count]);
 
 

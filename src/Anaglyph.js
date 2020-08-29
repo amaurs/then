@@ -7,7 +7,7 @@ import Loader from './Presentation.js';
 
 const Anaglyph = (props) => {
     let mount = useRef();
-    let [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
     const [data, setData] = useState({points: [], hasFetched: true});
 
     useTimeout(() => {

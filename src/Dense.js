@@ -32,7 +32,7 @@ const Dense = (props) => {
     const [delay, setDelay] = useState(null);
     const squareSampling = 100;
     const numberColors = 500;
-    let [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);

@@ -15,13 +15,14 @@ const Wigglegram = (props) => {
     const [current, setCurrent] =  useState(null);
     const [frames, setFrames] =  useState(null);
 
-    const [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);
     }, props.delay)
 
     useEffect(() => {
+        let cancel = false;
         const getData = (src) => {
             return new Promise ((resolve, reject) => {
                 let img = new Image();
@@ -40,9 +41,12 @@ const Wigglegram = (props) => {
         }
 
         Promise.all([getData(left), getData(right)]).then(function(frames) { 
-            setFrames(frames);
+            if(!cancel) {
+                setFrames(frames);
             console.log("Promise is fullfiled.")
+            }
         });
+        return () => {cancel = true}
 
     }, []);
 

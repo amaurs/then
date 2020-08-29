@@ -28,9 +28,9 @@ export default function Reinforcement(props) {
     const style = {height: squareSize + "px", 
                    width: squareSize + "px", 
                    fontSize: (squareSize * 0.75) + "px"};
-    const [board, setBoard] = useState(null);
+    const [board, setBoard] = useState(controller.toBoard());
     const requestRef = useRef();
-    const [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);
@@ -39,7 +39,7 @@ export default function Reinforcement(props) {
     useEffect(() => {
         let timeoutId;
         let n = 0;
-        if (!presenting) {
+        if (!presenting && board!==null) {
             const animate = () => {
                 timeoutId = setTimeout(function() {
                     controller.tick();
@@ -57,9 +57,11 @@ export default function Reinforcement(props) {
                 clearTimeout(timeoutId);
             }
         }
-    }, [presenting]);
+    }, [presenting, board]);
 
-    if (board !== null && !presenting) {
+    if (presenting) {
+        return <Loader title={props.title}/>
+    } else {
         const rows = board.map((row, rowIndex) => 
             <div key={rowIndex}>{row.map((cell, cellIndex) => <div style={style} key={cellIndex}>{getIcon(cell)}</div>)}</div>
         );
@@ -69,7 +71,5 @@ export default function Reinforcement(props) {
                 {rows}
             </div>
         );
-    } else {
-        return <Loader title={props.title}/>;
     }
 }

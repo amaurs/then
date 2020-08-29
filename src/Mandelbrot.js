@@ -80,7 +80,7 @@ let colors = wikipedia;
 const Mandelbrot = (props) => {
     const mount = useRef();
     const theme = useContext(ThemeContext);
-    const [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
     const [delay, setDelay] = useState(null);
 
     const [imageData, setImageData] = useState(null);

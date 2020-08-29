@@ -13,7 +13,7 @@ const AUTOSTEREOGRAM_STRIPS = 8
 const Autostereogram = (props) => {
     let autostereogramCanvas = useRef();
     let [show, setShow] = useState(true);
-    let [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);

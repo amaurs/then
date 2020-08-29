@@ -33,7 +33,7 @@ const Hilbert = (props) => {
     let mount = useRef();
     let [color, setColor] = useState(null);
     let [position, setPosition] = useState(null);
-    const [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);

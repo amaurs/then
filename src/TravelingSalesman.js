@@ -1,16 +1,19 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { useInterval, useTimeout } from './Hooks.js';
 import { getRandomIntegerArray, colorToString, invertColor } from './util.js';
 import Loader from './Presentation.js';
 import './TravelingSalesman.css';
 
+import { ThemeContext } from './ThemeContext.js';
+
 const TravelingSalesman = (props) => {
     let mount = useRef();
+    const theme = useContext(ThemeContext);
     const [delay, setDelay] = useState(null);
     const [cities, setCities] = useState({cities: [], hasFetched: true});
     const squareSampling = 100;
     const numberColors = 500;
-    let [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);

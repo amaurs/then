@@ -34,6 +34,7 @@ import { Switch, Redirect, Route, Link, useLocation, useHistory } from 'react-ro
 
 import { ThemeContext } from './ThemeContext.js';
 
+import {getRandomInt } from './util.js';
 
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -45,7 +46,7 @@ if (isProduction) {
 const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 const delay = 15000;
-const presentationTime = 2000;
+const presentationTime = 0;
 const NotFoundRedirect = () => <Redirect to='/not-found' />;
 
 
@@ -113,7 +114,6 @@ const Home = (props) => {
 
     const getMapping = () => {
         return {
-                "/":                        <Then />,
                 "/autostereogram":          <Autostereogram title="autostereogram" delay={presentationTime}  width={width} height={height} />,
                 "/1986":                    <Distrito title="1986" delay={presentationTime}  width={width} height={height} />,
                 "/corrupt":                 <Corrupted title="corrupt" delay={presentationTime}  width={width} height={height} />,
@@ -135,12 +135,15 @@ const Home = (props) => {
             };
     }
 
-    const getMappingDecorated = (home) => {
-        return { ...getMapping(), "/": getMapping()[home[0]]};
+    const getMappingDecorated = () => {
+        let backgrounds = Object.values(getMapping());
+        let index = getRandomInt(0, backgrounds.length)
+        let home = <Then content={backgrounds[index]} />;
+        return { "/": home, ...getMapping() };
     }
 
     const getNames = () => {
-        return Object.entries(getMapping()).filter((element) => 
+        return Object.entries(getMappingDecorated()).filter((element) => 
               !(element[0] === "/404" ||
                 element[0] === "/hilbert/:res")
         );
@@ -248,7 +251,7 @@ const Home = (props) => {
 
     const getBackgroundContentRouter = () => {
 
-        let routes = Object.entries(getMapping()).map((element, index) => <Route key={index} exact path={element[0]}>
+        let routes = Object.entries(getMappingDecorated()).map((element, index) => <Route key={index} exact path={element[0]}>
                 {element[1]}
                 </Route>
                 )
@@ -265,8 +268,8 @@ const Home = (props) => {
     
 
     return (
-        
-            <div {...handlers} style={{ background: theme.theme.background, color: theme.theme.foreground }}>
+            
+            <div style={{ background: theme.theme.background, color: theme.theme.foreground }}>
                 {usePageViews()}
                 <div className="MenuHamburger">
                     <Hamburger onClick={handleMenu} isActive={isActive} />

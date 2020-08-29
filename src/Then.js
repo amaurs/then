@@ -15,11 +15,15 @@ import './Then.css'
 **/
 
 
-const Then = () => {
+const Then = (props) => {
 
-    return (<div className="Then">
+    return (
+            <>
+            {props.content}
+            <div className="Then">
               <h1 className="name">then</h1>
-            </div>);
+            </div>
+            </>);
 }
 
 export default Then;

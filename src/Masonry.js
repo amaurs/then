@@ -11,7 +11,7 @@ const Masonry = (props) => {
 
     const [data, setData] = useState([]);
     const [current, setCurrent] =  useState(null);
-    let [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);
@@ -74,7 +74,7 @@ const Masonry = (props) => {
 
     let rows = data.map((row, index) => <div className="Masonry-row" key={index}>{createRow(row)}</div>); 
 
-    if (rows.length === 0 || presenting) {
+    if (rows.length === 0 && presenting) {
         return <Loader title={props.title}/>
     } else {
         return (

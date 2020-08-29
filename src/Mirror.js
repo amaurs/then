@@ -8,7 +8,7 @@ import Loader from './Presentation.js';
 const Mirror = (props) => {
     let canvas = useRef();
     let video = useRef();
-    const [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);

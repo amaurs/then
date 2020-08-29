@@ -14,7 +14,8 @@ const Voronoi = (props) => {
     let [cities, setCities] = useState(null);
     const [canvasWidth, setCanvasWidth] = useState(0);
     const [canvasHeight, setCanvasHeight] = useState(0);
-    let [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
+    
 
     useTimeout(() => {
         setPresenting(false);

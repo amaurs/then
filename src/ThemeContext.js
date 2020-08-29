@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 
 const themes = {
   light: {
-    foreground: "#000000",
+    foreground: "#161011",
     background: "#ffffff",
     slider: false,
     name: "light"
   },
   dark: {
     foreground: "#f0a5a3",
-    background: "#000000",
+    background: "#161011",
     slider: true,
     name: "dark"
   }

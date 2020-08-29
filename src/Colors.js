@@ -12,7 +12,7 @@ const numberColors = 750;
 const Colors = (props) => {
     let mount = useRef();
     const [colors, setColors] = useState([]);
-    const [presenting, setPresenting] = useState(true);
+    const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
         setPresenting(false);
