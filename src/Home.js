@@ -212,6 +212,9 @@ const Home = (props) => {
                 let current = names.map((element, index) =>{ return {name: element[0], index: index}}).filter(element => {
                     return element.name == location.pathname;
                 })[0];
+
+                return
+
                 if (event.key === 'ArrowRight' && current.index < names.length - 1) {
                     let next = names[current.index + 1];
                     setCurrent(next[0])
