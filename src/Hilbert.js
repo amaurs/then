@@ -43,7 +43,8 @@ const Hilbert = (props) => {
         
         let hilbert_cube = image_cube_map[res];
         let hilbert_square = image_square_map[res];
-
+        let cancel = false;    
+        
         const getData = (src) => {
             return new Promise ((resolve, reject) => {
                 let img = new Image();
@@ -62,12 +63,18 @@ const Hilbert = (props) => {
         }
 
         getData(hilbert_cube).then(imageData => {
-            setColor(imageData);
+            if (!cancel) {
+                setColor(imageData);
+            }
         })
 
         getData(hilbert_square).then(imageData => {
-            setPosition(imageData);
+            if (!cancel) {
+                setPosition(imageData);
+            }
         })
+
+        return () => {cancel = true};
 
     }, [res]);
 

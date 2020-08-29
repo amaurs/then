@@ -83,53 +83,60 @@ const Distrito = (props) => {
             });
         }
 
+        let cancel = false;
+
         Promise.all([getData(channelsFirst), getData(channelsSecond), getData(channelsThird), getData(channelMask)]).then(function(values) {
-            let [first, second, third, fourth] = values;
-            let image = new MultichannelImage(first.width, first.height);
-            let tm1 = new Uint8ClampedArray(first.width * first.height);
-            let tm2 = new Uint8ClampedArray(first.width * first.height);
-            let tm3 = new Uint8ClampedArray(first.width * first.height);
-            let tm4 = new Uint8ClampedArray(first.width * first.height);
-            let tm5 = new Uint8ClampedArray(first.width * first.height);
-            let tm6 = new Uint8ClampedArray(first.width * first.height);
-            let tm7 = new Uint8ClampedArray(first.width * first.height);
-            let mask = new Uint8ClampedArray(first.width * first.height);
-
-            let l = first.data.length / 4;
-
-            for (let i = 0; i < l; i++) {
-                tm1[i] = first.data[i * 4 + 0];
-                tm2[i] = first.data[i * 4 + 1];
-                tm3[i] = first.data[i * 4 + 2];
-                tm4[i] = second.data[i * 4 + 0];
-                tm5[i] = second.data[i * 4 + 1];
-                tm6[i] = second.data[i * 4 + 2];
-                tm7[i] = third.data[i * 4 + 0];             
-                mask[i] = fourth.data[i * 4 + 0];
+            if (!cancel) {
+                let [first, second, third, fourth] = values;
+                let image = new MultichannelImage(first.width, first.height);
+                let tm1 = new Uint8ClampedArray(first.width * first.height);
+                let tm2 = new Uint8ClampedArray(first.width * first.height);
+                let tm3 = new Uint8ClampedArray(first.width * first.height);
+                let tm4 = new Uint8ClampedArray(first.width * first.height);
+                let tm5 = new Uint8ClampedArray(first.width * first.height);
+                let tm6 = new Uint8ClampedArray(first.width * first.height);
+                let tm7 = new Uint8ClampedArray(first.width * first.height);
+                let mask = new Uint8ClampedArray(first.width * first.height);
+    
+                let l = first.data.length / 4;
+    
+                for (let i = 0; i < l; i++) {
+                    tm1[i] = first.data[i * 4 + 0];
+                    tm2[i] = first.data[i * 4 + 1];
+                    tm3[i] = first.data[i * 4 + 2];
+                    tm4[i] = second.data[i * 4 + 0];
+                    tm5[i] = second.data[i * 4 + 1];
+                    tm6[i] = second.data[i * 4 + 2];
+                    tm7[i] = third.data[i * 4 + 0];             
+                    mask[i] = fourth.data[i * 4 + 0];
+                }
+                
+                image.addChannel(tm1);
+                image.addChannel(tm2);
+                image.addChannel(tm3);
+                image.addChannel(tm4);
+                image.addChannel(tm5);
+                image.addChannel(tm6);
+                image.addChannel(tm7);
+                image.addMask(mask);
+    
+                setWidth(image.width * (image.channels.length + 1));
+                setHeight(image.height * 3);
+                setMultiImage(image);
+                setRows([{used: [{position: 4, color: "red"}, 
+                                 {position: 2, color: "green"}, 
+                                 {position: 5, color: "blue"}, 
+                                 ],
+                          available: []},
+                         {used: [{position: 5, color: "red"}, 
+                                 {position: 4, color: "green"}, 
+                                 {position: 1, color: "blue"}, 
+                                 ],
+                          available: []}]);                
             }
-            
-            image.addChannel(tm1);
-            image.addChannel(tm2);
-            image.addChannel(tm3);
-            image.addChannel(tm4);
-            image.addChannel(tm5);
-            image.addChannel(tm6);
-            image.addChannel(tm7);
-            image.addMask(mask);
 
-            setWidth(image.width * (image.channels.length + 1));
-            setHeight(image.height * 3);
-            setMultiImage(image);
-            setRows([{used: [{position: 4, color: "red"}, 
-                             {position: 2, color: "green"}, 
-                             {position: 5, color: "blue"}, 
-                             ],
-                      available: []},
-                     {used: [{position: 5, color: "red"}, 
-                             {position: 4, color: "green"}, 
-                             {position: 1, color: "blue"}, 
-                             ],
-                      available: []}]);
+            return () => {cancel = true};
+
         });
     }, []);
 

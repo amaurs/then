@@ -43,10 +43,10 @@ const Wigglegram = (props) => {
         Promise.all([getData(left), getData(right)]).then(function(frames) { 
             if(!cancel) {
                 setFrames(frames);
-            console.log("Promise is fullfiled.")
+                console.log("Promise is fullfiled.");
             }
         });
-        return () => {cancel = true}
+        return () => {cancel = true};
 
     }, []);
 

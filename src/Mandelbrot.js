@@ -93,21 +93,28 @@ const Mandelbrot = (props) => {
 
 
     useEffect(() => {
+        let cancel = false;
+
         if (props.width > 0 && props.height > 0 && !presenting) {
             const onLoad = (event) => {
-                let image = event.target;
-                let canvas = document.createElement('canvas');
-                canvas.width = image.width;
-                canvas.height = image.height;
-                let context = canvas.getContext('2d');
-                context.drawImage(image, 0, 0);
-                let frame = context.getImageData(0, 0, image.width, image.height);
-                setImageData(frame);
+                if (!cancel) {
+                    let image = event.target;
+                    let canvas = document.createElement('canvas');
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    let context = canvas.getContext('2d');
+                    context.drawImage(image, 0, 0);
+                    let frame = context.getImageData(0, 0, image.width, image.height);
+                    setImageData(frame);
+                }
+
             }
             let image = new Image();
             image.src = myMandelbrot;
             image.onload = onLoad;
         }
+
+        return () => {cancel = true};
 
     }, [props.width, props.height, presenting]);
 
