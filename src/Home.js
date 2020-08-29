@@ -123,7 +123,7 @@ const Home = (props) => {
 
 
     let backgrounds = Object.values(getMapping());
-    const [indexBackground, setIndexBackground] = useState(0);
+    const [indexBackground, setIndexBackground] = useState(null);
 
     const theme = useContext(ThemeContext);
 
@@ -136,16 +136,18 @@ const Home = (props) => {
                   rotationAngle: 0,                      
                 }
 
-    useInterval(() => {
-        setIndexBackground((indexBackground + 1) % backgrounds.length);
+    //useInterval(() => {
+    //    setIndexBackground((indexBackground + 1) % backgrounds.length);
+    //}, 10000);
 
-    }, 10000);
+
 
 
     const getMappingDecorated = () => {
         
         // let index = getRandomInt(0, backgrounds.length)
-        let home = <Then content={backgrounds[indexBackground]} />;
+
+        let home = <Then content={getMapping()[indexBackground]} />;
         return { "/": home, ...getMapping() };
     }
 
@@ -250,12 +252,30 @@ const Home = (props) => {
     }, [current]);
 
     const handleMenu = () => {
+        console.log(isActive);
         setIsActive(!isActive);
     }
 
+    const handlerFactory = (name) => {
+        const handleChange = () => {
+            console.log("on it: " + name);
+
+            setIndexBackground(name);
+        }
+        return handleChange;
+    }
+    
+
     const getMenu = () => {
-        return <ul>{names.map((element, index) => <li key={index}><Link onClick={handleMenu} to={element[0]}>{element[0].slice(1).replace("-", " ")}</Link></li>)
-        }</ul>;
+        return <ul>{names.map((element, index) => 
+                   <li key={index}>
+                       <Link onClick={handleMenu} 
+                             onMouseEnter={handlerFactory(element[0])}
+                             onMouseLeave={handlerFactory(null)}
+                             to={element[0]}>{element[0].slice(1).replace("-", " ")}
+                       </Link>
+                   </li>)}
+               </ul>;
     }
 
     const getBackgroundContentRouter = () => {
@@ -269,12 +289,11 @@ const Home = (props) => {
         return routes;
     }
 
-    let menu = <div className={"Menu Home-info-container" + (isActive?" active":"")}
-                    style={{ background: theme.theme.background, color: theme.theme.foreground }}>
-                {getMenu()}
+    let menu = <div className="Menu Home-info-container"
+                    style={{ color: theme.theme.foreground }}>
+                    {getMenu()}
                </div>;
 
-    
 
     return (
             
@@ -287,7 +306,7 @@ const Home = (props) => {
                 <div className="Home-slider">
                     <Slider />
                 </div>
-                    {isActive?menu:null} 
+                    {isActive?null:menu} 
                 <div className="Home Home-info-container">
                     <Switch>
                         {getBackgroundContentRouter()}

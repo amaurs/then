@@ -25,5 +25,5 @@ code {
 }
 
 canvas, h1, img, div {
-    mix-blend-mode: normal;
+    mix-blend-mode: difference;
 }

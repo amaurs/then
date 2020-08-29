@@ -1,5 +1,4 @@
 .If {
-    display: none;
     position: absolute;
     font-size:24px;
     z-index: 1;
@@ -17,7 +16,7 @@
     margin: 0 auto;
     font-weight: bold;
     z-index: 0;
-    color: blue; 
+    color: blue;
 }
 
 .Then .name {
