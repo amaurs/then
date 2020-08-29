@@ -85,18 +85,23 @@ const Autostereogram = (props) => {
                     realContext.putImageData(frame, 0, 0);
                 }
             }
+
+            let timeoutId;
     
             const animate = () => {
-                cube.rotation.x += 0.04;
-                cube.rotation.y += 0.04;
-                renderScene();
-                frameId = requestAnimationFrame(animate);
+                timeoutId = setTimeout(function() {
+                    cube.rotation.x += 0.04;
+                    cube.rotation.y += 0.04;
+                    renderScene();
+                    frameId = requestAnimationFrame(animate);
+                }, 1000/ 10);
             }
     
             let frameId = requestAnimationFrame(animate);
             
             return () => {
                 cancelAnimationFrame(frameId);
+                clearTimeout(timeoutId);
                 frameId = null;
                 scene.remove(cube);
                 geometry.dispose();

@@ -64,18 +64,23 @@ const Anaglyph = (props) => {
             const renderScene = () => {
                 renderer.render(scene, camera);
             }
+
+            let timeoutId;
     
             const animate = () => {
-                line.rotation.x += 0.01;
-                line.rotation.y += 0.01;
-                renderScene();
-                frameId = requestAnimationFrame(animate);
+                timeoutId = setTimeout(function() {
+                    line.rotation.x += 0.01;
+                    line.rotation.y += 0.01;
+                    renderScene();
+                    frameId = requestAnimationFrame(animate);
+                }, 1000/ 10);
             }
     
             let frameId = requestAnimationFrame(animate);
             return () => {
                 cancelAnimationFrame(frameId);
                 frameId = null;
+                clearTimeout(timeoutId);
                 scene.remove(line);
                 geometry.dispose();
                 material.dispose();
