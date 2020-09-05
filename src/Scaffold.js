@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocalStorage } from './Hooks.js'; 
-import Home from './Home.js';
+import Home from './Something.js';
 
 
 import { ThemeContext, themes   } from './ThemeContext.js'

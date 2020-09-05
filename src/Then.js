@@ -15,14 +15,14 @@ import { ThemeContext } from './ThemeContext.js';
 **/
 
 
-const Then = (props) => {
+const Then = () => {
 
     const theme = useContext(ThemeContext);
 
     return (<>
-                {props.content}
                 <div className="Then" style={{color: theme.theme.foreground, 
                                               mixBlendMode: theme.theme.mixBlendMode}}> 
+                    <h1 className="name">Then</h1>
                 </div>
             </>);
 }

@@ -116,7 +116,7 @@ const Dense = (props) => {
     if (!presenting) {
         return (<canvas
                 ref={mount}
-                style={style}
+                style={{...props.style, ...style}}
                 width={canvasWidth}
                 height={canvasHeight}
                 className="Dense"

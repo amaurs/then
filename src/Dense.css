@@ -1,6 +1,7 @@
 .Dense {
     align-self: center;
     margin: 0 auto;
+    position: absolute;
 }
 
 .Dense h1{

@@ -23,7 +23,3 @@ code {
   font-family: 'LubalinGraphStd-Medium';
   src: url('fonts/LubalinGraphStd-Medium/font.woff2') format('woff2'), url('fonts/LubalinGraphStd-Medium/font.woff') format('woff');
 }
-
-canvas, h1, img, div {
-    mix-blend-mode: difference;
-}

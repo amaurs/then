@@ -209,7 +209,7 @@ const Mandelbrot = (props) => {
             <canvas
                 className="Mandelbrot"
                 ref={mount}
-                style={style}
+                style={{...props.style, ...style}}
             />
         );
     }

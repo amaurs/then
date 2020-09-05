@@ -289,7 +289,7 @@ const Home = (props) => {
         return routes;
     }
 
-    let menu = <div className="Menu Home-info-container"
+    let menu = <div className={"Menu Home-info-container" + (isActive?" active":"")}
                     style={{ color: theme.theme.foreground }}>
                     {getMenu()}
                </div>;
@@ -306,7 +306,7 @@ const Home = (props) => {
                 <div className="Home-slider">
                     <Slider />
                 </div>
-                    {isActive?null:menu} 
+                    {menu} 
                 <div className="Home Home-info-container">
                     <Switch>
                         {getBackgroundContentRouter()}

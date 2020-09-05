@@ -28,10 +28,12 @@ body {
     box-sizing: border-box;
     overflow: scroll;
     z-index: 100;
+
 }
 
 .Menu.active {
     transform: translateX(0);
+    display: none;
 }
 
 .Menu ul {

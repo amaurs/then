@@ -2,7 +2,7 @@
     position: absolute;
     font-size:24px;
     z-index: 1;
-    mix-blend-mode: difference;
+    mix-blend-mode: normal;
     font-family: Futura;
     font-weight: normal;
 }
