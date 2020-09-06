@@ -67,12 +67,15 @@ const Corrupted = (props) => {
 
     }, [props.width, props.height, presenting]);
 
+    let style = {};
+
     if (presenting) {
         return <Loader title={props.title}/>
     } else {
         return (
             <canvas
                 className="Corrupted"
+                style={{ ...props.style, ...style }}
                 ref={canvas}
             />
         );

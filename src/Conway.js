@@ -118,7 +118,7 @@ const Conway = (props) => {
             <canvas
                 className="Conway"
                 ref={ref} 
-                style={style}
+                style={{ ...props.style, ...style }}
                 width={1000}
                 height={1000}
                 onMouseDown={handleOnMouseDown}

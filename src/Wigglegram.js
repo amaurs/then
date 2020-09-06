@@ -102,7 +102,7 @@ const Wigglegram = (props) => {
             <canvas
                 className="Wigglegram"
                 ref={mount}
-                style={style}
+                style={{ ...props.style, ...style }}
             />
         );
     }

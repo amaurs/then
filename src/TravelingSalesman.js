@@ -124,6 +124,7 @@ const TravelingSalesman = (props) => {
     if (cities.cities.length >= 0 && !presenting) {
         return (<canvas
                 ref={mount}
+                style={{ ...props.style, ...style }}
                 width={minSize}
                 height={minSize}
                 className="TravelingSalesman"

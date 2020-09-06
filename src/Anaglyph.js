@@ -89,11 +89,14 @@ const Anaglyph = (props) => {
 
     }, [data, props.width, props.height, presenting]);
 
+    let style = {};
+
     if (presenting) {
         return <Loader title={props.title}/>
     } else {
         return (
             <div className="Anaglyph"
+                 style={{ ...props.style, ...style }}
                  ref={mount} >
             </div>
         );

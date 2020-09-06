@@ -168,11 +168,14 @@ const Voronoi = (props) => {
 
     let isVertical = props.height / props.width < 1;
 
+    let style = {};
+
     if (presenting) {
         return <Loader title={props.title}/>
     } else {
         return (
             <canvas className="Voronoi"
+                    style={{ ...props.style, ...style }}
                     width={canvasWidth + "px"} 
                     height={canvasHeight + "px"} 
                     ref={mount} />

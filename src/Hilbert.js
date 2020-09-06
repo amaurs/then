@@ -143,8 +143,8 @@ const Hilbert = (props) => {
         return <Loader title={props.title}/>
     } else {
         return (
-            <canvas className="Hilbert" 
-                    style={style}
+            <canvas className="Hilbert"
+                    style={{ ...props.style, ...style }}
                     width={res + "px"} 
                     height={res + "px"} 
                     ref={mount} 

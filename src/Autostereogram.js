@@ -110,12 +110,15 @@ const Autostereogram = (props) => {
         }
     }, [show, props.width, props.height, presenting]);
 
+    let style = {};
+
     if (presenting) {
         return <Loader title={props.title}/>;
     } else {
         return (
             <canvas
                 className="Autostereogram"
+                style={{ ...props.style, ...style }}
                 ref={autostereogramCanvas}
                 width={props.width}
                 height={props.width / 2}

@@ -73,12 +73,13 @@ const Masonry = (props) => {
     }
 
     let rows = data.map((row, index) => <div className="Masonry-row" key={index}>{createRow(row)}</div>); 
-
+    let style = { height: dynamicHeight + "px" };
     if (rows.length === 0 && presenting) {
         return <Loader title={props.title}/>
     } else {
         return (
-            <div className="Masonry" style={{height: dynamicHeight + "px"}}>
+            <div className="Masonry" 
+                 style={{ ...props.style, ...style }}>
                 <div className="Masonry-sticky" ref={verticalContainerRef}>
                     <div className="Masonry-horizontal" style={{ transform: "translateX(" + translateX +"px)" }} ref={horizontalContainerRef}>
                         {rows}

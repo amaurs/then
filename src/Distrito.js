@@ -337,13 +337,13 @@ const Distrito = (props) => {
     } else {
         return (
             <canvas className="Distrito"
-                ref={mount} 
-                style={style}
-                width={width + "px"}
-                height={height + "px"}
-                onMouseDown={handleOnMouseDown}
-                onMouseUp={handleOnMouseUp}
-                onMouseMove={handleOnMouseMove}
+                    ref={mount} 
+                    style={{ ...props.style, ...style }}
+                    width={width + "px"}
+                    height={height + "px"}
+                    onMouseDown={handleOnMouseDown}
+                    onMouseUp={handleOnMouseUp}
+                    onMouseMove={handleOnMouseMove}
             />
         );
     }

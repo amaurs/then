@@ -97,7 +97,7 @@ const Colors = (props) => {
     } else {
         return (
             <canvas className="Colors" 
-                    style={style}
+                    style={{ ...props.style, ...style }}
                     ref={mount} />
         );
     }

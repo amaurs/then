@@ -78,12 +78,15 @@ export default function Bolero(props) {
         } 
     }, [sentence, presenting]);
 
+    let style= {color: theme.theme.foreground, 
+                mixBlendMode: theme.theme.mixBlendMode};
+
     if (presenting) {
         return <Loader title={props.title}/>
     } else {
         return (
-            <div className="Bolero" style={{color: theme.theme.foreground, 
-                                          mixBlendMode: theme.theme.mixBlendMode}}>
+            <div className="Bolero" 
+                 style={{ ...props.style, ...style }}>
                 <h1 ref={mount}></h1>
             </div>
         );

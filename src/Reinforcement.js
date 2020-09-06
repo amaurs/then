@@ -67,7 +67,8 @@ export default function Reinforcement(props) {
         );
 
         return (
-            <div className="Reinforcement">
+            <div className="Reinforcement"
+                 style={{ ...props.style, ...style }}>
                 {rows}
             </div>
         );
