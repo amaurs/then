@@ -51,11 +51,7 @@ body {
 }
 
 .Home-slider {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    z-index: 200;
-    margin: 25px;
+
 }
 
 

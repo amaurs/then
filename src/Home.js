@@ -33,8 +33,8 @@ import './Home.css';
 import { Switch, Redirect, Route, Link, useLocation, useHistory } from 'react-router-dom';
 
 import { ThemeContext } from './ThemeContext.js';
-import { useInterval } from './Hooks.js' 
-import {getRandomInt } from './util.js';
+import { useInterval } from './Hooks.js';
+import { getRandomInt } from './util.js';
 
 
 const isProduction = process.env.NODE_ENV === 'production';

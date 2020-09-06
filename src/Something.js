@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState, useContext, onEffect } from 'react';
-import { useLocation, Navigate, useNavigate, useParams, Routes, Route, Outlet } from 'react-router-dom';
+import { Link, useLocation, Navigate, useNavigate, useParams, Routes, Route, Outlet } from 'react-router-dom';
 import Menu from './Menu.js';
 
 import Anaglyph from './Anaglyph.js';
@@ -48,6 +48,8 @@ import stereoPhotography from './StereoPhotography.md';
 
 import { ThemeContext } from './ThemeContext.js';
 import Slider from './Slider.js';
+
+import { useTimeout } from './Hooks.js';
 
 const presentationTime = 0;
 
@@ -195,18 +197,32 @@ const Project = (props) => {
 
 const Container = (props) => {
 
-    let theme = useContext(ThemeContext);
 
-    return <div style={{ background: theme.theme.background, 
-                         color: theme.theme.foreground,
-                         width: "100vw",
-                         height: "100vh" }}>
+
+    let { slug } = useParams();
+
+
+
+    return <Fragment>
+               
                 {props.background}
                 <Outlet />
                 <div className="Home-slider">
+                    <nav style={{position: "fixed",
+                                 right: "0",
+                                 top: "0",
+                                 zIndex: "200",
+                                 margin: "25px",
+                                 display: props.showMenu?"block":"none"}}>
+                        <ul>
+                            <li style={{display: "inline"}}><Link style={{fontSize: "24px", textDecoration: "none"}} to="/" onClick={() => props.setIndexBackground(null)}>then</Link></li>{" "}
+                            <li style={{display: "inline"}}><Link style={{fontSize: "24px", textDecoration: "none"}} to="/projects" onClick={() => props.setIndexBackground(null)}>projects</Link></li>{" "}
+                            <li style={{display: "inline"}}><Link style={{fontSize: "24px", textDecoration: "none"}} to={(slug?"/projects/" + slug:"") + "/about"} onClick={() => props.setIndexBackground(null)}>about</Link></li>
+                        </ul>
+                    </nav>
                     <Slider />
                 </div>
-           </div>
+           </Fragment>;
 }
 
 const ProjectMenu = (props) => {
@@ -221,10 +237,31 @@ const Home = (props) => {
 
     let [indexBackground, setIndexBackground] = useState(null);
     let navigate = useNavigate();
-    
-
-
     let [markdown, setMarkdown] = useState(null);
+    let [delay, setDelay] = useState(1000);
+    let theme = useContext(ThemeContext);
+    let [showMenu, setShowMenu] = useState(true);
+
+    // let debouncedShowMenu = useDebounce(showMenu, 5000);
+
+    useTimeout(() => {
+        if(showMenu) {
+            setShowMenu(false);
+            console.log("TIMEOUT");
+            
+        }
+        setDelay(null);
+    }, [delay])
+
+
+    const mouseMoveHandler = (event) => {
+        if (!showMenu) {
+            setShowMenu(true);
+            setDelay(2000);
+        }
+    }
+
+
 
     useEffect(() => {
         let cancel = false;
@@ -242,22 +279,27 @@ const Home = (props) => {
         }
         fetchMarkdown(about);
         return () => cancel=true;
-    }, [])
+    }, []);
 
-    return <Fragment>
-            
+    return <div style={{ background: theme.theme.background, 
+                         color: theme.theme.foreground,
+                         width: "100vw",
+                         height: "100vh" }}
+                 onMouseMove={mouseMoveHandler}>
             <Routes>
                 <Route path="/" element={ <Container background={indexBackground===null?null:mapping[indexBackground].component} 
-                                                     setIndexBackground={setIndexBackground} /> } >
-                    <Route path="/" element={ <Then /> } />
+                                                     setIndexBackground={setIndexBackground}
+                                                     showMenu={showMenu} /> }>
+                    <Route path="/" element={ <Then keys={Object.keys(mapping)}
+                                                    setIndexBackground={setIndexBackground} /> } />
                     <Route path="projects" element={ <ProjectMenu setIndexBackground={setIndexBackground} /> } />
                     <Route path="projects/:slug" element={ <Project setIndexBackground={setIndexBackground} /> } />
                     <Route path="about" element={ <ReactMarkdown source={markdown} /> } />
                 </Route>
 
             </Routes>
-            
-           </Fragment>;
+           </div>
+           
 
 }
 

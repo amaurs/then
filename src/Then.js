@@ -1,6 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 import './Then.css'
+
+import { useInterval } from './Hooks.js';
 
 import { ThemeContext } from './ThemeContext.js';
 /**
@@ -15,9 +17,15 @@ import { ThemeContext } from './ThemeContext.js';
 **/
 
 
-const Then = () => {
+const Then = (props) => {
 
     const theme = useContext(ThemeContext);
+    let [tick, setTick] = useState(0);
+
+    useInterval(() => {
+        props.setIndexBackground(props.keys[tick % props.keys.length]);
+        setTick(tick + 1);
+    }, 10000);
 
     return (<>
                 <div className="Then" style={{color: theme.theme.foreground, 
