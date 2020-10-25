@@ -58,7 +58,7 @@ const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 const mapping = {
     "/dense": {content: dense,
                component: <Dense title="dense" 
-                                 style={{ position: "absolute" }}
+                                 style={{ }}
                                  delay={presentationTime}  
                                  width={window.innerWidth} 
                                  height={window.innerHeight} 
@@ -66,14 +66,14 @@ const mapping = {
     
     "/mandelbrot": {content: mandelbrot,
                     component: <Mandelbrot title="mandelbrot"
-                                           style={{ position: "absolute" }}
+                                           style={{ }}
                                            delay={presentationTime} 
                                            width={window.innerWidth} 
                                            height={window.innerHeight} />},
     
     "/voronoi": {content: voronoi,
                  component: <Voronoi title="voronoi" 
-                                     style={{ position: "absolute" }}
+                                     style={{  }}
                                      delay={presentationTime}  
                                      width={window.innerWidth} 
                                      height={window.innerHeight} />},
@@ -81,52 +81,52 @@ const mapping = {
     "/stereo-photography": {content: stereoPhotography,
                             component: <Wigglegram 
                                        title="stereo photography" 
-                                       style={{ position: "absolute" }}
+                                       style={{  }}
                                        delay={presentationTime}  
                                        width={window.innerWidth} 
                                        height={window.innerHeight} />},
 
     "/hilbert": {content: hilbert,
                  component: <Hilbert title="hilbert" 
-                                     style={{ position: "absolute" }}
+                                     style={{ }}
                                      delay={presentationTime} 
                                      width={window.innerWidth} 
                                      height={window.innerHeight} />},
 
-    "/corrupt": {content: corrupt,
-                 component: <Corrupted title="corrupted" 
-                                       style={{ position: "absolute" }}
+    "/corrupted": {content: corrupt,
+                   component: <Corrupted title="corrupted" 
+                                       style={{ }}
                                        delay={presentationTime} 
                                        width={window.innerWidth} 
                                        height={window.innerHeight} />}, 
     "/reinforcement-learning": {content: reinforcement,
                                 component: <Reinforcement title="reinforcement learning"
-                                                          style={{ position: "absolute" }} 
+                                                          style={{  }} 
                                                           delay={presentationTime}  
                                                           width={window.innerWidth} 
                                                           height={window.innerHeight} />},
     "/anaglyph": {content: anaglyph,
                   component: <Anaglyph title="anaglyph" 
-                                       style={{ position: "absolute" }} 
+                                       style={{  }} 
                                        delay={presentationTime} 
                                        width={window.innerWidth} 
                                        height={window.innerHeight} 
                                        url={banditHost} />},
     "/traveling-salesman": {content: travelingSalesman,
                             component: <TravelingSalesman title="traveling salesman" delay={presentationTime} 
-                                                          style={{ position: "absolute" }} 
+                                                          style={{ }} 
                                                           width={window.innerWidth} 
                                                           height={window.innerHeight} 
                                                           url={banditHost} />},
     "/conway": {content: conway,
                 component: <Conway title="conway" 
-                                   style={{ position: "absolute" }} 
+                                   style={{ }} 
                                    delay={presentationTime} 
                                    width={window.innerWidth} 
                                    height={window.innerHeight} />},
     "/film": {content: film,
               component: <Masonry title="film" 
-                                  style={{ position: "absolute" }}
+                                  style={{ }}
                                   delay={presentationTime}  
                                   width={window.innerWidth} 
                                   height={window.innerHeight} 
@@ -134,7 +134,7 @@ const mapping = {
                                   rows={1} />},
     "/bolero": {content: bolero,
                 component: <Bolero title="bolero" 
-                                   style={{ position: "absolute" }}
+                                   style={{ }}
                                    delay={presentationTime} 
                                    width={window.innerWidth} 
                                    height={window.innerHeight} 
@@ -142,20 +142,20 @@ const mapping = {
 
     "/1986": {content: distrito,
               component: <Distrito title="1986"
-                                   style={{ position: "absolute" }}
+                                   style={{ }}
                                    delay={presentationTime}  
                                    width={window.innerWidth}
                                    height={window.innerHeight} />},
     "/autostereogram": {content: autostereogram,
                         component: <Autostereogram title="autostereogram"
                                                    delay={presentationTime}  
-                                                   style={{ position: "absolute" }}
+                                                   style={{ }}
                                                    width={window.innerWidth}
                                                    height={window.innerHeight} />},
     "/colors": {content: colors,
                         component: <Colors title="colors"
                                            delay={presentationTime}  
-                                           style={{ position: "absolute" }}
+                                           style={{  }}
                                            width={window.innerWidth}
                                            height={window.innerHeight}  
                                            url={banditHost} />},
@@ -190,9 +190,7 @@ const Project = (props) => {
         return () => cancel=true;
     }, [slug])
 
-    return <div style={{ width: "500px", height: "100vh", position: "fixed", top: "0", right: "0", background:"white",  mixBlendMode: "normal" }}>
-            <ReactMarkdown source={markdown} />
-           </div>
+    return <div style={{ width: "0px", height: "100vh", position: "fixed", top: "0", right: "0", background:"white",  mixBlendMode: "normal" }}></div>
 }
 
 const Container = (props) => {
@@ -281,12 +279,13 @@ const Home = (props) => {
         return () => cancel=true;
     }, []);
 
-    return <div style={{ background: theme.theme.background, 
+    return <div className="Home Home-info-container"
+                style={{ background: theme.theme.background, 
                          color: theme.theme.foreground,
                          width: "100vw",
                          height: "100vh" }}
-                 onMouseMove={mouseMoveHandler}>
-            <Routes>
+                onMouseMove={mouseMoveHandler}>
+             <Routes>
                 <Route path="/" element={ <Container background={indexBackground===null?null:mapping[indexBackground].component} 
                                                      setIndexBackground={setIndexBackground}
                                                      showMenu={showMenu} /> }>
@@ -297,7 +296,7 @@ const Home = (props) => {
                     <Route path="about" element={ <ReactMarkdown source={markdown} /> } />
                 </Route>
 
-            </Routes>
+             </Routes>
            </div>
            
 

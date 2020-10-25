@@ -7,6 +7,8 @@ import { Delaunay } from "d3-delaunay";
 import { useTimeout } from './Hooks.js';
 import Loader from './Presentation.js';
 
+import "./Voronoi.css"
+
 const Voronoi = (props) => {
 
     let mount = useRef();

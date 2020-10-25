@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 
 import './Then.css'
 
@@ -27,12 +27,10 @@ const Then = (props) => {
         setTick(tick + 1);
     }, 10000);
 
-    return (<>
-                <div className="Then" style={{color: theme.theme.foreground, 
-                                              mixBlendMode: theme.theme.mixBlendMode}}> 
+    return <div className="Then" style={{color: theme.theme.foreground, 
+                                         mixBlendMode: theme.theme.mixBlendMode}}> 
                     <h1 className="name">Then</h1>
-                </div>
-            </>);
+           </div>;
 }
 
 export default Then;
