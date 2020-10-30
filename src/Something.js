@@ -12,6 +12,7 @@ import Distrito from './Distrito.js';
 import Bolero from './Bolero.js';
 import Conway from './Conway.js';
 import Dense from './Dense.js';
+import Loom from './Loom.js';
 import Mandelbrot from './Mandelbrot.js';
 import Masonry from './Masonry.js';
 import Voronoi from './Voronoi.js';
@@ -33,6 +34,7 @@ import colors from './Colors.md';
 import distrito from './Distrito.md';
 import bolero from './Bolero.md';
 import dense from './Dense.md';
+import loom from './Loom.md';
 import conway from './Conway.md';
 import film from './Film.md';
 import mandelbrot from './Mandelbrot.md';
@@ -159,6 +161,13 @@ const mapping = {
                                            width={window.innerWidth}
                                            height={window.innerHeight}  
                                            url={banditHost} />},
+
+    "/loom": {content: colors,
+                    component: <Loom title="loom"
+                                     delay={presentationTime}  
+                                     style={{  }}
+                                     width={window.innerWidth}
+                                     height={window.innerHeight} />},
 
 
 }
