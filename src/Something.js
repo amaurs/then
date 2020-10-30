@@ -20,6 +20,7 @@ import Reinforcement from './Reinforcement.js';
 import Wigglegram from './Wigglegram.js';
 import Hilbert from './Hilbert.js';
 import Corrupted from './Corrupted.js';
+import Quilt from './Quilt.js';
 import Then from './Then.js';
 import TravelingSalesman from './TravelingSalesman.js'
 
@@ -42,6 +43,7 @@ import voronoi from './Voronoi.md';
 import hilbert from './Hilbert.md';
 import corrupt from './Corrupt.md';
 import reinforcement from './Reinforcement.md';
+import quilt from './Quilt.md';
 import travelingSalesman from './TravelingSalesman.md'
 
 
@@ -162,12 +164,19 @@ const mapping = {
                                            height={window.innerHeight}  
                                            url={banditHost} />},
 
-    "/loom": {content: colors,
+    "/loom": {content: loom,
                     component: <Loom title="loom"
                                      delay={presentationTime}  
                                      style={{  }}
                                      width={window.innerWidth}
                                      height={window.innerHeight} />},
+
+    "/quilt": {content: quilt,
+               component: <Quilt title="quilt"
+                                 delay={presentationTime}  
+                                 style={{  }}
+                                 width={window.innerWidth}
+                                 height={window.innerHeight} />},
 
 
 }
