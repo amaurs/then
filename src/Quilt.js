@@ -1,29 +1,31 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useTimeout } from './Hooks.js';
 
+import { shuffle, getRandomInt } from './util.js';
+
 import Loader from './Presentation.js';
 
 import './Quilt.css';
 
 
-let o1 = {points: [[0, 0], [100, 0], [100, 100], [50, 50], [0, 100]],
+let o1 = {points: [[-50,-50],[50,-50],[50,50],[0,0],[-50,50]],
           offsetY: 0,
           offsetX: 0,
           color: "DarkOrange"};
 
 
-let o2 = {points: [[50, 0], [100, 50], [50, 100], [0, 50], [50, 50]],
+let o2 = {points: [[0,-50],[50,0],[0,50],[-50,0],[0,0]],
           offsetY: 0,
           offsetX: 100,
           color: "White"};
 
 
-let o3 = {points: [[0, 0], [50, 0], [100, 50], [50, 100], [0, 50]],
+let o3 = {points: [[-50,-50],[0,-50],[50,0],[0,50],[-50,0]],
           offsetY: 0,
           offsetX: 200,
           color: "White"};
 
-let o4 = {points: [[0, 0], [100, 0], [100, 50], [50, 100], [0, 50]],
+let o4 = {points: [[-50,-50],[50,-50],[50,0],[0,50],[-50,0]],
           offsetY: 0,
           offsetX: 300,
           color: "DarkOrange"};
@@ -31,7 +33,7 @@ let o4 = {points: [[0, 0], [100, 0], [100, 50], [50, 100], [0, 50]],
           // [[0, 0], [0, 50], [50, 100], [50, 100], [0, 50]]
 
 
-const Colors = (props) => {
+const Quilt = (props) => {
     let mount = useRef();
     const [presenting, setPresenting] = useState(props.delay>0);
 
@@ -59,19 +61,34 @@ const Colors = (props) => {
                     
                     
 
-                    let allObjects = [o1, o2, o3, o4];
+                    let allObjects = shuffle([o1, o1, o1, o1, o1, o1, o2, o2, o2, o2, o2, o2, o3, o3, o3, o3, o4, o4, o4, o4]);
+
+                    for(let j = 0; j < 4; j++) {
+                        for(let i = 0; i < 5; i++) {
+                            console.log(5 * j + i)
+                            let o = allObjects[5 * j + i];
+
+                            console.log(o.points.map(d => "[" + (d[0] - 50) + "," + (d[1] - 50) + "]").toString())
+                        
+                            context.fillStyle = o.color;
+                            context.beginPath();
+                            context.translate(i * 100 + 50, j * 100 + 50);
+                            context.rotate(getRandomInt(0, 4) * Math.PI/2);
+                            context.moveTo(o.points[0][0], o.points[0][1]);
+                    
+                            for (let k = 1; k < o.points.length; k++) {
+                                context.lineTo(o.points[k][0], o.points[k][1]);
+                            }
+
+                            context.resetTransform();
+                            //context.closePath();
+                        
+                            context.fill();
+                        }
+                    }
 
                     allObjects.forEach(o => {
-                        context.fillStyle = o.color;
-                        context.beginPath();
-                        context.moveTo(o.points[0][0] + o.offsetX, o.points[0][1] + o.offsetY);
-                    
-                        for (let i = 1; i < o.points.length; i++) {
-                            context.lineTo(o.points[i][0] + o.offsetX, o.points[i][1] + o.offsetY);
-                        }
-                        //context.closePath();
                         
-                        context.fill();
                     });
                     
                     
@@ -79,7 +96,7 @@ const Colors = (props) => {
 
                     
                     frameId = requestAnimationFrame(animate);
-                }, 1000 / 1);
+                }, 1000 / 5);
                 
              }
 
@@ -114,4 +131,4 @@ const Colors = (props) => {
     }
 }
 
-export default Colors;
+export default Quilt;

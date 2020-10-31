@@ -59,6 +59,27 @@ export function getXYfromIndex(index, width) {
   return [x, y];
 }
 
+export function shuffle(array) {
+  // taken from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+  
+  let result = array.slice();
+  let currentIndex = result.length, temporaryValue, randomIndex;
+
+  
+  while (0 !== currentIndex) {
+
+    
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    temporaryValue = result[currentIndex];
+    result[currentIndex] = result[randomIndex];
+    result[randomIndex] = temporaryValue;
+  }
+
+  return result;
+}
+
 export function download(filename, text) {
     var pom = document.createElement('a');
     pom.setAttribute('href', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(text));
