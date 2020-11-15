@@ -233,7 +233,6 @@ const Container = (props) => {
                         <ul>
                             <li style={{display: "inline"}}><Link style={{fontSize: "24px", textDecoration: "none"}} to="/" onClick={() => props.setIndexBackground(null)}>then</Link></li>{" "}
                             <li style={{display: "inline"}}><Link style={{fontSize: "24px", textDecoration: "none"}} to="/projects" onClick={() => props.setIndexBackground(null)}>projects</Link></li>{" "}
-                            <li style={{display: "inline"}}><Link style={{fontSize: "24px", textDecoration: "none"}} to={(slug?"/projects/" + slug:"") + "/about"} onClick={() => props.setIndexBackground(null)}>about</Link></li>
                         </ul>
                     </nav>
                     <Slider />
