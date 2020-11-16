@@ -38,19 +38,19 @@ body {
 
 .Menu ul {
     list-style: none;
-    
 }
+
 
 .Menu a {
     font-weight: bold;
     cursor: pointer;  
-    font-size: 140px;
+    font-size: 40px;
     color: inherit;
     text-decoration: inherit;
     text-transform: capitalize;
 }
 
-.Home-slider {
+.Home-slider { 
 
 }
 
@@ -60,4 +60,8 @@ body {
     .Menu a {
         font-size: 140px;
     } 
+
+    .Menu li {
+        padding-left: 10px;
+    }
 }
