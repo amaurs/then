@@ -12,7 +12,6 @@
 
 .Reinforcement > div > div {
     border-style: solid;
-    border: 1px solid #eee;
+    border: 0px solid #eee;
     text-align: center;
-    font-size: 48px;
 }

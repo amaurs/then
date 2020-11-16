@@ -105,7 +105,7 @@ const mapping = {
                                        height={window.innerHeight} />}, 
     "/reinforcement-learning": {content: reinforcement,
                                 component: <Reinforcement title="reinforcement learning"
-                                                          style={{  }} 
+                                                          style={{ height: window.innerHeight + "px"}} 
                                                           delay={presentationTime}  
                                                           width={window.innerWidth} 
                                                           height={window.innerHeight} />},
@@ -262,8 +262,7 @@ const Home = (props) => {
     useTimeout(() => {
         if(showMenu) {
             setShowMenu(false);
-            console.log("TIMEOUT");
-            
+            console.log("Hiding menu.");
         }
         setDelay(null);
     }, [delay])
@@ -272,6 +271,7 @@ const Home = (props) => {
     const mouseMoveHandler = (event) => {
         if (!showMenu) {
             setShowMenu(true);
+            console.log("Showing menu.");   
             setDelay(2000);
         }
     }

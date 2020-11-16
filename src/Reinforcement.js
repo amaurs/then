@@ -24,10 +24,10 @@ function  getIcon(key){
 }
 
 export default function Reinforcement(props) {
-    const squareSize = props.width / map.width;
+    const squareSize = props.width / props.height < 1? props.height / map.height / 2 : props.width / map.width / 2;
     const style = {height: squareSize + "px", 
                    width: squareSize + "px", 
-                   fontSize: (squareSize * 0.75) + "px"};
+                   fontSize: (squareSize * 0.85) + "px"};
     const [board, setBoard] = useState(controller.toBoard());
     const requestRef = useRef();
     const [presenting, setPresenting] = useState(props.delay>0);
@@ -46,9 +46,7 @@ export default function Reinforcement(props) {
                     setBoard(controller.toBoard());
                     n += 1;
                     requestRef.current = requestAnimationFrame(animate);
-                    console.log("One tick: " + n)
-
-                }, 1000 / 10);
+                }, 1000 / 24);
             }
             requestRef.current = requestAnimationFrame(animate);
             return () => {
@@ -68,7 +66,7 @@ export default function Reinforcement(props) {
 
         return (
             <div className="Reinforcement"
-                 style={{ ...props.style, ...style }}>
+                 style={{ }}>
                 {rows}
             </div>
         );
