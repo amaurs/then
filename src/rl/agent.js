@@ -1,4 +1,4 @@
-import {argMax} from './util.js';
+import { argMax } from "./util.js";
 
 export class Agent {
     constructor(numberOfActions, numberOfStates) {
@@ -23,26 +23,25 @@ export class Agent {
     /**
      * This methods implements a epsilon-greedy policy, (1 - epsilon) of the time
      * it selects the action that has the best return, the rest of the time it selects
-     * randomly from all the actions. 
+     * randomly from all the actions.
      * @returns {number} the index of the selected action.
      */
     epsilonGreedyPolicy(state, epsilon) {
-        const actionsIndex = []; 
+        const actionsIndex = [];
         let actionStateValue = [];
-        for(let i = 0; i < this.numberOfActions; i++) {
+        for (let i = 0; i < this.numberOfActions; i++) {
             actionStateValue.push(this.Q[this.indexStateAction(state, i)]);
             actionsIndex.push(i); // There should be a cleaner way to accomplish this.
-        }   
+        }
         const argMaxActions = argMax(actionStateValue);
-        if(Math.random() < epsilon) {
-
-            if(actionsIndex.length === 0) {
-                debugger
+        if (Math.random() < epsilon) {
+            if (actionsIndex.length === 0) {
+                debugger;
             }
             return actionsIndex;
         } else {
-            if(argMaxActions.length === 0) {
-                debugger
+            if (argMaxActions.length === 0) {
+                debugger;
             }
             return argMaxActions;
         }
@@ -76,13 +75,14 @@ export class Agent {
 
     toActionMap() {
         let map = [];
-        for(let i = 0; i < this.numberOfStates; i++) {
+        for (let i = 0; i < this.numberOfStates; i++) {
             // deterministic, I choose the first element of the list
             let actions = new Array(this.numberOfActions).fill(0);
-            this.epsilonGreedyPolicy(i, 0).map((element)=>{ return actions[element] = 1});
+            this.epsilonGreedyPolicy(i, 0).map((element) => {
+                return (actions[element] = 1);
+            });
             map.push(actions);
         }
         return map;
     }
 }
-

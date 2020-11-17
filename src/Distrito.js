@@ -1,14 +1,13 @@
-import React, { useRef, useState, useEffect } from 'react';
-import channelsFirst from './assets/first-channels-small.png';
-import channelsSecond from './assets/second-channels-small.png';
-import channelsThird from './assets/third-channels-small.png';
-import channelMask from './assets/mask-small.png';
-import { useTimeout } from './Hooks.js';
-import Loader from './Presentation.js';
-import './Distrito.css';
+import React, { useRef, useState, useEffect } from "react";
+import channelsFirst from "./assets/first-channels-small.png";
+import channelsSecond from "./assets/second-channels-small.png";
+import channelsThird from "./assets/third-channels-small.png";
+import channelMask from "./assets/mask-small.png";
+import { useTimeout } from "./Hooks.js";
+import Loader from "./Presentation.js";
+import "./Distrito.css";
 
 class MultichannelImage {
-
     constructor(width, height) {
         this.height = height;
         this.width = width;
@@ -50,16 +49,14 @@ class MultichannelImage {
     }
 }
 
-
 const Distrito = (props) => {
-
     let mount = useRef();
     let [width, setWidth] = useState(0);
     let [height, setHeight] = useState(0);
     let [multiImage, setMultiImage] = useState(null);
     let [rows, setRows] = useState(null);
     let [hold, setHold] = useState(null);
-    const [presenting, setPresenting] = useState(props.delay>0);
+    const [presenting, setPresenting] = useState(props.delay > 0);
 
     useTimeout(() => {
         setPresenting(false);
@@ -67,25 +64,32 @@ const Distrito = (props) => {
 
     useEffect(() => {
         const getData = (src) => {
-            return new Promise ((resolve, reject) => {
+            return new Promise((resolve, reject) => {
                 let img = new Image();
                 img.onload = (event) => {
                     let image = event.target;
-                    let canvas = document.createElement('canvas');
+                    let canvas = document.createElement("canvas");
                     canvas.width = image.width;
                     canvas.height = image.height;
-                    let context = canvas.getContext('2d');
+                    let context = canvas.getContext("2d");
                     context.drawImage(image, 0, 0);
-                    resolve(context.getImageData(0, 0, image.width, image.height))
-                }
-                img.onerror = reject
-                img.src = src
+                    resolve(
+                        context.getImageData(0, 0, image.width, image.height)
+                    );
+                };
+                img.onerror = reject;
+                img.src = src;
             });
-        }
+        };
 
         let cancel = false;
 
-        Promise.all([getData(channelsFirst), getData(channelsSecond), getData(channelsThird), getData(channelMask)]).then(function(values) {
+        Promise.all([
+            getData(channelsFirst),
+            getData(channelsSecond),
+            getData(channelsThird),
+            getData(channelMask),
+        ]).then(function (values) {
             if (!cancel) {
                 let [first, second, third, fourth] = values;
                 let image = new MultichannelImage(first.width, first.height);
@@ -97,9 +101,9 @@ const Distrito = (props) => {
                 let tm6 = new Uint8ClampedArray(first.width * first.height);
                 let tm7 = new Uint8ClampedArray(first.width * first.height);
                 let mask = new Uint8ClampedArray(first.width * first.height);
-    
+
                 let l = first.data.length / 4;
-    
+
                 for (let i = 0; i < l; i++) {
                     tm1[i] = first.data[i * 4 + 0];
                     tm2[i] = first.data[i * 4 + 1];
@@ -107,10 +111,10 @@ const Distrito = (props) => {
                     tm4[i] = second.data[i * 4 + 0];
                     tm5[i] = second.data[i * 4 + 1];
                     tm6[i] = second.data[i * 4 + 2];
-                    tm7[i] = third.data[i * 4 + 0];             
+                    tm7[i] = third.data[i * 4 + 0];
                     mask[i] = fourth.data[i * 4 + 0];
                 }
-                
+
                 image.addChannel(tm1);
                 image.addChannel(tm2);
                 image.addChannel(tm3);
@@ -119,50 +123,65 @@ const Distrito = (props) => {
                 image.addChannel(tm6);
                 image.addChannel(tm7);
                 image.addMask(mask);
-    
+
                 setWidth(image.width * (image.channels.length + 1));
                 setHeight(image.height * 3);
                 setMultiImage(image);
-                setRows([{used: [{position: 4, color: "red"}, 
-                                 {position: 2, color: "green"}, 
-                                 {position: 5, color: "blue"}, 
-                                 ],
-                          available: []},
-                         {used: [{position: 5, color: "red"}, 
-                                 {position: 4, color: "green"}, 
-                                 {position: 1, color: "blue"}, 
-                                 ],
-                          available: []}]);                
+                setRows([
+                    {
+                        used: [
+                            { position: 4, color: "red" },
+                            { position: 2, color: "green" },
+                            { position: 5, color: "blue" },
+                        ],
+                        available: [],
+                    },
+                    {
+                        used: [
+                            { position: 5, color: "red" },
+                            { position: 4, color: "green" },
+                            { position: 1, color: "blue" },
+                        ],
+                        available: [],
+                    },
+                ]);
             }
 
-            return () => {cancel = true};
-
+            return () => {
+                cancel = true;
+            };
         });
     }, []);
 
-
-
     useEffect(() => {
-        const colorMap = {"red": 0, 
-                          "green": 1,
-                          "blue": 2};
-        if (multiImage !== null && width !== null && height !== null && rows !== null && !presenting) { 
-            let realContext = mount.current.getContext('2d');
+        const colorMap = { red: 0, green: 1, blue: 2 };
+        if (
+            multiImage !== null &&
+            width !== null &&
+            height !== null &&
+            rows !== null &&
+            !presenting
+        ) {
+            let realContext = mount.current.getContext("2d");
             let canvasWidth = mount.current.width;
             let canvasHeight = mount.current.height;
             realContext.clearRect(0, 0, canvasWidth, canvasHeight);
-            realContext.filter = 'brightness(1) saturate(100%) contrast(100%) opacity(1)';
+            realContext.filter =
+                "brightness(1) saturate(100%) contrast(100%) opacity(1)";
 
-
-            const offscreen = document.createElement('canvas');
+            const offscreen = document.createElement("canvas");
             offscreen.width = mount.current.width;
             offscreen.height = mount.current.height;
 
-            let context = offscreen.getContext('2d')
+            let context = offscreen.getContext("2d");
             context.clearRect(0, 0, canvasWidth, canvasHeight);
 
             for (let i = 0; i < multiImage.channels.length; i++) {
-                context.putImageData(multiImage.getGrayImageData(i), i * multiImage.width, 0);
+                context.putImageData(
+                    multiImage.getGrayImageData(i),
+                    i * multiImage.width,
+                    0
+                );
             }
 
             rows.forEach((row, index) => {
@@ -170,21 +189,31 @@ const Distrito = (props) => {
                 row.used.forEach((colorObject) => {
                     let bands = [-1, -1, -1];
                     bands[colorMap[colorObject.color]] = colorObject.position;
-                    mergedBands[colorMap[colorObject.color]] = colorObject.position;
-                    context.putImageData(multiImage.getMixImageData(bands), colorObject.position * multiImage.width, (1 + index) * multiImage.height);
+                    mergedBands[colorMap[colorObject.color]] =
+                        colorObject.position;
+                    context.putImageData(
+                        multiImage.getMixImageData(bands),
+                        colorObject.position * multiImage.width,
+                        (1 + index) * multiImage.height
+                    );
                 });
-                context.putImageData(multiImage.getMixImageData(mergedBands), multiImage.channels.length * multiImage.width, (1 + index) * multiImage.height);
-
-                            
+                context.putImageData(
+                    multiImage.getMixImageData(mergedBands),
+                    multiImage.channels.length * multiImage.width,
+                    (1 + index) * multiImage.height
+                );
             });
 
             if (hold !== null) {
                 let color = colorMap[hold.color];
-                context.putImageData(multiImage.getColorMask(color), hold.x, hold.y);
-            }    
+                context.putImageData(
+                    multiImage.getColorMask(color),
+                    hold.x,
+                    hold.y
+                );
+            }
             realContext.drawImage(offscreen, 0, 0);
         }
-        
     }, [multiImage, width, height, rows, hold, presenting]);
 
     /**
@@ -232,29 +261,36 @@ const Distrito = (props) => {
 
     const handleOnMouseDown = (e) => {
         let rect = mount.current.getBoundingClientRect();
-        let x = Math.floor((e.pageX - rect.left) / rect.width * width),
-            y = Math.floor((e.pageY - rect.top) / rect.height * height);
+        let x = Math.floor(((e.pageX - rect.left) / rect.width) * width),
+            y = Math.floor(((e.pageY - rect.top) / rect.height) * height);
 
-        
         let row = Math.floor(y / multiImage.height) - 1;
         let column = Math.floor(x / multiImage.width);
-
 
         let xOffset = x - column * multiImage.width,
             yOffset = y - (row + 1) * multiImage.height;
 
-        if (!(row < 0) ) {
+        if (!(row < 0)) {
             let newRows = [...rows];
             let newAvailable = [...newRows[row].available];
             let newUsed = [];
 
             // First I check if they clicked on an assigned space.
-            newRows[row].used.forEach(colorObject => {
+            newRows[row].used.forEach((colorObject) => {
                 if (colorObject.position === column) {
-                    newAvailable.unshift({color: colorObject.color, position: -1});
-                    setHold({color: colorObject.color, row: row, position: colorObject.position, x: x - xOffset, y: y - yOffset});
+                    newAvailable.unshift({
+                        color: colorObject.color,
+                        position: -1,
+                    });
+                    setHold({
+                        color: colorObject.color,
+                        row: row,
+                        position: colorObject.position,
+                        x: x - xOffset,
+                        y: y - yOffset,
+                    });
                 } else {
-                    newUsed.push({...colorObject});
+                    newUsed.push({ ...colorObject });
                 }
             });
 
@@ -262,36 +298,32 @@ const Distrito = (props) => {
             newRows[row].available = newAvailable;
             setRows(newRows);
         }
-    } 
+    };
 
     const handleOnMouseUp = (e) => {
-        console.log("Realeasing hold")
+        console.log("Realeasing hold");
 
         if (hold !== null) {
-
             let rect = mount.current.getBoundingClientRect();
-            let x = Math.floor((e.pageX - rect.left) / rect.width * width),
-                y = Math.floor((e.pageY - rect.top) / rect.height * height);
-    
-            
+            let x = Math.floor(((e.pageX - rect.left) / rect.width) * width),
+                y = Math.floor(((e.pageY - rect.top) / rect.height) * height);
+
             let row = Math.floor(y / multiImage.height) - 1;
             let column = Math.floor(x / multiImage.width);
-    
-    
+
             // First I check if they clicked on an assigned space.
-    
+
             let invalid = false;
             let newRows = [...rows];
-    
-    
+
             if (!(row < 0) && hold.row === row) {
-                newRows[row].used.forEach(colorObject => {
+                newRows[row].used.forEach((colorObject) => {
                     if (colorObject.position === column) {
                         invalid = true;
                     }
                 });
             }
-    
+
             if (hold.row !== row) {
                 invalid = true;
             }
@@ -299,54 +331,60 @@ const Distrito = (props) => {
             if (!(column < multiImage.channels.length)) {
                 invalid = true;
             }
-            
+
             if (invalid) {
-                newRows[hold.row].used.push({color: hold.color, position: hold.position});
+                newRows[hold.row].used.push({
+                    color: hold.color,
+                    position: hold.position,
+                });
             } else {
-                newRows[hold.row].used.push({color: hold.color, position: column});
+                newRows[hold.row].used.push({
+                    color: hold.color,
+                    position: column,
+                });
             }
             setHold(null);
             setRows(newRows);
         }
-    } 
+    };
 
     const handleOnMouseMove = (e) => {
         if (hold !== null) {
             let rect = mount.current.getBoundingClientRect();
-            let x = Math.floor((e.pageX - rect.left) / rect.width * width),
-                y = Math.floor((e.pageY - rect.top) / rect.height * height);
+            let x = Math.floor(((e.pageX - rect.left) / rect.width) * width),
+                y = Math.floor(((e.pageY - rect.top) / rect.height) * height);
             let row = Math.floor(y / multiImage.height) - 1;
             let column = Math.floor(x / multiImage.width);
 
             let xOffset = x - column * multiImage.width,
                 yOffset = y - (row + 1) * multiImage.height;
 
-
-            setHold({...hold, x: x - xOffset, y: y - yOffset});
+            setHold({ ...hold, x: x - xOffset, y: y - yOffset });
         }
-    }
+    };
 
-    let style = {width: props.width + "px"};
+    let style = { width: props.width + "px" };
 
     if (props.width === 0 && props.height === 0) {
         return null;
     }
 
     if (presenting) {
-        return <Loader title={props.title}/>;
+        return <Loader title={props.title} />;
     } else {
         return (
-            <canvas className="Distrito"
-                    ref={mount} 
-                    style={{ ...props.style, ...style }}
-                    width={width + "px"}
-                    height={height + "px"}
-                    onMouseDown={handleOnMouseDown}
-                    onMouseUp={handleOnMouseUp}
-                    onMouseMove={handleOnMouseMove}
+            <canvas
+                className="Distrito"
+                ref={mount}
+                style={{ ...props.style, ...style }}
+                width={width + "px"}
+                height={height + "px"}
+                onMouseDown={handleOnMouseDown}
+                onMouseUp={handleOnMouseUp}
+                onMouseMove={handleOnMouseMove}
             />
         );
     }
-}
+};
 
 export default Distrito;

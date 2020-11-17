@@ -8,7 +8,7 @@ const Loader = () => {
         let width = 800;
         let height = 450;
         let canvas = document.createElement( "canvas" );
-        const scene = new THREE.Scene();
+           const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: canvas.current, antialias: true });
         //const geometry = new THREE.TorusKnotGeometry(10, 1, 64, 8, 2, 3, 1);
