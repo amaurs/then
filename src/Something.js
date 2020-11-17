@@ -17,7 +17,7 @@ import {
 } from "react-router-dom";
 import Menu from "./Menu.js";
 
-import Anaglyph from "./Anaglyph.js";
+import Anaglyph from "./projects/anaglyph/Anaglyph.tsx";
 
 import Autostereogram from "./Autostereogram.js";
 import Colors from "./Colors.js";
@@ -43,7 +43,7 @@ import ReactMarkdown from "react-markdown";
 
 import "./Home.css";
 
-import anaglyph from "./Anaglyph.md";
+import anaglyph from "./projects/anaglyph/Anaglyph.md";
 import autostereogram from "./Autostereogram.md";
 import colors from "./Colors.md";
 import distrito from "./Distrito.md";
