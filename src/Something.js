@@ -21,7 +21,7 @@ import Anaglyph from "./projects/anaglyph/Anaglyph.tsx";
 import Bolero from "./projects/bolero/Bolero.tsx";
 import Quilt from "./projects/quilt/Quilt.tsx";
 
-import Autostereogram from "./Autostereogram.js";
+import Autostereogram from "./projects/autostereogram/Autostereogram.tsx";
 import Colors from "./Colors.js";
 import Distrito from "./Distrito.js";
 
@@ -45,7 +45,7 @@ import ReactMarkdown from "react-markdown";
 import "./Home.css";
 
 import anaglyph from "./projects/anaglyph/Anaglyph.md";
-import autostereogram from "./Autostereogram.md";
+import autostereogram from "./projects/autostereogram/Autostereogram.md";
 import colors from "./Colors.md";
 import distrito from "./Distrito.md";
 import bolero from "./projects/bolero/Bolero.md";
