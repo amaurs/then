@@ -18,12 +18,13 @@ import {
 import Menu from "./Menu.js";
 
 import Anaglyph from "./projects/anaglyph/Anaglyph.tsx";
+import Bolero from "./projects/bolero/Bolero.tsx";
+import Quilt from "./projects/quilt/Quilt.tsx";
 
 import Autostereogram from "./Autostereogram.js";
 import Colors from "./Colors.js";
 import Distrito from "./Distrito.js";
 
-import Bolero from "./Bolero.js";
 import Conway from "./Conway.js";
 import Dense from "./Dense.js";
 import Loom from "./Loom.js";
@@ -34,7 +35,7 @@ import Reinforcement from "./Reinforcement.js";
 import Wigglegram from "./Wigglegram.js";
 import Hilbert from "./Hilbert.js";
 import Corrupted from "./Corrupted.js";
-import Quilt from "./projects/quilt/Quilt.tsx";
+
 import Then from "./Then.js";
 import TravelingSalesman from "./TravelingSalesman.js";
 
@@ -47,7 +48,7 @@ import anaglyph from "./projects/anaglyph/Anaglyph.md";
 import autostereogram from "./Autostereogram.md";
 import colors from "./Colors.md";
 import distrito from "./Distrito.md";
-import bolero from "./Bolero.md";
+import bolero from "./projects/bolero/Bolero.md";
 import dense from "./Dense.md";
 import loom from "./Loom.md";
 import conway from "./Conway.md";
@@ -73,6 +74,19 @@ const presentationTime = 0;
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 
 const mapping = {
+    "/bolero": {
+        content: bolero,
+        component: (
+            <Bolero
+                title="bolero"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost + "/boleros/en"}
+            />
+        ),
+    },
     "/dense": {
         content: dense,
         component: (
@@ -212,19 +226,6 @@ const mapping = {
                 height={window.innerHeight}
                 url={banditHost + "/wigglegrams/jpg"}
                 rows={1}
-            />
-        ),
-    },
-    "/bolero": {
-        content: bolero,
-        component: (
-            <Bolero
-                title="bolero"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={banditHost + "/boleros/en"}
             />
         ),
     },

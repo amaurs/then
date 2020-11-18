@@ -1,16 +1,26 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { ThemeContext } from "./ThemeContext.js";
+import { ThemeContext } from "../../ThemeContext.js";
 import "./Bolero.css";
-import { useInterval, useTimeout } from "./Hooks.js";
-import Loader from "./Presentation.js";
+import { useInterval, useTimeout } from "../../Hooks.js";
+import Loader from "../../Presentation.js";
+import CSS from "csstype";
 
-export default function Bolero(props) {
-    let mount = useRef();
+interface Props {
+    title: string;
+    delay: number;
+    style: CSS.Properties;
+    width: number;
+    height: number;
+    url: string;
+}
+
+export default function Bolero(props: Props) {
+    let div = useRef<HTMLDivElement>(document.createElement("div"));
     const theme = useContext(ThemeContext);
     const [sentence, setSentence] = useState("");
     const [count, setCount] = useState(0);
     const [total, setTotal] = useState(0);
-    const [delay, setDelay] = useState(null);
+    const [delay, setDelay] = useState(0);
     const [presenting, setPresenting] = useState(props.delay > 0);
 
     useTimeout(() => {
@@ -20,7 +30,7 @@ export default function Bolero(props) {
 
     useEffect(() => {
         let cancel = false;
-        const getPhrase = async (url) => {
+        const getPhrase = async (url: string) => {
             try {
                 let payload = {
                     method: "GET",
@@ -35,15 +45,15 @@ export default function Bolero(props) {
                     setSentence(
                         json.sentence
                             .split(" ")
-                            .filter((word) => "" !== word)
-                            .map((word) => (word === "i" ? "I" : word))
-                            .map((word, index) =>
+                            .filter((word: string) => "" !== word)
+                            .map((word: string) => (word === "i" ? "I" : word))
+                            .map((word: string, index: number) =>
                                 index === 0
                                     ? word.charAt(0).toUpperCase() +
                                       word.slice(1)
                                     : word
                             )
-                            .reduce((a, b) => a + " " + b, "")
+                            .reduce((a: string, b: string) => a + " " + b, "")
                     );
                     setTotal(total + 1);
                 }
@@ -52,19 +62,21 @@ export default function Bolero(props) {
             }
         };
         getPhrase(props.url);
-        return () => (cancel = true);
+        return () => {
+            cancel = true;
+        };
     }, [props.url, count]);
 
     useEffect(() => {
         if (sentence.length > 0 && !presenting) {
             let n = 0;
-            let timeoutId;
+            let timeoutId: any;
 
             const animate = () => {
                 timeoutId = setTimeout(function () {
                     console.log(sentence.slice(0, n));
 
-                    mount.current.innerHTML = sentence.slice(0, n);
+                    div.current.innerHTML = sentence.slice(0, n);
 
                     if (sentence.length === n - 5 && total < 10) {
                         setCount(count + 1);
@@ -75,9 +87,9 @@ export default function Bolero(props) {
                 }, 1000 / 5);
             };
 
-            let frameId = requestAnimationFrame(animate);
+            let frameId: number | null = requestAnimationFrame(animate);
             return () => {
-                cancelAnimationFrame(frameId);
+                cancelAnimationFrame(frameId!);
                 // It is important to clean up after the component unmounts.
                 clearTimeout(timeoutId);
                 frameId = null;
@@ -85,9 +97,9 @@ export default function Bolero(props) {
         }
     }, [sentence, presenting]);
 
-    let style = {
+    let style: CSS.Properties = {
         color: theme.theme.middleground,
-        mixBlendMode: theme.theme.mixBlendMode,
+        mixBlendMode: theme.theme.mixBlendMode as CSS.Property.MixBlendMode,
     };
 
     if (presenting) {
@@ -95,7 +107,7 @@ export default function Bolero(props) {
     } else {
         return (
             <div className="Bolero" style={{ ...props.style, ...style }}>
-                <h1 ref={mount}></h1>
+                <h1 ref={div}></h1>
             </div>
         );
     }
