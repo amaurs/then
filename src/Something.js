@@ -25,7 +25,7 @@ import Autostereogram from "./projects/autostereogram/Autostereogram.tsx";
 import Colors from "./projects/colors/Colors.tsx";
 import Distrito from "./Distrito.js";
 
-import Conway from "./Conway.js";
+import Conway from "./projects/conway/Conway.tsx";
 import Dense from "./Dense.js";
 import Loom from "./Loom.js";
 import Mandelbrot from "./Mandelbrot.js";
@@ -51,7 +51,7 @@ import distrito from "./Distrito.md";
 import bolero from "./projects/bolero/Bolero.md";
 import dense from "./Dense.md";
 import loom from "./Loom.md";
-import conway from "./Conway.md";
+import conway from "./projects/conway/Conway.md";
 import film from "./Film.md";
 import mandelbrot from "./Mandelbrot.md";
 import voronoi from "./Voronoi.md";
