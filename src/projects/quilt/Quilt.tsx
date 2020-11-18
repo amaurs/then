@@ -4,7 +4,7 @@ import { useTimeout } from "../../Hooks.js";
 import { shuffle, getRandomInt } from "../../util.js";
 
 import Loader from "../../Presentation.js";
-
+import CSS from "csstype";
 import "./Quilt.css";
 
 interface Patch {
@@ -15,7 +15,7 @@ interface Patch {
 interface Props {
     title: string;
     delay: number;
-    style: object;
+    style: CSS.Properties;
     width: number;
     height: number;
 }

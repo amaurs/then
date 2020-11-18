@@ -1,16 +1,30 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useParams } from "react-router";
-import { colorToInt } from "./util.js";
-import { useInterval } from "./Hooks.js";
-import { getRandomIntegerArray, colorToString, invertColor } from "./util.js";
-import { useTimeout } from "./Hooks.js";
-import Loader from "./Presentation.js";
+import { useInterval } from "../../Hooks.js";
+import {
+    getRandomIntegerArray,
+    colorToString,
+    invertColor,
+    colorToInt,
+} from "../../util.js";
+import { useTimeout } from "../../Hooks.js";
+import Loader from "../../Presentation.js";
+import CSS from "csstype";
 import "./Colors.css";
+
+interface Props {
+    title: string;
+    delay: number;
+    style: CSS.Properties;
+    width: number;
+    height: number;
+    url: string;
+}
 
 const numberColors = 750;
 
-const Colors = (props) => {
-    let mount = useRef();
+const Colors = (props: Props) => {
+    const canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
     const [colors, setColors] = useState([]);
     const [presenting, setPresenting] = useState(props.delay > 0);
 
@@ -20,7 +34,10 @@ const Colors = (props) => {
 
     useEffect(() => {
         let cancel = false;
-        const fetchColorsSolution = async (url, numberColors) => {
+        const fetchColorsSolution = async (
+            url: string,
+            numberColors: number
+        ) => {
             try {
                 let payload = {
                     method: "GET",
@@ -50,13 +67,15 @@ const Colors = (props) => {
             }
         };
         fetchColorsSolution(props.url, numberColors);
-        return () => (cancel = true);
+        return () => {
+            cancel = true;
+        };
     }, [props.url]);
 
     useEffect(() => {
         if (colors.length > 0 && !presenting) {
             let n = 0;
-            let timeoutId;
+            let timeoutId: any;
 
             const animate = () => {
                 // Wrapping the animation function wiht a timeout makes it
@@ -69,9 +88,11 @@ const Colors = (props) => {
                         colors[(n % (colors.length / 3)) * 3 + 2],
                     ];
 
-                    const context = mount.current.getContext("2d");
-                    const width = mount.current.width;
-                    const height = mount.current.height;
+                    const context: CanvasRenderingContext2D = canvas.current.getContext(
+                        "2d"
+                    )!;
+                    const width = canvas.current.width;
+                    const height = canvas.current.height;
                     context.save();
                     context.clearRect(0, 0, width, height);
                     context.fillStyle = colorToString(
@@ -96,9 +117,9 @@ const Colors = (props) => {
                 }, 1000 / 10);
             };
 
-            let frameId = requestAnimationFrame(animate);
+            let frameId: number | null = requestAnimationFrame(animate);
             return () => {
-                cancelAnimationFrame(frameId);
+                cancelAnimationFrame(frameId!);
                 // It is important to clean up after the component unmounts.
                 clearTimeout(timeoutId);
                 frameId = null;
@@ -122,7 +143,7 @@ const Colors = (props) => {
             <canvas
                 className="Colors"
                 style={{ ...props.style, ...style }}
-                ref={mount}
+                ref={canvas}
             />
         );
     }
