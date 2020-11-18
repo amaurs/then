@@ -34,7 +34,7 @@ import Voronoi from "./Voronoi.js";
 import Reinforcement from "./Reinforcement.js";
 import Wigglegram from "./Wigglegram.js";
 import Hilbert from "./Hilbert.js";
-import Corrupted from "./Corrupted.js";
+import Corrupted from "./projects/corrupted/Corrupted.tsx";
 
 import Then from "./Then.js";
 import TravelingSalesman from "./TravelingSalesman.js";
@@ -56,7 +56,7 @@ import film from "./Film.md";
 import mandelbrot from "./Mandelbrot.md";
 import voronoi from "./Voronoi.md";
 import hilbert from "./Hilbert.md";
-import corrupt from "./Corrupt.md";
+import corrupt from "./projects/corrupted/Corrupted.md";
 import reinforcement from "./Reinforcement.md";
 import quilt from "./projects/quilt/Quilt.md";
 import travelingSalesman from "./TravelingSalesman.md";
