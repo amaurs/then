@@ -23,7 +23,7 @@ import Quilt from "./projects/quilt/Quilt.tsx";
 
 import Autostereogram from "./projects/autostereogram/Autostereogram.tsx";
 import Colors from "./projects/colors/Colors.tsx";
-import Distrito from "./Distrito.js";
+import Distrito from "./projects/distrito/Distrito.tsx";
 
 import Conway from "./projects/conway/Conway.tsx";
 import Dense from "./Dense.js";
@@ -47,7 +47,7 @@ import "./Home.css";
 import anaglyph from "./projects/anaglyph/Anaglyph.md";
 import autostereogram from "./projects/autostereogram/Autostereogram.md";
 import colors from "./projects/colors/Colors.md";
-import distrito from "./Distrito.md";
+import distrito from "./projects/distrito/Distrito.md";
 import bolero from "./projects/bolero/Bolero.md";
 import dense from "./Dense.md";
 import loom from "./Loom.md";
