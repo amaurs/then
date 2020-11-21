@@ -29,28 +29,6 @@ interface Map {
     color: Color;
 }
 
-interface RowState {
-    position: number;
-    color: string;
-}
-
-interface Row {
-    used: Array<RowState>;
-    available: Array<RowState>;
-}
-
-interface INumbersOnly {
-    [key: string]: number;
-}
-
-interface Hold {
-    color: string;
-    row: number;
-    position: number;
-    x: number;
-    y: number;
-}
-
 class MultichannelImage {
     height: number;
     width: number;
@@ -322,9 +300,6 @@ const Distrito = (props: Props) => {
                 style={{ ...props.style, ...style }}
                 width={width + "px"}
                 height={height + "px"}
-                //onMouseDown={handleOnMouseDown}
-                //onMouseUp={handleOnMouseUp}
-                //onMouseMove={handleOnMouseMove}
             />
         );
     }
