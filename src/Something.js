@@ -26,7 +26,7 @@ import Colors from "./projects/colors/Colors.tsx";
 import Distrito from "./projects/distrito/Distrito.tsx";
 
 import Conway from "./projects/conway/Conway.tsx";
-import Dense from "./Dense.js";
+import Dense from "./projects/dense/Dense.tsx";
 import Loom from "./Loom.js";
 import Mandelbrot from "./Mandelbrot.js";
 import Masonry from "./Masonry.js";
@@ -49,7 +49,7 @@ import autostereogram from "./projects/autostereogram/Autostereogram.md";
 import colors from "./projects/colors/Colors.md";
 import distrito from "./projects/distrito/Distrito.md";
 import bolero from "./projects/bolero/Bolero.md";
-import dense from "./Dense.md";
+import dense from "./projects/dense/Dense.md";
 import loom from "./Loom.md";
 import conway from "./projects/conway/Conway.md";
 import film from "./Film.md";

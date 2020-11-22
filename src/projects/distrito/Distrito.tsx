@@ -222,7 +222,7 @@ const Distrito = (props: Props) => {
 
                     let mapRows: Array<Array<Map>> = [];
 
-                    for (let i = 0; i < 2; i++) {
+                    for (let i = 0; i < 4; i++) {
                         let row: Array<Map> = [];
                         let positions = selectRandomFrom(
                             [0, 1, 2, 3, 4, 5, 6],
@@ -296,7 +296,7 @@ const Distrito = (props: Props) => {
                 width={
                     multiImage!.width * (multiImage!.channels.length + 1) + "px"
                 }
-                height={multiImage!.height * 3 + "px"}
+                height={multiImage!.height * 5 + "px"}
             />
         );
     }
