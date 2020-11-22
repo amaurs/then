@@ -1,14 +1,13 @@
-import { mod, intToColor } from './util.js';
+import { mod, intToColor, getRandomInt } from "./util.js";
 const ALIVE = 1;
 const DEAD = 0;
 
 export default class Board {
-
     constructor(width, height, seed) {
         this.height = height;
         this.width = width;
         this.board = [];
-        this.seed = seed || .5;
+        this.seed = seed || 0.5;
         this.init();
     }
 
@@ -20,9 +19,9 @@ export default class Board {
     }
 
     randomize() {
-        for(let i = 0; i < this.width; i++) {
-            for(let j = 0; j < this.height; j++) {
-                this.setXY(i, j, Math.random() < .5? ALIVE: DEAD);
+        for (let i = 0; i < this.width; i++) {
+            for (let j = 0; j < this.height; j++) {
+                this.setXY(i, j, Math.random() < this.seed ? ALIVE : DEAD);
             }
         }
     }
@@ -33,7 +32,6 @@ export default class Board {
         this.setXY(x + 1, y + 0, ALIVE);
         this.setXY(x + 1, y + 2, ALIVE);
         this.setXY(x + 2, y + 0, ALIVE);
-
     }
 
     glider2(x, y) {
@@ -42,7 +40,6 @@ export default class Board {
         this.setXY(x + 0, y + 2, ALIVE);
         this.setXY(x + 1, y + 0, ALIVE);
         this.setXY(x + 2, y + 1, ALIVE);
-
     }
 
     piece1(x, y) {
@@ -59,7 +56,6 @@ export default class Board {
         this.setXY(x + 0, y + 1, ALIVE);
         this.setXY(x + 1, y + 0, ALIVE);
         this.setXY(x + 1, y + 1, ALIVE);
-
     }
     gliderGun(x, y) {
         this.square(x + 0, y + 2);
@@ -72,30 +68,45 @@ export default class Board {
         this.square(x + 34, y + 0);
         this.glider2(x + 35, y + 7);
     }
-    
+
     getBoard() {
         return this.board;
     }
 
     getXY(x, y) {
-        return this.board[mod(y, this.height) * this.width + mod(x, this.width)];
+        return this.board[
+            mod(y, this.height) * this.width + mod(x, this.width)
+        ];
     }
 
     setXY(x, y, status) {
-        this.board[mod(y, this.height) * this.width + mod(x, this.width)] = status;
+        this.board[
+            mod(y, this.height) * this.width + mod(x, this.width)
+        ] = status;
     }
 
     getNeighbors(x, y) {
-        let directions = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
-        return directions.map(function(element) {
-            return this.getXY(x + element[0], y + element[1]);
-        }.bind(this));
+        let directions = [
+            [1, 0],
+            [1, 1],
+            [0, 1],
+            [-1, 1],
+            [-1, 0],
+            [-1, -1],
+            [0, -1],
+            [1, -1],
+        ];
+        return directions.map(
+            function (element) {
+                return this.getXY(x + element[0], y + element[1]);
+            }.bind(this)
+        );
     }
 
     getNextGeneration() {
         let next = new Board(this.width, this.height);
-        for(let i = 0; i < this.width; i++) {
-            for(let j = 0; j < this.height; j++) {
+        for (let i = 0; i < this.width; i++) {
+            for (let j = 0; j < this.height; j++) {
                 let neighbors = this.getNeighbors(i, j);
                 let condition = neighbors.reduce((a, b) => a + b, 0);
                 if (this.getXY(i, j) === ALIVE) {
@@ -117,15 +128,14 @@ export default class Board {
     }
 
     print() {
-        
-        for(let j = 0; j < this.height; j++) {
-            let row = ""
-            for(let i = 0; i < this.width; i++) {
-                row = row + (this.getXY(i, j)?"*": " ");
+        for (let j = 0; j < this.height; j++) {
+            let row = "";
+            for (let i = 0; i < this.width; i++) {
+                row = row + (this.getXY(i, j) ? "*" : " ");
             }
-            console.log(row)
+            console.log(row);
         }
-        console.log("")
+        console.log("");
     }
 
     printContext(context, squareSize, color) {
@@ -133,11 +143,16 @@ export default class Board {
     }
 
     printContextOffset(context, squareSize, x, y, color) {
-        for(let j = 0; j < this.height; j++) {
-            for(let i = 0; i < this.width; i++) {
+        for (let j = 0; j < this.height; j++) {
+            for (let i = 0; i < this.width; i++) {
                 if (this.getXY(i, j)) {
                     context.fillStyle = color;
-                    context.fillRect((x + i) * squareSize, (y + j) * squareSize, squareSize, squareSize);
+                    context.fillRect(
+                        (x + i) * squareSize,
+                        (y + j) * squareSize,
+                        squareSize,
+                        squareSize
+                    );
                 }
             }
         }
@@ -145,14 +160,19 @@ export default class Board {
 
     highlight(context, squareSize, x, y, width, height) {
         let counter = 0;
-        for(let j = y; j < y + height; j++) {
-            for(let i = x; i < x + width; i++) {
+        for (let j = y; j < y + height; j++) {
+            for (let i = x; i < x + width; i++) {
                 if (this.getXY(i, j)) {
                     context.fillStyle = "white";
                 } else {
                     context.fillStyle = intToColor(1 << counter);
                 }
-                context.fillRect(i * squareSize, j * squareSize, squareSize, squareSize);
+                context.fillRect(
+                    i * squareSize,
+                    j * squareSize,
+                    squareSize,
+                    squareSize
+                );
                 counter++;
             }
         }
@@ -161,12 +181,12 @@ export default class Board {
     getColor(context, squareSize, x, y, width, height) {
         let counter = 0;
         let color = 0;
-        for(let j = y; j < y + height; j++) {
-            for(let i = x; i < x + width; i++) {
+        for (let j = y; j < y + height; j++) {
+            for (let i = x; i < x + width; i++) {
                 if (this.getXY(i, j)) {
                     color += 1 << counter;
                 }
-                
+
                 counter++;
             }
         }
@@ -175,71 +195,69 @@ export default class Board {
 
     shiftDown() {
         let result = new Board(this.width, this.height);
-        for(let j = this.height - 1; j > 0; j--) {
-            for(let i = 0; i < this.width; i++) {
+        for (let j = this.height - 1; j > 0; j--) {
+            for (let i = 0; i < this.width; i++) {
                 result.setXY(i, j, this.getXY(i, j - 1));
             }
         }
-        for(let i = 0; i < this.width; i++) {
-            result.setXY(i, 0, Math.random() < this.seed? ALIVE: DEAD);
+        for (let i = 0; i < this.width; i++) {
+            result.setXY(i, 0, Math.random() < this.seed ? ALIVE : DEAD);
         }
         return result;
     }
 
     shiftUp() {
         let result = new Board(this.width, this.height, this.seed);
-        for(let j = 0; j < this.height - 1; j++) {
-            for(let i = 0; i < this.width; i++) {
+        for (let j = 0; j < this.height - 1; j++) {
+            for (let i = 0; i < this.width; i++) {
                 result.setXY(i, j, this.getXY(i, j + 1));
             }
         }
-        for(let i = 0; i < this.width; i++) {
-            result.setXY(i, this.height - 1, Math.random() < this.seed? ALIVE: DEAD);
-        }
+        result.setXY(getRandomInt(0, this.width), this.height - 1, ALIVE);
         return result;
     }
 
     shiftRight() {
         let result = new Board(this.width, this.height, this.seed);
-        for(let j = 0; j < this.height; j++) {
-            for(let i = this.width - 1; i > 0; i--) {
+        for (let j = 0; j < this.height; j++) {
+            for (let i = this.width - 1; i > 0; i--) {
                 result.setXY(i, j, this.getXY(i - 1, j));
             }
         }
-        for(let j = 0; j < this.height; j++) {
-            result.setXY(0, j, Math.random() < this.seed? ALIVE: DEAD);
-        }
+
+        result.setXY(0, getRandomInt(0, this.height), ALIVE);
+
         return result;
     }
 
-
     multiply(other) {
-
-        console.assert(other.height === this.width, {errorMsg: "Board dimension do not match."});
+        console.assert(other.height === this.width, {
+            errorMsg: "Board dimension do not match.",
+        });
         let result = new Board(other.width, this.height);
 
-        for(let j = 0; j < this.height; j++) {
-            for(let i = 0; i < other.width; i++) {
+        for (let j = 0; j < this.height; j++) {
+            for (let i = 0; i < other.width; i++) {
                 let dot = 0;
-                for(let k = 0; k < other.height; k++) {
+                for (let k = 0; k < other.height; k++) {
                     dot += this.getXY(k, j) * other.getXY(i, k);
                 }
                 result.setXY(i, j, dot);
             }
         }
- 
+
         return result;
     }
 
     transpose() {
         let result = new Board(this.height, this.width);
 
-        for(let j = 0; j < this.height; j++) {
-            for(let i = 0; i < this.width; i++) {
-                result.setXY(j, i, this.getXY(i,j));
+        for (let j = 0; j < this.height; j++) {
+            for (let i = 0; i < this.width; i++) {
+                result.setXY(j, i, this.getXY(i, j));
             }
         }
- 
+
         return result;
     }
 }
