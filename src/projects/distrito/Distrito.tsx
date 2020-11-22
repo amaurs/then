@@ -82,7 +82,7 @@ const selectRandomFrom = (pool: Array<any>, howMany: number): Array<any> => {
     let result: Array<any> = [];
 
     for (let i = 0; i < howMany; i++) {
-        let index = getRandomInt(0, poolCopy.length - 1);
+        let index = getRandomInt(0, poolCopy.length);
         let extracted = poolCopy.splice(index, 1);
         result = [...result, ...extracted];
     }
@@ -91,8 +91,6 @@ const selectRandomFrom = (pool: Array<any>, howMany: number): Array<any> => {
 
 const Distrito = (props: Props) => {
     let mount = useRef<HTMLCanvasElement>(document.createElement("canvas"));
-    let [width, setWidth] = useState(0);
-    let [height, setHeight] = useState(0);
     let [multiImage, setMultiImage] = useState<MultichannelImage | undefined>(
         undefined
     );
@@ -174,8 +172,6 @@ const Distrito = (props: Props) => {
                 image.addChannel(tm7);
                 image.addMask(mask);
 
-                setWidth(image.width * (image.channels.length + 1));
-                setHeight(image.height * 3);
                 setMultiImage(image);
             }
 
@@ -186,12 +182,7 @@ const Distrito = (props: Props) => {
     }, []);
 
     useEffect(() => {
-        if (
-            multiImage !== undefined &&
-            !presenting &&
-            width !== null &&
-            height !== null
-        ) {
+        if (multiImage !== undefined && !presenting) {
             let timeoutId: any;
 
             const animate = () => {
@@ -237,7 +228,11 @@ const Distrito = (props: Props) => {
                             [0, 1, 2, 3, 4, 5, 6],
                             3
                         );
-                        let colors = selectRandomFrom([0, 1, 2], 3);
+                        console.log(positions);
+                        let colors = selectRandomFrom(
+                            [Color.RED, Color.GREEN, Color.BLUE],
+                            3
+                        );
                         for (let j = 0; j < 3; j++) {
                             row.push({
                                 position: positions[j],
@@ -282,7 +277,7 @@ const Distrito = (props: Props) => {
                 frameId = null;
             };
         }
-    }, [multiImage, presenting, width, height]);
+    }, [multiImage, presenting]);
 
     let style = { width: props.width + "px" };
 
@@ -290,7 +285,7 @@ const Distrito = (props: Props) => {
         return null;
     }
 
-    if (presenting) {
+    if (!(multiImage !== undefined && !presenting)) {
         return <Loader title={props.title} />;
     } else {
         return (
@@ -298,8 +293,10 @@ const Distrito = (props: Props) => {
                 className="Distrito"
                 ref={mount}
                 style={{ ...props.style, ...style }}
-                width={width + "px"}
-                height={height + "px"}
+                width={
+                    multiImage!.width * (multiImage!.channels.length + 1) + "px"
+                }
+                height={multiImage!.height * 3 + "px"}
             />
         );
     }
