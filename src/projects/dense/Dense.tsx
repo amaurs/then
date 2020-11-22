@@ -74,7 +74,7 @@ const Dense = (props: Props) => {
                 frameId = null;
             };
         }
-    }, [presenting]); //, color]);
+    }, [presenting]);
 
     let style = {};
 

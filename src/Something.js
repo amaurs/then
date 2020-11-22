@@ -33,7 +33,7 @@ import Masonry from "./Masonry.js";
 import Voronoi from "./Voronoi.js";
 import Reinforcement from "./Reinforcement.js";
 import Wigglegram from "./Wigglegram.js";
-import Hilbert from "./Hilbert.js";
+import Hilbert from "./projects/hilbert/Hilbert.tsx";
 import Corrupted from "./projects/corrupted/Corrupted.tsx";
 
 import Then from "./Then.js";
@@ -55,7 +55,7 @@ import conway from "./projects/conway/Conway.md";
 import film from "./Film.md";
 import mandelbrot from "./Mandelbrot.md";
 import voronoi from "./Voronoi.md";
-import hilbert from "./Hilbert.md";
+import hilbert from "./projects/hilbert/Hilbert.md";
 import corrupt from "./projects/corrupted/Corrupted.md";
 import reinforcement from "./Reinforcement.md";
 import quilt from "./projects/quilt/Quilt.md";
