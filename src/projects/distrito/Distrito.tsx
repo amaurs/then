@@ -76,10 +76,13 @@ class MultichannelImage {
     }
 }
 
-const selectRandomFrom = (pool: Array<any>, howMany: number): Array<any> => {
+const selectRandomFrom = <T extends unknown>(
+    pool: Array<T>,
+    howMany: number
+): Array<T> => {
     let poolCopy = [...pool];
 
-    let result: Array<any> = [];
+    let result: Array<T> = [];
 
     for (let i = 0; i < howMany; i++) {
         let index = getRandomInt(0, poolCopy.length);
@@ -222,7 +225,7 @@ const Distrito = (props: Props) => {
 
                     let mapRows: Array<Array<Map>> = [];
 
-                    for (let i = 0; i < 4; i++) {
+                    for (let i = 0; i < 2; i++) {
                         let row: Array<Map> = [];
                         let positions = selectRandomFrom(
                             [0, 1, 2, 3, 4, 5, 6],
@@ -296,7 +299,7 @@ const Distrito = (props: Props) => {
                 width={
                     multiImage!.width * (multiImage!.channels.length + 1) + "px"
                 }
-                height={multiImage!.height * 5 + "px"}
+                height={multiImage!.height * 3 + "px"}
             />
         );
     }
