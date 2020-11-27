@@ -29,7 +29,7 @@ import Conway from "./projects/conway/Conway.tsx";
 import Dense from "./projects/dense/Dense.tsx";
 import Loom from "./projects/loom/Loom.tsx";
 import Mandelbrot from "./projects/mandelbrot/Mandelbrot.tsx";
-import Masonry from "./Masonry.js";
+import Photography from "./projects/photography/Photography.tsx";
 import Voronoi from "./projects/voronoi/Voronoi.tsx";
 import Reinforcement from "./projects/reinforcement/Reinforcement.tsx";
 import Stereo from "./projects/stereo/Stereo.tsx";
@@ -52,7 +52,7 @@ import bolero from "./projects/bolero/Bolero.md";
 import dense from "./projects/dense/Dense.md";
 import loom from "./projects/loom/Loom.md";
 import conway from "./projects/conway/Conway.md";
-import film from "./Film.md";
+import photography from "./projects/photography/Photography.md";
 import mandelbrot from "./projects/mandelbrot/Mandelbrot.md";
 import voronoi from "./projects/voronoi/Voronoi.md";
 import hilbert from "./projects/hilbert/Hilbert.md";
@@ -215,11 +215,11 @@ const mapping = {
             />
         ),
     },
-    "/film": {
-        content: film,
+    "/photography": {
+        content: photography,
         component: (
-            <Masonry
-                title="film"
+            <Photography
+                title="photography"
                 style={{}}
                 delay={presentationTime}
                 width={window.innerWidth}

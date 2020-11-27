@@ -1,9 +1,9 @@
-.Masonry {
+.Photography {
     position: relative;
     width: 100%;
 }
 
-.Masonry-sticky {
+.Photography-sticky {
     position: sticky;
     display: flex;
     top: 0;
@@ -12,18 +12,18 @@
     overflow-x: hidden;
 }
 
-.Masonry-horizontal {
+.Photography-horizontal {
     align-self: center;
     top: 0;
     will-change: transform;
 }
 
-.Masonry-row {
+.Photography-row {
     display: flex;
     flex-direction: row;
 }
 
-.Masonry-image {
+.Photography-image {
     
 }
 
