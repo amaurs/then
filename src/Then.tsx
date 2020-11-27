@@ -5,6 +5,8 @@ import './Then.css'
 import { useInterval } from './Hooks.js';
 
 import { ThemeContext } from './ThemeContext.js';
+
+import CSS from "csstype";
 /**
               <p className="pronunciation">/ <span className="underline">TH</span>en /</p>
               <p className="type">adverb</p>
@@ -16,19 +18,27 @@ import { ThemeContext } from './ThemeContext.js';
 
 **/
 
+interface Props {
+    keys: Array<number>;
+    setIndexBackground: (index: number) => void;
+}
 
-const Then = (props) => {
+const Then = (props: Props) => {
 
     const theme = useContext(ThemeContext);
     let [tick, setTick] = useState(0);
 
     useInterval(() => {
-        props.setIndexBackground(props.keys[tick % props.keys.length]);
+        props.setIndexBackground(props!.keys[tick % props.keys.length]);
         setTick(tick + 1);
     }, 10000);
 
-    return <div className="Then" style={{color: theme.theme.foreground, 
-                                         mixBlendMode: theme.theme.mixBlendMode}}> 
+    let style: CSS.Properties = {
+        color: theme.theme.middleground,
+        mixBlendMode: theme.theme.mixBlendMode as CSS.Property.MixBlendMode,
+    };
+
+    return <div className="Then" style={style}> 
                     <h1 className="name">Then</h1>
            </div>;
 }
