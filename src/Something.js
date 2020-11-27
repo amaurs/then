@@ -31,7 +31,7 @@ import Loom from "./projects/loom/Loom.tsx";
 import Mandelbrot from "./projects/mandelbrot/Mandelbrot.tsx";
 import Masonry from "./Masonry.js";
 import Voronoi from "./projects/voronoi/Voronoi.tsx";
-import Reinforcement from "./Reinforcement.js";
+import Reinforcement from "./projects/reinforcement/Reinforcement.tsx";
 import Wigglegram from "./Wigglegram.js";
 import Hilbert from "./projects/hilbert/Hilbert.tsx";
 import Corrupted from "./projects/corrupted/Corrupted.tsx";
@@ -57,7 +57,7 @@ import mandelbrot from "./projects/mandelbrot/Mandelbrot.md";
 import voronoi from "./projects/voronoi/Voronoi.md";
 import hilbert from "./projects/hilbert/Hilbert.md";
 import corrupt from "./projects/corrupted/Corrupted.md";
-import reinforcement from "./Reinforcement.md";
+import reinforcement from "./projects/reinforcement/Reinforcement.md";
 import quilt from "./projects/quilt/Quilt.md";
 import travelingSalesman from "./projects/travelingsalesman/TravelingSalesman.md";
 
