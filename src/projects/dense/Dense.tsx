@@ -1,13 +1,10 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { useInterval, useTimeout } from "../../Hooks.js";
+
 import {
-    getRandomIntegerArray,
-    colorToString,
-    invertColor,
-    randomColor,
     intToColor,
-    colorToInt,
-} from "../../util.js";
+    colorToInt, randomColor, invertColor, colorToString, getRandomIntegerArray
+} from '../../tools';
 import Loader from "../../Presentation.js";
 import "./Dense.css";
 import CSS from "csstype";

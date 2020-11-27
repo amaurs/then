@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
 import { useTimeout } from '../../Hooks.js';
-import { getRandomIntegerArray } from '../../util.js';
+import { getRandomIntegerArray } from '../../tools';
 import Loader from '../../Presentation.js';
 import './TravelingSalesman.css';
 

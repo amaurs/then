@@ -8,7 +8,9 @@ import Loader from "../../Presentation.js";
 import "./Distrito.css";
 import CSS from "csstype";
 
-import { getRandomInt } from "../../util.js";
+import {
+    getRandomInt,
+} from "../../tools";
 
 interface Props {
     title: string;

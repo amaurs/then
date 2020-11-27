@@ -2,11 +2,11 @@ import React, { useRef, useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { useInterval } from "../../Hooks.js";
 import {
-    getRandomIntegerArray,
     colorToString,
     invertColor,
+    getRandomIntegerArray,
     colorToInt,
-} from "../../util.js";
+} from "../../tools";
 import { useTimeout } from "../../Hooks.js";
 import Loader from "../../Presentation.js";
 import CSS from "csstype";

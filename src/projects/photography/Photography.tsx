@@ -4,7 +4,7 @@ import './Photography.css'
 import Loader from '../../Presentation.js';
 
 import { useTimeout } from '../../Hooks.js';
-import { getRandomInt } from '../../util.js';
+import { getRandomInt } from '../../tools';
 
 import CSS from "csstype";
 

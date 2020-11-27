@@ -1,7 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useTimeout } from "../../Hooks.js";
 
-import { shuffle, getRandomInt } from "../../util.js";
+import { shuffle } from "../../util.js";
+import {
+    getRandomInt,
+} from "../../tools";
 
 import Loader from "../../Presentation.js";
 import CSS from "csstype";

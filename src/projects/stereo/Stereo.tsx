@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Stereo.css'
 import Loader from '../../Presentation.js';
 import { useTimeout } from '../../Hooks.js';
-import { getRandomInt } from '../../util.js';
+import { getRandomInt } from '../../tools';
 
 import left from '../../assets/left.jpg';
 import right from '../../assets/right.jpg';
@@ -66,7 +66,7 @@ const Stereo = (props: Props) => {
     useEffect(() => {
 
         if (frames !== undefined && !presenting) {
-            
+
             // This constants come from the execution of the image,
             // need to figure out how to pass this down in a more
             // dynamic way.

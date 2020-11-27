@@ -1,4 +1,5 @@
-import { mod, intToColor, getRandomInt } from "./util.js";
+import { mod } from "./util.js";
+import { getRandomInt, intToColor } from "./tools";
 const ALIVE = 1;
 const DEAD = 0;
 

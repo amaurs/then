@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useParams } from "react-router";
-import { colorToInt } from "../../util.js";
+import { colorToInt } from "../../tools";
 import { useInterval, useTimeout } from "../../Hooks.js";
 import "./Hilbert.css";
 import Loader from "../../Presentation.js";

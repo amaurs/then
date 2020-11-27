@@ -36,7 +36,7 @@ import Stereo from "./projects/stereo/Stereo.tsx";
 import Hilbert from "./projects/hilbert/Hilbert.tsx";
 import Corrupted from "./projects/corrupted/Corrupted.tsx";
 
-import Then from "./Then.js";
+import Then from "./Then.tsx";
 import TravelingSalesman from "./projects/travelingsalesman/TravelingSalesman.tsx";
 
 import Loader from "./Loader.js";
