@@ -37,7 +37,7 @@ import Hilbert from "./projects/hilbert/Hilbert.tsx";
 import Corrupted from "./projects/corrupted/Corrupted.tsx";
 
 import Then from "./Then.js";
-import TravelingSalesman from "./TravelingSalesman.js";
+import TravelingSalesman from "./projects/travelingsalesman/TravelingSalesman.tsx";
 
 import Loader from "./Loader.js";
 import ReactMarkdown from "react-markdown";
@@ -59,7 +59,7 @@ import hilbert from "./projects/hilbert/Hilbert.md";
 import corrupt from "./projects/corrupted/Corrupted.md";
 import reinforcement from "./Reinforcement.md";
 import quilt from "./projects/quilt/Quilt.md";
-import travelingSalesman from "./TravelingSalesman.md";
+import travelingSalesman from "./projects/travelingsalesman/TravelingSalesman.md";
 
 import about from "./About.md";
 import stereoPhotography from "./StereoPhotography.md";

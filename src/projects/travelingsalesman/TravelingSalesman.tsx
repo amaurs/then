@@ -1,15 +1,25 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
-import { useInterval, useTimeout } from './Hooks.js';
-import { getRandomIntegerArray, colorToString, invertColor } from './util.js';
-import Loader from './Presentation.js';
+import { useTimeout } from '../../Hooks.js';
+import { getRandomIntegerArray } from '../../util.js';
+import Loader from '../../Presentation.js';
 import './TravelingSalesman.css';
 
-import { ThemeContext } from './ThemeContext.js';
+import { ThemeContext } from '../../ThemeContext.js';
 
-const TravelingSalesman = (props) => {
-    let mount = useRef();
+import CSS from "csstype";
+
+interface Props {
+    title: string;
+    delay: number;
+    style: CSS.Properties;
+    width: number;
+    height: number;
+    url: string;
+}
+
+const TravelingSalesman = (props:Props) => {
+    let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
     const theme = useContext(ThemeContext);
-    const [delay, setDelay] = useState(null);
     const [cities, setCities] = useState({cities: [], hasFetched: true});
     const squareSampling = 100;
     const numberColors = 500;
@@ -17,12 +27,11 @@ const TravelingSalesman = (props) => {
 
     useTimeout(() => {
         setPresenting(false);
-        setDelay(10);
     }, props.delay);
 
     useEffect(() => {
         let cancel = false;
-        const fetchCitiesSolution = async (url, numberColors, squareSampling) => {
+        const fetchCitiesSolution = async (url: string, numberColors: number, squareSampling: number) => {
             try {
                 let payload = {
                   method: 'GET',
@@ -44,14 +53,16 @@ const TravelingSalesman = (props) => {
             }
         }
         fetchCitiesSolution(props.url, numberColors, squareSampling);
-        return () => cancel=true;
+        return () => {
+            cancel=true;
+        } 
     }, [props.url]);
 
     useEffect(() => {
         if (cities.cities.length > 0 && !presenting) {
 
             let n = 0;
-            let timeoutId;
+            let timeoutId: any;
 
             const animate = () => {
                 // Wrapping the animation function wiht a timeout makes it
@@ -59,7 +70,7 @@ const TravelingSalesman = (props) => {
                 // requestAnimationFrame.
                 timeoutId = setTimeout(function() {
 
-                    const maxBound = (time, size) => {
+                    const maxBound = (time: number, size: number) => {
                         let t = time % (2 * size)
                         if (t < size) {
                             return t;
@@ -67,7 +78,7 @@ const TravelingSalesman = (props) => {
                             return size;
                         }
                     }
-                    const minBound = (time, size) => {
+                    const minBound = (time: number, size: number) => {
                         let t = time % (2 * size)
                         if (t < size) {
                             return 0;
@@ -80,9 +91,11 @@ const TravelingSalesman = (props) => {
                     let citiesToDraw = cities.cities.slice(min * 2, max * 2);
         
         
-                    const context = mount.current.getContext('2d');
-                    const width = mount.current.width;
-                    const height = mount.current.height;
+                    const context: CanvasRenderingContext2D = canvas.current.getContext(
+                        "2d"
+                    )!;
+                    const width = canvas.current.width;
+                    const height = canvas.current.height;
                     context.save();
                     context.clearRect(0, 0, width, height);
                     context.fillStyle = '#161011';
@@ -100,13 +113,13 @@ const TravelingSalesman = (props) => {
                 
              }
 
-            let frameId = requestAnimationFrame(animate);
+            let frameId: number | null = requestAnimationFrame(animate);
             return () => {
-                cancelAnimationFrame(frameId);
+                cancelAnimationFrame(frameId!);
                 // It is important to clean up after the component unmounts.
                 clearTimeout(timeoutId);
                 frameId = null;
-            }
+            };
         }
 
     }, [cities, presenting]);
@@ -123,7 +136,7 @@ const TravelingSalesman = (props) => {
     
     if (cities.cities.length >= 0 && !presenting) {
         return (<canvas
-                ref={mount}
+                ref={canvas}
                 style={{ ...props.style, ...style }}
                 width={minSize}
                 height={minSize}
