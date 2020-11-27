@@ -1,21 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './Wigglegram.css'
-import Loader from './Presentation.js';
-import { useTimeout } from './Hooks.js';
-import { getRandomInt } from './util.js';
+import './Stereo.css'
+import Loader from '../../Presentation.js';
+import { useTimeout } from '../../Hooks.js';
+import { getRandomInt } from '../../util.js';
 
-import left from './assets/left.jpg';
-import right from './assets/right.jpg';
+import left from '../../assets/left.jpg';
+import right from '../../assets/right.jpg';
 
-const Wigglegram = (props) => {
+import CSS from "csstype";
 
-    
-    const mount = useRef();
+interface Props {
+    title: string;
+    delay: number;
+    style: CSS.Properties;
+    width: number;
+    height: number;
+}
+
+const Stereo = (props: Props) => {
+
+
+    const mount = useRef<HTMLCanvasElement>(document.createElement("canvas"));
     const [data, setData] = useState(null);
-    const [current, setCurrent] =  useState(null);
-    const [frames, setFrames] =  useState(null);
+    const [current, setCurrent] = useState(null);
+    const [frames, setFrames] = useState<Array<ImageData> | undefined>(undefined);
 
-    const [presenting, setPresenting] = useState(props.delay>0);
+    const [presenting, setPresenting] = useState(props.delay > 0);
 
     useTimeout(() => {
         setPresenting(false);
@@ -23,15 +33,17 @@ const Wigglegram = (props) => {
 
     useEffect(() => {
         let cancel = false;
-        const getData = (src) => {
-            return new Promise ((resolve, reject) => {
+        const getData = (src: string): Promise<ImageData> => {
+            return new Promise((resolve, reject) => {
                 let img = new Image();
-                img.onload = (event) => {
-                    let image = event.target;
+                img.onload = (event: Event) => {
+                    let image = event.currentTarget as HTMLImageElement;
                     let canvas = document.createElement('canvas');
                     canvas.width = image.width;
                     canvas.height = image.height;
-                    let context = canvas.getContext('2d');
+                    const context: CanvasRenderingContext2D = canvas.getContext(
+                        "2d"
+                    )!;
                     context.drawImage(image, 0, 0);
                     resolve(context.getImageData(0, 0, image.width, image.height))
                 }
@@ -40,67 +52,68 @@ const Wigglegram = (props) => {
             });
         }
 
-        Promise.all([getData(left), getData(right)]).then(function(frames) { 
-            if(!cancel) {
+        Promise.all([getData(left), getData(right)]).then(function(frames: Array<ImageData>) {
+            if (!cancel) {
                 setFrames(frames);
                 console.log("Promise is fullfiled.");
             }
         });
-        return () => {cancel = true};
+        return () => { cancel = true };
 
     }, []);
 
 
     useEffect(() => {
 
-        if(frames !== null && !presenting) {
-
+        if (frames !== undefined && !presenting) {
+            
             // This constants come from the execution of the image,
             // need to figure out how to pass this down in a more
             // dynamic way.
 
             let tick = 0;
 
-            let timeoutId;
+            let timeoutId: any;
             const animate = () => {
                 // Wrapping the animation function wiht a timeout makes it
                 // possible to control the fps, without losing the benefits of
                 // requestAnimationFrame.
                 timeoutId = setTimeout(function() {
                     let canvas = mount.current;
-                    
+
                     canvas.width = frames[0].width;
                     canvas.height = frames[0].height;
-                    let context = canvas.getContext('2d');
-
+                    const context: CanvasRenderingContext2D = mount.current.getContext(
+                        "2d"
+                    )!;
                     context.putImageData(frames[tick % frames.length], 0, 0);
                     tick = tick + 1
                     frameId = requestAnimationFrame(animate);
                 }, 1000 / 8);
             }
 
-            let frameId = requestAnimationFrame(animate);
+            let frameId: number | null = requestAnimationFrame(animate);
             return () => {
-                cancelAnimationFrame(frameId);
+                cancelAnimationFrame(frameId!);
                 // It is important to clean up after the component unmounts.
                 clearTimeout(timeoutId);
                 frameId = null;
-            }  
+            };
         }
 
     }, [frames, presenting]);
 
     let style = {};
     if (props.width > 0 && props.height > 0) {
-        style = props.width/props.height<1?{width: "100vw"}:{height: "100vh"};
+        style = props.width / props.height < 1 ? { width: "100vw" } : { height: "100vh" };
     }
-    
+
     if (presenting) {
-        return <Loader title={props.title}/>
+        return <Loader title={props.title} />
     } else {
         return (
             <canvas
-                className="Wigglegram"
+                className="Stereo"
                 ref={mount}
                 style={{ ...props.style, ...style }}
             />
@@ -108,4 +121,4 @@ const Wigglegram = (props) => {
     }
 }
 
-export default Wigglegram;
+export default Stereo;

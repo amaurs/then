@@ -32,7 +32,7 @@ import Mandelbrot from "./projects/mandelbrot/Mandelbrot.tsx";
 import Masonry from "./Masonry.js";
 import Voronoi from "./projects/voronoi/Voronoi.tsx";
 import Reinforcement from "./projects/reinforcement/Reinforcement.tsx";
-import Wigglegram from "./Wigglegram.js";
+import Stereo from "./projects/stereo/Stereo.tsx";
 import Hilbert from "./projects/hilbert/Hilbert.tsx";
 import Corrupted from "./projects/corrupted/Corrupted.tsx";
 
@@ -62,7 +62,7 @@ import quilt from "./projects/quilt/Quilt.md";
 import travelingSalesman from "./projects/travelingsalesman/TravelingSalesman.md";
 
 import about from "./About.md";
-import stereoPhotography from "./StereoPhotography.md";
+import stereo from "./projects/stereo/Stereo.md";
 
 import { ThemeContext } from "./ThemeContext.js";
 import Slider from "./Slider.js";
@@ -127,11 +127,11 @@ const mapping = {
         ),
     },
 
-    "/stereo-photography": {
-        content: stereoPhotography,
+    "/stereo": {
+        content: stereo,
         component: (
-            <Wigglegram
-                title="stereo photography"
+            <Stereo
+                title="stereo"
                 style={{}}
                 delay={presentationTime}
                 width={window.innerWidth}
