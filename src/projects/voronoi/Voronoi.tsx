@@ -1,19 +1,43 @@
 import React, { useRef, useState, useEffect } from 'react';
-import robot from './assets/our-lady.jpg';
-import { getXYfromIndex, getRandomInt, getBrightness, getCentroids } from './util.js';
+import robot from '../../assets/our-lady.jpg';
+import { getXYfromIndex, getRandomInt, getBrightness, getCentroids } from '../../util.js';
 import './Voronoi.css'
 import * as d3 from 'd3';
 import { Delaunay } from "d3-delaunay";
-import { useTimeout } from './Hooks.js';
-import Loader from './Presentation.js';
+import { useTimeout } from '../../Hooks.js';
+import Loader from '../../Presentation.js';
 
 import "./Voronoi.css"
 
-const Voronoi = (props) => {
+import CSS from "csstype";
 
-    let mount = useRef();
-    let [updates, setUpdates] = useState(0);
-    let [cities, setCities] = useState(null);
+interface Props {
+    title: string;
+    delay: number;
+    style: CSS.Properties;
+    width: number;
+    height: number;
+}
+
+interface City {
+    x: number;
+    y: number;
+    r: number;
+    g: number;
+    b: number;
+}
+
+interface Cities {
+    totalData: Array<City>;
+    imageWidth: number; 
+    imageHeight: number;
+    sites: Array<City>;
+}
+
+const Voronoi = (props: Props) => {
+
+    let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
+    let [cities, setCities] = useState<Cities| undefined>(undefined);
     const [canvasWidth, setCanvasWidth] = useState(0);
     const [canvasHeight, setCanvasHeight] = useState(0);
     const [presenting, setPresenting] = useState(props.delay>0);
@@ -29,16 +53,18 @@ const Voronoi = (props) => {
         
         if (props.width > 0 && props.height > 0) {
 
-            const onLoad = (event) => {
+            const onLoad = (event: Event) => {
                 if (!cancel) {
-                    const image = event.target;
-                    let canvas = document.createElement('canvas');
+                    const image = event.currentTarget as HTMLImageElement;
+                    const canvas = document.createElement('canvas');
                     canvas.width = image.width;
                     canvas.height = image.height;
-                    let context = canvas.getContext('2d');
+                    const context: CanvasRenderingContext2D = canvas.getContext(
+                        "2d"
+                    )!;
                     context.drawImage(image, 0, 0);
                     let imageData = context.getImageData(0, 0, image.width, image.height);
-                    let totalData = [];
+                    let totalData: Array<City> = [];
                     for(let index = 0; index < image.width * image.height; index++) {
                         let pixel = getXYfromIndex(index, image.width);
                         totalData.push({
@@ -96,38 +122,35 @@ const Voronoi = (props) => {
     }, [props.width, props.height]);
 
     useEffect(() => {
-        if (cities !== null && !presenting) {
-            const getRadius = (d) => {
+        if (cities !== undefined && !presenting) {
+            const getRadius = (d: City) => {
                 return  2 + 1 * getBrightness(d.r, d.g, d.b);
             }
 
-            const sitesUpdate = (sites, imageData, width, height) => {
+            const sitesUpdate = (sites: Array<City>, imageData: Array<City>, width: number, height: number): Array<City> => {
                 const delaunay = Delaunay.from(sites, 
                                                   function(d) { return d.x },
                                                   function(d) { return d.y });
                 const voronoi = delaunay.voronoi([0, 0, width, height]);
                 const diagram = voronoi.cellPolygons();
-                let newSites = getCentroids(diagram).map(function(centroid, index) {
+                let newSites: Array<City> = getCentroids(diagram).map(function(centroid, index) {
                     let closestIndex = Math.floor(centroid[1]) * width + Math.floor(centroid[0]);
                     let closestPixel = imageData[closestIndex];
-                    return {
-                            oldX: sites[index].x,
-                            oldY: sites[index].y,
+
+                    const newCity: City = {
                             x: centroid[0],
                             y: centroid[1],
                             r: closestPixel.r,
                             g: closestPixel.g,
-                            b: closestPixel.b,
-                            oldR: sites[index].r,
-                            oldG: sites[index].g,
-                            oldB: sites[index].b
-                    };
+                            b: closestPixel.b
+                    }
+                    return newCity;
                 });
                 return newSites;
             }
 
             let updates = 0;  
-            let timeoutId;
+            let timeoutId: any;
             let citiesCopy = JSON.parse(JSON.stringify(cities));
 
             const animate = () => {
@@ -135,14 +158,16 @@ const Voronoi = (props) => {
                 // possible to control the fps, without losing the benefits of
                 // requestAnimationFrame.
                 timeoutId = setTimeout(function() {
-                    let context = mount.current.getContext('2d');
-                    let canvasWidth = mount.current.width;
-                    let canvasHeight = mount.current.height;
+                    const context: CanvasRenderingContext2D = canvas.current.getContext(
+                        "2d"
+                    )!;
+                    let canvasWidth = canvas.current.width;
+                    let canvasHeight = canvas.current.height;
                     context.clearRect(0, 0, canvasWidth, canvasHeight);
 
-                    citiesCopy.sites.forEach(function(d){
+                    citiesCopy.sites.forEach(function(d: City){
                         context.beginPath();
-                        context.fillStyle = d3.rgb(+d.r, +d.g, +d.b);
+                        context.fillStyle = "" + d3.rgb(+d.r, +d.g, +d.b);
                         let x = (+d.x / citiesCopy.imageWidth) * canvasWidth;
                         let y = (+d.y / citiesCopy.imageHeight) * canvasHeight;
                         let r = getRadius(d) * canvasWidth / 800;
@@ -156,14 +181,13 @@ const Voronoi = (props) => {
                     }
                 }, 1000 / 10);
             }
-
-            let frameId = requestAnimationFrame(animate);
+            let frameId: number | null = requestAnimationFrame(animate);
             return () => {
-                cancelAnimationFrame(frameId);
+                cancelAnimationFrame(frameId!);
                 // It is important to clean up after the component unmounts.
                 clearTimeout(timeoutId);
                 frameId = null;
-            }
+            };
         }
     }, [cities, presenting]);
 
@@ -180,7 +204,7 @@ const Voronoi = (props) => {
                     style={{ ...props.style, ...style }}
                     width={canvasWidth + "px"} 
                     height={canvasHeight + "px"} 
-                    ref={mount} />
+                    ref={canvas} />
         );
     }
 }
