@@ -1,14 +1,15 @@
 import React from "react";
 
-const themes = {
+let themes = {
     light: {
-        foreground: "magenta",
-        background: "#ffffff",
+        foreground: "blue",
+        background: "orange",
         middleground: "#161011",
         slider: false,
         name: "light",
         mixBlendMode: "multiply",
         mixBlendModeBackground: "difference",
+        quilt: ["DarkOrange", "White", "DarkOrange", "Black"],
     },
     dark: {
         foreground: "#f0a5a3",
@@ -18,6 +19,7 @@ const themes = {
         name: "dark",
         mixBlendMode: "difference",
         mixBlendModeForeground: "multiply",
+        quilt: ["DarkOrange", "Black", "DarkOrange", "White"],
     },
     konami: {
         foreground: "red",
@@ -27,6 +29,7 @@ const themes = {
         name: "konami",
         mixBlendMode: "normal",
         mixBlendModeForeground: "screen",
+        quilt: ["rgb(255,127,255)", "rgb(255,212,255)", "rgb(255,127,255)", "rgb(255,0,255)"],
     },
 };
 
