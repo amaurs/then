@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { useParams } from "react-router";
 import { colorToInt } from "../../tools";
 import { useInterval, useTimeout } from "../../Hooks.js";
@@ -12,6 +12,8 @@ import hilbert_cube_512 from "../../assets/hilbert_cube_512_512.png";
 import hilbert_square_512 from "../../assets/hilbert_square_512_512.png";
 import hilbert_cube_4096 from "../../assets/hilbert_cube_4096_4096.png";
 import hilbert_square_4096 from "../../assets/hilbert_square_4096_4096.png";
+
+import { ThemeContext } from "../../ThemeContext.js";
 
 import CSS from "csstype";
 
@@ -44,6 +46,7 @@ const Hilbert = (props: Props) => {
     }
 
     let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
+    let theme = useContext(ThemeContext);
     let [color, setColor] = useState<ImageData | undefined>(undefined);
     let [position, setPosition] = useState<ImageData | undefined>(undefined);
     const [presenting, setPresenting] = useState(props.delay > 0);
@@ -131,10 +134,24 @@ const Hilbert = (props: Props) => {
                         let b = position!.data[index * 4 + 2];
                         let j = colorToInt(r, g, b);
 
-                        frame.data[j * 4 + 0] = color!.data[i * 4 + 0];
-                        frame.data[j * 4 + 1] = color!.data[i * 4 + 1];
-                        frame.data[j * 4 + 2] = color!.data[i * 4 + 2];
-                        frame.data[j * 4 + 3] = 255;
+                        if (theme.theme.name == 'konami') {
+                            frame.data[j * 4 + 0] = 255;
+                            frame.data[j * 4 + 1] = i * 4;
+                            frame.data[j * 4 + 2] = 255;
+                            frame.data[j * 4 + 3] = 255;
+                        } else if (theme.theme.name == 'light') {
+                            frame.data[j * 4 + 0] = 255 - color!.data[i * 4 + 0];
+                            frame.data[j * 4 + 1] = 255 - color!.data[i * 4 + 1];
+                            frame.data[j * 4 + 2] = 255 - color!.data[i * 4 + 2];
+                            frame.data[j * 4 + 3] = 255;
+                        } else {
+                            frame.data[j * 4 + 0] = color!.data[i * 4 + 0];
+                            frame.data[j * 4 + 1] = color!.data[i * 4 + 1];
+                            frame.data[j * 4 + 2] = color!.data[i * 4 + 2];
+                            frame.data[j * 4 + 3] = 255;
+                        }
+                        
+                        
                     }
                     context.putImageData(frame, 0, 0);
 
@@ -151,7 +168,7 @@ const Hilbert = (props: Props) => {
                 frameId = null;
             };
         }
-    }, [color, position, presenting]);
+    }, [color, position, presenting, theme]);
 
     let style = {};
     if (props.width > 0 && props.height > 0) {
