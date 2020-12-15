@@ -5,8 +5,44 @@ import escudo from "../../assets/escudo.png";
 import { useTimeout } from "../../Hooks.js";
 import Loader from "../../Presentation.js";
 
+
 import { ThemeContext } from "../../ThemeContext.js";
 import CSS from "csstype";
+
+
+let vertexShader = `
+varying vec2 vUv;
+void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+}
+`;
+let fragmentShader = `
+uniform bool invert;
+uniform bool konami;
+uniform vec3 color;
+uniform sampler2D tDiffuse;
+varying vec2 vUv;
+
+void main() {
+    vec4 texel = texture2D( tDiffuse, vUv );
+    if (konami) {
+        float grey = (0.21 * texel.r + 0.71 * texel.g + 0.07 * texel.b);
+        if (invert) {
+            gl_FragColor =  1.0 - vec4(color.r - grey, color.g - grey, color.b - grey, texel.a);
+        } else {
+            gl_FragColor = vec4(color.r - grey, color.g - grey, color.b - grey, texel.a);
+        }
+    } else {
+        if (invert) {
+            gl_FragColor = 1.0 - vec4(texel.r, texel.g, texel.b, texel.a);
+        } else {
+            gl_FragColor = vec4(texel.r, texel.g, texel.b, texel.a);
+        }
+    }
+}
+`;
+
 
 interface Props {
     title: string;
@@ -15,6 +51,13 @@ interface Props {
     width: number;
     height: number;
 }
+
+interface Shader {
+    uniforms: object;
+    vertexShader: string;
+    fragmentShader: string;
+}
+
 
 const Corrupted = (props: Props) => {
     let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
@@ -56,9 +99,24 @@ const Corrupted = (props: Props) => {
 
             let g = new THREE.GlitchPass();
 
-            //g.goWild = true
+            g.goWild = false
 
             composer.addPass(g);
+
+            const customShader: Shader = {
+                uniforms: {
+                    "tDiffuse": { value: null }, 
+                    "invert": { value: theme.theme.name !== 'light' }, 
+                    "konami": { value: theme.theme.name === 'konami' },
+                    "color": { value: new THREE.Color(0.0, 1.0, 0.0)}
+                },
+                vertexShader: vertexShader,
+                fragmentShader: fragmentShader,
+            }
+
+            const magentaShader = new THREE.ShaderPass(customShader);
+
+            composer.addPass(magentaShader);
 
             let copyPass = new THREE.ShaderPass(THREE.CopyShader);
             copyPass.renderToScreen = true;
@@ -79,7 +137,7 @@ const Corrupted = (props: Props) => {
                 material.dispose();
             };
         }
-    }, [props.width, props.height, presenting]);
+    }, [props.width, props.height, presenting, theme]);
 
     let style = {};
 

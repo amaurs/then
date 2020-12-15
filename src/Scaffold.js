@@ -5,10 +5,13 @@ import Home from "./Something.js";
 import { ThemeContext, themes } from "./ThemeContext.js";
 
 const Then = () => {
+
+    localStorage.clear();
     const [theme, setTheme] = useLocalStorage("theme", themes.light);
 
     const toggleTheme = () => {
-        setTheme(theme.name === "dark" ? themes.light : themes.dark);
+        console.log(theme);
+        setTheme(theme.name !== "konami" ? (theme.name === "dark" ? themes.light : themes.dark): themes.light);
     };
 
     return (
