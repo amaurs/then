@@ -1,9 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import robot from '../../assets/our-lady.jpg';
-import {  
-    getCentroids } from '../../util.js';
 import {
-    getRandomInt, 
+    getCentroids
+} from '../../util.js';
+import {
+    getRandomInt,
     getXYfromIndex,
     getBrightness,
 } from "../../tools";
@@ -12,6 +13,7 @@ import * as d3 from 'd3';
 import { Delaunay } from "d3-delaunay";
 import { useTimeout } from '../../Hooks.js';
 import Loader from '../../Presentation.js';
+import { ThemeContext } from "../../ThemeContext.js";
 
 import "./Voronoi.css"
 
@@ -35,7 +37,7 @@ interface City {
 
 interface Cities {
     totalData: Array<City>;
-    imageWidth: number; 
+    imageWidth: number;
     imageHeight: number;
     sites: Array<City>;
 }
@@ -43,10 +45,11 @@ interface Cities {
 const Voronoi = (props: Props) => {
 
     let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
-    let [cities, setCities] = useState<Cities| undefined>(undefined);
+    const theme = useContext(ThemeContext);
+    let [cities, setCities] = useState<Cities | undefined>(undefined);
     const [canvasWidth, setCanvasWidth] = useState(0);
     const [canvasHeight, setCanvasHeight] = useState(0);
-    const [presenting, setPresenting] = useState(props.delay>0);
+    const [presenting, setPresenting] = useState(props.delay > 0);
 
 
     useTimeout(() => {
@@ -54,9 +57,9 @@ const Voronoi = (props: Props) => {
     }, props.delay);
 
     useEffect(() => {
-        
+
         let cancel = false;
-        
+
         if (props.width > 0 && props.height > 0) {
 
             const onLoad = (event: Event) => {
@@ -71,72 +74,74 @@ const Voronoi = (props: Props) => {
                     context.drawImage(image, 0, 0);
                     let imageData = context.getImageData(0, 0, image.width, image.height);
                     let totalData: Array<City> = [];
-                    for(let index = 0; index < image.width * image.height; index++) {
+                    for (let index = 0; index < image.width * image.height; index++) {
                         let pixel = getXYfromIndex(index, image.width);
                         totalData.push({
-                                         x: pixel[0],
-                                         y: pixel[1],
-                                         r: imageData.data[index * 4],
-                                         g: imageData.data[index * 4 + 1],
-                                         b: imageData.data[index * 4 + 2],
-                                       });
+                            x: pixel[0],
+                            y: pixel[1],
+                            r: imageData.data[index * 4],
+                            g: imageData.data[index * 4 + 1],
+                            b: imageData.data[index * 4 + 2],
+                        });
                     }
                     const total = 5000;
                     let sites = [];
                     /** I use the rejection algorithm to get points with the most brightness. **/
                     let numPoints = 0;
-                    while(numPoints < total){
-                      let index = getRandomInt(0, image.width * image.height);
-                      let site = totalData[index]
-                      let brightness = getBrightness(site.r, 
-                                                     site.g, 
-                                                     site.b);
-                      if (Math.random() >= brightness ) {
-                        sites.push(site);
-                        numPoints++;
-                      }
+                    while (numPoints < total) {
+                        let index = getRandomInt(0, image.width * image.height);
+                        let site = totalData[index]
+                        let brightness = getBrightness(site.r,
+                            site.g,
+                            site.b);
+                        if (Math.random() >= brightness) {
+                            sites.push(site);
+                            numPoints++;
+                        }
                     }
-    
+
                     let imageAspectRatio = image.width / image.height;
                     let windowAspectRatio = props.width / props.height;
                     let box
                     if (windowAspectRatio < 1) {
-            
+
                         box = [imageAspectRatio * props.height, props.height];
                     } else {
                         box = [props.width, props.width / imageAspectRatio];
-                
+
                     }
-        
-                    setCities({totalData: totalData,
-                               imageWidth: image.width,
-                               imageHeight: image.height,
-                               sites: sites});
+
+                    setCities({
+                        totalData: totalData,
+                        imageWidth: image.width,
+                        imageHeight: image.height,
+                        sites: sites
+                    });
                     setCanvasWidth(box[0]);
                     setCanvasHeight(box[1]);
                 }
             }
-            
-    
+
+
             let image = new Image();
             image.src = robot;
             image.onload = onLoad;
         }
 
-        return () => {cancel = true};
+        return () => { cancel = true };
 
     }, [props.width, props.height]);
 
     useEffect(() => {
         if (cities !== undefined && !presenting) {
             const getRadius = (d: City) => {
-                return  2 + 1 * getBrightness(d.r, d.g, d.b);
+                return 2 + 1 * getBrightness(d.r, d.g, d.b);
             }
 
             const sitesUpdate = (sites: Array<City>, imageData: Array<City>, width: number, height: number): Array<City> => {
-                const delaunay = Delaunay.from(sites, 
-                                                  function(d) { return d.x },
-                                                  function(d) { return d.y });
+                const delaunay = Delaunay.from(sites,
+                    function(d) { return d.x },
+                    function(d) { return d.y });
                 const voronoi = delaunay.voronoi([0, 0, width, height]);
                 const diagram = voronoi.cellPolygons();
                 let newSites: Array<City> = getCentroids(diagram).map(function(centroid, index) {
@@ -144,18 +149,18 @@ const Voronoi = (props: Props) => {
                     let closestPixel = imageData[closestIndex];
 
                     const newCity: City = {
-                            x: centroid[0],
-                            y: centroid[1],
-                            r: closestPixel.r,
-                            g: closestPixel.g,
-                            b: closestPixel.b
+                        x: centroid[0],
+                        y: centroid[1],
+                        r: closestPixel.r,
+                        g: closestPixel.g,
+                        b: closestPixel.b
                     }
                     return newCity;
                 });
                 return newSites;
             }
 
-            let updates = 0;  
+            let updates = 0;
             let timeoutId: any;
             let citiesCopy = JSON.parse(JSON.stringify(cities));
 
@@ -171,9 +176,15 @@ const Voronoi = (props: Props) => {
                     let canvasHeight = canvas.current.height;
                     context.clearRect(0, 0, canvasWidth, canvasHeight);
 
-                    citiesCopy.sites.forEach(function(d: City){
+                    citiesCopy.sites.forEach(function(d: City) {
                         context.beginPath();
-                        context.fillStyle = "" + d3.rgb(+d.r, +d.g, +d.b);
+                        if (theme.theme.name === 'light') {
+                            context.fillStyle = `${d3.rgb(+d.r, +d.g, +d.b)}`;
+                        } else if (theme.theme.name === 'dark') {
+                            context.fillStyle = `${d3.rgb(255 - +d.r, 255 - +d.g, 255 - +d.b)}`;
+                        } else {
+                            context.fillStyle = `rgba(255, 0, 255, ${getBrightness(+d.r, +d.g, +d.b)})`;
+                        }
                         let x = (+d.x / citiesCopy.imageWidth) * canvasWidth;
                         let y = (+d.y / citiesCopy.imageHeight) * canvasHeight;
                         let r = getRadius(d) * canvasWidth / 800;
@@ -195,7 +206,7 @@ const Voronoi = (props: Props) => {
                 frameId = null;
             };
         }
-    }, [cities, presenting]);
+    }, [cities, presenting, theme]);
 
 
     let isVertical = props.height / props.width < 1;
@@ -203,14 +214,14 @@ const Voronoi = (props: Props) => {
     let style = {};
 
     if (presenting) {
-        return <Loader title={props.title}/>
+        return <Loader title={props.title} />
     } else {
         return (
             <canvas className="Voronoi"
-                    style={{ ...props.style, ...style }}
-                    width={canvasWidth + "px"} 
-                    height={canvasHeight + "px"} 
-                    ref={canvas} />
+                style={{ ...props.style, ...style }}
+                width={canvasWidth + "px"}
+                height={canvasHeight + "px"}
+                ref={canvas} />
         );
     }
 }
