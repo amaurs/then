@@ -34,6 +34,44 @@ const wikipedia: Map<number, Array<number>> = new Map([
     [15, [106, 52, 3]],
 ]);
 
+const magentaToBlack: Map<number, Array<number>> = new Map([
+    [0, [255, 0, 255]],
+    [1, [238, 0, 238]],
+    [2, [221, 0, 221]],
+    [3, [204, 0, 204]],
+    [4, [187, 0, 187]],
+    [5, [170, 0, 170]],
+    [6, [153, 0, 153]],
+    [7, [136, 0, 136]],
+    [8, [119, 0, 119]],
+    [9, [102, 0, 102]],
+    [10, [85, 0, 85]],
+    [11, [68, 0, 68]],
+    [12, [51, 0, 51]],
+    [13, [34, 0, 34]],
+    [14, [17, 0, 17]],
+    [15, [0, 0, 0]],
+]);
+
+const magentaToWhite: Map<number, Array<number>> = new Map([
+    [0, [255, 0, 255]],
+    [1, [255, 17, 255]],
+    [2, [255, 34, 255]],
+    [3, [255, 51, 255]],
+    [4, [255, 68, 255]],
+    [5, [255, 85, 255]],
+    [6, [255, 102, 255]],
+    [7, [255, 119, 255]],
+    [8, [255, 136, 255]],
+    [9, [255, 153, 255]],
+    [10, [255, 170, 255]],
+    [11, [255, 187, 255]],
+    [12, [255, 204, 255]],
+    [13, [255, 221, 255]],
+    [14, [255, 238, 255]],
+    [15, [255, 255, 255]],
+]);
+
 const apple: Map<number, Array<number>> = new Map([
     [0, [0, 0, 0]],
     [1, [100, 45, 164]],
@@ -121,14 +159,14 @@ const Mandelbrot = (props: Props) => {
             } else if (theme.theme.name === "dark") {
                 colors = apple;
             } else if (theme.theme.name === "konami") {
-                colors = amau;
+                colors = magentaToWhite;
             }
 
             const animate = () => {
                 // Wrapping the animation function wiht a timeout makes it
                 // possible to control the fps, without losing the benefits of
                 // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
+                timeoutId = setTimeout(function() {
                     let canvas = mount.current;
 
                     canvas.width = imageData!.width;
