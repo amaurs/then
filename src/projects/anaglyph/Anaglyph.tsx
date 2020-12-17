@@ -1,9 +1,10 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import * as THREE from "three-full";
 import AnaglyphSVGRenderer from "./AnaglyphSVGRenderer.js";
 import "./Anaglyph.css";
 import { useTimeout } from "../../Hooks.js";
 import Loader from "../../Presentation.js";
+import { ThemeContext } from "../../ThemeContext.js";
 
 interface Props {
     title: string;
@@ -18,6 +19,7 @@ const Anaglyph = (props: Props) => {
     let div = useRef<HTMLDivElement>(document.createElement("div"));
     const [presenting, setPresenting] = useState(props.delay > 0);
     const [data, setData] = useState({ points: [], hasFetched: true });
+    const theme = useContext(ThemeContext);
 
     useTimeout(() => {
         setPresenting(false);
@@ -77,7 +79,20 @@ const Anaglyph = (props: Props) => {
             );
             camera.position.z = 4;
             const renderer = new AnaglyphSVGRenderer(width, height);
+            if (theme.theme.name === 'konami') {
+                renderer.setLeftColor(new THREE.Color(1, 0, 1));
+                renderer.setRightColor(new THREE.Color(1, 0, 1));
+            } else if (theme.theme.name === 'light') {
+                renderer.setLeftColor(new THREE.Color(1, 0, 0));
+                renderer.setRightColor(new THREE.Color(0, 1, 1));
+            } else {
+                renderer.setLeftColor(new THREE.Color(1, 0, 1));
+                renderer.setRightColor(new THREE.Color(0, 1, 0));
+            }
             renderer.setClearColor(0xffffff, 0.0);
+            if (div.current.childNodes.length > 0) {
+                div.current.removeChild(div.current.childNodes[0]);
+            }
             div.current.appendChild(renderer.domElement);
             let geometry = new THREE.BufferGeometry();
 
@@ -115,7 +130,7 @@ const Anaglyph = (props: Props) => {
                 material.dispose();
             };
         }
-    }, [data, props.width, props.height, presenting]);
+    }, [data, props.width, props.height, presenting, theme]);
 
     let style = {};
 

@@ -1,7 +1,7 @@
 import * as THREE from "three-full";
 
 class AnaglyphSVGRenderer {
-    constructor(width, height) {
+    constructor(width, height, domElement) {
         this.domElement = document.createElement("div");
         this._svg = document.createElementNS(
             "http://www.w3.org/2000/svg",
@@ -31,6 +31,8 @@ class AnaglyphSVGRenderer {
         this._viewMatrix = new THREE.Matrix4();
         this._viewProjectionMatrix = new THREE.Matrix4();
         this.setSize(width, height);
+        this._leftColor = new THREE.Color(1, 0, 0);
+        this._rightColor = new THREE.Color(0, 0, 1);
         this.autoClear = true;
         this.info = { render: { vertices: 0, faces: 0 } };
     }
@@ -46,6 +48,14 @@ class AnaglyphSVGRenderer {
             default:
                 break;
         }
+    }
+
+    setLeftColor(color) {
+        this._leftColor = color;
+    }
+
+    setRightColor(color) {
+        this._rightColor = color;
     }
 
     setClearColor(color, alpha) {
@@ -201,7 +211,7 @@ class AnaglyphSVGRenderer {
         this.renderCamera(
             _elements,
             this._stereo.cameraL,
-            new THREE.Color(1, 0, 0),
+            this._leftColor,
             this._svg
         );
         this.flushPath(this._svg);
@@ -215,7 +225,7 @@ class AnaglyphSVGRenderer {
         this.renderCamera(
             _elements,
             this._stereo.cameraR,
-            new THREE.Color(0, 0, 1),
+            this._rightColor,
             this._svg
         );
         this.flushPath(this._svg);
@@ -251,7 +261,7 @@ class AnaglyphSVGRenderer {
                 "fill:none;stroke:" +
                 this.getSvgColor(material.color, material.opacity) +
                 ";stroke-width:" +
-                material.linewidth +
+                5 +
                 ";stroke-linecap:" +
                 material.linecap;
             if (material.isLineDashedMaterial) {
