@@ -98,10 +98,10 @@ const TravelingSalesman = (props:Props) => {
                     const height = canvas.current.height;
                     context.save();
                     context.clearRect(0, 0, width, height);
-                    context.fillStyle = '#161011';
+                    context.fillStyle = theme.theme.background;
                     context.fillRect(0, 0, width, height);
                     context.beginPath();
-                    context.strokeStyle = '#f0a5a3';
+                    context.strokeStyle = theme.theme.middleground;
                     context.lineWidth = 5;
                     for(let i=0; i < citiesToDraw.length; i+=2) {
                         context.lineTo(Math.floor(width * citiesToDraw[i] / squareSampling), Math.floor(height * citiesToDraw[i + 1] / squareSampling))    
@@ -122,7 +122,7 @@ const TravelingSalesman = (props:Props) => {
             };
         }
 
-    }, [cities, presenting]);
+    }, [cities, presenting, theme]);
 
     let style = {};
 
