@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { useParams } from "react-router";
 import { useInterval } from "../../Hooks.js";
 import {
@@ -6,10 +6,12 @@ import {
     invertColor,
     getRandomIntegerArray,
     colorToInt,
+    colorToGrey,
 } from "../../tools";
 import { useTimeout } from "../../Hooks.js";
 import Loader from "../../Presentation.js";
 import CSS from "csstype";
+import { ThemeContext } from "../../ThemeContext.js";
 import "./Colors.css";
 
 interface Props {
@@ -25,6 +27,7 @@ const numberColors = 750;
 
 const Colors = (props: Props) => {
     const canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
+    const theme = useContext(ThemeContext);
     const [colors, setColors] = useState([]);
     const [presenting, setPresenting] = useState(props.delay > 0);
 
@@ -81,7 +84,7 @@ const Colors = (props: Props) => {
                 // Wrapping the animation function wiht a timeout makes it
                 // possible to control the fps, without losing the benefits of
                 // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
+                timeoutId = setTimeout(function() {
                     let color = [
                         colors[(n % (colors.length / 3)) * 3],
                         colors[(n % (colors.length / 3)) * 3 + 1],
@@ -95,23 +98,53 @@ const Colors = (props: Props) => {
                     const height = canvas.current.height;
                     context.save();
                     context.clearRect(0, 0, width, height);
-                    context.fillStyle = colorToString(
-                        color[0],
-                        color[1],
-                        color[2]
-                    );
-                    context.fillRect(0, 0, width, height);
-                    context.fillStyle = invertColor(
-                        color[0],
-                        color[1],
-                        color[2]
-                    );
-                    context.fillRect(
-                        (width * (1 - Math.sqrt(2) / 2)) / 2,
-                        (height * (1 - Math.sqrt(2) / 2)) / 2,
-                        width / Math.sqrt(2),
-                        height / Math.sqrt(2)
-                    );
+                    if (theme.theme.name === 'konami') {
+                        let grey = colorToGrey(color[0],
+                            color[1],
+                            color[2]);
+
+                        console.log(`grey: ${grey}`);
+
+                        context.fillStyle = colorToString(
+                            255,
+                            grey,
+                            255
+                        );
+
+                        context.fillRect(0, 0, width, height);
+                        context.fillStyle = colorToString(
+                            255,
+                            255 - grey,
+                            255
+                        );
+                        context.fillRect(
+                            (width * (1 - Math.sqrt(2) / 2)) / 2,
+                            (height * (1 - Math.sqrt(2) / 2)) / 2,
+                            width / Math.sqrt(2),
+                            height / Math.sqrt(2)
+                        );
+
+                    } else {
+                        context.fillStyle = colorToString(
+                            color[0],
+                            color[1],
+                            color[2]
+                        );
+                        context.fillRect(0, 0, width, height);
+                        context.fillStyle = invertColor(
+                            color[0],
+                            color[1],
+                            color[2]
+                        );
+                        context.fillRect(
+                            (width * (1 - Math.sqrt(2) / 2)) / 2,
+                            (height * (1 - Math.sqrt(2) / 2)) / 2,
+                            width / Math.sqrt(2),
+                            height / Math.sqrt(2)
+                        );
+                    };
+
+
                     n += 1;
                     frameId = requestAnimationFrame(animate);
                 }, 1000 / 10);
@@ -125,7 +158,7 @@ const Colors = (props: Props) => {
                 frameId = null;
             };
         }
-    }, [colors, presenting]);
+    }, [colors, presenting, theme]);
 
     let style = {};
 
