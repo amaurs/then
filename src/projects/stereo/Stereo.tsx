@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import './Stereo.css'
 import Loader from '../../Presentation.js';
 import { useTimeout } from '../../Hooks.js';
-import { getRandomInt } from '../../tools';
+import { getRandomInt, colorToGrey } from '../../tools';
 
 import left from '../../assets/left.jpg';
 import right from '../../assets/right.jpg';
+import { ThemeContext } from "../../ThemeContext.js";
 
 import CSS from "csstype";
 
@@ -24,6 +25,7 @@ const Stereo = (props: Props) => {
     const [data, setData] = useState(null);
     const [current, setCurrent] = useState(null);
     const [frames, setFrames] = useState<Array<ImageData> | undefined>(undefined);
+    const theme = useContext(ThemeContext);
 
     const [presenting, setPresenting] = useState(props.delay > 0);
 
@@ -86,8 +88,22 @@ const Stereo = (props: Props) => {
                     const context: CanvasRenderingContext2D = mount.current.getContext(
                         "2d"
                     )!;
-                    context.putImageData(frames[tick % frames.length], 0, 0);
+                    let image = frames[tick % frames.length];
+                    if (theme.theme.name === 'konami') {
+                        let arr = new Uint8ClampedArray(canvas.width * canvas.height * 4);
+                        for (let i = 0; i < arr.length; i++) {
+                            let grey = colorToGrey(image.data[i * 4 + 0], image.data[i * 4 + 1], image.data[i * 4 + 2]);
+                            arr[i * 4 + 0] = 255;
+                            arr[i * 4 + 1] = grey;
+                            arr[i * 4 + 2] = 255;
+                            arr[i * 4 + 3] = image.data[i * 4 + 3];
+                        }
+                        image = new ImageData(arr, image.width, image.height);
+                    }
+                    
+                    context.putImageData(image, 0, 0);
                     tick = tick + 1
+
                     frameId = requestAnimationFrame(animate);
                 }, 1000 / 8);
             }
@@ -101,7 +117,7 @@ const Stereo = (props: Props) => {
             };
         }
 
-    }, [frames, presenting]);
+    }, [frames, presenting, theme]);
 
     let style = {};
     if (props.width > 0 && props.height > 0) {
