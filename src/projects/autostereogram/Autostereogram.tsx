@@ -1,14 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import * as THREE from 'three-full';
 import Board from '../../Board.js';
-
 import './Autostereogram.css';
-
 import { useTimeout } from '../../Hooks.js';
-
 import Loader from '../../Presentation.js';
-
 import CSS from "csstype";
+import { ThemeContext } from "../../ThemeContext.js";
 
 interface Props {
     title: string;
@@ -24,8 +21,10 @@ const Autostereogram = (props: Props) => {
     const autostereogramCanvas = useRef<HTMLCanvasElement>(
         document.createElement("canvas")
     );
+
     let [show, setShow] = useState(true);
     const [presenting, setPresenting] = useState(props.delay > 0);
+    const theme = useContext(ThemeContext);
 
     useTimeout(() => {
         setPresenting(false);
@@ -71,6 +70,8 @@ const Autostereogram = (props: Props) => {
                     board.init();
                     board.randomize();
 
+                    let color = theme.theme.name==='konami'?255:0;
+
                     for (let y = 0; y < frame.height; y++) {
                         for (let x = 0; x < frame.width; x++) {
                             let index = (y * frame.width + x) * 4;
@@ -84,9 +85,11 @@ const Autostereogram = (props: Props) => {
                                 }
                             }
                             if (board.getXY((x % strip_width), y)) {
-                                frame.data[index + 0] = 0;
+
+
+                                frame.data[index + 0] = color;
                                 frame.data[index + 1] = 0;
-                                frame.data[index + 2] = 0;
+                                frame.data[index + 2] = color;
                             } else {
                                 frame.data[index + 0] = 255;
                                 frame.data[index + 1] = 255;
@@ -120,7 +123,7 @@ const Autostereogram = (props: Props) => {
                 material.dispose();
             };
         }
-    }, [show, props.width, props.height, presenting]);
+    }, [show, props.width, props.height, presenting, theme]);
 
     let style = {};
 
