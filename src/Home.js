@@ -1,321 +1,503 @@
-// tttttt  hh  hh  eeeeee  nn   nn
-//   tt    hh  hh  ee      nnn  nn
-//   tt    hhhhhh  eeee    nn n nn
-//   tt    hh  hh  ee      nn  nnn
-//   tt    hh  hh  eeeeee  nn   nn
+import React, {
+    Fragment,
+    useEffect,
+    useState,
+    useContext,
+    onEffect,
+} from "react";
+import {
+    Link,
+    useLocation,
+    Navigate,
+    useNavigate,
+    useParams,
+    Routes,
+    Route,
+    Outlet,
+} from "react-router-dom";
+import Menu from "./Menu.js";
 
-import React, { useEffect, useState, useContext } from 'react';
+import Anaglyph from "./projects/anaglyph/Anaglyph.tsx";
+import Bolero from "./projects/bolero/Bolero.tsx";
+import Quilt from "./projects/quilt/Quilt.tsx";
 
-import Anaglyph from './Anaglyph.js';
-import Conway from './Conway.js';
-import Corrupted from './Corrupted.js';
-import Colors from './Colors.js';
-import Dense from './Dense.js';
-import Distrito from './Distrito.js';
-import Hamburger from './Hamburger';
-import Hilbert from './Hilbert.js';
-import Autostereogram from './Autostereogram.js';
-import Loader from './Loader.js'
-import Mandelbrot from './Mandelbrot.js';
-import Masonry from './Masonry.js';
-import Mirror from './Mirror.js';
-import Bolero from './Bolero.js';
-import NotFound from './NotFound';
-import Reinforcement from './Reinforcement.js';
-import Slider from './Slider.js';
-import Then from './Then.js';
-import TravelingSalesman from './TravelingSalesman';
-import Voronoi from './Voronoi.js';
-import Wigglegram from './Wigglegram.js';
-import ReactGA from 'react-ga';
-import { useSwipeable } from 'react-swipeable';
-import './Home.css';
-import { Switch, Redirect, Route, Link, useLocation, useHistory } from 'react-router-dom';
+import Autostereogram from "./projects/autostereogram/Autostereogram.tsx";
+import Colors from "./projects/colors/Colors.tsx";
+import Distrito from "./projects/distrito/Distrito.tsx";
 
-import { ThemeContext } from './ThemeContext.js';
-import { useInterval } from './Hooks.js';
-import { getRandomInt } from './util.js';
+import Conway from "./projects/conway/Conway.tsx";
+import Dense from "./projects/dense/Dense.tsx";
+import Loom from "./projects/loom/Loom.tsx";
+import Mandelbrot from "./projects/mandelbrot/Mandelbrot.tsx";
+import Photography from "./projects/photography/Photography.tsx";
+import Voronoi from "./projects/voronoi/Voronoi.tsx";
+import Reinforcement from "./projects/reinforcement/Reinforcement.tsx";
+import Stereo from "./projects/stereo/Stereo.tsx";
+import Hilbert from "./projects/hilbert/Hilbert.tsx";
+import Corrupted from "./projects/corrupted/Corrupted.tsx";
 
+import Then from "./Then.tsx";
+import TravelingSalesman from "./projects/travelingsalesman/TravelingSalesman.tsx";
 
-const isProduction = process.env.NODE_ENV === 'production';
+import Loader from "./Loader.js";
+import ReactMarkdown from "react-markdown";
 
-if (isProduction) {
-    ReactGA.initialize(process.env.REACT_APP_GA_ID);
-}
+import "./Home.css";
 
-const mandelbrot = process.env.REACT_APP_MANDELBROT_HOST;
-const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
-const delay = 15000;
+import anaglyph from "./projects/anaglyph/Anaglyph.md";
+import autostereogram from "./projects/autostereogram/Autostereogram.md";
+import colors from "./projects/colors/Colors.md";
+import distrito from "./projects/distrito/Distrito.md";
+import bolero from "./projects/bolero/Bolero.md";
+import dense from "./projects/dense/Dense.md";
+import loom from "./projects/loom/Loom.md";
+import conway from "./projects/conway/Conway.md";
+import photography from "./projects/photography/Photography.md";
+import mandelbrot from "./projects/mandelbrot/Mandelbrot.md";
+import voronoi from "./projects/voronoi/Voronoi.md";
+import hilbert from "./projects/hilbert/Hilbert.md";
+import corrupt from "./projects/corrupted/Corrupted.md";
+import reinforcement from "./projects/reinforcement/Reinforcement.md";
+import quilt from "./projects/quilt/Quilt.md";
+import travelingSalesman from "./projects/travelingsalesman/TravelingSalesman.md";
+
+import about from "./About.md";
+import stereo from "./projects/stereo/Stereo.md";
+
+import { ThemeContext } from "./ThemeContext.js";
+import Slider from "./Slider.js";
+
+import { useTimeout } from "./Hooks.js";
+
 const presentationTime = 0;
-const NotFoundRedirect = () => <Redirect to='/not-found' />;
 
+const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 
-const usePageViews = (pathname) => {
-    let location = useLocation();
+const mapping = {
+    "/bolero": {
+        content: bolero,
+        component: (
+            <Bolero
+                title="bolero"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost + "/boleros/en"}
+            />
+        ),
+    },
+    "/dense": {
+        content: dense,
+        component: (
+            <Dense
+                title="dense"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost}
+            />
+        ),
+    },
 
-    useEffect(() => {
-        if (isProduction) {
+    "/mandelbrot": {
+        content: mandelbrot,
+        component: (
+            <Mandelbrot
+                title="mandelbrot"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
 
-            ReactGA.set({ page: location.pathname }); 
-            ReactGA.pageview(location.pathname);
+    "/voronoi": {
+        content: voronoi,
+        component: (
+            <Voronoi
+                title="voronoi"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
 
-            const fetchMetrics = async () => {
-                try {
-                    let payload = {
-                            method: 'POST',
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                          body: JSON.stringify({state: location.pathname, reward: delay})
-                        }
-                    const response = await fetch(banditHost + "/metric", payload);
-                    console.log(await response.json());
-                } catch (error) {
-                    console.err("Call to metrics endpoint failed.", error)
-                }
-            }
+    "/stereo": {
+        content: stereo,
+        component: (
+            <Stereo
+                title="stereo"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
 
-            let id = setTimeout(() => { 
-                console.log("User has been in " + location.pathname + " for " + delay + " milliseconds.")
-                fetchMetrics();
-            }, delay);
-            return () => clearTimeout(id);
-        }
-    }, [location]);
+    "/hilbert": {
+        content: hilbert,
+        component: (
+            <Hilbert
+                title="hilbert"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
 
-}
+    "/corrupted": {
+        content: corrupt,
+        component: (
+            <Corrupted
+                title="corrupted"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
+    "/reinforcement-learning": {
+        content: reinforcement,
+        component: (
+            <Reinforcement
+                title="reinforcement learning"
+                style={{ height: window.innerHeight + "px" }}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
+    "/anaglyph": {
+        content: anaglyph,
+        component: (
+            <Anaglyph
+                title="anaglyph"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost}
+            />
+        ),
+    },
+    "/traveling-salesman": {
+        content: travelingSalesman,
+        component: (
+            <TravelingSalesman
+                title="traveling salesman"
+                delay={presentationTime}
+                style={{}}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost}
+            />
+        ),
+    },
+    "/conway": {
+        content: conway,
+        component: (
+            <Conway
+                title="conway"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
+    "/photography": {
+        content: photography,
+        component: (
+            <Photography
+                title="photography"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost + "/wigglegrams/jpg"}
+                rows={1}
+            />
+        ),
+    },
 
+    "/1986": {
+        content: distrito,
+        component: (
+            <Distrito
+                title="1986"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
+    "/autostereogram": {
+        content: autostereogram,
+        component: (
+            <Autostereogram
+                title="autostereogram"
+                delay={presentationTime}
+                style={{}}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
+    "/colors": {
+        content: colors,
+        component: (
+            <Colors
+                title="colors"
+                delay={presentationTime}
+                style={{}}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost}
+            />
+        ),
+    },
 
+    "/loom": {
+        content: loom,
+        component: (
+            <Loom
+                title="loom"
+                delay={presentationTime}
+                style={{}}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
 
+    "/quilt": {
+        content: quilt,
+        component: (
+            <Quilt
+                title="quilt"
+                delay={presentationTime}
+                style={{}}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
+};
 
-const Home = (props) => {
+const Project = (props) => {
+    let [markdown, setMarkdown] = useState(null);
 
-    const [isActive, setIsActive] = useState(false);
-    const [width, setWidth] = useState(0);
-    const [height, setHeight] = useState(0);
-    const [names, setNames] = useState([]);
-    const [current, setCurrent] = useState(null);
-    const [pointer, setPointer] = useState(0);
-    const [font, setFont] = useState(null);
-    const history = useHistory();
-
-    const getMapping = () => {
-        return {
-                "/autostereogram":          <Autostereogram title="autostereogram" delay={presentationTime}  width={width} height={height} />,
-                "/1986":                    <Distrito title="1986" delay={presentationTime}  width={width} height={height} />,
-                "/corrupt":                 <Corrupted title="corrupt" delay={presentationTime}  width={width} height={height} />,
-                "/colors":                  <Colors title="colors" delay={presentationTime}  width={width} height={height}  url={banditHost} />,
-                "/dense":                   <Dense title="dense" delay={presentationTime}  width={width} height={height} url={banditHost} />,
-                "/mandelbrot":              <Mandelbrot title="mandelbrot" delay={presentationTime}  width={width} height={height} host={mandelbrot}/>,
-                "/voronoi":                 <Voronoi title="voronoi" delay={presentationTime}  width={width} height={height} />,
-                "/stereo-photography":      <Wigglegram title="stereo photography" delay={presentationTime}  width={width} height={height} />,
-                "/bolero":                  <Bolero title="bolero" delay={presentationTime}  width={width} height={height} url={banditHost + "/boleros/en"} />,
-                "/hilbert":                 <Hilbert title="hilbert" delay={presentationTime}  width={width} height={height} />,
-                "/hilbert/:res":            <Hilbert title="hilbert" delay={presentationTime}  width={width} height={height} />,
-                "/reinforcement-learning":  <Reinforcement title="reinforcement learning" delay={presentationTime}  width={width} height={height} />,
-                "/anaglyph":                <Anaglyph title="anaglyph" delay={presentationTime} width={width} height={height} url={banditHost} />,
-                "/traveling-salesman":      <TravelingSalesman title="traveling salesman" delay={presentationTime}  width={width} height={height} url={banditHost} />,
-                "/conway":                  <Conway title="conway" delay={presentationTime}  width={width} height={height} />,
-                //"/kaleidoscope":            <Mirror title="kaleidoscope" delay={presentationTime}  width={width} height={height} />,
-                "/film":                    <Masonry title="film" delay={presentationTime}  width={width} height={height} url={banditHost + "/wigglegrams/jpg"} rows={1} />,
-            };
-    }
-
-
-    let backgrounds = Object.values(getMapping());
-    const [indexBackground, setIndexBackground] = useState(null);
-
-    const theme = useContext(ThemeContext);
-
-
-    let config = {
-                  delta: 30,                             
-                  preventDefaultTouchmoveEvent: false,   
-                  trackTouch: true,                      
-                  trackMouse: false,                     
-                  rotationAngle: 0,                      
-                }
-
-    //useInterval(() => {
-    //    setIndexBackground((indexBackground + 1) % backgrounds.length);
-    //}, 10000);
-
-
-
-
-    const getMappingDecorated = () => {
-        
-        // let index = getRandomInt(0, backgrounds.length)
-
-        let home = <Then content={getMapping()[indexBackground]} />;
-        return { "/": home, ...getMapping() };
-    }
-
-    const getNames = () => {
-        return Object.entries(getMapping()).filter((element) => 
-              !(element[0] === "/hilbert/:res")
-        );
-    }
-
-    let location = useLocation();
-
-    useEffect(() => {
-        const onWindowResize = () => {
-            setWidth(window.innerWidth);
-            setHeight(window.innerHeight);
-        }
-        setWidth(window.innerWidth);
-        setHeight(window.innerHeight);
-        window.addEventListener("resize", onWindowResize);
-        return () => window.removeEventListener("resize", onWindowResize);
-    }, []);
+    let { slug } = useParams();
 
     useEffect(() => {
         let cancel = false;
-        const fetchOrder = async () => {
+        const fetchMarkdown = async (url) => {
             try {
-                let payload = {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({states: getNames()})
-                };
-                let response = await fetch(banditHost + "/order", payload);
-                let json = await response.json();
+                let response = await fetch(url);
+                let text = await response.text();
                 if (!cancel) {
-                    setNames(json.order);
-                }  
+                    console.log(text);
+                    setMarkdown(text);
+                }
             } catch (error) {
-                console.log("Call to order endpoint failed.", error)
+                console.log("Markdown loading failed.", error);
             }
- 
-        }
-        fetchOrder();
-        return () => cancel=true;
-    }, []);
+        };
+        fetchMarkdown(mapping["/" + slug].content);
 
-    const handlers = useSwipeable({ onSwiped: (eventData) => {
-        
-        if (names.length > 0) {
-            let current = names.map((element, index) =>{ return {name: element[0], index: index}}).filter(element => {
-                return element.name == location.pathname;
-            })[0];
-            if (eventData.dir === 'Left' && current.index < names.length - 1) {
-                let next = names[current.index + 1];
-                setCurrent(next[0])
-            }
-            if (eventData.dir === 'Right'  && current.index > 0) {
-                let prev = names[current.index - 1];
-                setCurrent(prev[0])
-            }
-        }
+        props.setIndexBackground("/" + slug);
 
-    }, ...config });
-
-
-    useEffect(() => {
-        const handleKeyPress = (event) => {
-            if (names.length > 0) {
-                let current = names.map((element, index) =>{ return {name: element[0], index: index}}).filter(element => {
-                    return element.name == location.pathname;
-                })[0];
-
-                return
-
-                if (event.key === 'ArrowRight' && current.index < names.length - 1) {
-                    let next = names[current.index + 1];
-                    setCurrent(next[0])
-                }
-                if (event.key === 'ArrowLeft'  && current.index > 0) {
-                    let prev = names[current.index - 1];
-                    setCurrent(prev[0])
-                }
-                if (event.key === 't') {
-                    console.log(event.key);
-                    //setTheme(theme === themes.dark?themes.light:themes.dark);
-                    theme.toggleTheme()
-
-                }
-            }
-        }
-        window.addEventListener("keydown", handleKeyPress);
-        return () => {
-            window.removeEventListener("keydown", handleKeyPress);
-        }
-    }, [names, location.pathname, theme.theme]);
-
-    useEffect(() => {
-        if (current !== null) {
-            history.push(current);
-        }
-    }, [current]);
-
-    const handleMenu = () => {
-        console.log(isActive);
-        setIsActive(!isActive);
-    }
-
-    const handlerFactory = (name) => {
-        const handleChange = () => {
-            console.log("on it: " + name);
-
-            setIndexBackground(name);
-        }
-        return handleChange;
-    }
-    
-
-    const getMenu = () => {
-        return <ul>{names.map((element, index) => 
-                   <li key={index}>
-                       <Link onClick={handleMenu} 
-                             onMouseEnter={handlerFactory(element[0])}
-                             onMouseLeave={handlerFactory(null)}
-                             to={element[0]}>{element[0].slice(1).replace("-", " ")}
-                       </Link>
-                   </li>)}
-               </ul>;
-    }
-
-    const getBackgroundContentRouter = () => {
-
-        let routes = Object.entries(getMappingDecorated()).map((element, index) => <Route key={index} exact path={element[0]}>
-                {element[1]}
-                </Route>
-                )
-        routes.push(<Route key={404} component={Loader} exact path="/404" ></Route>);
-        routes.push(<Route key={405} component={NotFoundRedirect}><Redirect to="/404" /></Route>);
-        return routes;
-    }
-
-    let menu = <div className={"Menu Home-info-container" + (isActive?" active":"")}
-                    style={{ color: theme.theme.foreground }}>
-                    {getMenu()}
-               </div>;
-
+        return () => (cancel = true);
+    }, [slug]);
 
     return (
-            
-            <div style={{ background: theme.theme.background, 
-                          color: theme.theme.foreground }}>
-                {usePageViews()}
-                <div className="MenuHamburger">
-                    <Hamburger onClick={handleMenu} isActive={isActive} />
-                </div>
-                <div className="Home-slider">
-                    <Slider />
-                </div>
-                    {menu} 
-                <div className="Home Home-info-container">
-                    <Switch>
-                        {getBackgroundContentRouter()}
-                    </Switch>
-                </div>
-                
-            </div>
-        
+        <div
+            style={{
+                width: "0px",
+                height: "100vh",
+                position: "fixed",
+                top: "0",
+                right: "0",
+                background: "white",
+                mixBlendMode: "normal",
+            }}
+        ></div>
     );
-}
+};
+
+const Container = (props) => {
+    let { slug } = useParams();
+
+    return (
+        <Fragment>
+            {props.background}
+            <Outlet />
+            <div className="Home-slider">
+                <nav
+                    style={{
+                        position: "fixed",
+                        right: "0",
+                        top: "0",
+                        zIndex: "200",
+                        margin: "25px",
+                        display: props.showMenu ? "block" : "none",
+                    }}
+                >
+                    <ul>
+                        <li style={{ display: "inline" }}>
+                            <Link
+                                style={{
+                                    fontSize: "24px",
+                                    textDecoration: "none",
+                                }}
+                                to="/"
+                                onClick={() => props.setIndexBackground(null)}
+                            >
+                                then
+                            </Link>
+                        </li>{" "}
+                        <li style={{ display: "inline" }}>
+                            <Link
+                                style={{
+                                    fontSize: "24px",
+                                    textDecoration: "none",
+                                }}
+                                to="/projects"
+                                onClick={() => props.setIndexBackground(null)}
+                            >
+                                projects
+                            </Link>
+                        </li>{" "}
+                    </ul>
+                </nav>
+                <Slider />
+            </div>
+        </Fragment>
+    );
+};
+
+const ProjectMenu = (props) => {
+    return (
+        <Menu
+            options={Object.keys(mapping)}
+            style={{ backgroundColor: "transparent" }}
+            setIndexBackground={props.setIndexBackground}
+        ></Menu>
+    );
+};
+
+const Home = (props) => {
+    let [indexBackground, setIndexBackground] = useState(null);
+    let navigate = useNavigate();
+    let [markdown, setMarkdown] = useState(null);
+    let [delay, setDelay] = useState(1000);
+    let theme = useContext(ThemeContext);
+    let [showMenu, setShowMenu] = useState(true);
+
+    // let debouncedShowMenu = useDebounce(showMenu, 5000);
+
+    useTimeout(() => {
+        if (showMenu) {
+            setShowMenu(false);
+            console.log("Hiding menu.");
+        }
+        setDelay(null);
+    }, [delay]);
+
+    const mouseMoveHandler = (event) => {
+        if (!showMenu) {
+            setShowMenu(true);
+            console.log("Showing menu.");
+            setDelay(2000);
+        }
+    };
+
+    useEffect(() => {
+        let cancel = false;
+        const fetchMarkdown = async (url) => {
+            try {
+                let response = await fetch(url);
+                let text = await response.text();
+                if (!cancel) {
+                    console.log(text);
+                    setMarkdown(text);
+                }
+            } catch (error) {
+                console.log("Markdown loading failed.", error);
+            }
+        };
+        fetchMarkdown(about);
+        return () => (cancel = true);
+    }, []);
+
+    return (
+        <div
+            className="Home Home-info-container"
+            style={{
+                background: theme.theme.background,
+                color: theme.theme.foreground,
+                width: "100vw",
+                height: "100vh",
+            }}
+            onMouseMove={mouseMoveHandler}
+        >
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <Container
+                            background={
+                                indexBackground === null
+                                    ? null
+                                    : mapping[indexBackground].component
+                            }
+                            setIndexBackground={setIndexBackground}
+                            showMenu={showMenu}
+                        />
+                    }
+                >
+                    <Route
+                        path="/"
+                        element={
+                            <Then
+                                keys={Object.keys(mapping)}
+                                setIndexBackground={setIndexBackground}
+                            />
+                        }
+                    />
+                    <Route
+                        path="projects"
+                        element={
+                            <ProjectMenu
+                                setIndexBackground={setIndexBackground}
+                            />
+                        }
+                    />
+                    <Route
+                        path="projects/:slug"
+                        element={
+                            <Project setIndexBackground={setIndexBackground} />
+                        }
+                    />
+                    <Route
+                        path="about"
+                        element={<ReactMarkdown source={markdown} />}
+                    />
+                </Route>
+            </Routes>
+        </div>
+    );
+};
 
 export default Home;
