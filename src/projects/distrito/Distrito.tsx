@@ -1,12 +1,14 @@
-import React, { useRef, useState, useEffect, SyntheticEvent } from "react";
+import React, { useRef, useState, useEffect, SyntheticEvent, useContext } from "react";
 import channelsFirst from "../../assets/first-channels-small.png";
 import channelsSecond from "../../assets/second-channels-small.png";
 import channelsThird from "../../assets/third-channels-small.png";
 import channelMask from "../../assets/mask-small.png";
 import { useTimeout } from "../../Hooks.js";
+import { colorImageData } from "../../tools";
 import Loader from "../../Presentation.js";
 import "./Distrito.css";
 import CSS from "csstype";
+import { ThemeContext } from "../../ThemeContext.js";
 
 import {
     getRandomInt,
@@ -96,6 +98,7 @@ const selectRandomFrom = <T extends unknown>(
 
 const Distrito = (props: Props) => {
     let mount = useRef<HTMLCanvasElement>(document.createElement("canvas"));
+    const theme = useContext(ThemeContext);
     let [multiImage, setMultiImage] = useState<MultichannelImage | undefined>(
         undefined
     );
@@ -142,7 +145,7 @@ const Distrito = (props: Props) => {
             getData(channelsSecond),
             getData(channelsThird),
             getData(channelMask),
-        ]).then(function (values: Array<ImageData>) {
+        ]).then(function(values: Array<ImageData>) {
             if (!cancel) {
                 let [first, second, third, fourth] = values;
                 let image = new MultichannelImage(first.width, first.height);
@@ -194,7 +197,7 @@ const Distrito = (props: Props) => {
                 // Wrapping the animation function wiht a timeout makes it
                 // possible to control the fps, without losing the benefits of
                 // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
+                timeoutId = setTimeout(function() {
                     const realContext: CanvasRenderingContext2D = mount.current.getContext(
                         "2d"
                     )!;
@@ -218,7 +221,7 @@ const Distrito = (props: Props) => {
                     multiImage!.channels.forEach(
                         (channel: Uint8ClampedArray, index: number) => {
                             context.putImageData(
-                                multiImage!.getGrayImageData(index),
+                                colorImageData(multiImage!.getGrayImageData(index), theme.theme.colorMatrix),
                                 index * multiImage!.width,
                                 0
                             );
@@ -255,23 +258,22 @@ const Distrito = (props: Props) => {
                             bands[map.color] = map.position;
                             mergedBands[map.color] = map.position;
                             context.putImageData(
-                                multiImage!.getMixImageData(bands),
+                                colorImageData(multiImage!.getMixImageData(bands), theme.theme.colorMatrix),
                                 map.position * multiImage!.width,
                                 (1 + index) * multiImage!.height
                             );
                         });
 
                         context.putImageData(
-                            multiImage!.getMixImageData(mergedBands),
+                            colorImageData(multiImage!.getMixImageData(mergedBands), theme.theme.colorMatrix),
                             multiImage!.channels.length * multiImage!.width,
                             (1 + index) * multiImage!.height
                         );
                     });
-
                     realContext.drawImage(offscreen, 0, 0);
 
                     frameId = requestAnimationFrame(animate);
-                }, 1000 / 12);
+                }, 1000 / 6);
             };
 
             let frameId: number | null = requestAnimationFrame(animate);
@@ -282,7 +284,7 @@ const Distrito = (props: Props) => {
                 frameId = null;
             };
         }
-    }, [multiImage, presenting]);
+    }, [multiImage, presenting, theme]);
 
     let style = { width: props.width + "px" };
 
