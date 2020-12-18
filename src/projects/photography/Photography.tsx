@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import './Photography.css'
 
 import Loader from '../../Presentation.js';
 
 import { useTimeout } from '../../Hooks.js';
 import { getRandomInt } from '../../tools';
+import { ThemeContext } from "../../ThemeContext.js";
 
 import CSS from "csstype";
 
@@ -28,6 +29,7 @@ const Photography = (props: Props) => {
     const [data, setData] = useState<Array<Array<Image>>>([[]]);
     const [current, setCurrent] = useState(null);
     const [presenting, setPresenting] = useState(props.delay > 0);
+    const theme = useContext(ThemeContext);
 
     useTimeout(() => {
         setPresenting(false);
@@ -87,7 +89,19 @@ const Photography = (props: Props) => {
     }, [props.width, props.height, presenting]);
 
     const createRow = (images: Array<Image>) => {
-        return images.map((image, index) => <img className="Photography-image" style={{ height: (props.height * .75) / props.rows }} src={image.url} key={index} />);
+        return images.map((image, index) => <div className="Photography-image" style={{ height: (props.height * .75) / props.rows, width: props.width }} key={index}>
+            <svg width="100%" height="100%">
+                <defs>
+                    <filter id="color">
+                        <feColorMatrix
+                            type="matrix"
+                            values={theme.theme.colorMatrix.join(" ")} />
+                    </filter>
+                </defs>
+
+                <image href={image.url} width="100%" height="100%" filter="url(#color)" />
+            </svg>
+        </div>);
     }
 
     let rows = data.map((row, index) => <div className="Photography-row" key={index}>{createRow(row)}</div>);
