@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import './Stereo.css'
 import Loader from '../../Presentation.js';
 import { useTimeout } from '../../Hooks.js';
-import { getRandomInt, colorToGrey } from '../../tools';
+import { getRandomInt, colorImageData } from '../../tools';
 
 import left from '../../assets/left.jpg';
 import right from '../../assets/right.jpg';
@@ -34,36 +34,40 @@ const Stereo = (props: Props) => {
     }, props.delay)
 
     useEffect(() => {
-        let cancel = false;
-        const getData = (src: string): Promise<ImageData> => {
-            return new Promise((resolve, reject) => {
-                let img = new Image();
-                img.onload = (event: Event) => {
-                    let image = event.currentTarget as HTMLImageElement;
-                    let canvas = document.createElement('canvas');
-                    canvas.width = image.width;
-                    canvas.height = image.height;
-                    const context: CanvasRenderingContext2D = canvas.getContext(
-                        "2d"
-                    )!;
-                    context.drawImage(image, 0, 0);
-                    resolve(context.getImageData(0, 0, image.width, image.height))
+        if (theme) {
+            let cancel = false;
+            const getData = (src: string): Promise<ImageData> => {
+                return new Promise((resolve, reject) => {
+                    let img = new Image();
+                    img.onload = (event: Event) => {
+                        let image = event.currentTarget as HTMLImageElement;
+                        let canvas = document.createElement('canvas');
+                        canvas.width = image.width;
+                        canvas.height = image.height;
+                        const context: CanvasRenderingContext2D = canvas.getContext(
+                            "2d"
+                        )!;
+                        context.drawImage(image, 0, 0);
+                        resolve(context.getImageData(0, 0, image.width, image.height))
+                    }
+                    img.onerror = reject
+                    img.src = src
+                });
+            }
+
+            Promise.all([getData(left), getData(right)]).then(function(frames: Array<ImageData>) {
+                if (!cancel) {
+                    setFrames(frames.map((frame) => {
+                        return colorImageData(frame, theme.theme.colorMatrix);
+                    }));
+                    console.log("Promise is fullfiled.");
                 }
-                img.onerror = reject
-                img.src = src
             });
+            return () => { cancel = true };
         }
 
-        Promise.all([getData(left), getData(right)]).then(function(frames: Array<ImageData>) {
-            if (!cancel) {
-                setFrames(frames);
-                console.log("Promise is fullfiled.");
-            }
-        });
-        return () => { cancel = true };
 
-    }, []);
-
+    }, [theme]);
 
     useEffect(() => {
 
@@ -88,20 +92,7 @@ const Stereo = (props: Props) => {
                     const context: CanvasRenderingContext2D = mount.current.getContext(
                         "2d"
                     )!;
-                    let image = frames[tick % frames.length];
-                    if (theme.theme.name === 'konami') {
-                        let arr = new Uint8ClampedArray(canvas.width * canvas.height * 4);
-                        for (let i = 0; i < arr.length; i++) {
-                            let grey = colorToGrey(image.data[i * 4 + 0], image.data[i * 4 + 1], image.data[i * 4 + 2]);
-                            arr[i * 4 + 0] = 255;
-                            arr[i * 4 + 1] = grey;
-                            arr[i * 4 + 2] = 255;
-                            arr[i * 4 + 3] = image.data[i * 4 + 3];
-                        }
-                        image = new ImageData(arr, image.width, image.height);
-                    }
-                    
-                    context.putImageData(image, 0, 0);
+                    context.putImageData(frames[tick % frames.length], 0, 0);
                     tick = tick + 1
 
                     frameId = requestAnimationFrame(animate);
@@ -117,7 +108,7 @@ const Stereo = (props: Props) => {
             };
         }
 
-    }, [frames, presenting, theme]);
+    }, [frames, presenting]);
 
     let style = {};
     if (props.width > 0 && props.height > 0) {

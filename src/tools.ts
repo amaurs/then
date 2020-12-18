@@ -64,3 +64,33 @@ export const getBrightness = (red: number, green: number, blue: number): number 
     return (red * 0.3 + green * 0.59 + blue * 0.11) / 255.0;
 }
 
+export const colorToGrey = (red: number, green: number, blue: number): number => {
+    return Math.round(0.21 * red + 0.71 * green + 0.07 * blue);
+}
+
+export const colorMatrix = (color: Array<number>, matrix: Array<number>): Uint8ClampedArray => {
+
+    let rotatedColor = new Uint8ClampedArray(4);
+
+    rotatedColor[0] = matrix[0] * color[0] + matrix[1] * color[1] + matrix[2] * color[2] + matrix[3] * color[3] + matrix[4] * 255;
+    rotatedColor[1] = matrix[5] * color[0] + matrix[6] * color[1] + matrix[7] * color[2] + matrix[8] * color[3] + matrix[9] * 255;
+    rotatedColor[2] = matrix[10] * color[0] + matrix[11] * color[1] + matrix[12] * color[2] + matrix[13] * color[3] + matrix[14] * 255;
+    rotatedColor[3] = matrix[15] * color[0] + matrix[16] * color[1] + matrix[17] * color[2] + matrix[18] * color[3] + matrix[19] * 255;
+
+    return rotatedColor;
+}
+
+export const colorImageData = (image: ImageData, matrix: Array<number>): ImageData => {
+    let arr = new Uint8ClampedArray(image.data.length);
+
+    for (let i = 0; i < arr.length; i++) {
+         let rotatedColor = colorMatrix([image.data[i * 4 + 0], image.data[i * 4 + 1], image.data[i * 4 + 2], image.data[i * 4 + 3]], matrix);
+         arr[i * 4 + 0] = rotatedColor[0];
+         arr[i * 4 + 1] = rotatedColor[1];
+         arr[i * 4 + 2] = rotatedColor[2];
+         arr[i * 4 + 3] = rotatedColor[3];
+     }
+
+     return new ImageData(arr, image.width, image.height);
+
+}
