@@ -6,6 +6,7 @@ import React, {
     useEffect,
 } from "react";
 import { useInterval, useTimeout } from "../../Hooks.js";
+import { colorMatrix } from '../../tools';
 import Board from "../../Board.js";
 import "./Conway.css";
 import Loader from "../../Presentation.js";
@@ -41,6 +42,7 @@ const Conway = (props: Props) => {
     const [offset, setOffset] = useState([0, 0]);
     const square = [8 * squareSize, 3 * squareSize];
     const [presenting, setPresenting] = useState(props.delay > 0);
+    const baseColor = [240, 165, 163, 1.0];
 
     useTimeout(() => {
         setPresenting(false);
@@ -67,10 +69,11 @@ const Conway = (props: Props) => {
                     //                                     position[1] / squareSize,
                     //                                     square[0] / squareSize,
                     //                                     square[1] / squareSize);
+                    let colorProcessed = colorMatrix(baseColor, theme.theme.colorMatrix)
                     board.printContext(
                         context,
                         squareSize,
-                        theme.theme.foreground
+                        `rgba(${colorProcessed[0]}, ${colorProcessed[1]}, ${colorProcessed[2]}, ${colorProcessed[3]})`
                     );
                     frameId = requestAnimationFrame(animate);
                 }, 1000 / 60);
@@ -84,7 +87,7 @@ const Conway = (props: Props) => {
                 frameId = null;
             };
         }
-    }, [presenting]);
+    }, [presenting, theme]);
 
     const handleOnMouseDown = (e: MouseEvent) => {
         let rect = ref.current.getBoundingClientRect();
