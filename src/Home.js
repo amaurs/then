@@ -405,6 +405,9 @@ const Home = (props) => {
     let theme = useContext(ThemeContext);
     let [showMenu, setShowMenu] = useState(true);
 
+    let [konami, setKonami] = useState(0);
+    let code = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+
     // let debouncedShowMenu = useDebounce(showMenu, 5000);
 
     useTimeout(() => {
@@ -424,6 +427,25 @@ const Home = (props) => {
     };
 
     useEffect(() => {
+
+        const handleKeyPress = (event) => {
+            if (event.keyCode === code[konami] && konami + 1 < code.length) {
+                setKonami(konami + 1);
+            } else {
+                if (konami + 1 === code.length) {
+                    theme.toggleTheme("konami");
+                }
+                setKonami(0);
+            }
+        }
+
+        window.addEventListener("keydown", handleKeyPress);
+        return () => {
+            window.removeEventListener("keydown", handleKeyPress);
+        }
+    }, [konami]);
+
+    useEffect(() => {
         let cancel = false;
         const fetchMarkdown = async (url) => {
             try {
@@ -438,7 +460,9 @@ const Home = (props) => {
             }
         };
         fetchMarkdown(about);
-        return () => (cancel = true);
+        return () => {
+            cancel = true;
+        }
     }, []);
 
     return (

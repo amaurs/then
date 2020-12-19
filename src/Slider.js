@@ -16,7 +16,7 @@ const Slider = () => {
                      margin: "25px"}}
              className="theme-switch-wrapper">
             <label className="theme-switch" >
-                <input type="checkbox" id="checkbox" onChange={theme.toggleTheme} checked={theme.theme.slider} />
+                <input type="checkbox" id="checkbox" onChange={ e => theme.toggleTheme() } checked={theme.theme.slider} />
                 <div className="slider round"></div>
             </label>
         </div>

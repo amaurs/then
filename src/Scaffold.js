@@ -9,9 +9,12 @@ const Then = () => {
     localStorage.clear();
     const [theme, setTheme] = useLocalStorage("theme", themes.light);
 
-    const toggleTheme = () => {
-        console.log(theme);
-        setTheme(theme.name !== "konami" ? (theme.name === "dark" ? themes.light : themes.dark): themes.light);
+    const toggleTheme = (themeName) => {
+        if (themeName === "konami") {
+            setTheme(themes.konami);
+        } else {
+            setTheme(theme.name !== "light" ? themes.light : themes.dark);
+        }
     };
 
     return (
