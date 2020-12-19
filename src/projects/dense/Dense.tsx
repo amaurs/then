@@ -3,7 +3,8 @@ import { useInterval, useTimeout } from "../../Hooks.js";
 
 import {
     intToColor,
-    colorToInt, randomColor, invertColor, colorToString, getRandomIntegerArray
+    colorToInt, randomColor, invertColor, colorToString, getRandomIntegerArray,
+    colorMatrix,
 } from '../../tools';
 import Loader from "../../Presentation.js";
 import "./Dense.css";
@@ -33,6 +34,8 @@ const Dense = (props: Props) => {
         setDelay(0);
     }, props.delay);
 
+    const color = [240, 165, 163, 1.0];
+
     useEffect(() => {
         if (!presenting) {
             let n = 0;
@@ -45,9 +48,8 @@ const Dense = (props: Props) => {
                 const height = canvas.current.height;
 
                 context.beginPath();
-                //context.strokeStyle = randomColor();
-                //context.strokeStyle = intToColor(n * 10000);
-                context.strokeStyle = theme.theme.foreground;
+                let colorProcessed = colorMatrix(color, theme.theme.colorMatrix);
+                context.strokeStyle = `rgba(${colorProcessed[0]}, ${colorProcessed[1]}, ${colorProcessed[2]}, ${colorProcessed[3]})`;
 
                 context.lineWidth = 5;
                 context.globalAlpha = 0.5;
@@ -71,7 +73,7 @@ const Dense = (props: Props) => {
                 frameId = null;
             };
         }
-    }, [presenting]);
+    }, [presenting, theme]);
 
     let style = {};
 
