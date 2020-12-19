@@ -3,6 +3,8 @@ import { useTimeout } from "../../Hooks.js";
 import Board from "../../Board.js";
 import "./Loom.css";
 import CSS from "csstype";
+import { ThemeContext } from "../../ThemeContext.js";
+import { colorMatrix } from "../../tools";
 
 const canvasSize = 1000;
 const squareSize = 10;
@@ -17,6 +19,7 @@ interface Props {
 
 const Loom = (props: Props) => {
     let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
+    const theme = useContext(ThemeContext);
     const [drag, setDrag] = useState(false);
     const [position, setPosition] = useState([
         48 * squareSize,
@@ -24,6 +27,11 @@ const Loom = (props: Props) => {
     ]);
     const [offset, setOffset] = useState([0, 0]);
     const square = [8 * squareSize, 3 * squareSize];
+
+    const threadingColorBase = [0, 255, 0, 1.0];
+    const treadlingColorBase = [0, 0, 255, 1.0];
+    const tieupColorBase = [0, 0, 0, 1.0];
+    const weaveColorBase = [255, 0, 0, 1.0];
 
     useEffect(() => {
         let timeoutId: any;
@@ -65,29 +73,31 @@ const Loom = (props: Props) => {
                 let weave = treadling
                     .multiply(tieup.transpose())
                     .multiply(threading);
-
-                threading.printContext(context, squareSize, "black");
+                let threadingColor = colorMatrix(threadingColorBase, theme.theme.colorMatrix);
+                threading.printContext(context, squareSize, `rgba(${threadingColor[0]}, ${threadingColor[1]}, ${threadingColor[2]}, ${threadingColor[3]})`);
+                let treadlingColor = colorMatrix(treadlingColorBase, theme.theme.colorMatrix);
                 treadling.printContextOffset(
                     context,
                     squareSize,
                     canvasSize / squareSize - treadlingSize,
                     threadingSize,
-                    "black"
+                    `rgba(${treadlingColor[0]}, ${treadlingColor[1]}, ${treadlingColor[2]}, ${treadlingColor[3]})`
                 );
+                let tieupColor = colorMatrix(tieupColorBase, theme.theme.colorMatrix);
                 tieup.printContextOffset(
                     context,
                     squareSize,
                     canvasSize / squareSize - treadlingSize,
                     0,
-                    "green"
+                    `rgba(${tieupColor[0]}, ${tieupColor[1]}, ${tieupColor[2]}, ${tieupColor[3]})`
                 );
-
+                let weaveColor = colorMatrix(weaveColorBase, theme.theme.colorMatrix);
                 weave.printContextOffset(
                     context,
                     squareSize,
                     0,
                     threadingSize,
-                    "red"
+                    `rgba(${weaveColor[0]}, ${weaveColor[1]}, ${weaveColor[2]}, ${weaveColor[3]})`
                 );
                 frameId = requestAnimationFrame(animate);
             }, 1000 / 60);
@@ -100,7 +110,7 @@ const Loom = (props: Props) => {
             clearTimeout(timeoutId);
             frameId = null;
         };
-    }, []);
+    }, [theme]);
 
     let style = {};
     if (props.width > 0 && props.height > 0) {
