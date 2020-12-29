@@ -4,44 +4,10 @@ import "./Corrupted.css";
 import escudo from "../../assets/escudo.png";
 import { useTimeout } from "../../Hooks.js";
 import Loader from "../../Presentation.js";
-
+import { colorMatrixShader } from "../../shaders";
 
 import { ThemeContext } from "../../ThemeContext.js";
 import CSS from "csstype";
-
-
-let vertexShader = `
-varying vec2 vUv;
-void main() {
-    vUv = uv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-}
-`;
-let fragmentShader = `
-uniform bool invert;
-uniform bool konami;
-uniform vec3 color;
-uniform sampler2D tDiffuse;
-varying vec2 vUv;
-
-void main() {
-    vec4 texel = texture2D( tDiffuse, vUv );
-    if (konami) {
-        float grey = (0.21 * texel.r + 0.71 * texel.g + 0.07 * texel.b);
-        if (invert) {
-            gl_FragColor =  1.0 - vec4(color.r - grey, color.g - grey, color.b - grey, texel.a);
-        } else {
-            gl_FragColor = vec4(color.r - grey, color.g - grey, color.b - grey, texel.a);
-        }
-    } else {
-        if (invert) {
-            gl_FragColor = 1.0 - vec4(texel.r, texel.g, texel.b, texel.a);
-        } else {
-            gl_FragColor = vec4(texel.r, texel.g, texel.b, texel.a);
-        }
-    }
-}
-`;
 
 
 interface Props {
@@ -50,12 +16,6 @@ interface Props {
     style: CSS.Properties;
     width: number;
     height: number;
-}
-
-interface Shader {
-    uniforms: object;
-    vertexShader: string;
-    fragmentShader: string;
 }
 
 
@@ -90,36 +50,21 @@ const Corrupted = (props: Props) => {
                 antialias: true,
             });
             renderer.setClearColor(0xffffff, 1);
-
-            //renderer.setPixelRatio( window.devicePixelRatio );
             renderer.setSize(props.width, props.height);
 
-            const composer = new THREE.EffectComposer(renderer);
-            composer.addPass(new THREE.RenderPass(scene, camera));
+            const glitchPass = new THREE.GlitchPass();
+            glitchPass.goWild = false
 
-            let g = new THREE.GlitchPass();
-
-            g.goWild = false
-
-            composer.addPass(g);
-
-            const customShader: Shader = {
-                uniforms: {
-                    "tDiffuse": { value: null }, 
-                    "invert": { value: theme.theme.name !== 'light' }, 
-                    "konami": { value: theme.theme.name === 'konami' },
-                    "color": { value: new THREE.Color(0.0, 1.0, 0.0)}
-                },
-                vertexShader: vertexShader,
-                fragmentShader: fragmentShader,
-            }
-
-            const magentaShader = new THREE.ShaderPass(customShader);
-
-            composer.addPass(magentaShader);
-
-            let copyPass = new THREE.ShaderPass(THREE.CopyShader);
+            const magentaPass = new THREE.ShaderPass(colorMatrixShader(theme.theme.colorMatrix));
+            
+            const copyPass = new THREE.ShaderPass(THREE.CopyShader);
             copyPass.renderToScreen = true;
+
+            const composer = new THREE.EffectComposer(renderer);
+
+            composer.addPass(new THREE.RenderPass(scene, camera));
+            composer.addPass(glitchPass);
+            composer.addPass(magentaPass);
             composer.addPass(copyPass);
 
             const animate = () => {
