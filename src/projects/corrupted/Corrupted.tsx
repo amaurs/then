@@ -18,7 +18,6 @@ interface Props {
     height: number;
 }
 
-
 const Corrupted = (props: Props) => {
     let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
     const [presenting, setPresenting] = useState(props.delay > 0);
@@ -49,7 +48,7 @@ const Corrupted = (props: Props) => {
                 canvas: canvas.current,
                 antialias: true,
             });
-            renderer.setClearColor(0xffffff, 1);
+            renderer.setClearColor(0xffffff, 1.0);
             renderer.setSize(props.width, props.height);
 
             const glitchPass = new THREE.GlitchPass();
@@ -63,13 +62,21 @@ const Corrupted = (props: Props) => {
             const composer = new THREE.EffectComposer(renderer);
 
             composer.addPass(new THREE.RenderPass(scene, camera));
+            
             composer.addPass(glitchPass);
             composer.addPass(magentaPass);
             composer.addPass(copyPass);
+            
+            let timeoutId: any;
 
             const animate = () => {
-                requestAnimationFrame(animate);
-                composer.render();
+                // Wrapping the animation function wiht a timeout makes it
+                // possible to control the fps, without losing the benefits of
+                // requestAnimationFrame.
+                timeoutId = setTimeout(function () {
+                    composer.render();
+                    frameId = requestAnimationFrame(animate);
+                }, 0);
             };
 
             let frameId: number | null = requestAnimationFrame(animate);
