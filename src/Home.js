@@ -32,6 +32,7 @@ import Mandelbrot from "./projects/mandelbrot/Mandelbrot.tsx";
 import Photography from "./projects/photography/Photography.tsx";
 import Voronoi from "./projects/voronoi/Voronoi.tsx";
 import Reinforcement from "./projects/reinforcement/Reinforcement.tsx";
+import Penrose from "./projects/penrose/Penrose.tsx";
 import Stereo from "./projects/stereo/Stereo.tsx";
 import Hilbert from "./projects/hilbert/Hilbert.tsx";
 import Corrupted from "./projects/corrupted/Corrupted.tsx";
@@ -57,8 +58,9 @@ import mandelbrot from "./projects/mandelbrot/Mandelbrot.md";
 import voronoi from "./projects/voronoi/Voronoi.md";
 import hilbert from "./projects/hilbert/Hilbert.md";
 import corrupt from "./projects/corrupted/Corrupted.md";
-import reinforcement from "./projects/reinforcement/Reinforcement.md";
+import penrose from "./projects/penrose/Penrose.md";
 import quilt from "./projects/quilt/Quilt.md";
+import reinforcement from "./projects/reinforcement/Reinforcement.md";
 import travelingSalesman from "./projects/travelingsalesman/TravelingSalesman.md";
 
 import about from "./About.md";
@@ -74,6 +76,18 @@ const presentationTime = 0;
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 
 const mapping = {
+    "/penrose": {
+        content: penrose,
+        component: (
+            <Penrose
+                title="penrose"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
     "/bolero": {
         content: bolero,
         component: (
@@ -160,8 +174,8 @@ const mapping = {
                 title="corrupted"
                 style={{}}
                 delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={1080}
+                height={1080}
             />
         ),
     },

@@ -1,5 +1,5 @@
 import { Environment } from './environment.js';
-import Vector from './vector.js';
+import Vector from '../util/vector';
 import { randomElement } from './util.js';
 
 const plan  =           ["#########################",

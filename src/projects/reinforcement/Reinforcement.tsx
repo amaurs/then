@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Environment, map } from '../../rl/windyGridworld.js';
 import Controller from '../../rl/controller';
 import { Agent } from '../../rl/sarsaAgent.js';
 import './Reinforcement.css';
 import { useTimeout } from '../../Hooks.js';
 import Loader from '../../Presentation.js';
+
+import { ThemeContext } from "../../ThemeContext.js";
 
 
 import CSS from "csstype";
@@ -38,12 +40,21 @@ function getIcon(key: string): string {
 }
 
 export default function Reinforcement(props: Props) {
+
+    const theme = useContext(ThemeContext);
     const squareSize = props.width / props.height < 1 ? props.height / map.height / 2 : props.width / map.width / 2;
-    const style = {
+    let style = {
         height: squareSize + "px",
         width: squareSize + "px",
-        fontSize: (squareSize * 0.85) + "px"
+        fontSize: (squareSize * 0.85) + "px",
+        color: "magenta", 
+        textShadow: "0 0 0 magenta"
     };
+
+    if (theme.theme.name == 'konami') {
+       style = { ...style, color: "transparent", textShadow: "0 0 0 magenta"}
+    }
+
     const [board, setBoard] = useState(controller.toBoard());
     const requestRef = useRef<number | undefined>();
     const [presenting, setPresenting] = useState(props.delay > 0);

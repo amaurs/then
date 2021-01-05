@@ -1,5 +1,5 @@
 import { Environment } from './environment.js';
-import Vector from './vector.js';
+import Vector from '../util/vector';
 
 const ACTIONS = [new Vector(0, 1), //DOWN
                  new Vector(0, -1), //UP
