@@ -202,3 +202,187 @@ export const ditherErrorShader = (width: number, height: number): Shader => {
             }`,
     }
 }
+
+export interface Prediction { 
+    topLeft: Array<number>;
+    bottomRight: Array<number>;
+}
+
+export const maskShader = (width: number, height: number, imageWidth: number, imageHeight: number, predictions: Array<Prediction>): Shader => {
+    
+
+    let rectangles = predictions.map((prediction: Prediction) => {
+        const topLeftX = prediction.topLeft[0];
+        const topLeftY = prediction.topLeft[1];
+        const bottomRightX = prediction.bottomRight[0];
+        const bottomRightY = prediction.bottomRight[1];
+        let maskWidth = (bottomRightX - topLeftX) / imageWidth;
+        let maskHeight = (bottomRightY - topLeftY) / imageHeight;
+        let maskX = topLeftX / imageWidth;
+        let maskY = topLeftY / imageHeight;
+        return `Rectangle(vec2(${maskWidth}, ${maskHeight}), uv, vec2(${maskX - 0.5}, ${0.5 - maskY - maskHeight}), maskColor)`;
+
+    });
+
+    return {
+        uniforms: {
+            tDiffuse: { value: null },
+            uPlaneRatio: { value: width / height }
+
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+            }`,
+        fragmentShader: `
+            uniform sampler2D tDiffuse;
+            uniform float uPlaneRatio;
+            varying vec2 vUv;
+
+            vec3 Rectangle(in vec2 size, in vec2 st, in vec2 p, in vec3 c) {
+                float top = step(1. - (p.y + size.y), 1. - st.y);
+                float right = step(1. - (p.x + size.x), 1. - st.x);
+                float bottom = step(p.y, st.y);
+                float left = step(p.x, st.x);
+                return top * right * bottom * left * c;
+            }
+
+            
+            void main() {
+                vec2 uv = vUv - 0.5;
+                uv.x *= uPlaneRatio;
+                vec3 color = vec3(uv.x, uv.y, 0.0);
+
+                vec2 maskPosition2 = vec2(0.0, 0.0);
+                vec3 maskColor =  vec3(0.0, 1.0, 1.0);
+                vec3 mask = ${rectangles.join(" + ")};
+                vec3 frontImage = texture2D(tDiffuse, uv * 1.0 + 0.5).rgb;
+                color = (1.0 - mask) * frontImage;
+                gl_FragColor = vec4(color, 1.0);
+                
+            }`,
+    }
+}
+
+
+
+
+export const glitchShader = (width: number, height: number, imageWidth: number, imageHeight: number, predictions: Array<Prediction>): Shader => {
+    
+    let rectangles = predictions.map((prediction: Prediction) => {
+        const topLeftX = prediction.topLeft[0];
+        const topLeftY = prediction.topLeft[1];
+        const bottomRightX = prediction.bottomRight[0];
+        const bottomRightY = prediction.bottomRight[1];
+        let maskWidth = (bottomRightX - topLeftX) / imageWidth;
+        let maskHeight = (bottomRightY - topLeftY) / imageHeight;
+        let maskX = topLeftX / imageWidth;
+        let maskY = topLeftY / imageHeight;
+        return `Rectangle(vec2(${maskWidth}, ${maskHeight}), uv, vec2(${maskX - 0.5}, ${0.5 - maskY - maskHeight}))`;
+
+    });
+
+    return {
+        uniforms: {
+            "tDiffuse": { value: null },
+            "tDisp": { value: null }, // displacement texture for digital glitch squares
+            "snowAmount": { value: 0.08 },
+            "offsetAmount": { value: 0.08 },
+            "angle": { value: 0.02 },
+            "seed": { value: 0.02 },
+            "seedX": { value: 0.02 }, // -1,1
+            "seedY": { value: 0.02 }, // -1,1
+            "distortionX": { value: 0.5 },
+            "distortionY": { value: 0.5 },
+            "colS": { value: 0.05 },
+            "uPlaneRatio": { value: width / height }
+
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+            }`,
+        fragmentShader: `
+            uniform sampler2D tDiffuse;
+            uniform sampler2D tDisp;
+        
+            uniform float snowAmount;
+            uniform float offsetAmount;
+            uniform float angle;
+            uniform float seed;
+            uniform float seedX;
+            uniform float seedY;
+            uniform float distortionX;
+            uniform float distortionY;
+            uniform float colS;
+            
+            varying vec2 vUv;
+
+            uniform float uPlaneRatio;
+
+            float Rectangle(in vec2 size, in vec2 st, in vec2 p) {
+                float top = step(1. - (p.y + size.y), 1. - st.y);
+                float right = step(1. - (p.x + size.x), 1. - st.x);
+                float bottom = step(p.y, st.y);
+                float left = step(p.x, st.x);
+                return top * right * bottom * left;
+            }
+        
+            float rand(vec2 co){
+                return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+            }
+                
+            void main() {
+                vec2 uv = vUv - 0.5;
+                //uv.x *= uPlaneRatio;
+                vec3 color = vec3(uv.x, uv.y, 0.0);
+
+                vec2 maskPosition2 = vec2(0.0, 0.0);
+                float mask = ${rectangles.join(" + ")};
+
+
+
+
+                if(mask > 0.5) {
+                    vec2 p = vUv * 1.0;
+                    //p.x *= uPlaneRatio;
+                    float xs = floor(gl_FragCoord.x / 0.5);
+                    float ys = floor(gl_FragCoord.y / 0.5);
+                //based on staffantans glitch shader for unity https://github.com/staffantan/unityglitch
+                    vec4 normal = texture2D (tDisp, p*seed*seed);
+                    if(p.y < distortionX + colS && p.y > distortionX - colS * seed) {
+                        if(seedX > 0.){
+                            p.y = 1. - (p.y + distortionY);
+                        }
+                        else {
+                            p.y = distortionY;
+                        }
+                    }
+                    if(p.x<distortionY+colS && p.x>distortionY-colS*seed) {
+                        if(seedY > 0.){
+                            p.x = distortionX;
+                        }
+                        else {
+                            p.x = 1. - (p.x + distortionX);
+                        }
+                    }
+                    p.x += normal.x * seedX * (seed / 5.);
+                    p.y += normal.y * seedY * (seed / 5.);
+                    vec2 offset = offsetAmount * vec2(cos(angle), sin(angle));
+                    vec4 cr = texture2D(tDiffuse, p + offset);
+                    vec4 cga = texture2D(tDiffuse, p);
+                    vec4 cb = texture2D(tDiffuse, p - offset);
+                    vec4 snow = 200. * snowAmount * vec4(rand(vec2(xs * seed, ys * seed*50.)) * 0.2);
+                    gl_FragColor = vec4(cr.r, cga.g, cb.b, cga.a) + snow;
+                }
+                else {
+                    gl_FragColor = texture2D(tDiffuse, uv * 1.0 + 0.5);
+                }
+                
+            }`,
+    }
+}

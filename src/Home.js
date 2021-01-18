@@ -36,6 +36,7 @@ import Penrose from "./projects/penrose/Penrose.tsx";
 import Stereo from "./projects/stereo/Stereo.tsx";
 import Hilbert from "./projects/hilbert/Hilbert.tsx";
 import Corrupted from "./projects/corrupted/Corrupted.tsx";
+import Nostalgia from "./projects/nostalgia/Nostalgia.tsx";
 
 import Then from "./Then.tsx";
 import TravelingSalesman from "./projects/travelingsalesman/TravelingSalesman.tsx";
@@ -62,6 +63,7 @@ import penrose from "./projects/penrose/Penrose.md";
 import quilt from "./projects/quilt/Quilt.md";
 import reinforcement from "./projects/reinforcement/Reinforcement.md";
 import travelingSalesman from "./projects/travelingsalesman/TravelingSalesman.md";
+import nostalgia from "./projects/nostalgia/Nostalgia.md";
 
 import about from "./About.md";
 import stereo from "./projects/stereo/Stereo.md";
@@ -81,6 +83,18 @@ const mapping = {
         component: (
             <Penrose
                 title="penrose"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
+    "/nostalgia": {
+        content: nostalgia,
+        component: (
+            <Nostalgia
+                title="nostalgia"
                 style={{}}
                 delay={presentationTime}
                 width={window.innerWidth}
