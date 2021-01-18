@@ -5,6 +5,7 @@
   "dependencies": {
     "@tensorflow-models/blazeface": "^0.0.5",
     "@tensorflow/tfjs": "^2.7.0",
+    "@tensorflow/tfjs-core": "^1.7.4",
     "@types/d3": "^6.2.0",
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.7",
