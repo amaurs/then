@@ -5,7 +5,7 @@ import boxer from '../../assets/boxer.jpg';
 import { useTimeout } from "../../Hooks.js";
 import Loader from "../../Presentation.js";
 
-import * as tf from '@tensorflow/tfjs'
+import * as tf from '@tensorflow/tfjs';
 import * as blazeface from '@tensorflow-models/blazeface';
 
 import { ThemeContext } from "../../ThemeContext.js";
@@ -37,6 +37,7 @@ const Nostalgia = (props: Props) => {
 
     useEffect(() => {
         let cancel = false;
+
         const getData = (src: string): Promise<HTMLImageElement> => {
             return new Promise((resolve, reject) => {
                 let img = new Image();
@@ -51,6 +52,7 @@ const Nostalgia = (props: Props) => {
         }
         const loadModel = (): Promise<any> => {
             return new Promise((resolve, reject) => {
+                tf.setBackend('cpu');
                 const model = blazeface.load();
                 resolve(model)
             });
