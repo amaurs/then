@@ -13,6 +13,8 @@ import Triangle from "../../util/triangle";
 import { BTileL, BTileS } from "../../util/bTiles";
 import PenroseGeometry from "../../util/three/PenroseGeometry";
 
+import { colorMatrixShader } from "../../shaders"
+
 
 import CSS from "csstype";
 
@@ -23,6 +25,20 @@ interface Props {
     width: number;
     height: number;
 }
+
+async function postData(url: string, payload: object) {
+    console.log("calling async");
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload) // body data type must match "Content-Type" header
+    });
+    return response.json(); 
+}
+
+const n = 5;
 
 
 const Penrose = (props: Props) => {
@@ -40,7 +56,6 @@ const Penrose = (props: Props) => {
             );
             camera.position.z = 2;
             const scene = new THREE.Scene();
-
             //let material = new THREE.MeshPhongMaterial( { color: 0x156289, emissive: 0x072534, side: THREE.BackSide, flatShading: true } );
             const material = new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors, side: THREE.DoubleSide});
             
@@ -49,10 +64,33 @@ const Penrose = (props: Props) => {
                 antialias: true,
             });
             renderer.setClearColor(0xffffff, 1.0);
-
             renderer.setPixelRatio( window.devicePixelRatio );
-            
             renderer.setSize(props.width, props.height);
+
+            let geometries:Array<PenroseGeometry> = [];
+
+
+            let objects:Array<PenroseGeometry> = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => {
+                let  geometry = new PenroseGeometry(1, i);
+                //let  geometry = new THREE.BoxGeometry(i,i,i);
+                geometries.push(geometry)
+                geometry.faces.forEach((face: any, ndx: any) => {
+                    let color = new THREE.Color( 0xffffff );
+                    color.setHex(Math.random() * 0xffffff);
+                    face.color = color;
+                });
+                let mesh = new THREE.Mesh(geometry, material);
+
+                return mesh;
+            });
+
+            
+            objects.forEach((object) => {
+                object.visible = false;
+                scene.add(object);
+            });
+            
+            
 
             const orbit = new THREE.OrbitControls( camera, renderer.domElement );
             orbit.enableZoom = false;
@@ -61,37 +99,30 @@ const Penrose = (props: Props) => {
             let timeoutId: any;
 
             let i = 0;
-            let  geometry = new PenroseGeometry(1, 0);
-            let mesh = new THREE.Mesh(geometry, material);
+
+            const composer = new THREE.EffectComposer(renderer);
+            const renderPass = new THREE.RenderPass(scene, camera);
+            const magentaPass = new THREE.ShaderPass(colorMatrixShader(theme.theme.colorMatrix));
+            const copyPass = new THREE.ShaderPass(THREE.CopyShader);
             
-            const animate = (time: number) => {
+            copyPass.renderToScreen = true;
+            composer.addPass(renderPass);
+            composer.addPass(magentaPass);
+            composer.addPass(copyPass);
+            
+            const animate = () => {
                 // Wrapping the animation function wiht a timeout makes it
                 // possible to control the fps, without losing the benefits of
                 // requestAnimationFrame.
-
-                time *= 0.01;
                 
                 timeoutId = setTimeout(function () {
-                    //const geometry = new PenroseGeometry(1, i % 7);
-
-                    geometry = new PenroseGeometry(1, i % 9);
-                    geometry.faces.forEach((face: any, ndx: any) => {
-                        let color = new THREE.Color( 0xffffff );
-                        color.setHex(Math.random() * 0xffffff);
-                        face.color = color;
+                    objects.forEach((object, index) => {
+                        object.visible = index == (Math.floor(i / 24)) % 7;
                     });
-
-                    mesh = new THREE.Mesh(geometry, material);
-                    scene.add(mesh);
-
-                    renderer.render(scene, camera);
+                    composer.render();
                     frameId = requestAnimationFrame(animate);
-
-                    scene.remove(mesh);
-                    geometry.dispose();
-
                     i++;
-                }, 1000);
+                }, 0);
             };
 
             let frameId: number | null = requestAnimationFrame(animate);
@@ -99,15 +130,21 @@ const Penrose = (props: Props) => {
             return () => {
                 cancelAnimationFrame(frameId!);
                 frameId = null;
-                scene.remove(mesh);
-                geometry.dispose();
+                objects.forEach((object, index) => {
+                    scene.remove(object);
+                });
+
+                geometries.forEach((geometry, index) => {
+                    geometry.dispose();
+                });
+                
                 material.dispose();
             };
         }
 
     }, [presenting, theme]);
 
-    let style = {};
+    let style = {height: 1080, width: 1080};
 
 
     if (presenting) {
