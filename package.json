@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "react-scripts": "^3.4.3",
-    "terser": "^3.17.0"
+    "terser": "^4.8.1"
   },
   "scripts": {
     "start": "react-scripts start",
