@@ -1,0 +1,3 @@
+# Anaglyph
+
+An anaglyph is a ruthimenthary method to channel different information to each of our eyes. Driven by the nostalgia of dinosaur 3d magazines that I read as a kid, I wanted to explore how to use Three.js to display rich 3d images based on an svg renderer. The final image is a solution of the Traveling Salesman problem on a set of points randomly placed on the surface of a Möebius band. The resulting path is the shortest way in which all points can be visited without visiting a point twice, and without the line intersecting itself.

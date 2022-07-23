@@ -1,1 +1,3 @@
 # Hilbert
+
+A space-filling curve is the image of a continuous function that maps an interval onto the unit cube of a n-dimensional euclidean space. The continuity of such mappings allow us to take one of these curves in certain space, stretch it into a line, and then map that line into another euclidean space. Using this tools we can flatten the space of colors, represented by triplets of Red, Green, and Blue values, into an image. The size of the image depends on the number of bits that we use to store the color information.
