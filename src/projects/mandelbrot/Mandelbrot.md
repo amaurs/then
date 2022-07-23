@@ -1,4 +1,4 @@
 
 # Mandelbrot
 
-It's very easy to make some words **bold** and other words *italic* with Markdown. You can even [link to Google!](http://google.com)
+The fractal can be thought of a escape time heatmap for points in the complex plane.
