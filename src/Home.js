@@ -493,6 +493,14 @@ const Home = (props) => {
         }
     }, []);
 
+    useEffect(() => {
+        if (indexBackground) {
+            console.log(`Index: ${index}`);
+            console.log(`Background: ${mapping[indexBackground].content}`);
+        }
+        
+    }, [indexBackground]);
+
     return (
         <div
             className="Home Home-info-container"

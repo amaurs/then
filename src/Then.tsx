@@ -1,11 +1,7 @@
-import React, { Fragment, useContext, useState } from 'react';
-
+import React, { Fragment, useContext, useState, useEffect } from 'react';
 import './Then.css'
-
 import { useInterval } from './Hooks.js';
-
 import { ThemeContext } from './ThemeContext.js';
-
 import CSS from "csstype";
 /**
               <p className="pronunciation">/ <span className="underline">TH</span>en /</p>
@@ -32,6 +28,13 @@ const Then = (props: Props) => {
         props.setIndexBackground(props!.keys[tick % props.keys.length]);
         setTick(tick + 1);
     }, 10000);
+
+    useEffect(() => {
+        let index = Math.floor(Math.random() * props.keys.length)
+        props.setIndexBackground(props!.keys[index]);
+        setTick(tick + 1);
+
+    }, []);
 
     let style: CSS.Properties = {
         color: theme.theme.foreground,
