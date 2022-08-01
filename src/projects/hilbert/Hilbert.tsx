@@ -56,8 +56,8 @@ const Hilbert = (props: Props) => {
     }, props.delay);
 
     useEffect(() => {
-        let hilbert_cube = image_cube_map.get(res);
-        let hilbert_square = image_square_map.get(res);
+        let hilbert_cube = image_cube_map.get(res!);
+        let hilbert_square = image_square_map.get(res!);
         let cancel = false;
 
         const getData = (src: string): Promise<ImageData> => {
