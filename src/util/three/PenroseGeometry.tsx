@@ -1,5 +1,5 @@
 
-import { Geometry, Vector3, Face3 } from "three-full";
+import { Geometry, Vector3, Face3 } from "three/examples/jsm/deprecated/Geometry.js";
 import Vector from '../vector';
 import Triangle from '../triangle';
 import { BTileS } from '../bTiles';

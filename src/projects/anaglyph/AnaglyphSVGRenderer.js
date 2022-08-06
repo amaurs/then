@@ -1,4 +1,7 @@
-import * as THREE from "three-full";
+import * as THREE from "three";
+import { Projector, RenderableLine } from "three/examples/jsm/renderers/Prejector.js";
+
+import { SVGObject } from "three/examples/js/renderers/SVGRenderer.js";
 
 class AnaglyphSVGRenderer {
     constructor(width, height, domElement) {
@@ -21,7 +24,7 @@ class AnaglyphSVGRenderer {
         this._camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
         this._clipBox = new THREE.Box2();
         this._elemBox = new THREE.Box2();
-        this._projector = new THREE.Projector();
+        this._projector = new Projector();
         this._quality = 1;
         this._precision = null;
         this._svgPathPool = [];
@@ -153,7 +156,7 @@ class AnaglyphSVGRenderer {
 
             this._elemBox.makeEmpty();
 
-            if (element instanceof THREE.RenderableLine) {
+            if (element instanceof RenderableLine) {
                 let _v1 = element.v1;
                 let _v2 = element.v2;
                 _v1.positionScreen.x *= this._svgWidthHalf;
@@ -231,7 +234,7 @@ class AnaglyphSVGRenderer {
         this.flushPath(this._svg);
 
         scene.traverseVisible(function (object) {
-            if (object instanceof THREE.SVGObject) {
+            if (object instanceof SVGObject) {
                 this._vector3.setFromMatrixPosition(object.matrixWorld);
                 this._vector3.applyMatrix4(this._viewProjectionMatrix);
                 let x = this._vector3.x * this._svgWidthHalf;

@@ -1,5 +1,4 @@
 import {
-    Pass,
     ShaderMaterial,
     OrthographicCamera,
     Scene,
@@ -9,8 +8,10 @@ import {
     FloatType,
     RGBFormat,
     UniformsUtils,
-    _Math
-} from 'three-full'
+    MathUtils
+} from 'three'
+
+import { Pass } from "three/jsm/postprocessing/Pass.js";
 
 import { glitchShader } from '../../shaders'
 
@@ -56,22 +57,22 @@ GlitchPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
         this.uniforms[ 'tDiffuse' ].value = readBuffer.texture;
         this.uniforms[ 'seed' ].value = Math.random();//default seeding
-        this.uniforms[ 'distortionX' ].value = _Math.randFloat( 0, 1 );
-        this.uniforms[ 'distortionY' ].value = _Math.randFloat( 0, 1 );
-        this.uniforms[ 'angle' ].value = _Math.randFloat( - Math.PI, Math.PI );
+        this.uniforms[ 'distortionX' ].value = MathUtils.randFloat( 0, 1 );
+        this.uniforms[ 'distortionY' ].value = MathUtils.randFloat( 0, 1 );
+        this.uniforms[ 'angle' ].value = MathUtils.randFloat( - Math.PI, Math.PI );
         if (this.curF % this.randX === 0 || this.goWild === true) {
             this.uniforms[ 'offsetAmount' ].value = Math.random() / 10;
             this.uniforms[ 'snowAmount' ].value = Math.random() / 30;
-            this.uniforms[ 'seedX' ].value = _Math.randFloat( - 1, 1 );
-            this.uniforms[ 'seedY' ].value = _Math.randFloat( - 1, 1 );
+            this.uniforms[ 'seedX' ].value = MathUtils.randFloat( - 1, 1 );
+            this.uniforms[ 'seedY' ].value = MathUtils.randFloat( - 1, 1 );
             this.curF = 0;
             this.generateTrigger();
 
         } else {
             this.uniforms[ 'offsetAmount' ].value = Math.random() / 90;
             this.uniforms[ 'snowAmount' ].value = Math.random() / 90;
-            this.uniforms[ 'seedX' ].value = _Math.randFloat( - 0.3, 0.3 );
-            this.uniforms[ 'seedY' ].value = _Math.randFloat( - 0.3, 0.3 );
+            this.uniforms[ 'seedX' ].value = MathUtils.randFloat( - 0.3, 0.3 );
+            this.uniforms[ 'seedY' ].value = MathUtils.randFloat( - 0.3, 0.3 );
 
         }
         this.curF ++;
@@ -86,7 +87,7 @@ GlitchPass.prototype = Object.assign( Object.create( Pass.prototype ), {
     },
 
     generateTrigger: function() {
-        this.randX = _Math.randInt(120, 240);
+        this.randX = MathUtils.randInt(120, 240);
     },
 
     generateHeightmap: function(dtSize) {
@@ -96,7 +97,7 @@ GlitchPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
         for (var i = 0; i < length; i ++) {
 
-            var val = _Math.randFloat( 0, 1 );
+            var val = MathUtils.randFloat( 0, 1 );
             data_arr[ i * 3 + 0 ] = val;
             data_arr[ i * 3 + 1 ] = val;
             data_arr[ i * 3 + 2 ] = val;

@@ -17,7 +17,6 @@ import {
 } from "react-router-dom";
 import Menu from "./Menu.js";
 
-import Anaglyph from "./projects/anaglyph/Anaglyph.tsx";
 import Bolero from "./projects/bolero/Bolero.tsx";
 import Quilt from "./projects/quilt/Quilt.tsx";
 
@@ -26,44 +25,32 @@ import Colors from "./projects/colors/Colors.tsx";
 import Distrito from "./projects/distrito/Distrito.tsx";
 
 import Conway from "./projects/conway/Conway.tsx";
-import Dense from "./projects/dense/Dense.tsx";
 import Loom from "./projects/loom/Loom.tsx";
 import Mandelbrot from "./projects/mandelbrot/Mandelbrot.tsx";
 import Photography from "./projects/photography/Photography.tsx";
 import Voronoi from "./projects/voronoi/Voronoi.tsx";
 import Reinforcement from "./projects/reinforcement/Reinforcement.tsx";
-import Penrose from "./projects/penrose/Penrose.tsx";
 import Stereo from "./projects/stereo/Stereo.tsx";
 import Hilbert from "./projects/hilbert/Hilbert.tsx";
-import Corrupted from "./projects/corrupted/Corrupted.tsx";
-import Nostalgia from "./projects/nostalgia/Nostalgia.tsx";
 
 import Then from "./Then.tsx";
-import TravelingSalesman from "./projects/travelingsalesman/TravelingSalesman.tsx";
 
-import Loader from "./Loader.js";
 import ReactMarkdown from "react-markdown";
 
 import "./Home.css";
 
-import anaglyph from "./projects/anaglyph/Anaglyph.md";
 import autostereogram from "./projects/autostereogram/Autostereogram.md";
 import colors from "./projects/colors/Colors.md";
 import distrito from "./projects/distrito/Distrito.md";
 import bolero from "./projects/bolero/Bolero.md";
-import dense from "./projects/dense/Dense.md";
 import loom from "./projects/loom/Loom.md";
 import conway from "./projects/conway/Conway.md";
 import photography from "./projects/photography/Photography.md";
 import mandelbrot from "./projects/mandelbrot/Mandelbrot.md";
 import voronoi from "./projects/voronoi/Voronoi.md";
 import hilbert from "./projects/hilbert/Hilbert.md";
-import corrupt from "./projects/corrupted/Corrupted.md";
-import penrose from "./projects/penrose/Penrose.md";
 import quilt from "./projects/quilt/Quilt.md";
 import reinforcement from "./projects/reinforcement/Reinforcement.md";
-import travelingSalesman from "./projects/travelingsalesman/TravelingSalesman.md";
-import nostalgia from "./projects/nostalgia/Nostalgia.md";
 
 import about from "./About.md";
 import stereo from "./projects/stereo/Stereo.md";
@@ -78,30 +65,7 @@ const presentationTime = 0;
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 
 const mapping = {
-    "/penrose": {
-        content: penrose,
-        component: (
-            <Penrose
-                title="penrose"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-            />
-        ),
-    },
-    "/nostalgia": {
-        content: nostalgia,
-        component: (
-            <Nostalgia
-                title="nostalgia"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-            />
-        ),
-    },
+
     "/bolero": {
         content: bolero,
         component: (
@@ -112,19 +76,6 @@ const mapping = {
                 width={window.innerWidth}
                 height={window.innerHeight}
                 url={banditHost + "/boleros/en"}
-            />
-        ),
-    },
-    "/dense": {
-        content: dense,
-        component: (
-            <Dense
-                title="dense"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={banditHost}
             />
         ),
     },
@@ -181,18 +132,6 @@ const mapping = {
         ),
     },
 
-    "/corrupted": {
-        content: corrupt,
-        component: (
-            <Corrupted
-                title="corrupted"
-                style={{}}
-                delay={presentationTime}
-                width={1080}
-                height={1080}
-            />
-        ),
-    },
     "/reinforcement-learning": {
         content: reinforcement,
         component: (
@@ -202,32 +141,6 @@ const mapping = {
                 delay={presentationTime}
                 width={window.innerWidth}
                 height={window.innerHeight}
-            />
-        ),
-    },
-    "/anaglyph": {
-        content: anaglyph,
-        component: (
-            <Anaglyph
-                title="anaglyph"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={banditHost}
-            />
-        ),
-    },
-    "/traveling-salesman": {
-        content: travelingSalesman,
-        component: (
-            <TravelingSalesman
-                title="traveling salesman"
-                delay={presentationTime}
-                style={{}}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={banditHost}
             />
         ),
     },
@@ -493,13 +406,7 @@ const Home = (props) => {
         }
     }, []);
 
-    useEffect(() => {
-        if (indexBackground) {
-            console.log(`Index: ${index}`);
-            console.log(`Background: ${mapping[indexBackground].content}`);
-        }
-        
-    }, [indexBackground]);
+
 
     return (
         <div

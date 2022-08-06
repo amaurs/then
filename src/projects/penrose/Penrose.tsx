@@ -1,7 +1,13 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 
 import Loader from '../../Presentation.js';
-import * as THREE from "three-full";
+import * as THREE from "three";
+import { CopyShader } from "three/examples/js/shaders/CopyShader.js";
+import { FaceColors } from "three/examples/jsm/deprecated/Geometry.js";
+import { EffectComposer } from "three/examples/js/postprocessing/EffectComposer.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { RenderPass } from "three/examples/js/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/examples/js/postprocessing/ShaderPass.js";
 import { ThemeContext } from '../../ThemeContext.js';
 
 
@@ -57,7 +63,7 @@ const Penrose = (props: Props) => {
             camera.position.z = 2;
             const scene = new THREE.Scene();
             //let material = new THREE.MeshPhongMaterial( { color: 0x156289, emissive: 0x072534, side: THREE.BackSide, flatShading: true } );
-            const material = new THREE.MeshBasicMaterial({vertexColors: THREE.FaceColors, side: THREE.DoubleSide});
+            const material = new THREE.MeshBasicMaterial({vertexColors: FaceColors, side: THREE.DoubleSide});
             
             const renderer = new THREE.WebGLRenderer({
                 canvas: canvas.current,
@@ -92,7 +98,7 @@ const Penrose = (props: Props) => {
             
             
 
-            const orbit = new THREE.OrbitControls( camera, renderer.domElement );
+            const orbit = new OrbitControls( camera, renderer.domElement );
             orbit.enableZoom = false;
 
             
@@ -100,10 +106,10 @@ const Penrose = (props: Props) => {
 
             let i = 0;
 
-            const composer = new THREE.EffectComposer(renderer);
-            const renderPass = new THREE.RenderPass(scene, camera);
-            const magentaPass = new THREE.ShaderPass(colorMatrixShader(theme.theme.colorMatrix));
-            const copyPass = new THREE.ShaderPass(THREE.CopyShader);
+            const composer = new EffectComposer(renderer);
+            const renderPass = new RenderPass(scene, camera);
+            const magentaPass = new ShaderPass(colorMatrixShader(theme.theme.colorMatrix));
+            const copyPass = new ShaderPass(CopyShader);
             
             copyPass.renderToScreen = true;
             composer.addPass(renderPass);

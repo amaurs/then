@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
-import * as THREE from "three-full";
+import * as THREE from "three";
 import AnaglyphSVGRenderer from "./AnaglyphSVGRenderer.js";
 import "./Anaglyph.css";
 import { useTimeout } from "../../Hooks.js";
