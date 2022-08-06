@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import * as THREE from 'three-full';
+import * as THREE from 'three';
+import { AsciiEffect } from 'three/examples/js/effect/AsciiEffect.js';
 import './Loader.css'
 
 const Loader = () => {
@@ -23,7 +24,7 @@ const Loader = () => {
         scene.add(cube);
 
         //let effect = new THREE.AsciiEffect( renderer, ' .:-+*=%@#', { invert: true } );
-        let effect = new THREE.AsciiEffect( renderer, '>LOADING..', { invert: true } );
+        let effect = new AsciiEffect( renderer, '>LOADING..', { invert: true } );
         
         effect.setSize( width, height );
         effect.domElement.style.color = 'black';

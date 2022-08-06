@@ -1,5 +1,10 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
-import * as THREE from "three-full";
+import * as THREE from "three";
+import { CopyShader } from "three/examples/js/shaders/CopyShader.js";
+import { EffectComposer } from "three/examples/js/postprocessing/EffectComposer.js";
+import { GlitchPass } from "three/examples/js/postprocessing/GlitchPass.js"; 
+import { RenderPass } from "three/examples/js/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/examples/js/postprocessing/ShaderPass.js";
 import "./Corrupted.css";
 import escudo from "../../assets/escudo.png";
 import { useTimeout } from "../../Hooks.js";
@@ -51,17 +56,17 @@ const Corrupted = (props: Props) => {
             renderer.setClearColor(0xffffff, 1.0);
             renderer.setSize(props.width, props.height);
 
-            const glitchPass = new THREE.GlitchPass();
+            const glitchPass = new GlitchPass();
             glitchPass.goWild = false
 
-            const magentaPass = new THREE.ShaderPass(colorMatrixShader(theme.theme.colorMatrix));
+            const magentaPass = new ShaderPass(colorMatrixShader(theme.theme.colorMatrix));
             
-            const copyPass = new THREE.ShaderPass(THREE.CopyShader);
+            const copyPass = new ShaderPass(CopyShader);
             copyPass.renderToScreen = true;
 
-            const composer = new THREE.EffectComposer(renderer);
+            const composer = new EffectComposer(renderer);
 
-            composer.addPass(new THREE.RenderPass(scene, camera));
+            composer.addPass(new RenderPass(scene, camera));
             
             composer.addPass(glitchPass);
             composer.addPass(magentaPass);
