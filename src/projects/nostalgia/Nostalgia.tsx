@@ -1,5 +1,10 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
-import * as THREE from "three-full";
+import * as THREE from "three";
+import { CopyShader } from "three/examples/jsm/shaders/CopyShader.js";
+import { DotScreenPass } from "three/examples/jsm/postprocessing/DotScreenPass.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { TexturePass } from "three/examples/jsm/postprocessing/TexturePass.js";
 import "./Nostalgia.css";
 import boxer from '../../assets/boxer.jpg';
 import { useTimeout } from "../../Hooks.js";
@@ -11,8 +16,8 @@ import * as blazeface from '@tensorflow-models/blazeface';
 import { ThemeContext } from "../../ThemeContext.js";
 import CSS from "csstype";
 
-import { colorMatrixShader, ditherShader, maskShader, Prediction } from "../../shaders"
-import { GlitchPass } from  "../../util/three/ShaderPass.js";
+import { colorMatrixShader, ditherShader, maskShader, Prediction } from "../../util/three/shaders";
+import { MaskPass } from  "../../util/three/MaskPass.js";
 
 
 interface Props {
@@ -106,18 +111,18 @@ const Nostalgia = (props: Props) => {
             }
             
 
-            const magentaPass = new THREE.ShaderPass(colorMatrixShader(theme.theme.colorMatrix));
-            const myMaskPass = new GlitchPass(32, props.width, props.height, width, height, predictions);
+            const magentaPass = new ShaderPass(colorMatrixShader(theme.theme.colorMatrix));
+            const myMaskPass = new MaskPass(32, props.width, props.height, width, height, predictions);
             myMaskPass.goWild = false; 
 
             const texture = new THREE.TextureLoader().load(boxer);
             texture.minFilter = THREE.LinearFilter;
-            const texturePass = new THREE.TexturePass(texture);
+            const texturePass = new TexturePass(texture);
             
-            const dotScreenPass = new THREE.DotScreenPass(new THREE.Vector2( 0.5, 0.5 ), 1.57, 0.8);
-            const copyPass = new THREE.ShaderPass(THREE.CopyShader);
+            const dotScreenPass = new DotScreenPass(new THREE.Vector2( 0.5, 0.5 ), 1.57, 0.8);
+            const copyPass = new ShaderPass(CopyShader);
             copyPass.renderToScreen = true;
-            const composer = new THREE.EffectComposer(renderer, renderTarget);
+            const composer = new EffectComposer(renderer, renderTarget);
 
             composer.addPass(texturePass);  
             composer.addPass(dotScreenPass);
