@@ -34,6 +34,7 @@ import Stereo from "./projects/stereo/Stereo.tsx";
 import Hilbert from "./projects/hilbert/Hilbert.tsx";
 import Nostalgia from "./projects/nostalgia/Nostalgia.tsx";
 import Corrupted from "./projects/corrupted/Corrupted.tsx";
+import Anaglyph from "./projects/anaglyph/Anaglyph.tsx";
 
 import Then from "./Then.tsx";
 
@@ -55,6 +56,7 @@ import quilt from "./projects/quilt/Quilt.md";
 import reinforcement from "./projects/reinforcement/Reinforcement.md";
 import nostalgia from "./projects/nostalgia/Nostalgia.md";
 import corrupted from "./projects/corrupted/Corrupted.md";
+import anaglyph from "./projects/anaglyph/Anaglyph.md";
 
 import about from "./About.md";
 import stereo from "./projects/stereo/Stereo.md";
@@ -157,6 +159,20 @@ const mapping = {
                 delay={presentationTime}
                 width={window.innerWidth}
                 height={window.innerHeight}
+            />
+        ),
+    },
+
+    "/anaglyph": {
+        content: anaglyph,
+        component: (
+            <Anaglyph
+                title="anaglyph"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost}
             />
         ),
     },
