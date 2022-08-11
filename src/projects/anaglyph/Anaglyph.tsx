@@ -96,7 +96,7 @@ const Anaglyph = (props: Props) => {
             div.current.appendChild(renderer.domElement);
             let geometry = new THREE.BufferGeometry();
 
-            geometry.addAttribute(
+            geometry.setAttribute(
                 "position",
                 new THREE.Float32BufferAttribute(vertices, 3)
             );

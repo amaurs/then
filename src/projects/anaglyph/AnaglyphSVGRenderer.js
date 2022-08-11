@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { Projector, RenderableLine } from "three/examples/jsm/renderers/Prejector.js";
+import { Projector, RenderableLine } from "three/examples/jsm/renderers/Projector.js";
 
-import { SVGObject } from "three/examples/js/renderers/SVGRenderer.js";
+import { SVGObject } from "three/examples/jsm/renderers/SVGRenderer.js";
 
 class AnaglyphSVGRenderer {
     constructor(width, height, domElement) {
