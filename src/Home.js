@@ -33,6 +33,7 @@ import Reinforcement from "./projects/reinforcement/Reinforcement.tsx";
 import Stereo from "./projects/stereo/Stereo.tsx";
 import Hilbert from "./projects/hilbert/Hilbert.tsx";
 import Nostalgia from "./projects/nostalgia/Nostalgia.tsx";
+import Corrupted from "./projects/corrupted/Corrupted.tsx";
 
 import Then from "./Then.tsx";
 
@@ -53,6 +54,7 @@ import hilbert from "./projects/hilbert/Hilbert.md";
 import quilt from "./projects/quilt/Quilt.md";
 import reinforcement from "./projects/reinforcement/Reinforcement.md";
 import nostalgia from "./projects/nostalgia/Nostalgia.md";
+import corrupted from "./projects/corrupted/Corrupted.md";
 
 import about from "./About.md";
 import stereo from "./projects/stereo/Stereo.md";
@@ -76,6 +78,19 @@ const mapping = {
                 delay={presentationTime}
                 width={window.innerWidth}
                 height={window.innerHeight}
+            />
+        ),
+    },
+
+    "/corrupted": {
+        content: corrupted,
+        component: (
+            <Corrupted
+                title="corrupted"
+                style={{}}
+                delay={presentationTime}
+                width={1080}
+                height={1080}
             />
         ),
     },
