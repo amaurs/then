@@ -35,6 +35,7 @@ import Hilbert from "./projects/hilbert/Hilbert.tsx";
 import Nostalgia from "./projects/nostalgia/Nostalgia.tsx";
 import Corrupted from "./projects/corrupted/Corrupted.tsx";
 import Anaglyph from "./projects/anaglyph/Anaglyph.tsx";
+import Penrose from "./projects/penrose/Penrose.tsx";
 
 import Then from "./Then.tsx";
 
@@ -57,6 +58,7 @@ import reinforcement from "./projects/reinforcement/Reinforcement.md";
 import nostalgia from "./projects/nostalgia/Nostalgia.md";
 import corrupted from "./projects/corrupted/Corrupted.md";
 import anaglyph from "./projects/anaglyph/Anaglyph.md";
+import penrose from "./projects/penrose/Penrose.md";
 
 import about from "./About.md";
 import stereo from "./projects/stereo/Stereo.md";
@@ -71,6 +73,18 @@ const presentationTime = 0;
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 
 const mapping = {
+    "/penrose": {
+        content: penrose,
+        component: (
+            <Penrose
+                title="penrose"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
     "/nostalgia": {
         content: nostalgia,
         component: (
