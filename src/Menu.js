@@ -7,7 +7,7 @@ const Menu = (props) => {
 
     return <ul className="Menu">{props.options.map((element, index) => { 
         return  <li key={index}>
-                    <Link to={"/projects" + element}
+                    <Link to={"/bit" + element}
                           onMouseEnter={ () => props.setIndexBackground(element) } 
                           onMouseLeave={ () => props.setIndexBackground(null) } >{element.slice(1).replace("-", " ")}</Link>
                 </li>} )}
