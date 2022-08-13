@@ -1,0 +1,3 @@
+# Penrose
+
+When doing the inflations, triangles will be oriented in different directions. To give them the same orientation we need to flip the ones that are incorrectly oriented by computing the cross product between any two vectors formed by the three points. The computation of each level of the planes should be reusable, we want to find a way in which we can compute deeper levels of the construct faster. After the Geometry object was deprecated from three.js we need to use BufferGeometry in which we have to create the information arrays by hand. We use vertex coloring by choosing a random color per triangle and adding it to each of its vetexes.

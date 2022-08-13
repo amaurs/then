@@ -17,25 +17,25 @@ import {
 } from "react-router-dom";
 import Menu from "./Menu.js";
 
-import Bolero from "./projects/bolero/Bolero.tsx";
-import Quilt from "./projects/quilt/Quilt.tsx";
+import Bolero from "./bits/bolero/Bolero.tsx";
+import Quilt from "./bits/quilt/Quilt.tsx";
 
-import Autostereogram from "./projects/autostereogram/Autostereogram.tsx";
-import Colors from "./projects/colors/Colors.tsx";
-import Distrito from "./projects/distrito/Distrito.tsx";
+import Autostereogram from "./bits/autostereogram/Autostereogram.tsx";
+import Colors from "./bits/colors/Colors.tsx";
+import Distrito from "./bits/distrito/Distrito.tsx";
 
-import Conway from "./projects/conway/Conway.tsx";
-import Loom from "./projects/loom/Loom.tsx";
-import Mandelbrot from "./projects/mandelbrot/Mandelbrot.tsx";
-import Photography from "./projects/photography/Photography.tsx";
-import Voronoi from "./projects/voronoi/Voronoi.tsx";
-import Reinforcement from "./projects/reinforcement/Reinforcement.tsx";
-import Stereo from "./projects/stereo/Stereo.tsx";
-import Hilbert from "./projects/hilbert/Hilbert.tsx";
-import Nostalgia from "./projects/nostalgia/Nostalgia.tsx";
-import Corrupted from "./projects/corrupted/Corrupted.tsx";
-import Anaglyph from "./projects/anaglyph/Anaglyph.tsx";
-import Penrose from "./projects/penrose/Penrose.tsx";
+import Conway from "./bits/conway/Conway.tsx";
+import Loom from "./bits/loom/Loom.tsx";
+import Mandelbrot from "./bits/mandelbrot/Mandelbrot.tsx";
+import Photography from "./bits/photography/Photography.tsx";
+import Voronoi from "./bits/voronoi/Voronoi.tsx";
+import Reinforcement from "./bits/reinforcement/Reinforcement.tsx";
+import Stereo from "./bits/stereo/Stereo.tsx";
+import Hilbert from "./bits/hilbert/Hilbert.tsx";
+import Nostalgia from "./bits/nostalgia/Nostalgia.tsx";
+import Corrupted from "./bits/corrupted/Corrupted.tsx";
+import Anaglyph from "./bits/anaglyph/Anaglyph.tsx";
+import Penrose from "./bits/penrose/Penrose.tsx";
 
 import Then from "./Then.tsx";
 
@@ -43,25 +43,25 @@ import ReactMarkdown from "react-markdown";
 
 import "./Home.css";
 
-import autostereogram from "./projects/autostereogram/Autostereogram.md";
-import colors from "./projects/colors/Colors.md";
-import distrito from "./projects/distrito/Distrito.md";
-import bolero from "./projects/bolero/Bolero.md";
-import loom from "./projects/loom/Loom.md";
-import conway from "./projects/conway/Conway.md";
-import photography from "./projects/photography/Photography.md";
-import mandelbrot from "./projects/mandelbrot/Mandelbrot.md";
-import voronoi from "./projects/voronoi/Voronoi.md";
-import hilbert from "./projects/hilbert/Hilbert.md";
-import quilt from "./projects/quilt/Quilt.md";
-import reinforcement from "./projects/reinforcement/Reinforcement.md";
-import nostalgia from "./projects/nostalgia/Nostalgia.md";
-import corrupted from "./projects/corrupted/Corrupted.md";
-import anaglyph from "./projects/anaglyph/Anaglyph.md";
-import penrose from "./projects/penrose/Penrose.md";
+import autostereogram from "./bits/autostereogram/Autostereogram.md";
+import colors from "./bits/colors/Colors.md";
+import distrito from "./bits/distrito/Distrito.md";
+import bolero from "./bits/bolero/Bolero.md";
+import loom from "./bits/loom/Loom.md";
+import conway from "./bits/conway/Conway.md";
+import photography from "./bits/photography/Photography.md";
+import mandelbrot from "./bits/mandelbrot/Mandelbrot.md";
+import voronoi from "./bits/voronoi/Voronoi.md";
+import hilbert from "./bits/hilbert/Hilbert.md";
+import quilt from "./bits/quilt/Quilt.md";
+import reinforcement from "./bits/reinforcement/Reinforcement.md";
+import nostalgia from "./bits/nostalgia/Nostalgia.md";
+import corrupted from "./bits/corrupted/Corrupted.md";
+import anaglyph from "./bits/anaglyph/Anaglyph.md";
+import penrose from "./bits/penrose/Penrose.md";
 
 import about from "./About.md";
-import stereo from "./projects/stereo/Stereo.md";
+import stereo from "./bits/stereo/Stereo.md";
 
 import { ThemeContext } from "./ThemeContext.js";
 import Slider from "./Slider.js";
@@ -295,7 +295,7 @@ const mapping = {
     },
 };
 
-const Project = (props) => {
+const Bit = (props) => {
     let [markdown, setMarkdown] = useState(null);
 
     let { slug } = useParams();
@@ -373,10 +373,10 @@ const Container = (props) => {
                                     fontSize: "24px",
                                     textDecoration: "none",
                                 }}
-                                to="/projects"
+                                to="/bits"
                                 onClick={() => props.setIndexBackground(null)}
                             >
-                                projects
+                                bits
                             </Link>
                         </li>{" "}
                     </ul>
@@ -387,7 +387,7 @@ const Container = (props) => {
     );
 };
 
-const ProjectMenu = (props) => {
+const BitMenu = (props) => {
     return (
         <Menu
             options={Object.keys(mapping)}
@@ -503,17 +503,17 @@ const Home = (props) => {
                         }
                     />
                     <Route
-                        path="projects"
+                        path="bits"
                         element={
-                            <ProjectMenu
+                            <BitMenu
                                 setIndexBackground={setIndexBackground}
                             />
                         }
                     />
                     <Route
-                        path="projects/:slug"
+                        path="bit/:slug"
                         element={
-                            <Project setIndexBackground={setIndexBackground} />
+                            <Bit setIndexBackground={setIndexBackground} />
                         }
                     />
                     <Route
