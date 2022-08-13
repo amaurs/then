@@ -23,6 +23,7 @@ class PenroseBufferGeometry extends THREE.BufferGeometry {
         }
   
         for (let i = 0; i < inflations; i++) {
+            // TODO: find a way to memoize this to make load time faster.
             triangles = triangles.reduce((result: Array<Triangle>, triangle: Triangle): Array<Triangle> => {
                 let inflation = triangle.inflate();
                 return [...result, ...inflation];
@@ -42,15 +43,13 @@ class PenroseBufferGeometry extends THREE.BufferGeometry {
 
         triangles.forEach((triangle, index) => {
 
-            if (triangle.orientation() > 0) {
-                triangle = triangle.invert();
-            }
-
             let color = new THREE.Color( 0xffffff );
             color.setHex(Math.random() * 0xffffff);
-            colors.push(color.r);
-            colors.push(color.g);
-            colors.push(color.b);
+
+            if (triangle.orientation() < 0) {
+                triangle = triangle.invert();
+            }
+            
             positions.push(triangle.a.x);
             positions.push(triangle.a.y);
             positions.push(0);
@@ -59,13 +58,10 @@ class PenroseBufferGeometry extends THREE.BufferGeometry {
             normals.push(1);
             uvs.push(0);
             uvs.push(1);
-            
-            color = new THREE.Color( 0xffffff );
-            color.setHex(Math.random() * 0xffffff);
-                    
             colors.push(color.r);
             colors.push(color.g);
             colors.push(color.b);
+
             positions.push(triangle.b.x); 
             positions.push(triangle.b.y);
             positions.push(0);
@@ -74,13 +70,10 @@ class PenroseBufferGeometry extends THREE.BufferGeometry {
             normals.push(1);
             uvs.push(0);
             uvs.push(1);
-
-            color = new THREE.Color( 0xffffff );
-            color.setHex(Math.random() * 0xffffff);
-                    
             colors.push(color.r);
             colors.push(color.g);
             colors.push(color.b);
+
             positions.push(triangle.c.x);
             positions.push(triangle.c.y);  
             positions.push(0);
@@ -89,7 +82,10 @@ class PenroseBufferGeometry extends THREE.BufferGeometry {
             normals.push(1);
             uvs.push(0);
             uvs.push(1);
-
+            colors.push(color.r);
+            colors.push(color.g);
+            colors.push(color.b);
+            
         });
 
         const geometry = new THREE.BufferGeometry();
