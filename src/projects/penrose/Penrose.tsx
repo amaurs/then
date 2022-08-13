@@ -15,7 +15,7 @@ interface Props {
 }
 
 const Penrose = (props: Props) => {
-    let div = useRef<HTMLDivElement>(document.createElement("div"));
+    let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
     const [presenting, setPresenting] = useState(props.delay > 0);
     const [data, setData] = useState({ points: [], hasFetched: true });
     const theme = useContext(ThemeContext);
@@ -38,14 +38,18 @@ const Penrose = (props: Props) => {
                 side: THREE.DoubleSide,
             });
 
-            const geometry = new PenroseBufferGeometry( 200, 3);
+            
+            let geometries:Array<PenroseBufferGeometry> = [4, 5, 6,7].map((i) => {
+                return new PenroseBufferGeometry(200, i);
+            });
+
             const scene = new THREE.Scene();
 
             
             const color = 0xFFFFFF;
             const intensity = 1;
             const light = new THREE.DirectionalLight(color, intensity);
-            light.position.set(0, 0, 10);
+            light.position.set(0, 0, -10);
             scene.add(light);
             
 
@@ -55,33 +59,49 @@ const Penrose = (props: Props) => {
                 1,
                 1000
             );
-            camera.position.z = 400;
+            camera.position.z = 100;
 
+            let objects = geometries.map((geometry, i) => {
+                let mesh = new THREE.Mesh( geometry, material );
+                if (i > 0) {
+                    mesh.visible = false;
+                }
+                scene.add(mesh);
+                return mesh;
+            });
+            
 
-            let mesh = new THREE.Mesh( geometry, material );
-            scene.add( mesh );
+            let renderer = new THREE.WebGLRenderer({
+                canvas: canvas.current,
+                antialias: true
+            });
 
-            let renderer = new THREE.WebGLRenderer( { antialias: true } );
             renderer.setPixelRatio( window.devicePixelRatio );
             renderer.setSize( width, height );
             renderer.setClearColor(0xffffff, 0.0);
-            if (div.current.childNodes.length > 0) {
-                div.current.removeChild(div.current.childNodes[0]);
-            }
-            div.current.appendChild(renderer.domElement);
 
             const renderScene = () => {
                 renderer.render(scene, camera);
             };
 
             let timeoutId: any;
+            let i: number = 0;
 
             const animate = () => {
+                // Wrapping the animation function wiht a timeout makes it
+                // possible to control the fps, without losing the benefits of
+                // requestAnimationFrame.
+                
+                
                 timeoutId = setTimeout(function () {
-                    //mesh.rotation.x += 0.01;
-                    //mesh.rotation.y += 0.01;
+                    
+                    objects.forEach((object, index) => {
+                        object.visible = index == (Math.floor(i / 24)) % objects.length;
+                        object.rotation.z -= 0.01;
+                    });
                     renderScene();
                     frameId = requestAnimationFrame(animate);
+                    i++;
                 }, 1000 / 60);
             };
 
@@ -90,8 +110,8 @@ const Penrose = (props: Props) => {
                 cancelAnimationFrame(frameId!);
                 frameId = null;
                 clearTimeout(timeoutId);
-                scene.remove(mesh);
-                geometry.dispose();
+                objects.forEach((mesh) => { scene.remove(mesh)});
+                geometries.forEach((geometry) => { geometry.dispose()});
                 material.dispose();
             };
         }
@@ -103,11 +123,11 @@ const Penrose = (props: Props) => {
         return <Loader title={props.title} />;
     } else {
         return (
-            <div
-                className="Penrose"
+            <canvas
+                className="Corrupted"
                 style={{ ...props.style, ...style }}
-                ref={div}
-            ></div>
+                ref={canvas}
+            />
         );
     }
 };

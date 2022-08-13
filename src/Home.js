@@ -80,8 +80,8 @@ const mapping = {
                 title="penrose"
                 style={{}}
                 delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={1080}
+                height={1080}
             />
         ),
     },
