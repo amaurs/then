@@ -14,4 +14,11 @@ export default abstract class Triangle {
     abstract inflate(): Array<Triangle>;
 
     abstract conjugate(): Triangle;
+
+    abstract invert(): Triangle;
+
+    orientation() {
+        // https://en.wikipedia.org/wiki/Cross_product#Computational_geometry
+        return (this.b.y - this.a.y) * (this.c.x - this.b.x) - (this.b.x - this.a.x) * (this.c.y - this.b.y);
+    }
 }

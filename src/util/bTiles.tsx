@@ -21,6 +21,12 @@ export class BTileL extends Triangle {
                           new Vector(this.b.x, -this.b.y),
                           new Vector(this.c.x, -this.c.y));
     }
+
+    invert(): Triangle {
+        return new BTileL(new Vector(this.a.x, this.a.y),
+                          new Vector(this.c.x, this.c.y),
+                          new Vector(this.b.x, this.b.y));
+    }
 }
 
 export class BTileS extends Triangle {
@@ -35,5 +41,11 @@ export class BTileS extends Triangle {
         return new BTileS(new Vector(this.a.x, -this.a.y),
                           new Vector(this.b.x, -this.b.y),
                           new Vector(this.c.x, -this.c.y));
+    }
+
+    invert(): Triangle {
+        return new BTileS(new Vector(this.a.x, this.a.y),
+                          new Vector(this.c.x, this.c.y),
+                          new Vector(this.b.x, this.b.y));
     }
 }
