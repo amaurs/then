@@ -42,7 +42,9 @@ class PenroseBufferGeometry extends THREE.BufferGeometry {
 
         triangles.forEach((triangle, index) => {
 
-
+            if (triangle.orientation() > 0) {
+                triangle = triangle.invert();
+            }
 
             let color = new THREE.Color( 0xffffff );
             color.setHex(Math.random() * 0xffffff);
