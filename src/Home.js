@@ -68,9 +68,13 @@ import Slider from "./Slider.js";
 
 import { useTimeout } from "./Hooks.js";
 
+import ReactGA from 'react-ga';
+ReactGA.initialize(TRACKING_ID);
+
 const presentationTime = 0;
 
 const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
+const TRACKING_ID = process.env.REACT_APP_GA_ID;
 
 const mapping = {
     "/penrose": {
