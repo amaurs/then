@@ -68,8 +68,9 @@ import Slider from "./Slider.js";
 
 import { useTimeout } from "./Hooks.js";
 
-import ReactGA from 'react-ga';
-ReactGA.initialize(TRACKING_ID);
+import ReactGA from "react-ga4";
+
+ReactGA.initialize(process.env.REACT_APP_GA_ID);
 
 const presentationTime = 0;
 
@@ -468,8 +469,6 @@ const Home = (props) => {
             cancel = true;
         }
     }, []);
-
-
 
     return (
         <div
