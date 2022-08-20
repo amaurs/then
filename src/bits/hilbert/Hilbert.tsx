@@ -42,7 +42,7 @@ const image_square_map: Map<string, string> = new Map([
 const Hilbert = (props: Props) => {
     let { res } = useParams();
     if (res === undefined) {
-        res = "4096";
+        res = "512";
     }
 
     let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
@@ -156,8 +156,8 @@ const Hilbert = (props: Props) => {
                     context.putImageData(frame, 0, 0);
 
                     frameId = requestAnimationFrame(animate);
-                    count += 4096 * 16;
-                }, 1000 / 20);
+                    count += 256;
+                }, 1000 / 250);
             };
 
             let frameId: number | null = requestAnimationFrame(animate);
