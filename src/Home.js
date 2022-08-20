@@ -36,6 +36,7 @@ import Nostalgia from "./bits/nostalgia/Nostalgia.tsx";
 import Corrupted from "./bits/corrupted/Corrupted.tsx";
 import Anaglyph from "./bits/anaglyph/Anaglyph.tsx";
 import Penrose from "./bits/penrose/Penrose.tsx";
+import Quadtree from "./bits/quadtree/QuadTree.tsx";
 
 import Then from "./Then.tsx";
 
@@ -59,6 +60,7 @@ import nostalgia from "./bits/nostalgia/Nostalgia.md";
 import corrupted from "./bits/corrupted/Corrupted.md";
 import anaglyph from "./bits/anaglyph/Anaglyph.md";
 import penrose from "./bits/penrose/Penrose.md";
+import quadtree from "./bits/quadtree/QuadTree.md";
 
 import about from "./About.md";
 import stereo from "./bits/stereo/Stereo.md";
@@ -208,6 +210,20 @@ const mapping = {
             />
         ),
     },
+
+    "/quadtree": {
+        content: quadtree,
+        component: (
+            <Quadtree
+                title="quadtree"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
+
     "/conway": {
         content: conway,
         component: (
