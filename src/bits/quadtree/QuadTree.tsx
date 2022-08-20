@@ -2,16 +2,16 @@ import React, { useRef, useState, useEffect, useContext } from "react";
 import { useParams } from "react-router";
 import { colorToInt } from "../../tools";
 import { useInterval, useTimeout } from "../../Hooks.js";
-import "./Hilbert.css";
+import "./QuadTree.css";
 import Loader from "../../Presentation.js";
-import hilbert_cube_8 from "../../assets/hilbert_cube_8_8.png";
-import hilbert_square_8 from "../../assets/hilbert_square_8_8.png";
-import hilbert_cube_64 from "../../assets/hilbert_cube_64_64.png";
-import hilbert_square_64 from "../../assets/hilbert_square_64_64.png";
-import hilbert_cube_512 from "../../assets/hilbert_cube_512_512.png";
-import hilbert_square_512 from "../../assets/hilbert_square_512_512.png";
-import hilbert_cube_4096 from "../../assets/hilbert_cube_4096_4096.png";
-import hilbert_square_4096 from "../../assets/hilbert_square_4096_4096.png";
+// import quadtree_cube_8 from "../../assets/quadtree_cube_8_8.png";
+// import quadtree_square_8 from "../../assets/quadtree_square_8_8.png";
+// import quadtree_cube_64 from "../../assets/quadtree_cube_64_64.png";
+// import quadtree_square_64 from "../../assets/quadtree_square_64_64.png";
+// import quadtree_cube_512 from "../../assets/quadtree_cube_512_512.png";
+// import quadtree_square_512 from "../../assets/quadtree_square_512_512.png";
+import quadtree_cube_4096 from "../../assets/quadtree_cube_4096_4096.png";
+import quadtree_square_4096 from "../../assets/quadtree_square_4096_4096.png";
 
 import { ThemeContext } from "../../ThemeContext.js";
 
@@ -26,20 +26,20 @@ interface Props {
 }
 
 const image_cube_map: Map<string, string> = new Map([
-    ["8", hilbert_cube_8],
-    ["64", hilbert_cube_64],
-    ["512", hilbert_cube_512],
-    ["4096", hilbert_cube_4096],
+//    ["8", quadtree_cube_8],
+//    ["64", quadtree_cube_64],
+//    ["512", quadtree_cube_512],
+    ["4096", quadtree_cube_4096],
 ]);
 
 const image_square_map: Map<string, string> = new Map([
-    ["8", hilbert_square_8],
-    ["64", hilbert_square_64],
-    ["512", hilbert_square_512],
-    ["4096", hilbert_square_4096],
+//    ["8", quadtree_square_8],
+//    ["64", quadtree_square_64],
+//    ["512", quadtree_square_512],
+    ["4096", quadtree_square_4096],
 ]);
 
-const Hilbert = (props: Props) => {
+const QuadTree = (props: Props) => {
     let { res } = useParams();
     if (res === undefined) {
         res = "4096";
@@ -56,8 +56,8 @@ const Hilbert = (props: Props) => {
     }, props.delay);
 
     useEffect(() => {
-        let hilbert_cube = image_cube_map.get(res!);
-        let hilbert_square = image_square_map.get(res!);
+        let quadtree_cube = image_cube_map.get(res!);
+        let quadtree_square = image_square_map.get(res!);
         let cancel = false;
 
         const getData = (src: string): Promise<ImageData> => {
@@ -83,13 +83,13 @@ const Hilbert = (props: Props) => {
             });
         };
 
-        getData(hilbert_cube!).then((imageData: ImageData) => {
+        getData(quadtree_cube!).then((imageData: ImageData) => {
             if (!cancel) {
                 setColor(imageData);
             }
         });
 
-        getData(hilbert_square!).then((imageData: ImageData) => {
+        getData(quadtree_square!).then((imageData: ImageData) => {
             if (!cancel) {
                 setPosition(imageData);
             }
@@ -183,7 +183,7 @@ const Hilbert = (props: Props) => {
     } else {
         return (
             <canvas
-                className="Hilbert"
+                className="Quadtree"
                 style={{ ...props.style, ...style }}
                 width={res + "px"}
                 height={res + "px"}
@@ -193,4 +193,4 @@ const Hilbert = (props: Props) => {
     }
 };
 
-export default Hilbert;
+export default QuadTree;
