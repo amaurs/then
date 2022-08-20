@@ -8,8 +8,8 @@ import Loader from "../../Presentation.js";
 // import quadtree_square_8 from "../../assets/quadtree_square_8_8.png";
 // import quadtree_cube_64 from "../../assets/quadtree_cube_64_64.png";
 // import quadtree_square_64 from "../../assets/quadtree_square_64_64.png";
-// import quadtree_cube_512 from "../../assets/quadtree_cube_512_512.png";
-// import quadtree_square_512 from "../../assets/quadtree_square_512_512.png";
+import quadtree_cube_512 from "../../assets/quadtree_cube_512_512.png";
+import quadtree_square_512 from "../../assets/quadtree_square_512_512.png";
 import quadtree_cube_4096 from "../../assets/quadtree_cube_4096_4096.png";
 import quadtree_square_4096 from "../../assets/quadtree_square_4096_4096.png";
 
@@ -28,21 +28,21 @@ interface Props {
 const image_cube_map: Map<string, string> = new Map([
 //    ["8", quadtree_cube_8],
 //    ["64", quadtree_cube_64],
-//    ["512", quadtree_cube_512],
+    ["512", quadtree_cube_512],
     ["4096", quadtree_cube_4096],
 ]);
 
 const image_square_map: Map<string, string> = new Map([
 //    ["8", quadtree_square_8],
 //    ["64", quadtree_square_64],
-//    ["512", quadtree_square_512],
+    ["512", quadtree_square_512],
     ["4096", quadtree_square_4096],
 ]);
 
 const QuadTree = (props: Props) => {
     let { res } = useParams();
     if (res === undefined) {
-        res = "4096";
+        res = "512";
     }
 
     let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
@@ -156,8 +156,8 @@ const QuadTree = (props: Props) => {
                     context.putImageData(frame, 0, 0);
 
                     frameId = requestAnimationFrame(animate);
-                    count += 4096 * 16;
-                }, 1000 / 20);
+                    count += 256;
+                }, 1000 / 250);
             };
 
             let frameId: number | null = requestAnimationFrame(animate);
