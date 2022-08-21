@@ -4,6 +4,7 @@ import { useTimeout } from "../../Hooks.js";
 import Loader from "../../Presentation.js";
 import { ThemeContext } from "../../ThemeContext.js";
 import { PenroseBufferGeometry } from "../../util/three/PenroseBufferGeometry";
+import "./Penrose.css";
 
 interface Props {
     title: string;
@@ -30,9 +31,15 @@ const Penrose = (props: Props) => {
             props.height > 0 &&
             !presenting
         ) {
-
-            const width = props.width;
-            const height = props.height;
+            let width, height;
+            if (props.width < props.height ) {
+                width = props.width;
+                height = props.width;
+            } else {
+                width = props.height;
+                height = props.height;
+            }
+            
             const material = new THREE.MeshPhongMaterial({
                 vertexColors: true,
                 side: THREE.DoubleSide,
@@ -102,7 +109,7 @@ const Penrose = (props: Props) => {
                     renderScene();
                     frameId = requestAnimationFrame(animate);
                     i++;
-                }, 1000 / 60);
+                }, 1000 / 40);
             };
 
             let frameId: number | null = requestAnimationFrame(animate);
@@ -116,17 +123,15 @@ const Penrose = (props: Props) => {
             };
         }
     }, [data, props.width, props.height, presenting, theme]);
-
-    let style = {};
-
+    
     if (presenting) {
         return <Loader title={props.title} />;
     } else {
         return (
             <canvas
-                className="Corrupted"
-                style={{ ...props.style, ...style }}
-                ref={canvas}
+                className="Penrose"
+                style={ props.style }
+                ref={ canvas }
             />
         );
     }
