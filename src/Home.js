@@ -37,6 +37,7 @@ import Corrupted from "./bits/corrupted/Corrupted.tsx";
 import Anaglyph from "./bits/anaglyph/Anaglyph.tsx";
 import Penrose from "./bits/penrose/Penrose.tsx";
 import Quadtree from "./bits/quadtree/QuadTree.tsx";
+import Natural from "./bits/natural/Natural.tsx";
 
 import Then from "./Then.tsx";
 
@@ -61,6 +62,7 @@ import corrupted from "./bits/corrupted/Corrupted.md";
 import anaglyph from "./bits/anaglyph/Anaglyph.md";
 import penrose from "./bits/penrose/Penrose.md";
 import quadtree from "./bits/quadtree/QuadTree.md";
+import natural from "./bits/natural/Natural.md";
 
 import about from "./About.md";
 import stereo from "./bits/stereo/Stereo.md";
@@ -72,7 +74,10 @@ import { useTimeout } from "./Hooks.js";
 
 import ReactGA from "react-ga4";
 
-ReactGA.initialize(process.env.REACT_APP_GA_ID);
+if (process.env.REACT_APP_GA_ID) {
+    ReactGA.initialize(process.env.REACT_APP_GA_ID);
+}
+
 
 const presentationTime = 0;
 
@@ -80,6 +85,18 @@ const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 const TRACKING_ID = process.env.REACT_APP_GA_ID;
 
 const mapping = {
+    "/natural": {
+        content: natural,
+        component: (
+            <Natural
+                title="natural"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            />
+        ),
+    },
     "/penrose": {
         content: penrose,
         component: (
