@@ -6,6 +6,7 @@ import Loader from '../../Presentation.js';
 import { useTimeout } from '../../Hooks.js';
 import { getRandomInt } from '../../tools';
 import { ThemeContext } from "../../ThemeContext.js";
+import { Image } from "../../util/interface";
 
 import CSS from "csstype";
 
@@ -17,10 +18,6 @@ interface Props {
     height: number;
     url: string;
     rows: number;
-}
-
-interface Image {
-    url: string;
 }
 
 
