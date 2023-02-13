@@ -25,6 +25,7 @@ import Colors from "./bits/colors/Colors.tsx";
 import Distrito from "./bits/distrito/Distrito.tsx";
 
 import Conway from "./bits/conway/Conway.tsx";
+import Composer from "./bits/composer/Composer.tsx"
 import Loom from "./bits/loom/Loom.tsx";
 import Mandelbrot from "./bits/mandelbrot/Mandelbrot.tsx";
 import Photography from "./bits/photography/Photography.tsx";
@@ -54,6 +55,7 @@ import conway from "./bits/conway/Conway.md";
 import photography from "./bits/photography/Photography.md";
 import mandelbrot from "./bits/mandelbrot/Mandelbrot.md";
 import voronoi from "./bits/voronoi/Voronoi.md";
+import hamiltonian from "./bits/composer/Composer.md"
 import hilbert from "./bits/hilbert/Hilbert.md";
 import quilt from "./bits/quilt/Quilt.md";
 import reinforcement from "./bits/reinforcement/Reinforcement.md";
@@ -85,6 +87,19 @@ const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
 const TRACKING_ID = process.env.REACT_APP_GA_ID;
 
 const mapping = {
+    "/hamiltonian": {
+        content: hamiltonian,
+        component: (
+            <Composer
+                title="hamiltonian"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost + "/wigglegrams/hamiltonian-cycle"}
+            />
+        ),
+    },
     "/natural": {
         content: natural,
         component: (

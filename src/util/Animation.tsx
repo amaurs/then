@@ -40,6 +40,7 @@ const Animation = (props: Props) => {
         const getData = (src: string): Promise<ImageData> => {
             return new Promise((resolve, reject) => {
                 let img = new Image();
+                img.setAttribute('crossOrigin', '*');
                 img.onload = (event: Event) => {
                     let canvas: HTMLCanvasElement = document.createElement(
                         "canvas"
