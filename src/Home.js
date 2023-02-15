@@ -47,6 +47,7 @@ import ReactMarkdown from "react-markdown";
 import "./Home.css";
 
 import autostereogram from "./bits/autostereogram/Autostereogram.md";
+import annealing from "./bits/annealing/Annealing.md";
 import colors from "./bits/colors/Colors.md";
 import distrito from "./bits/distrito/Distrito.md";
 import bolero from "./bits/bolero/Bolero.md";
@@ -97,6 +98,19 @@ const mapping = {
                 width={window.innerWidth}
                 height={window.innerHeight}
                 url={banditHost + "/wigglegrams/hamiltonian-cycle"}
+            />
+        ),
+    },
+    "/simulated-annealing": {
+        content: annealing,
+        component: (
+            <Composer
+                title="simulated annealing"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost + "/wigglegrams/simulated-annealing"}
             />
         ),
     },
