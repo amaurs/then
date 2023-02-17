@@ -50,6 +50,7 @@ import autostereogram from "./bits/autostereogram/Autostereogram.md";
 import annealing from "./bits/annealing/Annealing.md";
 import colors from "./bits/colors/Colors.md";
 import distrito from "./bits/distrito/Distrito.md";
+import floodfill from "./bits/flood/FloodFill.md";
 import bolero from "./bits/bolero/Bolero.md";
 import loom from "./bits/loom/Loom.md";
 import conway from "./bits/conway/Conway.md";
@@ -113,6 +114,20 @@ const mapping = {
                 height={window.innerHeight}
                 url={banditHost + "/wigglegrams/simulated-annealing"}
                 resolution={"512"}
+            />
+        ),
+    },
+    "/flood-fill": {
+        content: floodfill,
+        component: (
+            <Composer
+                title="flood fill"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost + "/wigglegrams/flood-fill"}
+                resolution={"64"}
             />
         ),
     },
