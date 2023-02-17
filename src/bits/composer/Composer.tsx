@@ -17,13 +17,10 @@ interface Props {
     width: number;
     height: number;
     url: string;
+    resolution: string;
 }
 
 const Composer = (props: Props) => {
-    let { res } = useParams();
-    if (res === undefined) {
-        res = "512";
-    }
 
     let [cube, setCube] = useState<string | undefined>();
     let [square, setSquare] = useState<string | undefined>();
@@ -76,7 +73,7 @@ const Composer = (props: Props) => {
             height={props.height}
             delay={props.delay}
             style={props.style}
-            res={res}
+            res={props.resolution}
             square={square}
             cube={cube}
         />
