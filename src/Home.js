@@ -98,6 +98,7 @@ const mapping = {
                 width={window.innerWidth}
                 height={window.innerHeight}
                 url={banditHost + "/wigglegrams/hamiltonian-cycle"}
+                resolution={"512"}
             />
         ),
     },
@@ -111,6 +112,7 @@ const mapping = {
                 width={window.innerWidth}
                 height={window.innerHeight}
                 url={banditHost + "/wigglegrams/simulated-annealing"}
+                resolution={"512"}
             />
         ),
     },
