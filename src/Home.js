@@ -57,6 +57,7 @@ import loom from "./bits/loom/Loom.md";
 import conway from "./bits/conway/Conway.md";
 import photography from "./bits/photography/Photography.md";
 import mandelbrot from "./bits/mandelbrot/Mandelbrot.md";
+import morton from "./bits/morton/Morton.md";
 import voronoi from "./bits/voronoi/Voronoi.md";
 import hamiltonian from "./bits/composer/Composer.md"
 import hilbert from "./bits/hilbert/Hilbert.md";
@@ -115,6 +116,20 @@ const mapping = {
                 width={window.innerWidth}
                 height={window.innerHeight}
                 url={`${banditHost}/colors/simulated-annealing/${512}`}
+                resolution={"512"}
+            />
+        ),
+    },
+    "/morton": {
+        content: morton,
+        component: (
+            <Composer
+                title="morton"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={`${banditHost}/colors/morton/${512}`}
                 resolution={"512"}
             />
         ),
