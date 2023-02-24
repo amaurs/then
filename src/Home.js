@@ -39,6 +39,7 @@ import Anaglyph from "./bits/anaglyph/Anaglyph.tsx";
 import Penrose from "./bits/penrose/Penrose.tsx";
 import Quadtree from "./bits/quadtree/QuadTree.tsx";
 import Natural from "./bits/natural/Natural.tsx";
+import TravelingSalesman from "./bits/travelingsalesman/TravelingSalesman.tsx";
 
 import Then from "./Then.tsx";
 
@@ -67,6 +68,7 @@ import anaglyph from "./bits/anaglyph/Anaglyph.md";
 import penrose from "./bits/penrose/Penrose.md";
 import quadtree from "./bits/quadtree/QuadTree.md";
 import natural from "./bits/natural/Natural.md";
+import travelingSalesman from "./bits/travelingsalesman/TravelingSalesman.md";
 
 import about from "./About.md";
 import stereo from "./bits/stereo/Stereo.md";
@@ -128,6 +130,19 @@ const mapping = {
                 height={window.innerHeight}
                 url={`${banditHost}/colors/flood-fill/${64}`}
                 resolution={"64"}
+            />
+        ),
+    },
+    "/traveling-salesman": {
+        content: travelingSalesman,
+        component: (
+            <TravelingSalesman
+                title="traveling salesman"
+                style={{}}
+                delay={presentationTime}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                url={banditHost}
             />
         ),
     },
