@@ -85,7 +85,7 @@ if (process.env.REACT_APP_GA_ID) {
 
 const presentationTime = 0;
 
-const banditHost = process.env.REACT_APP_API_BANDIT_HOST;
+const banditHost = process.env.REACT_APP_API_HOST;
 const TRACKING_ID = process.env.REACT_APP_GA_ID;
 
 const mapping = {
@@ -98,7 +98,7 @@ const mapping = {
                 delay={presentationTime}
                 width={window.innerWidth}
                 height={window.innerHeight}
-                url={banditHost + "/wigglegrams/hamiltonian-cycle"}
+                url={`${banditHost}/colors/hamiltonian-cycle/${512}`}
                 resolution={"512"}
             />
         ),
@@ -112,7 +112,7 @@ const mapping = {
                 delay={presentationTime}
                 width={window.innerWidth}
                 height={window.innerHeight}
-                url={banditHost + "/wigglegrams/simulated-annealing"}
+                url={`${banditHost}/colors/simulated-annealing/${512}`}
                 resolution={"512"}
             />
         ),
@@ -126,7 +126,7 @@ const mapping = {
                 delay={presentationTime}
                 width={window.innerWidth}
                 height={window.innerHeight}
-                url={banditHost + "/wigglegrams/flood-fill"}
+                url={`${banditHost}/colors/flood-fill/${64}`}
                 resolution={"64"}
             />
         ),
