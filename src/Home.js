@@ -164,12 +164,14 @@ const mapping = {
     "/natural": {
         content: natural,
         component: (
-            <Natural
+            <Composer
                 title="natural"
                 style={{}}
                 delay={presentationTime}
                 width={window.innerWidth}
                 height={window.innerHeight}
+                url={`${banditHost}/colors/identity/${512}`}
+                resolution={"512"}
             />
         ),
     },
@@ -267,12 +269,14 @@ const mapping = {
     "/hilbert": {
         content: hilbert,
         component: (
-            <Hilbert
+            <Composer
                 title="hilbert"
                 style={{}}
                 delay={presentationTime}
                 width={window.innerWidth}
                 height={window.innerHeight}
+                url={`${banditHost}/colors/hilbert/${512}`}
+                resolution={"512"}
             />
         ),
     },
@@ -307,12 +311,14 @@ const mapping = {
     "/quadtree": {
         content: quadtree,
         component: (
-            <Quadtree
+            <Composer
                 title="quadtree"
                 style={{}}
                 delay={presentationTime}
                 width={window.innerWidth}
                 height={window.innerHeight}
+                url={`${banditHost}/colors/quadtree/${512}`}
+                resolution={"512"}
             />
         ),
     },
@@ -631,6 +637,10 @@ const Home = (props) => {
                     <Route
                         path="about"
                         element={<ReactMarkdown source={markdown} />}
+                    />
+                    <Route
+                        path="abcd"
+                        element={<Navigate replace to="/bits" />}
                     />
                 </Route>
             </Routes>
