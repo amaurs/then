@@ -40,6 +40,7 @@ import Penrose from "./bits/penrose/Penrose.tsx";
 import Quadtree from "./bits/quadtree/QuadTree.tsx";
 import Natural from "./bits/natural/Natural.tsx";
 import TravelingSalesman from "./bits/travelingsalesman/TravelingSalesman.tsx";
+import Blog from './Blog.tsx';
 
 import Then from "./Then.tsx";
 
@@ -530,6 +531,9 @@ const Home = (props) => {
 
     // let debouncedShowMenu = useDebounce(showMenu, 5000);
 
+    let host = window.location.host.split(".");
+    let isBlog = host.length && host[0] === 'blog';
+
     useTimeout(() => {
         if (showMenu) {
             setShowMenu(false);
@@ -585,6 +589,32 @@ const Home = (props) => {
         }
     }, []);
 
+
+    if (isBlog) {
+        return (
+            <div
+                className="Home Home-info-container"
+                style={{
+                    background: theme.theme.background,
+                    color: theme.theme.foreground,
+                    width: "100vw",
+                    height: "100vh",
+                }}
+                onMouseMove={mouseMoveHandler}
+            >
+                <Routes>
+                     <Route
+                        path="/"
+                        element={
+                            <Blog title={"Hello blog!"} />
+                        }
+                    />
+                </Routes>
+            </div>
+        );
+    }
+
+
     return (
         <div
             className="Home Home-info-container"
@@ -637,10 +667,6 @@ const Home = (props) => {
                     <Route
                         path="about"
                         element={<ReactMarkdown source={markdown} />}
-                    />
-                    <Route
-                        path="abcd"
-                        element={<Navigate replace to="/bits" />}
                     />
                 </Route>
             </Routes>
