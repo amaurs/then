@@ -41,12 +41,14 @@ import Quadtree from "./bits/quadtree/QuadTree.tsx";
 import Natural from "./bits/natural/Natural.tsx";
 import TravelingSalesman from "./bits/travelingsalesman/TravelingSalesman.tsx";
 import Blog from './Blog.tsx';
+import Post from './Post.tsx';
 
 import Then from "./Then.tsx";
 
 import ReactMarkdown from "react-markdown";
 
 import "./Home.css";
+import "./Blog.css";
 
 import autostereogram from "./bits/autostereogram/Autostereogram.md";
 import annealing from "./bits/annealing/Annealing.md";
@@ -592,21 +594,24 @@ const Home = (props) => {
 
     if (isBlog) {
         return (
-            <div
-                className="Home Home-info-container"
-                style={{
-                    background: theme.theme.background,
-                    color: theme.theme.foreground,
-                    width: "100vw",
-                    height: "100vh",
-                }}
-                onMouseMove={mouseMoveHandler}
-            >
+            <div className="Blog">
                 <Routes>
                      <Route
                         path="/"
                         element={
-                            <Blog title={"Hello blog!"} />
+                            <Blog
+                                title={"Else"}
+                                url={`${banditHost}/posts`}
+                                />
+                        }
+                    />
+
+                    <Route
+                        path="/post/:slug"
+                        element={
+                            <Post
+                                url={`${banditHost}/post`}
+                                />
                         }
                     />
                 </Routes>
