@@ -1,0 +1,40 @@
+.Blog {
+    padding: 20px;
+}
+
+.Blog h1, h2, h3, h4 {
+    color: magenta;
+}
+
+.Blog h1 {
+    font-size: 60px;
+}
+
+.Blog ul {
+    list-style-type: none;
+}
+
+.Blog ul li {
+    font-size: 40px ;
+}
+
+.Blog p {
+    font-family: 'Arial', serif;
+    text-transform: none;
+    padding-bottom: 10px;
+}
+
+.Blog a {
+    text-decoration: none;
+    color: black;
+}
+
+@media only screen and (min-width: 600px) {
+    .Blog a {
+        font-size: 40px;
+    } 
+
+    .Blog li {
+        padding-left: 10px;
+    }
+}
