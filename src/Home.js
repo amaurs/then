@@ -78,6 +78,7 @@ import about from "./About.md";
 import stereo from "./bits/stereo/Stereo.md";
 
 import { ThemeContext } from "./ThemeContext.js";
+import { Code } from "./util/interface";
 import Slider from "./Slider.js";
 
 import { useTimeout } from "./Hooks.js";
@@ -527,6 +528,7 @@ const Home = (props) => {
     let [delay, setDelay] = useState(1000);
     let theme = useContext(ThemeContext);
     let [showMenu, setShowMenu] = useState(true);
+    let [codes, setCodes] = useState([]);
 
     let [konami, setKonami] = useState(0);
     let code = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
@@ -586,6 +588,32 @@ const Home = (props) => {
             }
         };
         fetchMarkdown(about);
+        return () => {
+            cancel = true;
+        }
+    }, []);
+
+    useEffect(() => {
+        let cancel = false;
+        const fetchCodes = async (url) => {
+            try {
+                let response = await fetch(url);
+                let json = await response.json();
+
+                if (!cancel) {
+                    let codes = json.codes.map((element, index) => <Route
+                        key={index}
+                        path={element.code}
+                        element={<Navigate replace to={element.redirect?`/bit/${element.redirect}`:'/'} />}
+                    />)
+                    setCodes(codes);
+
+                }
+            } catch (error) {
+                console.log("Error while loading qr routes.", error);
+            }
+        };
+        fetchCodes(`${banditHost}/codes`);
         return () => {
             cancel = true;
         }
@@ -673,6 +701,7 @@ const Home = (props) => {
                         path="about"
                         element={<ReactMarkdown source={markdown} />}
                     />
+                    {codes}
                 </Route>
             </Routes>
         </div>
