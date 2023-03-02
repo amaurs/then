@@ -5,3 +5,8 @@ export interface Image {
 export interface Post {
     url: string;
 }
+
+export interface Code {
+    code: string;
+    redirect: string;
+}
