@@ -26,6 +26,7 @@ import Distrito from "./bits/distrito/Distrito.tsx";
 
 import Conway from "./bits/conway/Conway.tsx";
 import Composer from "./bits/composer/Composer.tsx"
+import Animation from "./util/Animation";
 import Loom from "./bits/loom/Loom.tsx";
 import Mandelbrot from "./bits/mandelbrot/Mandelbrot.tsx";
 import Photography from "./bits/photography/Photography.tsx";
@@ -95,63 +96,7 @@ const presentationTime = 0;
 const banditHost = process.env.REACT_APP_API_HOST;
 const TRACKING_ID = process.env.REACT_APP_GA_ID;
 
-const mapping = {
-    "/hamiltonian": {
-        content: hamiltonian,
-        component: (
-            <Composer
-                title="hamiltonian"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={`${banditHost}/colors/hamiltonian-cycle/${512}`}
-                resolution={"512"}
-            />
-        ),
-    },
-    "/simulated-annealing": {
-        content: annealing,
-        component: (
-            <Composer
-                title="simulated annealing"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={`${banditHost}/colors/simulated-annealing/${512}`}
-                resolution={"512"}
-            />
-        ),
-    },
-    "/morton": {
-        content: morton,
-        component: (
-            <Composer
-                title="morton"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={`${banditHost}/colors/morton/${512}`}
-                resolution={"512"}
-            />
-        ),
-    },
-    "/flood-fill": {
-        content: floodfill,
-        component: (
-            <Composer
-                title="flood fill"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={`${banditHost}/colors/flood-fill/${64}`}
-                resolution={"64"}
-            />
-        ),
-    },
+const oldMapping = {
     "/traveling-salesman": {
         content: travelingSalesman,
         component: (
@@ -165,20 +110,7 @@ const mapping = {
             />
         ),
     },
-    "/natural": {
-        content: natural,
-        component: (
-            <Composer
-                title="natural"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={`${banditHost}/colors/identity/${512}`}
-                resolution={"512"}
-            />
-        ),
-    },
+
     "/penrose": {
         content: penrose,
         component: (
@@ -191,6 +123,7 @@ const mapping = {
             />
         ),
     },
+
     "/nostalgia": {
         content: nostalgia,
         component: (
@@ -270,21 +203,6 @@ const mapping = {
         ),
     },
 
-    "/hilbert": {
-        content: hilbert,
-        component: (
-            <Composer
-                title="hilbert"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={`${banditHost}/colors/hilbert/${512}`}
-                resolution={"512"}
-            />
-        ),
-    },
-
     "/anaglyph": {
         content: anaglyph,
         component: (
@@ -308,21 +226,6 @@ const mapping = {
                 delay={presentationTime}
                 width={window.innerWidth}
                 height={window.innerHeight}
-            />
-        ),
-    },
-
-    "/quadtree": {
-        content: quadtree,
-        component: (
-            <Composer
-                title="quadtree"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={`${banditHost}/colors/quadtree/${512}`}
-                resolution={"512"}
             />
         ),
     },
@@ -514,7 +417,7 @@ const Container = (props) => {
 const BitMenu = (props) => {
     return (
         <Menu
-            options={Object.keys(mapping)}
+            options={Object.keys(props.mapping)}
             style={{ backgroundColor: "transparent" }}
             setIndexBackground={props.setIndexBackground}
         ></Menu>
@@ -529,6 +432,8 @@ const Home = (props) => {
     let theme = useContext(ThemeContext);
     let [showMenu, setShowMenu] = useState(true);
     let [codes, setCodes] = useState([]);
+    let [colorsData, setColorsData] = useState(null);
+    let [mapping, setMapping] = useState(oldMapping);
 
     let [konami, setKonami] = useState(0);
     let code = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
@@ -601,6 +506,45 @@ const Home = (props) => {
                 let json = await response.json();
 
                 if (!cancel) {
+
+                    console.log(json);
+
+                    let projects = json.colors.map((element) => {
+                        console.log(element.resolutions);
+
+                        let final = element.resolutions.filter(e => e.resolution == element.default);
+                        let finalElement;
+                        if (final.length === 0) {
+                            finalElement = element.resolutions[0];
+                        } else {
+                            finalElement = final[0];
+                        }
+
+                        return {slug: element.slug, description: element.description, ...finalElement};
+                    });
+
+                    setColorsData(projects);
+                    console.log(projects);
+                }
+            } catch (error) {
+                console.log("Something went wrong.", error);
+                console.log(error);
+            }
+        };
+        fetchCodes(`${banditHost}/colors`);
+        return () => {
+            cancel = true;
+        }
+    }, []);
+
+    useEffect(() => {
+        let cancel = false;
+        const fetchCodes = async (url) => {
+            try {
+                let response = await fetch(url);
+                let json = await response.json();
+
+                if (!cancel) {
                     let codes = json.codes.map((element, index) => <Route
                         key={index}
                         path={element.code}
@@ -618,6 +562,30 @@ const Home = (props) => {
             cancel = true;
         }
     }, []);
+
+
+    useEffect(() => {
+
+        if (colorsData) {
+            let newMapping = colorsData.reduce((m, element) => {
+                m[`/${element.slug}`] = {
+                    content: quilt,
+                    component: <Animation
+                        className="Composer"
+                        title={element.slug}
+                        style={{}}
+                        delay={presentationTime}
+                        width={window.innerWidth}
+                        height={window.innerHeight}
+                        res={element.resolution}
+                        square={element.square}
+                        cube={element.cube}/>};
+                return m;
+            }, {});
+            setMapping({...mapping, ...newMapping});
+        }
+    }, [colorsData]);
+
 
 
     if (isBlog) {
@@ -646,7 +614,6 @@ const Home = (props) => {
             </div>
         );
     }
-
 
     return (
         <div
@@ -687,6 +654,7 @@ const Home = (props) => {
                         path="bits"
                         element={
                             <BitMenu
+                                mapping={mapping}
                                 setIndexBackground={setIndexBackground}
                             />
                         }
