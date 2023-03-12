@@ -7,10 +7,7 @@ import { ThemeContext } from '../../ThemeContext.js';
 
 import CSS from "csstype";
 
-interface Cities {
-    cities: number[];
-    hasFetched: boolean;
-}
+import { Cities } from "../../util/interface";
 
 interface Props {
     title: string;

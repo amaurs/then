@@ -177,20 +177,6 @@ const oldMapping = {
         ),
     },
 
-    "/anaglyph": {
-        content: anaglyph,
-        component: (
-            <Anaglyph
-                title="anaglyph"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={banditHost}
-            />
-        ),
-    },
-
     "/reinforcement-learning": {
         content: reinforcement,
         component: (
@@ -613,6 +599,40 @@ const Home = (props) => {
         };
     }, []);
 
+    const [anaglyphData, setAnaglyphData] = useState({ points: [], hasFetched: true });
+
+    useEffect(() => {
+        // let cancel: boolean = false;
+        let cancel = false;
+        // const fetchCitiesSolution = async (url: string) => {
+        const fetchCitiesSolution = async (url) => {
+            try {
+                let payload = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        point_set: "moebius",
+                        n_cities: "1000",
+                    }),
+                };
+
+                let response = await fetch(url, payload);
+                let json = await response.json();
+                if (!cancel) {
+                    setAnaglyphData({ points: json, hasFetched: true });
+                }
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error);
+            }
+        };
+        fetchCitiesSolution(banditHost);
+        return () => {
+            cancel = true;
+        };
+    }, [props.url]);
+
     useEffect(() => {
 
         if (colorsData) {
@@ -703,6 +723,29 @@ const Home = (props) => {
             setMapping({...mapping, ...newMapping});
         }
     }, [photographyData]);
+
+    useEffect(() => {
+
+        if (anaglyphData.points && anaglyphData.points.length) {
+            let newMapping = {
+
+                "/anaglyph": {
+                    content: anaglyph,
+                    component: (
+                        <Anaglyph
+                            title="anaglyph"
+                            style={{}}
+                            delay={presentationTime}
+                            width={window.innerWidth}
+                            height={window.innerHeight}
+                            anaglyphData={anaglyphData}
+                        />
+                    ),
+                },
+            };
+            setMapping({...mapping, ...newMapping});
+        }
+    }, [anaglyphData]);
 
     if (isBlog) {
         return (

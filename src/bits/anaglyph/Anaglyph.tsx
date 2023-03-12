@@ -6,19 +6,20 @@ import { useTimeout } from "../../Hooks.js";
 import Loader from "../../Presentation.js";
 import { ThemeContext } from "../../ThemeContext.js";
 
+import { Points } from "../../util/interface";
+
 interface Props {
     title: string;
     delay: number;
     style: object;
     width: number;
     height: number;
-    url: string;
+    anaglyphData: Points;
 }
 
 const Anaglyph = (props: Props) => {
     let div = useRef<HTMLDivElement>(document.createElement("div"));
     const [presenting, setPresenting] = useState(props.delay > 0);
-    const [data, setData] = useState({ points: [], hasFetched: true });
     const theme = useContext(ThemeContext);
 
     useTimeout(() => {
@@ -26,43 +27,13 @@ const Anaglyph = (props: Props) => {
     }, props.delay);
 
     useEffect(() => {
-        let cancel: boolean = false;
-        const fetchCitiesSolution = async (url: string) => {
-            try {
-                let payload = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        point_set: "moebius",
-                        n_cities: "1000",
-                    }),
-                };
-
-                let response = await fetch(url, payload);
-                let json = await response.json();
-                if (!cancel) {
-                    setData({ points: json, hasFetched: true });
-                }
-            } catch (error) {
-                console.log("Call to order endpoint failed.", error);
-            }
-        };
-        fetchCitiesSolution(props.url);
-        return () => {
-            cancel = true;
-        };
-    }, [props.url]);
-
-    useEffect(() => {
         if (
-            data.points.length > 0 &&
+            props.anaglyphData.points.length > 0 &&
             props.width > 0 &&
             props.height > 0 &&
             !presenting
         ) {
-            const vertices = data.points;
+            const vertices = props.anaglyphData.points;
             const width = props.width;
             const height = props.height;
             const material = new THREE.LineBasicMaterial({
@@ -130,7 +101,7 @@ const Anaglyph = (props: Props) => {
                 material.dispose();
             };
         }
-    }, [data, props.width, props.height, presenting, theme]);
+    }, [props.anaglyphData, props.width, props.height, presenting, theme]);
 
     let style = {};
 
