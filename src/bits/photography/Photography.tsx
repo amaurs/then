@@ -4,7 +4,6 @@ import './Photography.css'
 import Loader from '../../Presentation.js';
 
 import { useTimeout } from '../../Hooks.js';
-import { getRandomInt } from '../../tools';
 import { ThemeContext } from "../../ThemeContext.js";
 import { Image } from "../../util/interface";
 
@@ -18,13 +17,12 @@ interface Props {
     height: number;
     url: string;
     rows: number;
+    data: Array<Array<Image>>;
 }
 
 
 const Photography = (props: Props) => {
 
-    const [data, setData] = useState<Array<Array<Image>>>([[]]);
-    const [current, setCurrent] = useState(null);
     const [presenting, setPresenting] = useState(props.delay > 0);
     const theme = useContext(ThemeContext);
 
@@ -38,38 +36,9 @@ const Photography = (props: Props) => {
     const horizontalContainerRef = useRef<HTMLDivElement>(document.createElement("div"));
     const verticalContainerRef = useRef<HTMLDivElement>(document.createElement("div"));
 
-    useEffect(() => {
-        let cancel = false;
-        const fetchImages = async (url: string, rowNumber: number) => {
-            try {
-                let payload = {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                };
-                let response = await fetch(url, payload);
-                let json = await response.json();
-                if (!cancel) {
-                    let rows: Array<Array<Image>> = [...Array(rowNumber)].map(() => []);
-                    json["images"].map((image: Image, index: number) => {
-                        rows[index % rowNumber].push(image);
-                    });
-                    setData(rows);
-                }
-            } catch (error) {
-                console.log("Call to order endpoint failed.", error)
-            }
-        }
-        fetchImages(props.url, props.rows);
-        return () => {
-            cancel = true
-        };
-    }, [props.url, props.rows]);
-
 
     useEffect(() => {
-        if (!presenting && data !== undefined) {
+        if (!presenting && props.data !== undefined) {
             const setOffsetHander = () => {
                 const offsetTop = -verticalContainerRef.current.offsetTop;
                 const objectWidth = horizontalContainerRef.current.scrollWidth;
@@ -83,7 +52,7 @@ const Photography = (props: Props) => {
                 window.removeEventListener("scroll", setOffsetHander);
             }
         }
-    }, [props.width, props.height, presenting]);
+    }, [props.data, props.width, props.height, presenting]);
 
     const createRow = (images: Array<Image>) => {
         return images.map((image, index) => <div className="Photography-image" style={{ height: (props.height * .75) / props.rows, width: props.width }} key={index}>
@@ -101,7 +70,7 @@ const Photography = (props: Props) => {
         </div>);
     }
 
-    let rows = data.map((row, index) => <div className="Photography-row" key={index}>{createRow(row)}</div>);
+    let rows = props.data.map((row, index) => <div className="Photography-row" key={index}>{createRow(row)}</div>);
     let style = { height: dynamicHeight + "px" };
     if (rows.length === 0 && presenting) {
         return <Loader title={props.title} />

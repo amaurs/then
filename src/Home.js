@@ -216,20 +216,6 @@ const oldMapping = {
             />
         ),
     },
-    "/photography": {
-        content: photography,
-        component: (
-            <Photography
-                title="photography"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={banditHost + "/wigglegrams/jpg"}
-                rows={1}
-            />
-        ),
-    },
 
     "/1986": {
         content: distrito,
@@ -401,6 +387,8 @@ const Home = (props) => {
     let [mapping, setMapping] = useState(oldMapping);
     // traveling salesman
     const [cities, setCities] = useState({cities: [], hasFetched: true});
+    //  const [data, setData] = useState<Array<Array<Image>>>([[]]);
+    const [photographyData, setPhotographyData] = useState([[]]);
     const squareSampling = 100;
     const numberColors = 500;
 
@@ -594,6 +582,38 @@ const Home = (props) => {
     }, []);
 
     useEffect(() => {
+        let cancel = false;
+        // const fetchImages = async (url: string, rowNumber: number) => {
+        const fetchImages = async (url, rowNumber) => {
+            try {
+                let payload = {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                let response = await fetch(url, payload);
+                let json = await response.json();
+                if (!cancel) {
+                    //let rows: Array<Array<Image>> = [...Array(rowNumber)].map(() => []);
+                    let rows = [...Array(rowNumber)].map(() => []);
+                    // json["images"].map((image: Image, index: number) => {
+                    json["images"].map((image, index) => {
+                        rows[index % rowNumber].push(image);
+                    });
+                    setPhotographyData(rows);
+                }
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error)
+            }
+        }
+        fetchImages(banditHost + "/photography", 1);
+        return () => {
+            cancel = true
+        };
+    }, []);
+
+    useEffect(() => {
 
         if (colorsData) {
             let newMapping = colorsData.reduce((m, element) => {
@@ -639,7 +659,6 @@ const Home = (props) => {
         }
     }, [cities]);
 
-
     useEffect(() => {
 
         if (travelingSalesmanColors.length) {
@@ -662,7 +681,28 @@ const Home = (props) => {
         }
     }, [travelingSalesmanColors]);
 
+    useEffect(() => {
 
+        if (photographyData.length) {
+            let newMapping = {
+                "/photography": {
+                    content: photography,
+                    component: (
+                        <Photography
+                            title="photography"
+                            style={{}}
+                            delay={presentationTime}
+                            width={window.innerWidth}
+                            height={window.innerHeight}
+                            data={photographyData}
+                            rows={1}
+                        />
+                    ),
+                },
+            };
+            setMapping({...mapping, ...newMapping});
+        }
+    }, [photographyData]);
 
     if (isBlog) {
         return (
