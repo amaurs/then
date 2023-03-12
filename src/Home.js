@@ -81,6 +81,7 @@ import stereo from "./bits/stereo/Stereo.md";
 import { ThemeContext } from "./ThemeContext.js";
 import { Code } from "./util/interface";
 import Slider from "./Slider.js";
+import { getRandomIntegerArray } from './tools';
 
 import { useTimeout } from "./Hooks.js";
 
@@ -97,19 +98,6 @@ const banditHost = process.env.REACT_APP_API_HOST;
 const TRACKING_ID = process.env.REACT_APP_GA_ID;
 
 const oldMapping = {
-    "/traveling-salesman": {
-        content: travelingSalesman,
-        component: (
-            <TravelingSalesman
-                title="traveling salesman"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={banditHost}
-            />
-        ),
-    },
 
     "/penrose": {
         content: penrose,
@@ -437,6 +425,10 @@ const Home = (props) => {
     let [codes, setCodes] = useState([]);
     let [colorsData, setColorsData] = useState(null);
     let [mapping, setMapping] = useState(oldMapping);
+    // traveling salesman
+    const [cities, setCities] = useState({cities: [], hasFetched: true});
+    const squareSampling = 100;
+    const numberColors = 500;
 
     let [konami, setKonami] = useState(0);
     let code = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
@@ -566,6 +558,34 @@ const Home = (props) => {
         }
     }, []);
 
+    useEffect(() => {
+        let cancel = false;
+        const fetchCitiesSolution = async (url, numberColors, squareSampling) => {
+            try {
+                let payload = {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                };
+
+                let cityPoints = getRandomIntegerArray(numberColors * 2, 1, squareSampling);
+                let citiesUrl = url + "/solve?cities=" + JSON.stringify(cityPoints) + "&dimension=" + 2;
+
+                let response = await fetch(citiesUrl, payload);
+                let json = await response.json();
+                if (!cancel) {
+                    setCities({cities: json, hasFetched: true});
+                }  
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error)
+            }
+        }
+        fetchCitiesSolution(banditHost, numberColors, squareSampling);
+        return () => {
+            cancel=true;
+        } 
+    }, []);
 
     useEffect(() => {
 
@@ -588,6 +608,30 @@ const Home = (props) => {
             setMapping({...mapping, ...newMapping});
         }
     }, [colorsData]);
+
+    useEffect(() => {
+
+        if (cities.hasFetched) {
+            let newMapping = {
+                "/traveling-salesman": {
+                    content: travelingSalesman,
+                    component: (
+                        <TravelingSalesman
+                            title="traveling salesman"
+                            style={{}}
+                            delay={presentationTime}
+                            width={window.innerWidth}
+                            height={window.innerHeight}
+                            cities={cities}
+                            numberColors={numberColors}
+                            squareSampling={squareSampling}
+                        />
+                    ),
+                },
+            };
+            setMapping({...mapping, ...newMapping});
+        }
+    }, [cities]);
 
 
 
