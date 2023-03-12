@@ -1,12 +1,16 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
 import { useTimeout } from '../../Hooks.js';
-import { getRandomIntegerArray } from '../../tools';
 import Loader from '../../Presentation.js';
 import './TravelingSalesman.css';
 
 import { ThemeContext } from '../../ThemeContext.js';
 
 import CSS from "csstype";
+
+interface Cities {
+    cities: number[];
+    hasFetched: boolean;
+}
 
 interface Props {
     title: string;
@@ -15,14 +19,14 @@ interface Props {
     width: number;
     height: number;
     url: string;
+    cities: Cities;
+    squareSampling: number;
+    numberColors: number;
 }
 
 const TravelingSalesman = (props:Props) => {
     let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
     const theme = useContext(ThemeContext);
-    const [cities, setCities] = useState({cities: [], hasFetched: true});
-    const squareSampling = 100;
-    const numberColors = 500;
     const [presenting, setPresenting] = useState(props.delay>0);
 
     useTimeout(() => {
@@ -30,36 +34,7 @@ const TravelingSalesman = (props:Props) => {
     }, props.delay);
 
     useEffect(() => {
-        let cancel = false;
-        const fetchCitiesSolution = async (url: string, numberColors: number, squareSampling: number) => {
-            try {
-                let payload = {
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  }
-                };
-
-                let cityPoints = getRandomIntegerArray(numberColors * 2, 1, squareSampling);
-                let citiesUrl = url + "/solve?cities=" + JSON.stringify(cityPoints) + "&dimension=" + 2;
-
-                let response = await fetch(citiesUrl, payload);
-                let json = await response.json();
-                if (!cancel) {
-                    setCities({cities: json, hasFetched: true})
-                }  
-            } catch (error) {
-                console.log("Call to order endpoint failed.", error)
-            }
-        }
-        fetchCitiesSolution(props.url, numberColors, squareSampling);
-        return () => {
-            cancel=true;
-        } 
-    }, [props.url]);
-
-    useEffect(() => {
-        if (cities.cities.length > 0 && !presenting) {
+        if (props.cities.cities.length > 0 && !presenting) {
 
             let n = 0;
             let timeoutId: any;
@@ -86,9 +61,9 @@ const TravelingSalesman = (props:Props) => {
                             return time % size;
                         }
                     }
-                    let min = minBound(n, numberColors + 1);
-                    let max = maxBound(n, numberColors + 1);
-                    let citiesToDraw = cities.cities.slice(min * 2, max * 2);
+                    let min = minBound(n, props.numberColors + 1);
+                    let max = maxBound(n, props.numberColors + 1);
+                    let citiesToDraw = props.cities.cities.slice(min * 2, max * 2);
         
         
                     const context: CanvasRenderingContext2D = canvas.current.getContext(
@@ -104,7 +79,7 @@ const TravelingSalesman = (props:Props) => {
                     context.strokeStyle = theme.theme.middleground;
                     context.lineWidth = 5;
                     for(let i=0; i < citiesToDraw.length; i+=2) {
-                        context.lineTo(Math.floor(width * citiesToDraw[i] / squareSampling), Math.floor(height * citiesToDraw[i + 1] / squareSampling))    
+                        context.lineTo(Math.floor(width * citiesToDraw[i] / props.squareSampling), Math.floor(height * citiesToDraw[i + 1] / props.squareSampling))    
                     }
                     context.stroke();
                     n += 1;
@@ -122,7 +97,7 @@ const TravelingSalesman = (props:Props) => {
             };
         }
 
-    }, [cities, presenting, theme]);
+    }, [props.cities, props.squareSampling, props.numberColors, presenting, theme]);
 
     let style = {};
 
@@ -134,7 +109,7 @@ const TravelingSalesman = (props:Props) => {
     let minSize = props.width/props.height < 1 ? props.width:
                                                  props.height;
     
-    if (cities.cities.length >= 0 && !presenting) {
+    if (props.cities.cities.length >= 0 && !presenting) {
         return (<canvas
                 ref={canvas}
                 style={{ ...props.style, ...style }}
