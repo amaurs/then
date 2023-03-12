@@ -1,11 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
-import { useParams } from "react-router";
-import { useInterval } from "../../Hooks.js";
 import {
     colorToString,
     invertColor,
-    getRandomIntegerArray,
-    colorToInt,
     colorToGrey,
 } from "../../tools";
 import { useTimeout } from "../../Hooks.js";
@@ -20,15 +16,12 @@ interface Props {
     style: CSS.Properties;
     width: number;
     height: number;
-    url: string;
+    colors: number[];
 }
-
-const numberColors = 750;
 
 const Colors = (props: Props) => {
     const canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
     const theme = useContext(ThemeContext);
-    const [colors, setColors] = useState([]);
     const [presenting, setPresenting] = useState(props.delay > 0);
 
     useTimeout(() => {
@@ -36,47 +29,7 @@ const Colors = (props: Props) => {
     }, props.delay);
 
     useEffect(() => {
-        let cancel = false;
-        const fetchColorsSolution = async (
-            url: string,
-            numberColors: number
-        ) => {
-            try {
-                let payload = {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                };
-
-                let colorsArray = getRandomIntegerArray(
-                    numberColors * 3,
-                    0,
-                    256
-                );
-                let colorsUrl =
-                    props.url +
-                    "/solve?cities=" +
-                    JSON.stringify(colorsArray) +
-                    "&dimension=" +
-                    3;
-                let response = await fetch(colorsUrl, payload);
-                let json = await response.json();
-                if (!cancel) {
-                    setColors(json);
-                }
-            } catch (error) {
-                console.log("Call to order endpoint failed.", error);
-            }
-        };
-        fetchColorsSolution(props.url, numberColors);
-        return () => {
-            cancel = true;
-        };
-    }, [props.url]);
-
-    useEffect(() => {
-        if (colors.length > 0 && !presenting) {
+        if (props.colors.length > 0 && !presenting) {
             let n = 0;
             let timeoutId: any;
 
@@ -86,9 +39,9 @@ const Colors = (props: Props) => {
                 // requestAnimationFrame.
                 timeoutId = setTimeout(function() {
                     let color = [
-                        colors[(n % (colors.length / 3)) * 3],
-                        colors[(n % (colors.length / 3)) * 3 + 1],
-                        colors[(n % (colors.length / 3)) * 3 + 2],
+                        props.colors[(n % (props.colors.length / 3)) * 3],
+                        props.colors[(n % (props.colors.length / 3)) * 3 + 1],
+                        props.colors[(n % (props.colors.length / 3)) * 3 + 2],
                     ];
 
                     const context: CanvasRenderingContext2D = canvas.current.getContext(
@@ -158,7 +111,7 @@ const Colors = (props: Props) => {
                 frameId = null;
             };
         }
-    }, [colors, presenting, theme]);
+    }, [props.colors, presenting, theme]);
 
     let style = {};
 

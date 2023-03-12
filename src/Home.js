@@ -255,19 +255,6 @@ const oldMapping = {
             />
         ),
     },
-    "/colors": {
-        content: colors,
-        component: (
-            <Colors
-                title="colors"
-                delay={presentationTime}
-                style={{}}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={banditHost}
-            />
-        ),
-    },
 
     "/loom": {
         content: loom,
@@ -410,6 +397,7 @@ const Home = (props) => {
     let [showMenu, setShowMenu] = useState(true);
     let [codes, setCodes] = useState([]);
     let [colorsData, setColorsData] = useState(null);
+    let [travelingSalesmanColors, setTravelingSalesmanColors] = useState([]);
     let [mapping, setMapping] = useState(oldMapping);
     // traveling salesman
     const [cities, setCities] = useState({cities: [], hasFetched: true});
@@ -573,6 +561,38 @@ const Home = (props) => {
         } 
     }, []);
 
+    // Replicated code, should be refactored
+    useEffect(() => {
+        let cancel = false;
+        const fetchCitiesSolution = async (url, numberColors, squareSampling) => {
+            try {
+                let payload = {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                };
+
+                let cityPoints = getRandomIntegerArray(numberColors * 3, 0, 256);
+                let citiesUrl = url + "/solve?cities=" + JSON.stringify(cityPoints) + "&dimension=" + 3;
+
+                let response = await fetch(citiesUrl, payload);
+                let json = await response.json();
+                if (!cancel) {
+                    setTravelingSalesmanColors(json);
+                    console.log("colors");
+                    console.log(json);
+                }  
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error)
+            }
+        }
+        fetchCitiesSolution(banditHost, numberColors, squareSampling);
+        return () => {
+            cancel=true;
+        } 
+    }, []);
+
     useEffect(() => {
 
         if (colorsData) {
@@ -618,6 +638,29 @@ const Home = (props) => {
             setMapping({...mapping, ...newMapping});
         }
     }, [cities]);
+
+
+    useEffect(() => {
+
+        if (travelingSalesmanColors.length) {
+            let newMapping = {
+                "/colors": {
+                    content: travelingSalesman,
+                    component: (
+                        <Colors
+                            title="colors"
+                            delay={presentationTime}
+                            style={{}}
+                            width={window.innerWidth}
+                            height={window.innerHeight}
+                            colors={travelingSalesmanColors}
+                        />
+                    ),
+                },
+            };
+            setMapping({...mapping, ...newMapping});
+        }
+    }, [travelingSalesmanColors]);
 
 
 
