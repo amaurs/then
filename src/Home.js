@@ -341,7 +341,10 @@ const Bit = (props) => {
                 console.log("Markdown loading failed.", error);
             }
         };
-        fetchMarkdown(mapping["/" + slug].content);
+
+        console.log(props.mapping)
+
+        //fetchMarkdown(props.mapping["/" + slug].content);
 
         props.setIndexBackground("/" + slug);
 
@@ -632,7 +635,7 @@ const Home = (props) => {
                     element={
                         <Container
                             background={
-                                indexBackground === null
+                                indexBackground === null || mapping[indexBackground] === undefined
                                     ? null
                                     : mapping[indexBackground].component
                             }
@@ -662,7 +665,9 @@ const Home = (props) => {
                     <Route
                         path="bit/:slug"
                         element={
-                            <Bit setIndexBackground={setIndexBackground} />
+                            <Bit 
+                                mapping={mapping}
+                                setIndexBackground={setIndexBackground} />
                         }
                     />
                     <Route
