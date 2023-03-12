@@ -3,11 +3,9 @@ import React, {
     useEffect,
     useState,
     useContext,
-    onEffect,
 } from "react";
 import {
     Link,
-    useLocation,
     Navigate,
     useNavigate,
     useParams,
@@ -25,7 +23,6 @@ import Colors from "./bits/colors/Colors.tsx";
 import Distrito from "./bits/distrito/Distrito.tsx";
 
 import Conway from "./bits/conway/Conway.tsx";
-import Composer from "./bits/composer/Composer.tsx"
 import Animation from "./util/Animation";
 import Loom from "./bits/loom/Loom.tsx";
 import Mandelbrot from "./bits/mandelbrot/Mandelbrot.tsx";
@@ -33,13 +30,10 @@ import Photography from "./bits/photography/Photography.tsx";
 import Voronoi from "./bits/voronoi/Voronoi.tsx";
 import Reinforcement from "./bits/reinforcement/Reinforcement.tsx";
 import Stereo from "./bits/stereo/Stereo.tsx";
-import Hilbert from "./bits/hilbert/Hilbert.tsx";
 import Nostalgia from "./bits/nostalgia/Nostalgia.tsx";
 import Corrupted from "./bits/corrupted/Corrupted.tsx";
 import Anaglyph from "./bits/anaglyph/Anaglyph.tsx";
 import Penrose from "./bits/penrose/Penrose.tsx";
-import Quadtree from "./bits/quadtree/QuadTree.tsx";
-import Natural from "./bits/natural/Natural.tsx";
 import TravelingSalesman from "./bits/travelingsalesman/TravelingSalesman.tsx";
 import Blog from './Blog.tsx';
 import Post from './Post.tsx';
@@ -52,34 +46,26 @@ import "./Home.css";
 import "./Blog.css";
 
 import autostereogram from "./bits/autostereogram/Autostereogram.md";
-import annealing from "./bits/annealing/Annealing.md";
 import colors from "./bits/colors/Colors.md";
 import distrito from "./bits/distrito/Distrito.md";
-import floodfill from "./bits/flood/FloodFill.md";
 import bolero from "./bits/bolero/Bolero.md";
 import loom from "./bits/loom/Loom.md";
 import conway from "./bits/conway/Conway.md";
 import photography from "./bits/photography/Photography.md";
 import mandelbrot from "./bits/mandelbrot/Mandelbrot.md";
-import morton from "./bits/morton/Morton.md";
 import voronoi from "./bits/voronoi/Voronoi.md";
-import hamiltonian from "./bits/composer/Composer.md"
-import hilbert from "./bits/hilbert/Hilbert.md";
 import quilt from "./bits/quilt/Quilt.md";
 import reinforcement from "./bits/reinforcement/Reinforcement.md";
 import nostalgia from "./bits/nostalgia/Nostalgia.md";
 import corrupted from "./bits/corrupted/Corrupted.md";
 import anaglyph from "./bits/anaglyph/Anaglyph.md";
 import penrose from "./bits/penrose/Penrose.md";
-import quadtree from "./bits/quadtree/QuadTree.md";
-import natural from "./bits/natural/Natural.md";
 import travelingSalesman from "./bits/travelingsalesman/TravelingSalesman.md";
 
 import about from "./About.md";
 import stereo from "./bits/stereo/Stereo.md";
 
 import { ThemeContext } from "./ThemeContext.js";
-import { Code } from "./util/interface";
 import Slider from "./Slider.js";
 import { getRandomIntegerArray } from './tools';
 
