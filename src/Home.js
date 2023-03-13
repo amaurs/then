@@ -124,20 +124,6 @@ const oldMapping = {
         ),
     },
 
-    "/bolero": {
-        content: bolero,
-        component: (
-            <Bolero
-                title="bolero"
-                style={{}}
-                delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
-                url={banditHost + "/boleros/en"}
-            />
-        ),
-    },
-
     "/mandelbrot": {
         content: mandelbrot,
         component: (
@@ -361,20 +347,22 @@ const BitMenu = (props) => {
 };
 
 const Home = (props) => {
-    let [indexBackground, setIndexBackground] = useState(null);
-    let navigate = useNavigate();
-    let [markdown, setMarkdown] = useState(null);
-    let [delay, setDelay] = useState(1000);
-    let theme = useContext(ThemeContext);
-    let [showMenu, setShowMenu] = useState(true);
-    let [codes, setCodes] = useState([]);
-    let [colorsData, setColorsData] = useState(null);
-    let [travelingSalesmanColors, setTravelingSalesmanColors] = useState([]);
-    let [mapping, setMapping] = useState(oldMapping);
+    const [indexBackground, setIndexBackground] = useState(null);
+    const navigate = useNavigate();
+    const [markdown, setMarkdown] = useState(null);
+    const [delay, setDelay] = useState(1000);
+    const theme = useContext(ThemeContext);
+    const [showMenu, setShowMenu] = useState(true);
+    const [codes, setCodes] = useState([]);
+    const [colorsData, setColorsData] = useState(null);
+    const [travelingSalesmanColors, setTravelingSalesmanColors] = useState([]);
+    const [mapping, setMapping] = useState(oldMapping);
     // traveling salesman
     const [cities, setCities] = useState({cities: [], hasFetched: true});
-    //  const [data, setData] = useState<Array<Array<Image>>>([[]]);
+    // const [data, setData] = useState<Array<Array<Image>>>([[]]);
     const [photographyData, setPhotographyData] = useState([[]]);
+    const [anaglyphData, setAnaglyphData] = useState({ points: [], hasFetched: true });
+    const [sentence, setSentence] = useState("");
     const squareSampling = 100;
     const numberColors = 500;
 
@@ -599,8 +587,6 @@ const Home = (props) => {
         };
     }, []);
 
-    const [anaglyphData, setAnaglyphData] = useState({ points: [], hasFetched: true });
-
     useEffect(() => {
         // let cancel: boolean = false;
         let cancel = false;
@@ -631,7 +617,45 @@ const Home = (props) => {
         return () => {
             cancel = true;
         };
-    }, [props.url]);
+    }, []);
+
+    useEffect(() => {
+        let cancel = false;
+        const getPhrase = async (url) => {
+            try {
+                let payload = {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                };
+
+                let response = await fetch(url, payload);
+                let json = await response.json();
+                if (!cancel) {
+                    setSentence(
+                        json.sentence
+                            .split(" ")
+                            .filter((word) => "" !== word)
+                            .map((word) => (word === "i" ? "I" : word))
+                            .map((word, index) =>
+                                index === 0
+                                    ? word.charAt(0).toUpperCase() +
+                                      word.slice(1)
+                                    : word
+                            )
+                            .reduce((a, b) => a + " " + b, "")
+                    );
+                }
+            } catch (error) {
+                console.log("Call to order endpoint failed.", error);
+            }
+        };
+        getPhrase(banditHost + "/boleros/en");
+        return () => {
+            cancel = true;
+        };
+    }, []);
 
     useEffect(() => {
 
@@ -746,6 +770,29 @@ const Home = (props) => {
             setMapping({...mapping, ...newMapping});
         }
     }, [anaglyphData]);
+
+    useEffect(() => {
+
+        if (sentence.length) {
+            let newMapping = {
+
+                "/bolero": {
+                    content: bolero,
+                    component: (
+                        <Bolero
+                            title="bolero"
+                            style={{}}
+                            delay={presentationTime}
+                            width={window.innerWidth}
+                            height={window.innerHeight}
+                            sentence={sentence}
+                        />
+                    ),
+                },
+            };
+            setMapping({...mapping, ...newMapping});
+        }
+    }, [sentence]);
 
     if (isBlog) {
         return (
