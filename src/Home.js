@@ -67,7 +67,6 @@ import stereo from "./bits/stereo/Stereo.md";
 
 import { ThemeContext } from "./ThemeContext.js";
 import Slider from "./Slider.js";
-import { getRandomIntegerArray } from './tools';
 
 import { useTimeout } from "./Hooks.js";
 
@@ -354,7 +353,6 @@ const Home = (props) => {
     const theme = useContext(ThemeContext);
     const [showMenu, setShowMenu] = useState(true);
     const [mapping, setMapping] = useState(oldMapping);
-    const [masterData, setMasterData] = useState({});
     const squareSampling = 100;
     const numberColors = 500;
 
@@ -422,262 +420,9 @@ const Home = (props) => {
     }, []);
 
     useEffect(() => {
-        let cancel = false;
-        const fetchCodes = async (url) => {
-            try {
-                let response = await fetch(url);
-                let json = await response.json();
-
-                if (!cancel) {
-
-                    console.log(json);
-
-                    let projects = json.colors.map((element) => {
-                        console.log(element.resolutions);
-
-                        let final = element.resolutions.filter(e => e.resolution == element.default);
-                        let finalElement;
-                        if (final.length === 0) {
-                            finalElement = element.resolutions[0];
-                        } else {
-                            finalElement = final[0];
-                        }
-
-                        return {slug: element.slug, description: element.description, ...finalElement};
-                    });
-
-                    setMasterData({...masterData, colorsData: {data: projects, used: false}});
-                }
-            } catch (error) {
-                console.log("Something went wrong.", error);
-                console.log(error);
-            }
-        };
-
-        if (masterData.colors === undefined) {
-            fetchCodes(`${banditHost}/colors`);
-        }
-        
-        return () => {
-            cancel = true;
-        }
-    }, [masterData]);
-    
-    useEffect(() => {
-        let cancel = false;
-        const fetchCodes = async (url) => {
-            try {
-                console.log("Fetching codes.");
-                let response = await fetch(url);
-                let json = await response.json();
-
-                if (!cancel) {
-
-                    setMasterData({...masterData, ...json});
-                }
-            } catch (error) {
-                console.log("Error while loading qr routes.", error);
-            }
-        };
-
-        if (masterData.codes === undefined) {
-            fetchCodes(`${banditHost}/codes`);
-        }
-
-        return () => {
-            cancel = true;
-        }
-    }, [masterData]);
-
-    useEffect(() => {
-        let cancel = false;
-        const fetchCitiesSolution = async (url, numberColors, squareSampling) => {
-            try {
-                let payload = {
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  }
-                };
-
-                let cityPoints = getRandomIntegerArray(numberColors * 2, 1, squareSampling);
-                let citiesUrl = url + "/solve?cities=" + JSON.stringify(cityPoints) + "&dimension=" + 2;
-
-                let response = await fetch(citiesUrl, payload);
-                let json = await response.json();
-                if (!cancel) {
-
-                    setMasterData({...masterData, travelingSalesmanData: {cities: json, hasFetched: true}});
-                }  
-            } catch (error) {
-                console.log("Call to order endpoint failed.", error)
-            }
-        }
-
-        if (masterData.travelingSalesmanData === undefined) {
-            fetchCitiesSolution(banditHost, numberColors, squareSampling);
-        }
-        
-        return () => {
-            cancel=true;
-        } 
-    }, [masterData]);
-
-    // Replicated code, should be refactored
-    useEffect(() => {
-        let cancel = false;
-        const fetchCitiesSolution = async (url, numberColors, squareSampling) => {
-            try {
-                let payload = {
-                  method: 'GET',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  }
-                };
-
-                let cityPoints = getRandomIntegerArray(numberColors * 3, 0, 256);
-                let citiesUrl = url + "/solve?cities=" + JSON.stringify(cityPoints) + "&dimension=" + 3;
-
-                let response = await fetch(citiesUrl, payload);
-                let json = await response.json();
-                if (!cancel) {
-
-                    setMasterData({...masterData, travelingSalesmanColors: json});
-                }  
-            } catch (error) {
-                console.log("Call to order endpoint failed.", error)
-            }
-        }
-
-        if (masterData.travelingSalesmanColors === undefined) {
-            fetchCitiesSolution(banditHost, numberColors, squareSampling);
-        }
-
-        return () => {
-            cancel=true;
-        } 
-    }, [masterData]);
-
-    useEffect(() => {
-        let cancel = false;
-        // const fetchImages = async (url: string, rowNumber: number) => {
-        const fetchImages = async (url, rowNumber) => {
-            try {
-                let payload = {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                };
-                let response = await fetch(url, payload);
-                let json = await response.json();
-                if (!cancel) {
-                    //let rows: Array<Array<Image>> = [...Array(rowNumber)].map(() => []);
-                    let rows = [...Array(rowNumber)].map(() => []);
-                    // json["images"].map((image: Image, index: number) => {
-                    json["images"].map((image, index) => {
-                        rows[index % rowNumber].push(image);
-                    });
-
-                    setMasterData({...masterData, photography: rows});
-                }
-            } catch (error) {
-                console.log("Call to order endpoint failed.", error)
-            }
-        }
-
-        if (masterData.photography === undefined) {
-            fetchImages(banditHost + "/photography", 1);
-        }
-        
-        return () => {
-            cancel = true
-        };
-    }, [masterData]);
-
-    useEffect(() => {
-        // let cancel: boolean = false;
-        let cancel = false;
-        // const fetchCitiesSolution = async (url: string) => {
-        const fetchCitiesSolution = async (url) => {
-            try {
-                let payload = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        point_set: "moebius",
-                        n_cities: "500",
-                    }),
-                };
-
-                let response = await fetch(url, payload);
-                let json = await response.json();
-                if (!cancel) {
-
-                    setMasterData({...masterData, anaglyph: { points: json, hasFetched: true }});
-                }
-            } catch (error) {
-                console.log("Call to order endpoint failed.", error);
-            }
-        };
-
-        if (masterData.anaglyph === undefined) {
-            fetchCitiesSolution(banditHost);
-        }
-
-        return () => {
-            cancel = true;
-        };
-    }, [masterData]);
-
-    useEffect(() => {
-        let cancel = false;
-        const getPhrase = async (url) => {
-            try {
-                let payload = {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                };
-
-                let response = await fetch(url, payload);
-                let json = await response.json();
-                if (!cancel) {
-                    let bolero = json.sentence
-                        .split(" ")
-                        .filter((word) => "" !== word)
-                        .map((word) => (word === "i" ? "I" : word))
-                        .map((word, index) =>
-                            index === 0
-                                ? word.charAt(0).toUpperCase() +
-                                  word.slice(1)
-                                : word)
-                        .reduce((a, b) => a + " " + b, "");
-
-                    setMasterData({...masterData, bolero: bolero});
-                }
-            } catch (error) {
-                console.log("Call to order endpoint failed.", error);
-            }
-        };
-
-        if (masterData.bolero === undefined) {
-            getPhrase(banditHost + "/boleros/en");
-        }
-        
-        return () => {
-            cancel = true;
-        };
-    }, [masterData]);
-
-
-    useEffect(() => {
         let newMapping = {};
 
-        if (masterData.anaglyph && masterData.anaglyph.points && masterData.anaglyph.points.length && mapping["/anaglyph"] === undefined) {
+        if (props.masterData.anaglyph && props.masterData.anaglyph.points && props.masterData.anaglyph.points.length && mapping["/anaglyph"] === undefined) {
 
             newMapping["/anaglyph"] = {
                 content: anaglyph,
@@ -688,13 +433,13 @@ const Home = (props) => {
                         delay={presentationTime}
                         width={window.innerWidth}
                         height={window.innerHeight}
-                        anaglyphData={masterData.anaglyph}
+                        anaglyphData={props.masterData.anaglyph}
                     />
                 ),
             };
         }
 
-        if (masterData.bolero && masterData.bolero.length && mapping["/bolero"] === undefined) {
+        if (props.masterData.bolero && props.masterData.bolero.length && mapping["/bolero"] === undefined) {
             newMapping["/bolero"] = {
                 content: bolero,
                 component: (
@@ -704,13 +449,13 @@ const Home = (props) => {
                         delay={presentationTime}
                         width={window.innerWidth}
                         height={window.innerHeight}
-                        sentence={masterData.bolero}
+                        sentence={props.masterData.bolero}
                     />
                 ),
             };
         }
 
-        if (masterData.travelingSalesmanColors && masterData.travelingSalesmanColors.length && mapping["/colors"] === undefined) {
+        if (props.masterData.travelingSalesmanColors && props.masterData.travelingSalesmanColors.length && mapping["/colors"] === undefined) {
             newMapping["/colors"] = {
                 content: travelingSalesman,
                 component: (
@@ -720,14 +465,14 @@ const Home = (props) => {
                         style={{}}
                         width={window.innerWidth}
                         height={window.innerHeight}
-                        colors={masterData.travelingSalesmanColors}
+                        colors={props.masterData.travelingSalesmanColors}
                     />
                 ),
             };
         }
 
-        if (masterData.colorsData && masterData.colorsData.data && !masterData.colorsData.used) {
-            let colorsDataMapping = masterData.colorsData.data.reduce((m, element) => {
+        if (props.masterData.colorsData && props.masterData.colorsData.data && !props.masterData.colorsData.used) {
+            let colorsDataMapping = props.masterData.colorsData.data.reduce((m, element) => {
                 m[`/${element.slug}`] = {
                     content: quilt,
                     component: <Animation
@@ -743,14 +488,14 @@ const Home = (props) => {
                 return m;
             }, {});
 
-            masterData.colorsData.used = true;
+            props.masterData.colorsData.used = true;
 
-            setMasterData(masterData);
+            props.setMasterData(props.masterData);
 
             newMapping = {...newMapping, ...colorsDataMapping};
         }
 
-        if (masterData.photography && masterData.photography.length && mapping["/photography"] === undefined) {
+        if (props.masterData.photography && props.masterData.photography.length && mapping["/photography"] === undefined) {
             newMapping["/photography"] = {
                 content: photography,
                 component: (
@@ -760,14 +505,14 @@ const Home = (props) => {
                         delay={presentationTime}
                         width={window.innerWidth}
                         height={window.innerHeight}
-                        data={masterData.photography}
+                        data={props.masterData.photography}
                         rows={1}
                     />
                 ),
             };
         }
 
-        if (masterData.travelingSalesmanData && masterData.travelingSalesmanData.cities && masterData.travelingSalesmanData.hasFetched && mapping["/traveling-salesman"] === undefined) {
+        if (props.masterData.travelingSalesmanData && props.masterData.travelingSalesmanData.cities && props.masterData.travelingSalesmanData.hasFetched && mapping["/traveling-salesman"] === undefined) {
             newMapping["/traveling-salesman"] = {
                 content: travelingSalesman,
                 component: (
@@ -777,7 +522,7 @@ const Home = (props) => {
                         delay={presentationTime}
                         width={window.innerWidth}
                         height={window.innerHeight}
-                        cities={masterData.travelingSalesmanData}
+                        cities={props.masterData.travelingSalesmanData}
                         numberColors={numberColors}
                         squareSampling={squareSampling}
                     />
@@ -789,9 +534,9 @@ const Home = (props) => {
             setMapping({...mapping, ...newMapping});
         }
 
-    }, [masterData, mapping]);
+    }, [props.masterData, mapping]);
 
-    if (masterData.codes === undefined) {
+    if (props.masterData.codes === undefined) {
         return null;
     }
 
@@ -878,7 +623,7 @@ const Home = (props) => {
                         path="about"
                         element={<ReactMarkdown source={markdown} />}
                     />
-                    {masterData.codes.map((element, index) => <Route
+                    {props.masterData.codes.map((element, index) => <Route
                         key={index}
                         path={element.code}
                         element={<Navigate replace to={element.redirect?`/bit/${element.redirect}`:'/'} />}
