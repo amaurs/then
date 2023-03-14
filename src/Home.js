@@ -353,16 +353,8 @@ const Home = (props) => {
     const [delay, setDelay] = useState(1000);
     const theme = useContext(ThemeContext);
     const [showMenu, setShowMenu] = useState(true);
-    const [codes, setCodes] = useState([]);
-    const [colorsData, setColorsData] = useState(null);
-    const [travelingSalesmanColors, setTravelingSalesmanColors] = useState([]);
     const [mapping, setMapping] = useState(oldMapping);
-    // traveling salesman
-    const [cities, setCities] = useState({cities: [], hasFetched: true});
-    // const [data, setData] = useState<Array<Array<Image>>>([[]]);
-    const [photographyData, setPhotographyData] = useState([[]]);
-    const [anaglyphData, setAnaglyphData] = useState({ points: [], hasFetched: true });
-    const [sentence, setSentence] = useState("");
+    const [masterData, setMasterData] = useState({});
     const squareSampling = 100;
     const numberColors = 500;
 
@@ -454,45 +446,48 @@ const Home = (props) => {
                         return {slug: element.slug, description: element.description, ...finalElement};
                     });
 
-                    setColorsData(projects);
-                    console.log(projects);
+                    setMasterData({...masterData, colorsData: {data: projects, used: false}});
                 }
             } catch (error) {
                 console.log("Something went wrong.", error);
                 console.log(error);
             }
         };
-        fetchCodes(`${banditHost}/colors`);
+
+        if (masterData.colors === undefined) {
+            fetchCodes(`${banditHost}/colors`);
+        }
+        
         return () => {
             cancel = true;
         }
-    }, []);
-
+    }, [masterData]);
+    
     useEffect(() => {
         let cancel = false;
         const fetchCodes = async (url) => {
             try {
+                console.log("Fetching codes.");
                 let response = await fetch(url);
                 let json = await response.json();
 
                 if (!cancel) {
-                    let codes = json.codes.map((element, index) => <Route
-                        key={index}
-                        path={element.code}
-                        element={<Navigate replace to={element.redirect?`/bit/${element.redirect}`:'/'} />}
-                    />)
-                    setCodes(codes);
 
+                    setMasterData({...masterData, ...json});
                 }
             } catch (error) {
                 console.log("Error while loading qr routes.", error);
             }
         };
-        fetchCodes(`${banditHost}/codes`);
+
+        if (masterData.codes === undefined) {
+            fetchCodes(`${banditHost}/codes`);
+        }
+
         return () => {
             cancel = true;
         }
-    }, []);
+    }, [masterData]);
 
     useEffect(() => {
         let cancel = false;
@@ -511,17 +506,22 @@ const Home = (props) => {
                 let response = await fetch(citiesUrl, payload);
                 let json = await response.json();
                 if (!cancel) {
-                    setCities({cities: json, hasFetched: true});
+
+                    setMasterData({...masterData, travelingSalesmanData: {cities: json, hasFetched: true}});
                 }  
             } catch (error) {
                 console.log("Call to order endpoint failed.", error)
             }
         }
-        fetchCitiesSolution(banditHost, numberColors, squareSampling);
+
+        if (masterData.travelingSalesmanData === undefined) {
+            fetchCitiesSolution(banditHost, numberColors, squareSampling);
+        }
+        
         return () => {
             cancel=true;
         } 
-    }, []);
+    }, [masterData]);
 
     // Replicated code, should be refactored
     useEffect(() => {
@@ -541,19 +541,22 @@ const Home = (props) => {
                 let response = await fetch(citiesUrl, payload);
                 let json = await response.json();
                 if (!cancel) {
-                    setTravelingSalesmanColors(json);
-                    console.log("colors");
-                    console.log(json);
+
+                    setMasterData({...masterData, travelingSalesmanColors: json});
                 }  
             } catch (error) {
                 console.log("Call to order endpoint failed.", error)
             }
         }
-        fetchCitiesSolution(banditHost, numberColors, squareSampling);
+
+        if (masterData.travelingSalesmanColors === undefined) {
+            fetchCitiesSolution(banditHost, numberColors, squareSampling);
+        }
+
         return () => {
             cancel=true;
         } 
-    }, []);
+    }, [masterData]);
 
     useEffect(() => {
         let cancel = false;
@@ -575,17 +578,22 @@ const Home = (props) => {
                     json["images"].map((image, index) => {
                         rows[index % rowNumber].push(image);
                     });
-                    setPhotographyData(rows);
+
+                    setMasterData({...masterData, photography: rows});
                 }
             } catch (error) {
                 console.log("Call to order endpoint failed.", error)
             }
         }
-        fetchImages(banditHost + "/photography", 1);
+
+        if (masterData.photography === undefined) {
+            fetchImages(banditHost + "/photography", 1);
+        }
+        
         return () => {
             cancel = true
         };
-    }, []);
+    }, [masterData]);
 
     useEffect(() => {
         // let cancel: boolean = false;
@@ -600,24 +608,29 @@ const Home = (props) => {
                     },
                     body: JSON.stringify({
                         point_set: "moebius",
-                        n_cities: "1000",
+                        n_cities: "500",
                     }),
                 };
 
                 let response = await fetch(url, payload);
                 let json = await response.json();
                 if (!cancel) {
-                    setAnaglyphData({ points: json, hasFetched: true });
+
+                    setMasterData({...masterData, anaglyph: { points: json, hasFetched: true }});
                 }
             } catch (error) {
                 console.log("Call to order endpoint failed.", error);
             }
         };
-        fetchCitiesSolution(banditHost);
+
+        if (masterData.anaglyph === undefined) {
+            fetchCitiesSolution(banditHost);
+        }
+
         return () => {
             cancel = true;
         };
-    }, []);
+    }, [masterData]);
 
     useEffect(() => {
         let cancel = false;
@@ -633,34 +646,88 @@ const Home = (props) => {
                 let response = await fetch(url, payload);
                 let json = await response.json();
                 if (!cancel) {
-                    setSentence(
-                        json.sentence
-                            .split(" ")
-                            .filter((word) => "" !== word)
-                            .map((word) => (word === "i" ? "I" : word))
-                            .map((word, index) =>
-                                index === 0
-                                    ? word.charAt(0).toUpperCase() +
-                                      word.slice(1)
-                                    : word
-                            )
-                            .reduce((a, b) => a + " " + b, "")
-                    );
+                    let bolero = json.sentence
+                        .split(" ")
+                        .filter((word) => "" !== word)
+                        .map((word) => (word === "i" ? "I" : word))
+                        .map((word, index) =>
+                            index === 0
+                                ? word.charAt(0).toUpperCase() +
+                                  word.slice(1)
+                                : word)
+                        .reduce((a, b) => a + " " + b, "");
+
+                    setMasterData({...masterData, bolero: bolero});
                 }
             } catch (error) {
                 console.log("Call to order endpoint failed.", error);
             }
         };
-        getPhrase(banditHost + "/boleros/en");
+
+        if (masterData.bolero === undefined) {
+            getPhrase(banditHost + "/boleros/en");
+        }
+        
         return () => {
             cancel = true;
         };
-    }, []);
+    }, [masterData]);
+
 
     useEffect(() => {
+        let newMapping = {};
 
-        if (colorsData) {
-            let newMapping = colorsData.reduce((m, element) => {
+        if (masterData.anaglyph && masterData.anaglyph.points && masterData.anaglyph.points.length && mapping["/anaglyph"] === undefined) {
+
+            newMapping["/anaglyph"] = {
+                content: anaglyph,
+                component: (
+                    <Anaglyph
+                        title="anaglyph"
+                        style={{}}
+                        delay={presentationTime}
+                        width={window.innerWidth}
+                        height={window.innerHeight}
+                        anaglyphData={masterData.anaglyph}
+                    />
+                ),
+            };
+        }
+
+        if (masterData.bolero && masterData.bolero.length && mapping["/bolero"] === undefined) {
+            newMapping["/bolero"] = {
+                content: bolero,
+                component: (
+                    <Bolero
+                        title="bolero"
+                        style={{}}
+                        delay={presentationTime}
+                        width={window.innerWidth}
+                        height={window.innerHeight}
+                        sentence={masterData.bolero}
+                    />
+                ),
+            };
+        }
+
+        if (masterData.travelingSalesmanColors && masterData.travelingSalesmanColors.length && mapping["/colors"] === undefined) {
+            newMapping["/colors"] = {
+                content: travelingSalesman,
+                component: (
+                    <Colors
+                        title="colors"
+                        delay={presentationTime}
+                        style={{}}
+                        width={window.innerWidth}
+                        height={window.innerHeight}
+                        colors={masterData.travelingSalesmanColors}
+                    />
+                ),
+            };
+        }
+
+        if (masterData.colorsData && masterData.colorsData.data && !masterData.colorsData.used) {
+            let colorsDataMapping = masterData.colorsData.data.reduce((m, element) => {
                 m[`/${element.slug}`] = {
                     content: quilt,
                     component: <Animation
@@ -675,124 +742,58 @@ const Home = (props) => {
                         cube={element.cube}/>};
                 return m;
             }, {});
-            setMapping({...mapping, ...newMapping});
+
+            masterData.colorsData.used = true;
+
+            setMasterData(masterData);
+
+            newMapping = {...newMapping, ...colorsDataMapping};
         }
-    }, [colorsData]);
 
-    useEffect(() => {
-
-        if (cities.hasFetched) {
-            let newMapping = {
-                "/traveling-salesman": {
-                    content: travelingSalesman,
-                    component: (
-                        <TravelingSalesman
-                            title="traveling salesman"
-                            style={{}}
-                            delay={presentationTime}
-                            width={window.innerWidth}
-                            height={window.innerHeight}
-                            cities={cities}
-                            numberColors={numberColors}
-                            squareSampling={squareSampling}
-                        />
-                    ),
-                },
+        if (masterData.photography && masterData.photography.length && mapping["/photography"] === undefined) {
+            newMapping["/photography"] = {
+                content: photography,
+                component: (
+                    <Photography
+                        title="photography"
+                        style={{}}
+                        delay={presentationTime}
+                        width={window.innerWidth}
+                        height={window.innerHeight}
+                        data={masterData.photography}
+                        rows={1}
+                    />
+                ),
             };
-            setMapping({...mapping, ...newMapping});
         }
-    }, [cities]);
 
-    useEffect(() => {
-
-        if (travelingSalesmanColors.length) {
-            let newMapping = {
-                "/colors": {
-                    content: travelingSalesman,
-                    component: (
-                        <Colors
-                            title="colors"
-                            delay={presentationTime}
-                            style={{}}
-                            width={window.innerWidth}
-                            height={window.innerHeight}
-                            colors={travelingSalesmanColors}
-                        />
-                    ),
-                },
+        if (masterData.travelingSalesmanData && masterData.travelingSalesmanData.cities && masterData.travelingSalesmanData.hasFetched && mapping["/traveling-salesman"] === undefined) {
+            newMapping["/traveling-salesman"] = {
+                content: travelingSalesman,
+                component: (
+                    <TravelingSalesman
+                        title="traveling salesman"
+                        style={{}}
+                        delay={presentationTime}
+                        width={window.innerWidth}
+                        height={window.innerHeight}
+                        cities={masterData.travelingSalesmanData}
+                        numberColors={numberColors}
+                        squareSampling={squareSampling}
+                    />
+                ),
             };
+        }
+
+        if (Object.keys(newMapping).length){
             setMapping({...mapping, ...newMapping});
         }
-    }, [travelingSalesmanColors]);
 
-    useEffect(() => {
+    }, [masterData, mapping]);
 
-        if (photographyData.length) {
-            let newMapping = {
-                "/photography": {
-                    content: photography,
-                    component: (
-                        <Photography
-                            title="photography"
-                            style={{}}
-                            delay={presentationTime}
-                            width={window.innerWidth}
-                            height={window.innerHeight}
-                            data={photographyData}
-                            rows={1}
-                        />
-                    ),
-                },
-            };
-            setMapping({...mapping, ...newMapping});
-        }
-    }, [photographyData]);
-
-    useEffect(() => {
-
-        if (anaglyphData.points && anaglyphData.points.length) {
-            let newMapping = {
-
-                "/anaglyph": {
-                    content: anaglyph,
-                    component: (
-                        <Anaglyph
-                            title="anaglyph"
-                            style={{}}
-                            delay={presentationTime}
-                            width={window.innerWidth}
-                            height={window.innerHeight}
-                            anaglyphData={anaglyphData}
-                        />
-                    ),
-                },
-            };
-            setMapping({...mapping, ...newMapping});
-        }
-    }, [anaglyphData]);
-
-    useEffect(() => {
-
-        if (sentence.length) {
-            let newMapping = {
-
-                "/bolero": {
-                    content: bolero,
-                    component: (
-                        <Bolero
-                            title="bolero"
-                            style={{}}
-                            delay={presentationTime}
-                            width={window.innerWidth}
-                            height={window.innerHeight}
-                            sentence={sentence}
-                        />
-                    ),
-                },
-            };
-            setMapping({...mapping, ...newMapping});
-        }
-    }, [sentence]);
+    if (masterData.codes === undefined) {
+        return null;
+    }
 
     if (isBlog) {
         return (
@@ -877,7 +878,11 @@ const Home = (props) => {
                         path="about"
                         element={<ReactMarkdown source={markdown} />}
                     />
-                    {codes}
+                    {masterData.codes.map((element, index) => <Route
+                        key={index}
+                        path={element.code}
+                        element={<Navigate replace to={element.redirect?`/bit/${element.redirect}`:'/'} />}
+                    />)}
                 </Route>
             </Routes>
         </div>
