@@ -1,15 +1,14 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
-import { useParams } from "react-router";
 import { colorToInt } from "../tools";
-import { useInterval, useTimeout } from "../Hooks.js";
+import { useTimeout } from "../Hooks.js";
 import Loader from "../Presentation.js";
 import { ThemeContext } from "../ThemeContext.js";
+import "./Animation.css";
 
 import CSS from "csstype";
 
 interface Props {
     title: string;
-    className: string;
     delay: number;
     style: CSS.Properties;
     width: number;
@@ -163,7 +162,7 @@ const Animation = (props: Props) => {
     } else {
         return (
             <canvas
-                className={props.className}
+                className="Animation"
                 style={{ ...props.style, ...style }}
                 width={props.res + "px"}
                 height={props.res + "px"}

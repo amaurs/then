@@ -476,7 +476,6 @@ const Home = (props) => {
                 m[`/${element.slug}`] = {
                     content: quilt,
                     component: <Animation
-                        className="Composer"
                         title={element.slug}
                         style={{}}
                         delay={presentationTime}
