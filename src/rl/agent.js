@@ -1,13 +1,13 @@
-import { argMax } from "./util.js";
+import { argMax } from './util.js'
 
 export class Agent {
     constructor(numberOfActions, numberOfStates) {
-        this.numberOfStates = numberOfStates;
-        this.numberOfActions = numberOfActions;
-        this.Q = new Array(this.numberOfStates * this.numberOfActions).fill(0);
-        this.alpha = 0.8;
-        this.gamma = 0.4;
-        this.epsilon = 0.1;
+        this.numberOfStates = numberOfStates
+        this.numberOfActions = numberOfActions
+        this.Q = new Array(this.numberOfStates * this.numberOfActions).fill(0)
+        this.alpha = 0.8
+        this.gamma = 0.4
+        this.epsilon = 0.1
     }
 
     /**
@@ -17,7 +17,7 @@ export class Agent {
      * @returns {Object} information on the sate of the agent.
      */
     tick(state, reward) {
-        throw new Error("This method should be implemented by the subclass.");
+        throw new Error('This method should be implemented by the subclass.')
     }
 
     /**
@@ -27,23 +27,23 @@ export class Agent {
      * @returns {number} the index of the selected action.
      */
     epsilonGreedyPolicy(state, epsilon) {
-        const actionsIndex = [];
-        let actionStateValue = [];
+        const actionsIndex = []
+        let actionStateValue = []
         for (let i = 0; i < this.numberOfActions; i++) {
-            actionStateValue.push(this.Q[this.indexStateAction(state, i)]);
-            actionsIndex.push(i); // There should be a cleaner way to accomplish this.
+            actionStateValue.push(this.Q[this.indexStateAction(state, i)])
+            actionsIndex.push(i) // There should be a cleaner way to accomplish this.
         }
-        const argMaxActions = argMax(actionStateValue);
+        const argMaxActions = argMax(actionStateValue)
         if (Math.random() < epsilon) {
             if (actionsIndex.length === 0) {
-                debugger;
+                debugger
             }
-            return actionsIndex;
+            return actionsIndex
         } else {
             if (argMaxActions.length === 0) {
-                debugger;
+                debugger
             }
-            return argMaxActions;
+            return argMaxActions
         }
     }
 
@@ -52,37 +52,37 @@ export class Agent {
      * @returns an integer representing the (state, action) pair.
      */
     indexStateAction(state, action) {
-        return state * this.numberOfActions + action;
+        return state * this.numberOfActions + action
     }
     /**
      * Helper method to update the value of epsilon.
      */
     setEpsilon(epsilon) {
-        this.epsilon = epsilon;
+        this.epsilon = epsilon
     }
     /**
      * Helper method to update the value of alpha.
      */
     setAlpha(alpha) {
-        this.alpha = alpha;
+        this.alpha = alpha
     }
     /**
      * Helper method to update the value of gamma.
      */
     setGamma(gamma) {
-        this.gamma = gamma;
+        this.gamma = gamma
     }
 
     toActionMap() {
-        let map = [];
+        let map = []
         for (let i = 0; i < this.numberOfStates; i++) {
             // deterministic, I choose the first element of the list
-            let actions = new Array(this.numberOfActions).fill(0);
+            let actions = new Array(this.numberOfActions).fill(0)
             this.epsilonGreedyPolicy(i, 0).map((element) => {
-                return (actions[element] = 1);
-            });
-            map.push(actions);
+                return (actions[element] = 1)
+            })
+            map.push(actions)
         }
-        return map;
+        return map
     }
 }

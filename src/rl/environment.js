@@ -1,9 +1,7 @@
-
-
 export class Environment {
     constructor(width, height) {
-        this.width = width;
-        this.height = height;
+        this.width = width
+        this.height = height
     }
 
     /**
@@ -12,8 +10,8 @@ export class Environment {
      * be in.
      * @returns {number} the index of the position in the array that represents the world.
      */
-    getState(){
-        throw new Error("This method should be implemented by the subclass.");
+    getState() {
+        throw new Error('This method should be implemented by the subclass.')
     }
 
     /**
@@ -22,7 +20,7 @@ export class Environment {
      * @returns {number} the number of states in the world.
      */
     getNumberOfStates() {
-        throw new Error("This method should be implemented by the subclass.");
+        throw new Error('This method should be implemented by the subclass.')
     }
 
     /**
@@ -30,7 +28,7 @@ export class Environment {
      * @returns {number} number of actions in this environment.
      */
     getNumberOfActions() {
-        throw new Error("This method should be implemented by the subclass.");
+        throw new Error('This method should be implemented by the subclass.')
     }
 
     /**
@@ -38,15 +36,14 @@ export class Environment {
      * @returns {vector} a vector with the initial position.
      */
     initEnvironment() {
-        throw new Error("This method should be implemented by the subclass.");
+        throw new Error('This method should be implemented by the subclass.')
     }
 
     getHeight() {
-        return this.height;
+        return this.height
     }
 
     getWidth() {
-        return this.width;
+        return this.width
     }
 }
-

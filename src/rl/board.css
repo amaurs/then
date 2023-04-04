@@ -1,12 +1,9 @@
-
-
 .grid_bg {
-
 }
 
 .grid_bg > div {
     display: flex;
-    flex-direction: row
+    flex-direction: row;
 }
 
 .grid_bg > div > div {

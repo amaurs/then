@@ -1,52 +1,50 @@
-
-
 .info > p {
     font-size: 36px;
-    margin:0px;
+    margin: 0px;
 }
 
-.arrow{
-    stroke-width:5;
-    stroke:#000;
-    stroke-dasharray:5, 5;
+.arrow {
+    stroke-width: 5;
+    stroke: #000;
+    stroke-dasharray: 5, 5;
 }
 
-#world{
-   font-family: Futura, "Trebuchet MS", Arial, sans-serif;
-   white-space: pre-wrap;
+#world {
+    font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+    white-space: pre-wrap;
 }
 .center {
     width: 50%;
-    margin:auto;
+    margin: auto;
 }
 .container {
 }
 .controls {
     width: 840px;
     height: 744px;
-    float:left; 
+    float: left;
 }
-.board { 
-    float:left;
+.board {
+    float: left;
 }
 .arrows {
     width: 420px;
     height: 294px;
-    float:left;
+    float: left;
 }
 .col-third {
-    width: 33%; 
-    float:left;
+    width: 33%;
+    float: left;
 }
 
 .buttons {
-    margin-top:25px;
-    margin-bottom:25px;
-    display:flex;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    display: flex;
 }
 
 button {
-    background-color: #E01A4F;
+    background-color: #e01a4f;
     border: none;
     color: white;
     flex: 1 1 auto;
@@ -56,17 +54,16 @@ button {
     text-decoration: none;
     display: inline-block;
     font-size: 14px;
-    font-weight:bold;
+    font-weight: bold;
     text-transform: uppercase;
 }
 
-
 .agent {
-    fill:#F9C22E;
+    fill: #f9c22e;
 }
 .red {
-    background-color: rgb(255,155,155);
+    background-color: rgb(255, 155, 155);
 }
 .green {
-    background-color: rgb(155,255,155);
+    background-color: rgb(155, 255, 155);
 }
