@@ -1,23 +1,22 @@
 export interface Image {
-    url: string;
+    url: string
 }
 
 export interface Post {
-    url: string;
+    url: string
 }
 
 export interface Code {
-    code: string;
-    redirect: string;
+    code: string
+    redirect: string
 }
 
 export interface Cities {
-    cities: number[];
-    hasFetched: boolean;
+    cities: number[]
+    hasFetched: boolean
 }
 
-
 export interface Points {
-    points: number[];
-    hasFetched: boolean;
+    points: number[]
+    hasFetched: boolean
 }

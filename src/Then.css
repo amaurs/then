@@ -1,6 +1,6 @@
 .If {
     position: absolute;
-    font-size:24px;
+    font-size: 24px;
     z-index: 1;
     mix-blend-mode: normal;
     font-family: Futura;
@@ -29,33 +29,33 @@
     font-style: oblique;
     font-size: 32px;
     padding-top: 15px;
-    padding-bottom: 15px
+    padding-bottom: 15px;
 }
 
 .Then .type {
     font-size: 24px;
-    font-weight: bold
+    font-weight: bold;
 }
 
 .Then ol {
-    margin-top: 50px
+    margin-top: 50px;
 }
 
 .Then li {
-    font-style: oblique
+    font-style: oblique;
 }
 
 .Then p {
     font-style: normal;
-    font-size: 20px
+    font-size: 20px;
 }
 
 .underline {
-    text-decoration: underline
+    text-decoration: underline;
 }
 
 @media only screen and (min-width: 600px) {
     .Then .name {
         font-size: 360px;
-    }  
+    }
 }

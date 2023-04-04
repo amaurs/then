@@ -1,95 +1,98 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
-import { useInterval, useTimeout } from "../../Hooks.js";
+import React, { useRef, useState, useEffect, useContext } from 'react'
+import { useInterval, useTimeout } from '../../Hooks.js'
 
 import {
     intToColor,
-    colorToInt, randomColor, invertColor, colorToString, getRandomIntegerArray,
+    colorToInt,
+    randomColor,
+    invertColor,
+    colorToString,
+    getRandomIntegerArray,
     colorMatrix,
-} from '../../tools';
-import Loader from "../../Presentation.js";
-import "./Dense.css";
-import CSS from "csstype";
+} from '../../tools'
+import Loader from '../../Presentation.js'
+import './Dense.css'
+import CSS from 'csstype'
 
-import { ThemeContext } from "../../ThemeContext.js";
+import { ThemeContext } from '../../ThemeContext.js'
 
 interface Props {
-    title: string;
-    delay: number;
-    style: CSS.Properties;
-    width: number;
-    height: number;
-    url: string;
+    title: string
+    delay: number
+    style: CSS.Properties
+    width: number
+    height: number
+    url: string
 }
 
 const Dense = (props: Props) => {
-    let canvas = useRef<HTMLCanvasElement>(document.createElement("canvas"));
-    const theme = useContext(ThemeContext);
-    const [delay, setDelay] = useState<number>(0);
-    const squareSampling = 100;
-    const numberColors = 500;
-    const [presenting, setPresenting] = useState(props.delay > 0);
+    let canvas = useRef<HTMLCanvasElement>(document.createElement('canvas'))
+    const theme = useContext(ThemeContext)
+    const [delay, setDelay] = useState<number>(0)
+    const squareSampling = 100
+    const numberColors = 500
+    const [presenting, setPresenting] = useState(props.delay > 0)
 
     useTimeout(() => {
-        setPresenting(false);
-        setDelay(0);
-    }, props.delay);
+        setPresenting(false)
+        setDelay(0)
+    }, props.delay)
 
-    const color = [240, 165, 163, 1.0];
+    const color = [240, 165, 163, 1.0]
 
     useEffect(() => {
         if (!presenting) {
-            let n = 0;
+            let n = 0
 
             const animate = () => {
-                const context: CanvasRenderingContext2D = canvas.current.getContext(
-                    "2d"
-                )!;
-                const width = canvas.current.width;
-                const height = canvas.current.height;
+                const context: CanvasRenderingContext2D =
+                    canvas.current.getContext('2d')!
+                const width = canvas.current.width
+                const height = canvas.current.height
 
-                context.beginPath();
-                let colorProcessed = colorMatrix(color, theme.theme.colorMatrix);
-                context.strokeStyle = `rgba(${colorProcessed[0]}, ${colorProcessed[1]}, ${colorProcessed[2]}, ${colorProcessed[3]})`;
+                context.beginPath()
+                let colorProcessed = colorMatrix(color, theme.theme.colorMatrix)
+                context.strokeStyle = `rgba(${colorProcessed[0]}, ${colorProcessed[1]}, ${colorProcessed[2]}, ${colorProcessed[3]})`
 
-                context.lineWidth = 5;
-                context.globalAlpha = 0.5;
+                context.lineWidth = 5
+                context.globalAlpha = 0.5
 
-                context.moveTo(Math.floor(width / 2), Math.floor(height / 2));
+                context.moveTo(Math.floor(width / 2), Math.floor(height / 2))
 
                 context.lineTo(
                     Math.floor(width / 2) + Math.floor(width * Math.cos(n)),
                     Math.floor(height / 2) + Math.floor(height * Math.sin(n))
-                );
+                )
 
-                context.closePath();
-                context.stroke();
-                n += 1;
-                frameId = requestAnimationFrame(animate);
-            };
+                context.closePath()
+                context.stroke()
+                n += 1
+                frameId = requestAnimationFrame(animate)
+            }
 
-            let frameId: number | null = requestAnimationFrame(animate);
+            let frameId: number | null = requestAnimationFrame(animate)
             return () => {
-                cancelAnimationFrame(frameId!);
-                frameId = null;
-            };
+                cancelAnimationFrame(frameId!)
+                frameId = null
+            }
         }
-    }, [presenting, theme]);
+    }, [presenting, theme])
 
-    let style = {};
+    let style = {}
 
     if (props.width > 0 && props.height > 0) {
         style =
             props.width / props.height < 1
-                ? { width: "100vw" }
-                : { height: "100vh" };
+                ? { width: '100vw' }
+                : { height: '100vh' }
     }
 
-    let minSize = props.width / props.height < 1 ? props.width : props.height;
+    let minSize = props.width / props.height < 1 ? props.width : props.height
 
-    let scale = window.devicePixelRatio;
+    let scale = window.devicePixelRatio
 
-    let canvasWidth = 1000 * scale;
-    let canvasHeight = 1000 * scale;
+    let canvasWidth = 1000 * scale
+    let canvasHeight = 1000 * scale
 
     if (!presenting) {
         return (
@@ -100,10 +103,10 @@ const Dense = (props: Props) => {
                 height={canvasHeight}
                 className="Dense"
             />
-        );
+        )
     } else {
-        return <Loader title={props.title} />;
+        return <Loader title={props.title} />
     }
-};
+}
 
-export default Dense;
+export default Dense
