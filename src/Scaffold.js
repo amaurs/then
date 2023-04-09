@@ -63,7 +63,7 @@ const Then = () => {
             }
         }
 
-        if (masterData.colors === undefined) {
+        if (masterData.colorsData === undefined) {
             fetchCodes(`${banditHost}/colors`)
         }
 
