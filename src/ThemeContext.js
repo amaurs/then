@@ -7,7 +7,7 @@ let themes = {
         middleground: '#161011',
         slider: false,
         name: 'light',
-        mixBlendMode: 'multiply',
+        mixBlendMode: 'normal',
         mixBlendModeBackground: 'difference',
         quilt: ['DarkOrange', 'White', 'DarkOrange', 'Black'],
         colorMatrix: [
@@ -20,7 +20,7 @@ let themes = {
         middleground: '#f0a5a3',
         slider: true,
         name: 'dark',
-        mixBlendMode: 'difference',
+        mixBlendMode: 'normal',
         mixBlendModeForeground: 'multiply',
         quilt: ['DarkOrange', 'Black', 'DarkOrange', 'White'],
         colorMatrix: [

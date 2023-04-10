@@ -8,9 +8,8 @@
 }
 
 .Then {
-    height: 100vh;
     width: 100vw;
-    position: fixed;
+    height: 100vh;
     display: flex;
     justify-content: center;
     margin: 0 auto;
@@ -23,35 +22,7 @@
     font-size: 130px;
     align-self: center;
     z-index: 0;
-}
-
-.Then .pronunciation {
-    font-style: oblique;
-    font-size: 32px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-}
-
-.Then .type {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.Then ol {
-    margin-top: 50px;
-}
-
-.Then li {
-    font-style: oblique;
-}
-
-.Then p {
-    font-style: normal;
-    font-size: 20px;
-}
-
-.underline {
-    text-decoration: underline;
+    cursor: auto;
 }
 
 @media only screen and (min-width: 600px) {

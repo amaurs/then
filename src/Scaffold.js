@@ -30,11 +30,7 @@ const Then = () => {
                 let json = await response.json()
 
                 if (!cancel) {
-                    console.log(json)
-
                     let projects = json.colors.map((element) => {
-                        console.log(element.resolutions)
-
                         let final = element.resolutions.filter(
                             (e) => e.resolution == element.default
                         )
@@ -58,7 +54,6 @@ const Then = () => {
                     })
                 }
             } catch (error) {
-                console.log('Something went wrong.', error)
                 console.log(error)
             }
         }

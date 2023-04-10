@@ -1,13 +1,5 @@
 import React, { Fragment, useEffect, useState, useContext } from 'react'
-import {
-    Link,
-    Navigate,
-    useNavigate,
-    useParams,
-    Routes,
-    Route,
-    Outlet,
-} from 'react-router-dom'
+import { Navigate, Routes, Route, Outlet } from 'react-router-dom'
 import Menu from './Menu.js'
 
 import Bolero from './bits/bolero/Bolero.tsx'
@@ -35,13 +27,10 @@ import Post from './Post.tsx'
 
 import Then from './Then.tsx'
 
-import ReactMarkdown from 'react-markdown'
-
 import './Home.css'
 import './Blog.css'
 
 import autostereogram from './bits/autostereogram/Autostereogram.md'
-import colors from './bits/colors/Colors.md'
 import distrito from './bits/distrito/Distrito.md'
 import bolero from './bits/bolero/Bolero.md'
 import loom from './bits/loom/Loom.md'
@@ -57,13 +46,10 @@ import anaglyph from './bits/anaglyph/Anaglyph.md'
 import penrose from './bits/penrose/Penrose.md'
 import travelingSalesman from './bits/travelingsalesman/TravelingSalesman.md'
 
-import about from './About.md'
 import stereo from './bits/stereo/Stereo.md'
 
 import { ThemeContext } from './ThemeContext.js'
 import Slider from './Slider.js'
-
-import { useTimeout } from './Hooks.js'
 
 import ReactGA from 'react-ga4'
 
@@ -233,95 +219,12 @@ const oldMapping = {
     },
 }
 
-const Bit = (props) => {
-    let [markdown, setMarkdown] = useState(null)
-
-    let { slug } = useParams()
-
-    useEffect(() => {
-        let cancel = false
-        const fetchMarkdown = async (url) => {
-            try {
-                let response = await fetch(url)
-                let text = await response.text()
-                if (!cancel) {
-                    console.log(text)
-                    setMarkdown(text)
-                }
-            } catch (error) {
-                console.log('Markdown loading failed.', error)
-            }
-        }
-
-        console.log(props.mapping)
-
-        //fetchMarkdown(props.mapping["/" + slug].content);
-
-        props.setIndexBackground('/' + slug)
-
-        return () => (cancel = true)
-    }, [slug])
-
-    return (
-        <div
-            style={{
-                width: '0px',
-                height: '100vh',
-                position: 'fixed',
-                top: '0',
-                right: '0',
-                background: 'white',
-                mixBlendMode: 'normal',
-            }}
-        ></div>
-    )
-}
-
 const Container = (props) => {
-    let { slug } = useParams()
-
     return (
         <Fragment>
-            {props.background}
+            <div className="Background">{props.background}</div>
             <Outlet />
             <div className="Home-slider">
-                <nav
-                    style={{
-                        position: 'fixed',
-                        right: '0',
-                        top: '0',
-                        zIndex: '200',
-                        margin: '25px',
-                        display: props.showMenu ? 'block' : 'none',
-                    }}
-                >
-                    <ul>
-                        <li style={{ display: 'inline' }}>
-                            <Link
-                                style={{
-                                    fontSize: '24px',
-                                    textDecoration: 'none',
-                                }}
-                                to="/"
-                                onClick={() => props.setIndexBackground(null)}
-                            >
-                                then
-                            </Link>
-                        </li>{' '}
-                        <li style={{ display: 'inline' }}>
-                            <Link
-                                style={{
-                                    fontSize: '24px',
-                                    textDecoration: 'none',
-                                }}
-                                to="/bits"
-                                onClick={() => props.setIndexBackground(null)}
-                            >
-                                bits
-                            </Link>
-                        </li>{' '}
-                    </ul>
-                </nav>
                 <Slider />
             </div>
         </Fragment>
@@ -334,17 +237,15 @@ const BitMenu = (props) => {
             options={Object.keys(props.mapping)}
             style={{ backgroundColor: 'transparent' }}
             setIndexBackground={props.setIndexBackground}
+            setIsCursorOnMenu={props.setIsCursorOnMenu}
         ></Menu>
     )
 }
 
 const Home = (props) => {
     const [indexBackground, setIndexBackground] = useState(null)
-    const navigate = useNavigate()
-    const [markdown, setMarkdown] = useState(null)
-    const [delay, setDelay] = useState(1000)
+    const [isCursorOnMenu, setIsCursorOnMenu] = useState(false)
     const theme = useContext(ThemeContext)
-    const [showMenu, setShowMenu] = useState(true)
     const [mapping, setMapping] = useState(oldMapping)
     const squareSampling = 100
     const numberColors = 500
@@ -356,22 +257,6 @@ const Home = (props) => {
 
     let host = window.location.host.split('.')
     let isBlog = host.length && host[0] === 'blog'
-
-    useTimeout(() => {
-        if (showMenu) {
-            setShowMenu(false)
-            console.log('Hiding menu.')
-        }
-        setDelay(null)
-    }, [delay])
-
-    const mouseMoveHandler = (event) => {
-        if (!showMenu) {
-            setShowMenu(true)
-            console.log('Showing menu.')
-            setDelay(2000)
-        }
-    }
 
     useEffect(() => {
         const handleKeyPress = (event) => {
@@ -390,26 +275,6 @@ const Home = (props) => {
             window.removeEventListener('keydown', handleKeyPress)
         }
     }, [konami])
-
-    useEffect(() => {
-        let cancel = false
-        const fetchMarkdown = async (url) => {
-            try {
-                let response = await fetch(url)
-                let text = await response.text()
-                if (!cancel) {
-                    console.log(text)
-                    setMarkdown(text)
-                }
-            } catch (error) {
-                console.log('Markdown loading failed.', error)
-            }
-        }
-        fetchMarkdown(about)
-        return () => {
-            cancel = true
-        }
-    }, [])
 
     useEffect(() => {
         let newMapping = {}
@@ -584,14 +449,13 @@ const Home = (props) => {
 
     return (
         <div
-            className="Home Home-info-container"
+            className="Home"
             style={{
                 background: theme.theme.background,
                 color: theme.theme.foreground,
                 width: '100vw',
                 height: '100vh',
             }}
-            onMouseMove={mouseMoveHandler}
         >
             <Routes>
                 <Route
@@ -604,41 +468,25 @@ const Home = (props) => {
                                     ? null
                                     : mapping[indexBackground].component
                             }
-                            setIndexBackground={setIndexBackground}
-                            showMenu={showMenu}
                         />
                     }
                 >
                     <Route
                         path="/"
                         element={
-                            <Then
-                                keys={Object.keys(mapping)}
-                                setIndexBackground={setIndexBackground}
-                            />
+                            <Fragment>
+                                <Then
+                                    keys={Object.keys(mapping)}
+                                    setIndexBackground={setIndexBackground}
+                                    isCursorOnMenu={isCursorOnMenu}
+                                />
+                                <BitMenu
+                                    mapping={mapping}
+                                    setIndexBackground={setIndexBackground}
+                                    setIsCursorOnMenu={setIsCursorOnMenu}
+                                />
+                            </Fragment>
                         }
-                    />
-                    <Route
-                        path="bits"
-                        element={
-                            <BitMenu
-                                mapping={mapping}
-                                setIndexBackground={setIndexBackground}
-                            />
-                        }
-                    />
-                    <Route
-                        path="bit/:slug"
-                        element={
-                            <Bit
-                                mapping={mapping}
-                                setIndexBackground={setIndexBackground}
-                            />
-                        }
-                    />
-                    <Route
-                        path="about"
-                        element={<ReactMarkdown source={markdown} />}
                     />
                     {props.masterData.codes.map((element, index) => (
                         <Route
