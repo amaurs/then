@@ -17,6 +17,7 @@ import CSS from 'csstype'
 interface Props {
     keys: Array<number>
     setIndexBackground: (index: number) => void
+    isCursorOnMenu: boolean
 }
 
 const Then = (props: Props) => {
@@ -24,9 +25,11 @@ const Then = (props: Props) => {
     let [tick, setTick] = useState(0)
 
     useInterval(() => {
-        props.setIndexBackground(props!.keys[tick % props.keys.length])
-        setTick(tick + 1)
-    }, 10000)
+        if (!props.isCursorOnMenu) {
+            props.setIndexBackground(props!.keys[tick % props.keys.length])
+            setTick(tick + 1)
+        }
+    }, 5000)
 
     useEffect(() => {
         let index = Math.floor(Math.random() * props.keys.length)

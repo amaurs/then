@@ -1,60 +1,20 @@
 body {
     font-family: 'LubalinGraphStd-Medium', serif;
     text-transform: capitalize;
-    mix-blend-mode: difference;
 }
 
-.Home-info-container {
+.Home {
     display: flex;
-    min-height: 100vh;
-}
-
-.MenuHamburger {
-    position: fixed;
-    right: 0;
-    top: 0;
-    z-index: 200;
-    width: 100px;
-    height: 100px;
-}
-
-.Menu {
-    position: fixed;
-    transition: 0.5s;
-    width: 100vw;
-    height: 100vh;
-    box-sizing: border-box;
-    overflow: scroll;
-    z-index: 100;
-}
-
-.Menu.active {
-    transform: translateX(0);
-    display: none;
-}
-
-.Menu ul {
-    list-style: none;
-}
-
-.Menu a {
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 40px;
-    color: inherit;
-    text-decoration: inherit;
-    text-transform: capitalize;
+    flex-direction: column;
 }
 
 .Home-slider {
 }
 
-@media only screen and (min-width: 600px) {
-    .Menu a {
-        font-size: 140px;
-    }
-
-    .Menu li {
-        padding-left: 10px;
-    }
+.Background {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    position: fixed;
+    justify-content: center;
 }

@@ -10,11 +10,15 @@ const Menu = (props) => {
                 return (
                     <li key={index}>
                         <Link
-                            to={'/bit' + element}
-                            onMouseEnter={() =>
+                            to={'/'}
+                            onMouseEnter={() => {
                                 props.setIndexBackground(element)
-                            }
-                            onMouseLeave={() => props.setIndexBackground(null)}
+                                props.setIsCursorOnMenu(true)
+                            }}
+                            onMouseLeave={() => {
+                                props.setIndexBackground(null)
+                                props.setIsCursorOnMenu(false)
+                            }}
                         >
                             {element.slice(1).replace('-', ' ')}
                         </Link>
