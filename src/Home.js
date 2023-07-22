@@ -22,6 +22,7 @@ import Corrupted from './bits/corrupted/Corrupted.tsx'
 import Anaglyph from './bits/anaglyph/Anaglyph.tsx'
 import Penrose from './bits/penrose/Penrose.tsx'
 import TravelingSalesman from './bits/travelingsalesman/TravelingSalesman.tsx'
+import About from './About.tsx'
 import Blog from './Blog.tsx'
 import Post from './Post.tsx'
 
@@ -256,7 +257,6 @@ const Home = (props) => {
     // let debouncedShowMenu = useDebounce(showMenu, 5000);
 
     let host = window.location.host.split('.')
-    let isBlog = host.length && host[0] === 'blog'
 
     useEffect(() => {
         const handleKeyPress = (event) => {
@@ -427,7 +427,7 @@ const Home = (props) => {
         return null
     }
 
-    if (isBlog) {
+    if (host.length && host[0] === 'blog') {
         return (
             <div className="Blog">
                 <Routes>
@@ -442,6 +442,16 @@ const Home = (props) => {
                         path="/post/:slug"
                         element={<Post url={`${banditHost}/post`} />}
                     />
+                </Routes>
+            </div>
+        )
+    }
+
+    if (host.length && host[0] === 'about' || true) {
+        return (
+            <div className="Blog">
+                <Routes>
+                    <Route path="/" element={<About />} />
                 </Routes>
             </div>
         )
