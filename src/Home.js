@@ -460,6 +460,23 @@ const Home = (props) => {
                             </Fragment>
                         }
                     />
+                    <Route
+                        path="/bit/:slug"
+                        element={
+                            <Fragment>
+                                <Then
+                                    keys={Object.keys(mapping)}
+                                    setIndexBackground={setIndexBackground}
+                                    isCursorOnMenu={isCursorOnMenu}
+                                />
+                                <BitMenu
+                                    mapping={mapping}
+                                    setIndexBackground={setIndexBackground}
+                                    setIsCursorOnMenu={setIsCursorOnMenu}
+                                />
+                            </Fragment>
+                        }
+                    />
                     {props.masterData.codes.map((element, index) => (
                         <Route
                             key={index}

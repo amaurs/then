@@ -17,3 +17,9 @@
     text-decoration: inherit;
     text-transform: capitalize;
 }
+
+.Content {
+    font-family: 'Arial';
+    font-weight: normal;
+    text-transform: none;
+}

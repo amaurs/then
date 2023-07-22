@@ -18,3 +18,7 @@ body {
     position: fixed;
     justify-content: center;
 }
+
+.Content {
+    color: black;
+}
