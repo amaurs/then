@@ -1,0 +1,49 @@
+.AnaglyphWrapper img {
+    width: 100%;
+}
+
+.AnaglyphContainer {
+    position: relative;
+}
+
+.AnaglyphLeft {
+    position: absolute;
+    filter: url(#red);
+    top: 0;
+    left: 0;
+}
+.AnaglyphRight {
+    position: absolute;
+    filter: url(#cyan);
+    mix-blend-mode: lighten;
+    top: 0;
+    left: 0;
+}
+
+.WigglegramWrapper {
+    overflow: hidden;
+}
+
+.WigglegramContainer {
+    animation: fade 0.25s infinite;
+    animation-timing-function: steps(2);
+    display: flex;
+    width: 200%;
+}
+
+.Wigglegram {
+    display: block;
+    width: 50%;
+    max-width: 50%;
+    flex-basis: 50%;
+}
+
+@keyframes fade {
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.SideWrapper img {
+    width: 50%;
+}
