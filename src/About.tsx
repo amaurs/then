@@ -1,4 +1,6 @@
 import React, { useState, Fragment } from 'react'
+import l2019 from './assets/left.jpg'
+import r2019 from './assets/right.jpg'
 
 import './About.css'
 
@@ -17,10 +19,10 @@ const About = (props: Props) => {
             <h2>March 23, 2016. Havana, Cuba</h2>
             <p>
                 I would never have imagined that, on my thirtieth birthday,
-                chance would take me to a place like the Necropolis, in
-                Havana, Cuba. With the intention of capturing the particularity of
-                that moment, I photographed a grave with the Holga 3D that I had
-                on hand. The following year, driven by a strange fascination, I
+                chance would take me to a place like the Necropolis, in Havana,
+                Cuba. With the intention of capturing the particularity of that
+                moment, I photographed a grave with the Holga 3D that I had on
+                hand. The following year, driven by a strange fascination, I
                 repeated the ritual: this time I went to the Dolores cemetery in
                 Mexico City. Some time later I came to the conclusion that the
                 unconscious, intentionality and chance weave a network that
@@ -56,6 +58,49 @@ const About = (props: Props) => {
                 Paradoxically, 3D photography led me to analogue photography in
                 2011, marking a milestone in my artistic career.
             </p>
+            <svg width="100%" height="100%">
+                <defs>
+                    <filter id="cyan">
+                        <feColorMatrix
+                            type="matrix"
+                            values={[
+                                0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+                                0, 0, 1, 0,
+                            ].join(' ')}
+                        />
+                    </filter>
+                    <filter id="red">
+                        <feColorMatrix
+                            type="matrix"
+                            values={[
+                                1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                0, 0, 1, 0,
+                            ].join(' ')}
+                        />
+                    </filter>
+                </defs>
+            </svg>
+
+            <div className="WigglegramWrapper">
+                <div className="WigglegramContainer">
+                    <img className="Wigglegram" src={r2019} />
+                    <img className="Wigglegram" src={l2019} />
+                </div>
+            </div>
+
+            <div className="SideWrapper">
+                <div className="SideContainer">
+                    <img className="Side" src={r2019} />
+                    <img className="Side" src={l2019} />
+                </div>
+            </div>
+
+            <div className="AnaglyphWrapper">
+                <div className="AnaglyphContainer">
+                    <img className="AnaglyphLeft" src={r2019} />
+                    <img className="AnaglyphRight" src={l2019} />
+                </div>
+            </div>
         </Fragment>
     )
 }
