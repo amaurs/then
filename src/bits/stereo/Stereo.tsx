@@ -4,8 +4,8 @@ import Loader from '../../Presentation.js'
 import { useTimeout } from '../../Hooks.js'
 import { getRandomInt, colorImageData } from '../../tools'
 
-import left from '../../assets/left.jpg'
-import right from '../../assets/right.jpg'
+import left from '../../assets/2019/left.jpg'
+import right from '../../assets/2019/right.jpg'
 import { ThemeContext } from '../../ThemeContext.js'
 
 import CSS from 'csstype'

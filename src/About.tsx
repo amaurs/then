@@ -1,6 +1,10 @@
 import React, { useState, Fragment } from 'react'
-import l2019 from './assets/left.jpg'
-import r2019 from './assets/right.jpg'
+import l2016 from './assets/2016/left.jpg'
+import r2016 from './assets/2016/right.jpg'
+import l2017 from './assets/2017/left.jpg'
+import r2017 from './assets/2017/right.jpg'
+import l2019 from './assets/2019/left.jpg'
+import r2019 from './assets/2019/right.jpg'
 
 import './About.css'
 
@@ -9,8 +13,75 @@ interface Props {
     url: string
 }
 
+interface PhotoProps {
+    title: string
+    subtitle: string
+    left: string
+    right: string
+}
+
+const Wigglegram = (props: PhotoProps) => {
+    return (
+        <div className="WigglegramWrapper">
+            <h2>{props.title}</h2>
+            <div className="WigglegramContainer">
+                <img className="Wigglegram" src={props.left} />
+                <img className="Wigglegram" src={props.right} />
+            </div>
+            <p>{props.subtitle}</p>
+        </div>
+    )
+}
+
+const Anaglyph = (props: PhotoProps) => {
+    return (
+        <div className="AnaglyphWrapper">
+            <h2>{props.title}</h2>
+            <div className="AnaglyphContainer">
+                <img className="AnaglyphLeft" src={props.left} />
+                <img className="AnaglyphRight" src={props.right} />
+            </div>
+            <p>{props.subtitle}</p>
+        </div>
+    )
+}
+
+const SideBySide = (props: PhotoProps) => {
+    return (
+        <div className="SideWrapper">
+            <h2>{props.title}</h2>
+            <div className="SideContainer">
+                <img className="Side" src={props.left} />
+                <img className="Side" src={props.right} />
+            </div>
+            <p>{props.subtitle}</p>
+        </div>
+    )
+}
+
 const About = (props: Props) => {
     let [posts, setPosts] = useState<Array<string> | undefined>(undefined)
+
+    let info = [
+        {
+            title: '2016',
+            subtitle: 'Necropolis. Havana, Cuba',
+            left: l2016,
+            right: r2016,
+        },
+        {
+            title: '2017',
+            subtitle: 'Nevado de Toluca. Toluca, Mexico',
+            left: l2017,
+            right: r2017,
+        },
+        {
+            title: '2019',
+            subtitle: 'Presidio. San Francisco, United States of America',
+            left: l2019,
+            right: r2019,
+        },
+    ]
 
     return (
         <Fragment>
@@ -58,7 +129,7 @@ const About = (props: Props) => {
                 Paradoxically, 3D photography led me to analogue photography in
                 2011, marking a milestone in my artistic career.
             </p>
-            <svg width="100%" height="100%">
+            <svg width="0" height="0">
                 <defs>
                     <filter id="cyan">
                         <feColorMatrix
@@ -81,26 +152,8 @@ const About = (props: Props) => {
                 </defs>
             </svg>
 
-            <div className="WigglegramWrapper">
-                <div className="WigglegramContainer">
-                    <img className="Wigglegram" src={r2019} />
-                    <img className="Wigglegram" src={l2019} />
-                </div>
-            </div>
+            {info.map(photoProps => Wigglegram(photoProps))}
 
-            <div className="SideWrapper">
-                <div className="SideContainer">
-                    <img className="Side" src={r2019} />
-                    <img className="Side" src={l2019} />
-                </div>
-            </div>
-
-            <div className="AnaglyphWrapper">
-                <div className="AnaglyphContainer">
-                    <img className="AnaglyphLeft" src={r2019} />
-                    <img className="AnaglyphRight" src={l2019} />
-                </div>
-            </div>
         </Fragment>
     )
 }
