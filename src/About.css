@@ -38,6 +38,9 @@
     flex-basis: 50%;
 }
 
+
+
+
 @keyframes fade {
     100% {
         transform: translateX(-100%);

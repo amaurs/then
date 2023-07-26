@@ -5,6 +5,14 @@ import l2017 from './assets/2017/left.jpg'
 import r2017 from './assets/2017/right.jpg'
 import l2019 from './assets/2019/left.jpg'
 import r2019 from './assets/2019/right.jpg'
+import l2020 from './assets/2020/left.jpg'
+import r2020 from './assets/2020/right.jpg'
+import l2021 from './assets/2021/left.jpg'
+import r2021 from './assets/2021/right.jpg'
+import l2022 from './assets/2022/left.jpg'
+import r2022 from './assets/2022/right.jpg'
+import l2023 from './assets/2023/left.jpg'
+import r2023 from './assets/2023/right.jpg'
 
 import './About.css'
 
@@ -80,6 +88,30 @@ const About = (props: Props) => {
             subtitle: 'Presidio. San Francisco, United States of America',
             left: l2019,
             right: r2019,
+        },
+        {
+            title: '2020',
+            subtitle: 'Mt. Davidson Cross. San Francisco, California',
+            left: l2020,
+            right: r2020,
+        },
+        {
+            title: '2021',
+            subtitle: 'Greenwood Cemetery. Brooklyn, New York',
+            left: l2021,
+            right: r2021,
+        },
+        {
+            title: '2022',
+            subtitle: 'Xoco Cemetery. Coyoacan, Mexico City',
+            left: l2022,
+            right: r2022,
+        },
+        {
+            title: '2023',
+            subtitle: '29.98532058087638, -90.10652325125879, Holt Cemetery. New Orleans, Louisiana',
+            left: l2023,
+            right: r2023,
         },
     ]
 
