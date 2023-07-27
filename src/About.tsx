@@ -5,16 +5,16 @@ import l2017 from './assets/2017/left.jpg'
 import r2017 from './assets/2017/right.jpg'
 import l2018 from './assets/2018/left.jpg'
 import r2018 from './assets/2018/right.jpg'
-import l2019 from './assets/2019/left.jpg'
-import r2019 from './assets/2019/right.jpg'
-import l2020 from './assets/2020/left.jpg'
-import r2020 from './assets/2020/right.jpg'
+import r2019 from './assets/2019/left.jpg'
+import l2019 from './assets/2019/right.jpg'
+import r2020 from './assets/2020/left.jpg'
+import l2020 from './assets/2020/right.jpg'
 import l2021 from './assets/2021/left.jpg'
 import r2021 from './assets/2021/right.jpg'
 import l2022 from './assets/2022/left.jpg'
 import r2022 from './assets/2022/right.jpg'
-import l2023 from './assets/2023/left.jpg'
-import r2023 from './assets/2023/right.jpg'
+import r2023 from './assets/2023/left.jpg'
+import l2023 from './assets/2023/right.jpg'
 
 import './About.css'
 
@@ -25,6 +25,7 @@ interface Props {
 
 interface PhotoProps {
     title: string
+    location: string
     subtitle: string
     left: string
     right: string
@@ -34,11 +35,12 @@ const Wigglegram = (props: PhotoProps) => {
     return (
         <div className="WigglegramWrapper">
             <h2>{props.title}</h2>
+            <h3>{props.subtitle}</h3>
             <div className="WigglegramContainer">
                 <img className="Wigglegram" src={props.left} />
                 <img className="Wigglegram" src={props.right} />
             </div>
-            <p>{props.subtitle}</p>
+            <p>{props.location}</p>
         </div>
     )
 }
@@ -46,12 +48,12 @@ const Wigglegram = (props: PhotoProps) => {
 const Anaglyph = (props: PhotoProps) => {
     return (
         <div className="AnaglyphWrapper">
-            <h2>{props.title}</h2>
+            <h3>{props.subtitle}</h3>
             <div className="AnaglyphContainer">
                 <img className="AnaglyphLeft" src={props.left} />
                 <img className="AnaglyphRight" src={props.right} />
             </div>
-            <p>{props.subtitle}</p>
+            <p>{props.location ? props.location : '0.0, 0.0'}</p>
         </div>
     )
 }
@@ -60,11 +62,12 @@ const SideBySide = (props: PhotoProps) => {
     return (
         <div className="SideWrapper">
             <h2>{props.title}</h2>
+            <h3>{props.subtitle}</h3>
             <div className="SideContainer">
                 <img className="Side" src={props.left} />
                 <img className="Side" src={props.right} />
             </div>
-            <p>{props.subtitle}</p>
+            <p>{props.location ? props.location : '0.0, 0.0'}</p>
         </div>
     )
 }
@@ -75,49 +78,57 @@ const About = (props: Props) => {
     let info = [
         {
             title: '2016',
+            location: '23°07\'21.6"N 82°23\'56.6"W',
             subtitle: 'Necropolis. Vedado, Havana',
             left: l2016,
             right: r2016,
         },
         {
             title: '2017',
+            location: '19°06\'31.4"N 99°45\'44.6"W',
             subtitle: 'Nevado de Toluca. Toluca, State of Mexico',
             left: l2017,
             right: r2017,
         },
         {
             title: '2018',
+            location: '19°24\'29.0"N 99°12\'19.3"W',
             subtitle: 'Panteón de Dolores. Miguel Hidalgo, Mexico City',
             left: l2018,
             right: r2018,
         },
         {
             title: '2019',
+            location: '37°47\'52.1"N 122°27\'54.4"W',
             subtitle: 'Presidio. San Francisco, California',
             left: l2019,
             right: r2019,
         },
         {
             title: '2020',
+            location: '37°44\'17.8"N 122°27\'15.1"W',
             subtitle: 'Mt. Davidson Cross. San Francisco, California',
             left: l2020,
             right: r2020,
         },
         {
             title: '2021',
+            location: '40°38\'51.6"N 73°59\'20.2"W',
             subtitle: 'Greenwood Cemetery. Brooklyn, New York',
             left: l2021,
             right: r2021,
         },
         {
             title: '2022',
+            location: '19°21\'33.1"N 99°09\'53.6"W',
             subtitle: 'Xoco Cemetery. Coyoacan, Mexico City',
             left: l2022,
             right: r2022,
         },
         {
             title: '2023',
-            subtitle: '29.98532058087638, -90.10652325125879, Holt Cemetery. New Orleans, Louisiana',
+            location: '29°59\'07.2"N 90°06\'23.5"W',
+            subtitle: 'Holt Cemetery. New Orleans, Louisiana',
             left: l2023,
             right: r2023,
         },
@@ -192,8 +203,7 @@ const About = (props: Props) => {
                 </defs>
             </svg>
 
-            {info.map(photoProps => Wigglegram(photoProps))}
-
+            {info.map((photoProps) => Wigglegram(photoProps))}
         </Fragment>
     )
 }
