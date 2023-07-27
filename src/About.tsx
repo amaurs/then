@@ -3,6 +3,8 @@ import l2016 from './assets/2016/left.jpg'
 import r2016 from './assets/2016/right.jpg'
 import l2017 from './assets/2017/left.jpg'
 import r2017 from './assets/2017/right.jpg'
+import l2018 from './assets/2018/left.jpg'
+import r2018 from './assets/2018/right.jpg'
 import l2019 from './assets/2019/left.jpg'
 import r2019 from './assets/2019/right.jpg'
 import l2020 from './assets/2020/left.jpg'
@@ -73,19 +75,25 @@ const About = (props: Props) => {
     let info = [
         {
             title: '2016',
-            subtitle: 'Necropolis. Havana, Cuba',
+            subtitle: 'Necropolis. Vedado, Havana',
             left: l2016,
             right: r2016,
         },
         {
             title: '2017',
-            subtitle: 'Nevado de Toluca. Toluca, Mexico',
+            subtitle: 'Nevado de Toluca. Toluca, State of Mexico',
             left: l2017,
             right: r2017,
         },
         {
+            title: '2018',
+            subtitle: 'Panteón de Dolores. Miguel Hidalgo, Mexico City',
+            left: l2018,
+            right: r2018,
+        },
+        {
             title: '2019',
-            subtitle: 'Presidio. San Francisco, United States of America',
+            subtitle: 'Presidio. San Francisco, California',
             left: l2019,
             right: r2019,
         },
