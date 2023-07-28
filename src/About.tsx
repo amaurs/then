@@ -29,45 +29,19 @@ interface PhotoProps {
     subtitle: string
     left: string
     right: string
+    class: string
 }
 
-const Wigglegram = (props: PhotoProps) => {
+const Photo = (props: PhotoProps) => {
     return (
-        <div className="WigglegramWrapper">
+        <div className={`${props.class}Wrapper`}>
             <h2>{props.title}</h2>
             <h3>{props.subtitle}</h3>
-            <div className="WigglegramContainer">
-                <img className="Wigglegram" src={props.left} />
-                <img className="Wigglegram" src={props.right} />
+            <div className={`${props.class}Container`}>
+                <img className={`${props.class}Left`} src={props.left} />
+                <img className={`${props.class}Right`} src={props.right} />
             </div>
             <p>{props.location}</p>
-        </div>
-    )
-}
-
-const Anaglyph = (props: PhotoProps) => {
-    return (
-        <div className="AnaglyphWrapper">
-            <h3>{props.subtitle}</h3>
-            <div className="AnaglyphContainer">
-                <img className="AnaglyphLeft" src={props.left} />
-                <img className="AnaglyphRight" src={props.right} />
-            </div>
-            <p>{props.location ? props.location : '0.0, 0.0'}</p>
-        </div>
-    )
-}
-
-const SideBySide = (props: PhotoProps) => {
-    return (
-        <div className="SideWrapper">
-            <h2>{props.title}</h2>
-            <h3>{props.subtitle}</h3>
-            <div className="SideContainer">
-                <img className="Side" src={props.left} />
-                <img className="Side" src={props.right} />
-            </div>
-            <p>{props.location ? props.location : '0.0, 0.0'}</p>
         </div>
     )
 }
@@ -135,7 +109,7 @@ const About = (props: Props) => {
     ]
 
     return (
-        <Fragment>
+        <div className='containerColumn'>
             <h1>Confines of Existence</h1>
 
             <h2>March 23, 2016. Havana, Cuba</h2>
@@ -203,8 +177,10 @@ const About = (props: Props) => {
                 </defs>
             </svg>
 
-            {info.map((photoProps) => Wigglegram(photoProps))}
-        </Fragment>
+            <div >
+                {info.map((photoProps) => Photo({ ...photoProps, class: "Anaglyph" }))}
+            </div>
+        </div>
     )
 }
 

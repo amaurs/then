@@ -1,3 +1,8 @@
+.containerColumn {
+    max-width: 1080px;
+    margin: auto;
+}
+
 .AnaglyphWrapper img {
     width: 100%;
     
@@ -33,15 +38,12 @@
     width: 200%;
 }
 
-.Wigglegram {
+.WigglegramLeft, .WigglegramRight {
     display: block;
     width: 50%;
     max-width: 50%;
     flex-basis: 50%;
 }
-
-
-
 
 @keyframes fade {
     100% {
@@ -49,6 +51,6 @@
     }
 }
 
-.SideWrapper img {
+.SideBySideWrapper img {
     width: 50%;
 }
