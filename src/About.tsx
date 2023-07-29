@@ -32,22 +32,25 @@ interface PhotoProps {
     class: string
 }
 
-const Photo = (props: PhotoProps) => {
+const Photo = (props: PhotoProps, i: number, handleClick: () => void) => {
     return (
-        <div className={`${props.class}Wrapper`}>
+        <div className={`${props.class}Container`} key={i}>
             <h2>{props.title}</h2>
             <h3>{props.subtitle}</h3>
-            <div className={`${props.class}Container`}>
+            <div className={`${props.class}`} onClick={handleClick}>
                 <img className={`${props.class}Left`} src={props.left} />
                 <img className={`${props.class}Right`} src={props.right} />
             </div>
-            <p>{props.location}</p>
+            <p className='thick'>{props.location}</p>
         </div>
     )
 }
 
 const About = (props: Props) => {
-    let [posts, setPosts] = useState<Array<string> | undefined>(undefined)
+
+    const modes = ["Anaglyph", "Wigglegram"]
+
+    let [modeIndex, setModeIndex] = useState<number>(0)
 
     let info = [
         {
@@ -108,6 +111,10 @@ const About = (props: Props) => {
         },
     ]
 
+    const toggleMode = () => {
+        setModeIndex((modeIndex + 1) % modes.length)
+    }
+
     return (
         <div className='containerColumn'>
             <h1>Confines of Existence</h1>
@@ -154,6 +161,9 @@ const About = (props: Props) => {
                 Paradoxically, 3D photography led me to analogue photography in
                 2011, marking a milestone in my artistic career.
             </p>
+            <div >
+                {info.map((photoProps, i) => Photo({ ...photoProps, class: modes[modeIndex] }, i, toggleMode))}
+            </div>
             <svg width="0" height="0">
                 <defs>
                     <filter id="cyan">
@@ -176,10 +186,6 @@ const About = (props: Props) => {
                     </filter>
                 </defs>
             </svg>
-
-            <div >
-                {info.map((photoProps) => Photo({ ...photoProps, class: "Anaglyph" }))}
-            </div>
         </div>
     )
 }

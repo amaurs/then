@@ -1,41 +1,37 @@
-.containerColumn {
+.Column {
     max-width: 1080px;
     margin: auto;
 }
 
-.AnaglyphWrapper img {
+.AnaglyphContainer img {
     width: 100%;
-    
 }
 
-.AnaglyphContainer {
+.Anaglyph {
     position: relative;
     height: 100%;
 }
 
 .AnaglyphLeft {
-    position: absolute;
     filter: url(#red);
-    top: 0;
-    left: 0;
 }
 .AnaglyphRight {
     position: absolute;
     filter: url(#cyan);
     mix-blend-mode: lighten;
-    top: 0;
-    left: 0;
-}
-
-.WigglegramWrapper {
-    overflow: hidden;
+    inset: 0;
 }
 
 .WigglegramContainer {
+    overflow: hidden;
+}
+
+.Wigglegram {
     animation: fade 0.25s infinite;
     animation-timing-function: steps(2);
     display: flex;
     width: 200%;
+    margin-bottom: 6px;
 }
 
 .WigglegramLeft, .WigglegramRight {
@@ -51,6 +47,14 @@
     }
 }
 
-.SideBySideWrapper img {
+.SideBySide {
+
+}
+
+.SideBySideLeft, .SideBySideRight {
     width: 50%;
+}
+
+p.thick {
+    font-weight: bold;
 }
