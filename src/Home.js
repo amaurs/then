@@ -447,7 +447,7 @@ const Home = (props) => {
         )
     }
 
-    if (host.length && (host[0] === 'about' || host[0] === 'if')) {
+    if (host.length && (host[0] === 'about' || host[0] === 'into')) {
         return (
             <div className="Blog">
                 <Routes>
