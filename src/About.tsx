@@ -156,9 +156,6 @@ const About = (props: Props) => {
                 San Francisco 2023
             </p>
 
-            <p className="thick">
-                [Click any of the pictures below to switch between view modes.]
-            </p>
             <div>
                 {info.map((photoProps, i) =>
                     Photo(
