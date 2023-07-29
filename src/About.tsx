@@ -41,14 +41,13 @@ const Photo = (props: PhotoProps, i: number, handleClick: () => void) => {
                 <img className={`${props.class}Left`} src={props.left} />
                 <img className={`${props.class}Right`} src={props.right} />
             </div>
-            <p className='thick'>{props.location}</p>
+            <p className="thick">{props.location}</p>
         </div>
     )
 }
 
 const About = (props: Props) => {
-
-    const modes = ["Anaglyph", "Wigglegram"]
+    const modes = ['Anaglyph', 'Wigglegram']
 
     let [modeIndex, setModeIndex] = useState<number>(0)
 
@@ -116,54 +115,61 @@ const About = (props: Props) => {
     }
 
     return (
-        <div className='containerColumn'>
+        <div className="Column">
             <h1>Confines of Existence</h1>
 
-            <h2>March 23, 2016. Havana, Cuba</h2>
             <p>
-                I would never have imagined that, on my thirtieth birthday,
-                chance would take me to a place like the Necropolis, in Havana,
-                Cuba. With the intention of capturing the particularity of that
-                moment, I photographed a grave with the Holga 3D that I had on
-                hand. The following year, driven by a strange fascination, I
-                repeated the ritual: this time I went to the Dolores cemetery in
-                Mexico City. Some time later I came to the conclusion that the
-                unconscious, intentionality and chance weave a network that
-                drives creation: without knowing it, with the photo taken in
-                Havana, I inaugurated a tradition that would continue in
-                consecutive years.
+                On the day of my thirtieth birthday, as I wandered through the
+                streets of Havana, I unexpectedly came across the Necropolis of
+                Colon. Armed with a stereoscopic camera crafted from a
+                couple of disposable cameras, I captured images of the exquisite
+                statues.The following year, during a hike in the crater of an
+                inactive volcano situated to the east of my hometown, Mexico
+                City, I found a tomb, this time better prepared with a
+                proper stereoscopic camera. These two moments would lay the
+                foundation of a personal ritual that I would follow in the years
+                to come.
             </p>
             <p>
-                The paradox of visiting cemeteries, when celebrating the
-                beginning of my life, led me to reflect on life and death as two
-                inescapable pillars of our existence. The repetition of the act
-                strengthened my bond with photography as a creative process and
-                became a means of exploring the transience of time, the
-                uniqueness of impermanence, and the transcendence of memories.
-                Just as each visit to the cemetery is an unrepeatable
+                This tradition strengthened my bond with photography as a
+                creative process and became a means of exploring the transience
+                of time, the uniqueness of impermanence, and the transcendence
+                of memories. Just as each visit to a cemetery is an unrepeatable
                 experience, each photograph in this series tells a unique story:
                 it is a close encounter with the duality of existence, and at
                 the same time, a reflection on the finiteness of our time in
                 this world.
             </p>
             <p>
-                My approach to this type of format arose when, browsing the
-                Internet, I discovered animated gifs. Curiosity led me to
-                investigate more about the creation of these images, and soon
-                after, I acquired the Holga 3D, a camera that became one of my
-                main creative tools. This modality represents for me something
-                more than a simple two-dimensional image; it's a more
-                comprehensive capture of significant moments. The 3D format
-                immortalizes the essence and movement of each moment with a
-                depth that goes beyond the limits of a conventional photograph.
+                Being a child who grew up in the nineties, before the internet
+                era, I vividly recall my fascination with anaglyphs when I first
+                came into contact with them. As I matured, this enchantment
+                became the very gateway into the world of photography. The
+                decision to employ this format for my artworks arises from that
+                enduring passion, acting as a vehicle to recollect intricate
+                details of my own reflection year over year.
             </p>
-            <p>
-                Paradoxically, 3D photography led me to analogue photography in
-                2011, marking a milestone in my artistic career.
+            
+            <p className='right noPadding'>
+                <a className='signature' href="https://instagram.com/_amaurs">Amaury Acosta</a>
             </p>
-            <div >
-                {info.map((photoProps, i) => Photo({ ...photoProps, class: modes[modeIndex] }, i, toggleMode))}
+            <p className='right'>
+                San Francisco 2023
+            </p>
+
+            <p className="thick">
+                [Click any of the pictures below to switch between view modes.]
+            </p>
+            <div>
+                {info.map((photoProps, i) =>
+                    Photo(
+                        { ...photoProps, class: modes[modeIndex] },
+                        i,
+                        toggleMode
+                    )
+                )}
             </div>
+
             <svg width="0" height="0">
                 <defs>
                     <filter id="cyan">
