@@ -137,8 +137,7 @@ const About = (props: Props) => {
                 of memories. Just as each visit to a cemetery is an unrepeatable
                 experience, each photograph in this series tells a unique story:
                 it is a close encounter with the duality of existence, and at
-                the same time, a reflection on the finiteness of our time in
-                this world.
+                the same time, a reflection on the finiteness of our lives.
             </p>
             <p>
                 Being a child who grew up in the nineties, before the internet
