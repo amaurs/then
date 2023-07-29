@@ -31,7 +31,6 @@
     animation-timing-function: steps(2);
     display: flex;
     width: 200%;
-    margin-bottom: 6px;
 }
 
 .WigglegramLeft, .WigglegramRight {
@@ -57,4 +56,19 @@
 
 p.thick {
     font-weight: bold;
+    font-size: 12px;
+}
+
+.right {
+    text-align: right;
+}
+
+.noPadding {
+    padding-bottom: 0 !important;
+}
+
+.signature {
+    font-size: 16px !important;
+    font-family: 'LubalinGraphStd-Medium', serif;
+    color: magenta !important;
 }
