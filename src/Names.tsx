@@ -65,7 +65,7 @@ const Names = () => {
                         {names.map((name, id) => {
                             return (
                                 <Draggable key={id} draggableId={`${id}`} index={id}>
-                                    {(provided) => <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>{name}</li>}
+                                    {(provided) => <li className={id==0?"highlight":""} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>{name}</li>}
                                 </Draggable>
                             )
                         })}
