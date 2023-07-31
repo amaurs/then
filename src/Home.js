@@ -24,6 +24,7 @@ import Penrose from './bits/penrose/Penrose.tsx'
 import TravelingSalesman from './bits/travelingsalesman/TravelingSalesman.tsx'
 import About from './About.tsx'
 import Blog from './Blog.tsx'
+import Names from './Names.tsx'
 import Post from './Post.tsx'
 
 import Then from './Then.tsx'
@@ -447,12 +448,20 @@ const Home = (props) => {
         )
     }
 
-    if (host.length && (host[0] === 'about' || host[0] === 'into')) {
+    if (host.length && host[0] === 'into') {
         return (
             <div className="Blog">
                 <Routes>
                     <Route path="/" element={<About />} />
                 </Routes>
+            </div>
+        )
+    }
+
+    if (host.length && host[0] === 'about') {
+        return (
+            <div className="Blog">
+                <Names />
             </div>
         )
     }
