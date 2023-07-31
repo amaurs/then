@@ -27,6 +27,7 @@
         "three": "^0.143.0"
     },
     "devDependencies": {
+        "@types/react-beautiful-dnd": "^13.1.4",
         "@types/three": "^0.143.0",
         "prettier": "2.8.7",
         "react-scripts": "^2.1.3",
