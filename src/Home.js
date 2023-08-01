@@ -451,9 +451,7 @@ const Home = (props) => {
     if (host.length && host[0] === 'into') {
         return (
             <div className="Blog">
-                <Routes>
-                    <Route path="/" element={<About />} />
-                </Routes>
+                <About />
             </div>
         )
     }
