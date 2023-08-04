@@ -22,10 +22,6 @@ import Corrupted from './bits/corrupted/Corrupted.tsx'
 import Anaglyph from './bits/anaglyph/Anaglyph.tsx'
 import Penrose from './bits/penrose/Penrose.tsx'
 import TravelingSalesman from './bits/travelingsalesman/TravelingSalesman.tsx'
-import About from './About.tsx'
-import Blog from './Blog.tsx'
-import Names from './Names.tsx'
-import Post from './Post.tsx'
 
 import Then from './Then.tsx'
 
@@ -60,9 +56,6 @@ if (process.env.REACT_APP_GA_ID) {
 }
 
 const presentationTime = 0
-
-const banditHost = process.env.REACT_APP_API_HOST
-const TRACKING_ID = process.env.REACT_APP_GA_ID
 
 const oldMapping = {
     '/penrose': {
@@ -257,8 +250,6 @@ const Home = (props) => {
 
     // let debouncedShowMenu = useDebounce(showMenu, 5000);
 
-    let host = window.location.host.split('.')
-
     useEffect(() => {
         const handleKeyPress = (event) => {
             if (event.keyCode === code[konami] && konami + 1 < code.length) {
@@ -426,42 +417,6 @@ const Home = (props) => {
 
     if (props.masterData.codes === undefined) {
         return null
-    }
-
-    if (host.length && host[0] === 'blog') {
-        return (
-            <div className="Blog">
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Blog title={'Else'} url={`${banditHost}/posts`} />
-                        }
-                    />
-
-                    <Route
-                        path="/post/:slug"
-                        element={<Post url={`${banditHost}/post`} />}
-                    />
-                </Routes>
-            </div>
-        )
-    }
-
-    if (host.length && host[0] === 'into') {
-        return (
-            <div className="Blog">
-                <About />
-            </div>
-        )
-    }
-
-    if (host.length && host[0] === 'poroto') {
-        return (
-            <div className="Blog">
-                <Names />
-            </div>
-        )
     }
 
     return (
