@@ -12,6 +12,7 @@ import About from './About.tsx'
 import Blog from './Blog.tsx'
 import Names from './Names.tsx'
 import Post from './Post.tsx'
+import Calendar from './Calendar.tsx'
 
 const root = createRoot(document.getElementById('root'))
 
@@ -37,6 +38,14 @@ if (host.length && host[0] === 'blog') {
                     />
                 </Routes>
             </div>
+        </Router>
+    )
+}
+
+else if (host.length && host[0] === 'calendar' || true) {
+    root.render(
+        <Router>
+            <Calendar />
         </Router>
     )
 }
