@@ -27,8 +27,8 @@ const getWeek = (date: Date) => {
     const timeDiff = date.getTime() - startOfYear.getTime()
     const a = timeDiff
     const b = (24 * 60 * 60 * 1000)
-    const remainder = a % b;
-    const quotient = (a - remainder) / b;
+    const remainder = a % b
+    const quotient = (a - remainder) / b
     const daysInYear = quotient
 
     let week = 0
@@ -45,11 +45,11 @@ const getWeek = (date: Date) => {
 }
 
 const dayToColor = (year: number, month: number, day: number): Color => {
-    const intValue = (year << 9) | (month << 5) | day;
+    const intValue = (year << 9) | (month << 5) | day
 
-    const red = (intValue >> 16) & 255;
-    const green = (intValue >> 8) & 255;
-    const blue = intValue & 255;
+    const red = (intValue >> 16) & 255
+    const green = (intValue >> 8) & 255
+    const blue = intValue & 255
 
     return { red: red, green: green, blue: blue, alpha: 255 }
 }
@@ -57,11 +57,11 @@ const dayToColor = (year: number, month: number, day: number): Color => {
 const colorToDay = (red: number, green: number, blue: number): Date => {
     const intValue = (red << 16) | (green << 8) | blue
 
-    const year = (intValue >> 9) & (2 ** 15 - 1);
-    const month = (intValue >> 5) & (2 ** 4 - 1);
-    const day = intValue & (2 ** 5 - 1);
+    const year = (intValue >> 9) & (2 ** 15 - 1)
+    const month = (intValue >> 5) & (2 ** 4 - 1)
+    const day = intValue & (2 ** 5 - 1)
 
-    return new Date(year, month, day);
+    return new Date(year, month, day)
 }
 
 const fillRectWithImageData = (
@@ -74,17 +74,17 @@ const fillRectWithImageData = (
     green: number,
     blue: number,
     alpha: number) => {
-    const imageData = context.createImageData(width, height);
-    const pixelData = imageData.data;
+    const imageData = context.createImageData(width, height)
+    const pixelData = imageData.data
 
     for (let i = 0; i < pixelData.length; i += 4) {
-        pixelData[i] = red;
-        pixelData[i + 1] = green;
-        pixelData[i + 2] = blue;
-        pixelData[i + 3] = alpha;
+        pixelData[i] = red
+        pixelData[i + 1] = green
+        pixelData[i + 2] = blue
+        pixelData[i + 3] = alpha
     }
 
-    context.putImageData(imageData, x, y);
+    context.putImageData(imageData, x, y)
 }
 
 const paintCalendar = (
@@ -150,28 +150,28 @@ const paintCalendar = (
 }
 
 const partitionIntervals = (startDate: Date, endDate: Date) => {
-    const intervals = [];
+    const intervals = []
 
-    let currentYear = startDate.getFullYear();
-    let currentDate = new Date(startDate);
+    let currentYear = startDate.getFullYear()
+    let currentDate = new Date(startDate)
 
     while (currentDate <= endDate) {
-        const intervalStart = new Date(currentDate);
-        let intervalEnd = new Date(currentYear, 11, 31);
+        const intervalStart = new Date(currentDate)
+        let intervalEnd = new Date(currentYear, 11, 31)
 
         if (intervalEnd > endDate) {
-            intervalEnd = new Date(endDate);
+            intervalEnd = new Date(endDate)
         }
 
-        intervals.push({ start: intervalStart, end: intervalEnd });
+        intervals.push({ start: intervalStart, end: intervalEnd })
 
-        currentYear++;
-        currentDate.setFullYear(currentYear);
-        currentDate.setDate(1);
-        currentDate.setMonth(0);
+        currentYear++
+        currentDate.setFullYear(currentYear)
+        currentDate.setDate(1)
+        currentDate.setMonth(0)
     }
 
-    return intervals;
+    return intervals
 }
 
 
@@ -189,7 +189,7 @@ const _Calendar = (props: _CalendarProps) => {
 
         
         const context: CanvasRenderingContext2D = mount.current.getContext('2d')!
-        context.imageSmoothingEnabled = false;
+        context.imageSmoothingEnabled = false
         context.canvas.width = (size + offsetWeek) * 54 - offsetWeek + 11 * offsetMonth
         context.canvas.height = (props.end.getFullYear() - props.start.getFullYear() + 1) * offsetYear - 15 - 17
 
@@ -231,14 +231,14 @@ const _Calendar = (props: _CalendarProps) => {
             offsetYear,
             size,
             size)
-        mount.current.addEventListener('mousemove', handleMouseMove);
-        mount.current.addEventListener('mouseout', handleMouseOut);
+        mount.current.addEventListener('mousemove', handleMouseMove)
+        mount.current.addEventListener('mouseout', handleMouseOut)
 
 
         return () => {
-            mount.current.removeEventListener('mousemove', handleMouseMove);
-            mount.current.removeEventListener('mouseout', handleMouseOut);
-        };
+            mount.current.removeEventListener('mousemove', handleMouseMove)
+            mount.current.removeEventListener('mouseout', handleMouseOut)
+        }
 
     }, [])
 
