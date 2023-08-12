@@ -65,7 +65,7 @@ const colorToDay = (red: number, green: number, blue: number): Date => {
 }
 
 const fillRectWithImageData = (
-    context: CanvasRenderingContext2D,
+    context: CanvasImageData,
     x: number,
     y: number,
     width: number,
@@ -89,6 +89,7 @@ const fillRectWithImageData = (
 
 const paintCalendar = (
     context: CanvasRenderingContext2D,
+    offScreenContext: OffscreenCanvasRenderingContext2D,
     start: number,
     end: number,
     offsetDay: number,
@@ -118,8 +119,16 @@ const paintCalendar = (
             week = 0
         }
 
+        context.fillStyle = "black"
+        context.fillRect(
+            (sizeX + offsetWeek) * week + offsetMonth * month,
+            (sizeY + offsetDay) * dayOfTheWeek + offsetYear * year,
+            sizeX,
+            sizeY
+        )
+
         fillRectWithImageData(
-            context,
+            offScreenContext,
             (sizeX + offsetWeek) * week + offsetMonth * month,
             (sizeY + offsetDay) * dayOfTheWeek + offsetYear * year,
             sizeX,
@@ -171,9 +180,6 @@ const _Calendar = (props: _CalendarProps) => {
     const [date, setDate] = useState<Date>()
 
     useEffect(() => {
-
-        let total = 0
-
         let DAYS_IN_A_WEEK = 7
         let offsetWeek = 5
         let offsetDay = 3
@@ -181,18 +187,19 @@ const _Calendar = (props: _CalendarProps) => {
         let size = 10
         let offsetYear = DAYS_IN_A_WEEK * (size + offsetWeek) + 15
 
-
+        
         const context: CanvasRenderingContext2D = mount.current.getContext('2d')!
         context.imageSmoothingEnabled = false;
         context.canvas.width = (size + offsetWeek) * 54 - offsetWeek + 11 * offsetMonth
         context.canvas.height = (props.end.getFullYear() - props.start.getFullYear() + 1) * offsetYear - 15 - 17
 
+        const offScreenContext = new OffscreenCanvas(context.canvas.width, context.canvas.height).getContext("2d")! // or webgl, etc.
 
         const handleMouseMove = (e: MouseEvent) => {
             const offsetX = e.offsetX
             const offsetY = e.offsetY
 
-            const pixelData = context.getImageData(offsetX, offsetY, 2, 2).data
+            const pixelData = offScreenContext.getImageData(offsetX, offsetY, 2, 2).data
             const red = pixelData[0]
             const green = pixelData[1]
             const blue = pixelData[2]
@@ -209,10 +216,13 @@ const _Calendar = (props: _CalendarProps) => {
 
 
         context.fillStyle = "white"
+        offScreenContext.fillStyle = "white"
         context.fillRect(0, 0, context.canvas.width, context.canvas.height)
+        offScreenContext.fillRect(0, 0, context.canvas.width, context.canvas.height)
 
         paintCalendar(
             context,
+            offScreenContext,
             props.start.getTime() + 1000 * 60 * 60 * 12, // Adding 12 hours to avoid problems with daylight saving.
             props.end.getTime(),
             offsetDay,
