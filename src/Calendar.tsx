@@ -87,6 +87,19 @@ const fillRectWithImageData = (
     context.putImageData(imageData, x, y)
 }
 
+const formatDate = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = ('0' + (date.getMonth() + 1)).slice(-2)
+    const day = ('0' + date.getDate()).slice(-2)
+    
+    return `${year}/${month}/${day}`
+  }
+
+const getColor = (index: undefined | number): string => {
+    return index !== undefined && index > 0? 
+        (index > 1? (index > 2? "#3772FF": "#DF2935"): "#FDCA40"): "#080708"
+}
+
 const paintCalendar = (
     context: CanvasRenderingContext2D,
     offScreenContext: OffscreenCanvasRenderingContext2D,
@@ -97,7 +110,8 @@ const paintCalendar = (
     offsetMonth: number,
     offsetYear: number,
     sizeX: number,
-    sizeY: number) => {
+    sizeY: number,
+    colorMapping: Map<string, number>) => {
 
     let startDate: Date = new Date(start)
     let week = getWeek(startDate)
@@ -119,7 +133,12 @@ const paintCalendar = (
             week = 0
         }
 
-        context.fillStyle = "black"
+
+        let colorindex = colorMapping.get(formatDate(square))
+        context.fillStyle = getColor(colorindex)
+
+
+        
         context.fillRect(
             (sizeX + offsetWeek) * week + offsetMonth * month,
             (sizeY + offsetDay) * dayOfTheWeek + offsetYear * year,
@@ -230,7 +249,19 @@ const _Calendar = (props: _CalendarProps) => {
             offsetMonth,
             offsetYear,
             size,
-            size)
+            size,
+            new Map<string, number>([
+                ['2023/02/22', 4],
+                ['2023/01/05', 1],
+                ['2016/03/23', 1],
+                ['2017/03/23', 1],
+                ['2018/03/23', 1],
+                ['2019/03/23', 1],
+                ['2020/03/23', 1],
+                ['2021/03/23', 1],
+                ['2022/03/23', 1],
+                ['2023/03/23', 1],
+            ]))
         mount.current.addEventListener('mousemove', handleMouseMove)
         mount.current.addEventListener('mouseout', handleMouseOut)
 
