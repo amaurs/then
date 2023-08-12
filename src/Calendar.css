@@ -2,6 +2,10 @@
     image-rendering: pixelated;
     align-self: center;
     margin: 10px auto;
+   
+}
+h1 {
+     color: magenta !important;
 }
 
 
