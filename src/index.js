@@ -13,6 +13,7 @@ import Blog from './Blog.tsx'
 import Names from './Names.tsx'
 import Post from './Post.tsx'
 import Calendar from './Calendar.tsx'
+import Album from './Album'
 
 const root = createRoot(document.getElementById('root'))
 
@@ -36,13 +37,22 @@ if (host.length && host[0] === 'blog') {
                         path="/post/:slug"
                         element={<Post url={`${banditHost}/post`} />}
                     />
+
+                    <Route
+                        path="/calendar"
+                        element={<Calendar />}
+                    />
+                    <Route
+                        path="/calendar/:year/:month/:day"
+                        element={<Album />}
+                    />
                 </Routes>
             </div>
         </Router>
     )
 }
 
-else if (host.length && host[0] === 'calendar' || true) {
+else if (host.length && host[0] === 'calendar') {
     root.render(
         <Router>
             <Calendar />
