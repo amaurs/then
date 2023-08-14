@@ -200,7 +200,7 @@ const partitionIntervals = (startDate: Date, endDate: Date) => {
 const _Calendar = (props: _CalendarProps) => {
     const mount = useRef<HTMLCanvasElement>(document.createElement('canvas'))
     const [date, setDate] = useState<Date>()
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     useEffect(() => {
         let DAYS_IN_A_WEEK = 7
