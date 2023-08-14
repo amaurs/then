@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, Fragment } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Calendar.css'
 
 interface Props {
@@ -11,6 +12,7 @@ interface _CalendarProps {
     height: number
     start: Date
     end: Date
+    photos: Map<string, number>
 }
 
 interface Color {
@@ -21,6 +23,7 @@ interface Color {
 }
 
 const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24
+const banditHost = process.env.REACT_APP_API_HOST
 
 const getWeek = (date: Date) => {
     const startOfYear = new Date(date.getFullYear(), 0, 1)
@@ -87,17 +90,17 @@ const fillRectWithImageData = (
     context.putImageData(imageData, x, y)
 }
 
-const formatDate = (date: Date): string => {
+const formatDate = (date: Date, separator: string): string => {
     const year = date.getFullYear()
     const month = ('0' + (date.getMonth() + 1)).slice(-2)
     const day = ('0' + date.getDate()).slice(-2)
     
-    return `${year}/${month}/${day}`
+    return `${year}${separator}${month}${separator}${day}`
   }
 
 const getColor = (index: undefined | number): string => {
     return index !== undefined && index > 0? 
-        (index > 1? (index > 2? "#3772FF": "#DF2935"): "#FDCA40"): "#080708"
+        (index > 1? (index > 2? "#3772FF": "#DF2935"): "#FDCA40"): "black" // "#080708"
 }
 
 const paintCalendar = (
@@ -134,7 +137,7 @@ const paintCalendar = (
         }
 
 
-        let colorindex = colorMapping.get(formatDate(square))
+        let colorindex = colorMapping.get(formatDate(square, '/'))
         context.fillStyle = getColor(colorindex)
 
 
@@ -197,6 +200,7 @@ const partitionIntervals = (startDate: Date, endDate: Date) => {
 const _Calendar = (props: _CalendarProps) => {
     const mount = useRef<HTMLCanvasElement>(document.createElement('canvas'))
     const [date, setDate] = useState<Date>()
+    const navigate = useNavigate();
 
     useEffect(() => {
         let DAYS_IN_A_WEEK = 7
@@ -205,7 +209,6 @@ const _Calendar = (props: _CalendarProps) => {
         let offsetMonth = 30
         let size = 10
         let offsetYear = DAYS_IN_A_WEEK * (size + offsetWeek) + 15
-
         
         const context: CanvasRenderingContext2D = mount.current.getContext('2d')!
         context.imageSmoothingEnabled = false
@@ -229,6 +232,27 @@ const _Calendar = (props: _CalendarProps) => {
             setDate(day)
         }
 
+        const handleMouseClick = (e: MouseEvent) => {
+            const offsetX = e.offsetX
+            const offsetY = e.offsetY
+
+            const pixelData = offScreenContext.getImageData(offsetX, offsetY, 2, 2).data
+            const red = pixelData[0]
+            const green = pixelData[1]
+            const blue = pixelData[2]
+            const alpha = pixelData[3]
+
+            let day = !(red == 255 && green == 255 && blue == 255 && alpha == 255) ? colorToDay(red, green, blue) : undefined
+
+            if (day !== undefined) {
+                const otherPixelData = context.getImageData(offsetX, offsetY, 2, 2).data
+                // TODO: This is right now hardcoded to color black, should make it configurable.
+                if (!(otherPixelData[0] == 0 && otherPixelData[1] == 0 && otherPixelData[2] == 0)) {
+                    navigate(`/calendar/${formatDate(day, '/')}`)
+                }
+            }
+        }
+
         const handleMouseOut = (e: MouseEvent) => {
             setDate(undefined)
         }
@@ -250,25 +274,18 @@ const _Calendar = (props: _CalendarProps) => {
             offsetYear,
             size,
             size,
-            new Map<string, number>([
-                ['2023/02/22', 4],
-                ['2023/01/05', 1],
-                ['2016/03/23', 1],
-                ['2017/03/23', 1],
-                ['2018/03/23', 1],
-                ['2019/03/23', 1],
-                ['2020/03/23', 1],
-                ['2021/03/23', 1],
-                ['2022/03/23', 1],
-                ['2023/03/23', 1],
-            ]))
+            props.photos)
         mount.current.addEventListener('mousemove', handleMouseMove)
         mount.current.addEventListener('mouseout', handleMouseOut)
+        mount.current.addEventListener('click', handleMouseClick)
 
 
         return () => {
-            mount.current.removeEventListener('mousemove', handleMouseMove)
-            mount.current.removeEventListener('mouseout', handleMouseOut)
+            if (mount.current) {
+                mount.current.removeEventListener('mousemove', handleMouseMove)
+                mount.current.removeEventListener('mouseout', handleMouseOut)
+                mount.current.removeEventListener('click', handleMouseClick)
+            }
         }
 
     }, [])
@@ -286,15 +303,46 @@ const _Calendar = (props: _CalendarProps) => {
     )
 }
 
+
 const Calendar = (props: Props) => {
+    const [start, setStart] = useState<Date>()
+    const [photos, setPhotos] =  useState<any>()
+
+    useEffect(() => {
+        let cancel = false
+        const fetchNames = async (url: string) => {
+            try {
+                let response = await fetch(url)
+                let json = await response.json()
+
+                if (!cancel) {
+                    setStart(new Date(json.start.year, json.start.month - 1, json.start.day))
+                    setPhotos(new Map(json.photos))
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        fetchNames(`${banditHost}/calendar/amaurs`)
+    
+        return () => {
+            cancel = true
+        }
+    }, [])
+
+    if (start === undefined) {
+        return null
+    }
     return (
         <Fragment>
-            {partitionIntervals(new Date(1986, 2, 23), new Date(Date.now())).map((interval, index) => {
+            {partitionIntervals(start, new Date(Date.now())).reverse().map((interval, index) => {
                 return <_Calendar
                     height={props.height}
                     width={props.width}
                     start={interval.start}
                     end={interval.end}
+                    photos={photos}
                     key={index}></_Calendar>
             })}
 
