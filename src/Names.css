@@ -2,3 +2,19 @@
     color: magenta;
     font-size: 45px !important;
 }
+
+button {
+    margin: 0 10px;
+    color: magenta;
+    border: none;
+    outline: none;
+    background: none;
+    font-family: 'LubalinGraphStd-Medium', serif;
+    font-size: 45px !important;
+}
+
+input, input:focus {
+    font-family: 'LubalinGraphStd-Medium', serif;
+    font-size: 45px !important;
+    color: gray;
+}
