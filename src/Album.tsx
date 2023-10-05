@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
+import './Album.css'
 
 const banditHost = process.env.REACT_APP_API_HOST
 
@@ -42,7 +43,7 @@ const Album = () => {
     
 
     return (
-        <Fragment>
+        <div className="Column">
             <h1>
                 {date.toLocaleDateString('en-US', {
                     weekday: 'long',
@@ -54,7 +55,7 @@ const Album = () => {
             {photos!.map((photo, index) => {
                 return <img src={photo} key={index}></img>
             })}
-        </Fragment>
+        </div>
     )
 }
 
