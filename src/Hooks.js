@@ -1,4 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import {
+    useEffect,
+    useRef,
+    useState,
+    createContext,
+    useContext,
+    useMemo,
+} from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export function useInterval(callback, delay) {
     const savedCallback = useRef()
@@ -80,6 +88,7 @@ export function useLocalStorage(key, initialValue) {
     return [storedValue, setValue]
 }
 
+
 export function useDebounce(value, delay) {
     const [debouncedValue, setDebouncedValue] = useState(value)
 
@@ -94,4 +103,39 @@ export function useDebounce(value, delay) {
     }, [value, delay])
 
     return debouncedValue
+}
+
+
+
+const AuthContext = createContext()
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useLocalStorage('user', null)
+    const navigate = useNavigate()
+
+    // call this function when you want to authenticate the user
+    const login = async (data) => {
+        setUser(data)
+        navigate('/calendar')
+    }
+
+    // call this function to sign out logged in user
+    const logout = () => {
+        setUser(null)
+        navigate('/', { replace: true })
+    }
+
+    const value = useMemo(
+        () => ({
+            user,
+            login,
+            logout,
+        }),
+        [user]
+    )
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+}
+
+export const useAuth = () => {
+    return useContext(AuthContext)
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
+import { useAuth } from './Hooks'
 import './Album.css'
 
 const banditHost = process.env.REACT_APP_API_HOST
@@ -9,12 +10,21 @@ const Album = () => {
     const { year, month, day } = useParams()
     const [photos, setPhotos] = useState<Array<string> | undefined>(undefined)
     const navigate = useNavigate()
+    const { user } = useAuth()
 
     useEffect(() => {
         let cancel = false
         const fetchNames = async (url: string) => {
             try {
-                let response = await fetch(url)
+                let payload = {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': user.token,
+                    }
+                }
+
+                let response = await fetch(url, payload)
                 let json = await response.json()
 
                 if (!cancel) {
@@ -22,6 +32,7 @@ const Album = () => {
                 }
             } catch (error) {
                 console.log(error)
+                navigate('/login')
             }
         }
 
