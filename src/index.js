@@ -14,6 +14,9 @@ import Names from './Names.tsx'
 import Post from './Post.tsx'
 import Calendar from './Calendar.tsx'
 import Album from './Album'
+import Login from './Login'
+import ProtectedRoute from './ProtectedRoute'
+import { AuthProvider } from './Hooks'
 
 const root = createRoot(document.getElementById('root'))
 
@@ -24,43 +27,55 @@ const banditHost = process.env.REACT_APP_API_HOST
 if (host.length && host[0] === 'blog') {
     root.render(
         <Router>
-            <div className="Blog">
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Blog title={'Else'} url={`${banditHost}/posts`} />
-                        }
-                    />
+            <AuthProvider>
+                <div className="Blog">
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                <Blog
+                                    title={'Else'}
+                                    url={`${banditHost}/posts`}
+                                />
+                            }
+                        />
 
-                    <Route
-                        path="/post/:slug"
-                        element={<Post url={`${banditHost}/post`} />}
-                    />
+                        <Route
+                            path="/post/:slug"
+                            element={<Post url={`${banditHost}/post`} />}
+                        />
 
-                    <Route
-                        path="/calendar"
-                        element={<Calendar />}
-                    />
-                    <Route
-                        path="/calendar/:year/:month/:day"
-                        element={<Album />}
-                    />
-                </Routes>
-            </div>
+                        <Route
+                            path="/calendar"
+                            element={
+                                <ProtectedRoute>
+                                    <Calendar />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/calendar/:year/:month/:day"
+                            element={
+                                <ProtectedRoute>
+                                    <Album />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route path="/login" element={<Login />} />
+                    </Routes>
+                </div>
+            </AuthProvider>
         </Router>
     )
-}
-
-else if (host.length && host[0] === 'calendar') {
+} else if (host.length && host[0] === 'calendar') {
     root.render(
         <Router>
             <Calendar />
         </Router>
     )
-}
-
-else if (host.length && host[0] === 'into') {
+} else if (host.length && host[0] === 'into') {
     root.render(
         <Router>
             <div className="Blog">
@@ -68,9 +83,7 @@ else if (host.length && host[0] === 'into') {
             </div>
         </Router>
     )
-}
-
-else if (host.length && host[0] === 'poroto') {
+} else if (host.length && host[0] === 'poroto') {
     root.render(
         <Router>
             <div className="Blog">
@@ -78,9 +91,7 @@ else if (host.length && host[0] === 'poroto') {
             </div>
         </Router>
     )
-}
-
-else {
+} else {
     root.render(
         <Router>
             <Scaffold />

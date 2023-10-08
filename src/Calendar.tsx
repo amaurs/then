@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Calendar.css'
+import { useAuth } from './Hooks'
 
 interface Props {
     width: number
@@ -307,12 +308,22 @@ const _Calendar = (props: _CalendarProps) => {
 const Calendar = (props: Props) => {
     const [start, setStart] = useState<Date>()
     const [photos, setPhotos] =  useState<any>()
+    const { user } = useAuth()
+    const navigate = useNavigate()
 
     useEffect(() => {
         let cancel = false
         const fetchNames = async (url: string) => {
             try {
-                let response = await fetch(url)
+                let payload = {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': user.token,
+                    }
+                }
+
+                let response = await fetch(url, payload)
                 let json = await response.json()
 
                 if (!cancel) {
@@ -321,6 +332,7 @@ const Calendar = (props: Props) => {
                 }
             } catch (error) {
                 console.log(error)
+                navigate('/login')
             }
         }
 
