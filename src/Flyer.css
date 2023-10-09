@@ -1,0 +1,26 @@
+.Info {
+    position: absolute;
+    max-width: 1080px;
+    margin: auto;
+    font-size: 32px;
+}
+
+.Info p {
+    font-family: 'Arial';
+    text-transform: none;
+}
+
+.Info h1 {
+    color: rgb(10, 77, 29
+    ) !important;
+}
+
+.address {
+    margin-top: 16px;
+    font-weight: bold;
+}
+
+.Flowers {
+    display: flex;
+    justify-content: right;
+}
