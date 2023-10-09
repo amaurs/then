@@ -15,6 +15,7 @@ import Post from './Post.tsx'
 import Calendar from './Calendar.tsx'
 import Album from './Album'
 import Login from './Login'
+import Flyer from './Flyer'
 import ProtectedRoute from './ProtectedRoute'
 import { AuthProvider } from './Hooks'
 
@@ -89,6 +90,12 @@ if (host.length && host[0] === 'blog') {
             <div className="Blog">
                 <Names />
             </div>
+        </Router>
+    )
+} else if (host.length && host[0] === 'flyer') {
+    root.render(
+        <Router>
+            <Flyer />
         </Router>
     )
 } else {
