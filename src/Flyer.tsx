@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, Fragment } from 'react'
-import faunita from './assets/faunita-small.jpg'
+import faunita from './assets/faunita-small-inverted.jpg'
 import * as THREE from 'three'
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
@@ -23,79 +23,6 @@ interface Data {
 }
 
 const banditHost = process.env.REACT_APP_API_HOST
-/**
-const Flyer = () => {
-
-    const [data, setData] = useState<Data | undefined>(undefined);
-
-    useEffect(() => {
-        let cancel = false
-        const fetchPost = async (url: string) => {
-            try {
-                let payload = {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-                let response = await fetch(url, payload)
-                let json = await response.json()
-
-                if (!cancel) {
-                    setData(json)
-                }
-            } catch (error) {
-                console.log('Call to post endpoint failed.', error)
-            }
-        }
-        fetchPost(`${banditHost}/flyer`)
-        return () => {
-            cancel = true
-        }
-    }, [])
-
-
-    if (data === undefined) {
-        return null
-    }
-
-    return (
-        <div className="Column">
-            <h1>Flyer</h1>
-            <p>{data.message}</p>
-            <p>{data.date}</p>
-            <div>{data.address.map((s, i) => <p key={i}>{s}</p>)}</div>
-
-            <div className="Flyer-image">
-                <svg width="100%" height="100%">
-                    <defs>
-                        <filter id="color">
-                            <feColorMatrix
-                                type="matrix"
-                                values={[
-                                    0.2126, 0.7152, 0.0722, 0, 1, 
-                                    0.2126, 0.7152, 0.0722, 0, 0, 
-                                    0.2126, 0.7152, 0.0722, 0, 1, 
-                                    0,      0,      0,      1, 0,
-                                ].join(' ')}
-                            />
-                        </filter>
-                    </defs>
-
-                    <image
-                        href={faunita}
-                        width="100%"
-                        height="100%"
-                        filter="url(#color)"
-                    />
-                </svg>
-            </div>
-        </div>
-    )
-}
-
-export default Flyer
- */
 
 const width = 512 * 3
 const height = 338 * 3
@@ -133,6 +60,7 @@ const Flyer = () => {
 
     useEffect(() => {
         if (true) {
+            let n = 0
             const renderer = new THREE.WebGLRenderer({
                 canvas: canvas.current,
             })
@@ -141,22 +69,22 @@ const Flyer = () => {
 
             const magentaPass = new ShaderPass(
                 colorMatrixShader([
-                    0.2126, 0.7152, 0.0722, 0, 0.98431372549, 
-                    0.2126, 0.7152, 0.0722, 0, 0.60784313725,
-                    0.2126, 0.7152, 0.0722, 0, 0.81960784313, 
+                    0.2126, 0.7152, 0.0722, 0, 0, 
+                    0.2126, 0.7152, 0.0722, 0, 0,
+                    0.2126, 0.7152, 0.0722, 0, 0, 
                     0, 0, 0, 1, 0,
                 ])
             )
 
             const ditherPass = new ShaderPass(
-                ditherShader(width, height, 3)
+                ditherShader(width, height, 8)
             )
 
 
             const dotScreenPass = new DotScreenPass(
-                new THREE.Vector2(0.5, 0.5),
-                8.57,
-                0.8
+                new THREE.Vector2(0.8, 0.5),
+                5.57,
+                0.6
             )
 
             const copyPass = new ShaderPass(CopyShader)
@@ -182,17 +110,26 @@ const Flyer = () => {
             const texturePass = new TexturePass(texture)
 
             composer.addPass(texturePass)
+            //composer.addPass(dotScreenPass)
             composer.addPass(ditherPass)
+            
             composer.addPass(magentaPass)
             composer.addPass(copyPass)
 
             let timeoutId: any
 
             const animate = () => {
-                timeoutId = setTimeout(function () {
-                    composer.render()
-                    frameId = requestAnimationFrame(animate)
-                }, 0)
+                frameId = requestAnimationFrame(animate)
+                n+=0.005
+
+                magentaPass.uniforms['constant'].value = new THREE.Vector4(
+                    (Math.cos(n) + 1) / 2,
+                    0,
+                    1,
+                    0
+                )
+
+                composer.render()
             }
 
             let frameId: number | null = requestAnimationFrame(animate)
@@ -211,24 +148,25 @@ const Flyer = () => {
     return (
         <div className="Flyer">
             <div className="Info">
-                <h1>{data.title}</h1>
-                <div>
+                <h1 style={{color: "green !important"}}>{data.title}</h1>
+                <div className='Block'>
                     <p>{data.message}</p>
                 </div>
-                <div>
+                <div className='Block emphasis right'>
                     <p>{data.date}</p>
                 </div>
-                <div>
+                <div className='Block Url right'>
                     <p><a href={data.url}>{data.registry}</a></p>
                 </div>
-                <div className='address'>
+                <div className='Block emphasis right'>
                     {data.address.map((s, i) => (
                         <p key={i}>{s}</p>
                     ))}
                 </div>
             </div>
-            <div className="Flowers">
-                <canvas ref={canvas} />
+            
+            <div className='Background'>
+                <canvas className="Flowers" ref={canvas} />
             </div>
         </div>
     )

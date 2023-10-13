@@ -1,26 +1,70 @@
-.Info {
-    position: absolute;
-    max-width: 1080px;
-    margin: auto;
-    font-size: 32px;
-}
-
-.Info p {
-    font-family: 'Arial';
-    text-transform: none;
-}
-
-.Info h1 {
-    color: rgb(10, 77, 29
-    ) !important;
-}
-
-.address {
-    margin-top: 16px;
-    font-weight: bold;
+.Flyer .Background {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    position: fixed;
+    justify-content: center;
 }
 
 .Flowers {
-    display: flex;
-    justify-content: right;
+    align-self: center;
+    margin: 0 auto;
+    opacity: 0.4;
+    
+}
+
+.Info {
+    padding: 30px;
+    position: fixed;
+    z-index: 2;
+    mix-blend-mode: color-burn;
+}
+
+.Info h1 {
+    font-size: 64px;
+    text-align: center;
+}
+
+.Info p {
+    font-size: 24px;
+    text-transform: none;
+    
+}
+
+.Info a {
+    color: blue;
+}
+
+.Block {
+    padding-top: 20px;
+
+}
+
+.Url a {
+    font-family: 'LubalinGraphStd-Medium', serif;
+    text-transform: capitalize;
+}
+
+.emphasis {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.right {
+    text-align: right;
+}
+
+@media only screen and (min-width: 600px) {
+    .Info h1 {
+        font-size: 120px;
+    }
+
+    .Info {
+        padding: 50px;
+    }
+
+    .Info p {
+        font-size: 28px;
+    }
+    
 }
