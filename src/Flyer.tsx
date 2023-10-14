@@ -139,7 +139,7 @@ const Flyer = () => {
                 frameId = null
             }
         }
-    }, [])
+    }, [data])
 
     if (data === undefined) {
         return null
