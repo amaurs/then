@@ -1,23 +1,30 @@
-.Flyer .Background {
+.Flyer {
+
+}
+
+.Background {
     height: 100vh;
     width: 100vw;
     display: flex;
-    position: fixed;
+    position: absolute;
     justify-content: center;
 }
 
 .Flowers {
     align-self: center;
     margin: 0 auto;
-    opacity: 0.4;
+    opacity: 0.3;
     
+}
+
+.Main {
+    font-size: 19px;
 }
 
 .Info {
     padding: 30px;
-    position: fixed;
+    position: absolute;
     z-index: 2;
-    mix-blend-mode: color-burn;
 }
 
 .Info h1 {
@@ -26,28 +33,31 @@
 }
 
 .Info p {
-    font-size: 24px;
-    text-transform: none;
-    
+    font-family: serif;
+    padding-top: 15px;
+    text-transform: none;    
 }
 
 .Info a {
-    color: blue;
+    color: black;
 }
 
 .Block {
     padding-top: 20px;
+}
 
+.address p {
+    padding-top: 0px;
 }
 
 .Url a {
-    font-family: 'LubalinGraphStd-Medium', serif;
     text-transform: capitalize;
 }
 
 .emphasis {
     font-weight: bold;
     font-size: 20px;
+    font-family: 'LubalinGraphStd-Medium', serif !important;
 }
 
 .right {
@@ -55,6 +65,10 @@
 }
 
 @media only screen and (min-width: 600px) {
+    .Main {
+        font-size: 60px;
+    }
+
     .Info h1 {
         font-size: 120px;
     }
@@ -64,7 +78,7 @@
     }
 
     .Info p {
-        font-size: 28px;
+        font-size: 24px;
     }
     
 }

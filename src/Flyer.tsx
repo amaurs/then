@@ -14,12 +14,14 @@ import { colorMatrixShader, ditherShader } from './util/three/shaders'
 import './Flyer.css'
 
 interface Data {
-    message: string
-    date: string
+    message: Array<string>
+    date?: string
     url: string
     title: string
     registry: string
-    address: Array<string>
+    address?: Array<string>
+    closing: string
+    signature: string
 }
 
 const banditHost = process.env.REACT_APP_API_HOST
@@ -59,7 +61,7 @@ const Flyer = () => {
     }, [])
 
     useEffect(() => {
-        if (true) {
+        if (data !== undefined) {
             let n = 0
             const renderer = new THREE.WebGLRenderer({
                 canvas: canvas.current,
@@ -69,17 +71,12 @@ const Flyer = () => {
 
             const magentaPass = new ShaderPass(
                 colorMatrixShader([
-                    0.2126, 0.7152, 0.0722, 0, 0, 
-                    0.2126, 0.7152, 0.0722, 0, 0,
-                    0.2126, 0.7152, 0.0722, 0, 0, 
-                    0, 0, 0, 1, 0,
+                    0.2126, 0.7152, 0.0722, 0, 0, 0.2126, 0.7152, 0.0722, 0, 0,
+                    0.2126, 0.7152, 0.0722, 0, 0, 0, 0, 0, 1, 0,
                 ])
             )
 
-            const ditherPass = new ShaderPass(
-                ditherShader(width, height, 8)
-            )
-
+            const ditherPass = new ShaderPass(ditherShader(width, height, 8))
 
             const dotScreenPass = new DotScreenPass(
                 new THREE.Vector2(0.8, 0.5),
@@ -112,7 +109,7 @@ const Flyer = () => {
             composer.addPass(texturePass)
             //composer.addPass(dotScreenPass)
             composer.addPass(ditherPass)
-            
+
             composer.addPass(magentaPass)
             composer.addPass(copyPass)
 
@@ -120,7 +117,7 @@ const Flyer = () => {
 
             const animate = () => {
                 frameId = requestAnimationFrame(animate)
-                n+=0.005
+                n += 0.005
 
                 magentaPass.uniforms['constant'].value = new THREE.Vector4(
                     Math.cos(n),
@@ -148,24 +145,40 @@ const Flyer = () => {
     return (
         <div className="Flyer">
             <div className="Info">
-                <h1 style={{color: "green !important"}}>{data.title}</h1>
-                <div className='Block'>
-                    <p>{data.message}</p>
-                </div>
-                <div className='Block emphasis right'>
-                    <p>{data.date}</p>
-                </div>
-                <div className='Block Url right'>
-                    <p><a href={data.url}>{data.registry}</a></p>
-                </div>
-                <div className='Block emphasis right'>
-                    {data.address.map((s, i) => (
-                        <p key={i}>{s}</p>
+                <div className="Main">
+                    {data.message.map((m, i) => (
+                        <p key={i}>{m}</p>
                     ))}
                 </div>
+
+                <div className="Block">
+                    <p>{data.closing}</p>
+                    <p className="emphasis">{data.signature}</p>
+                </div>
+
+
+                {data.address ? (
+                    <div className="Block right">
+                        <p>{data.date}</p>
+                    </div>
+                ) : null}
+                
+
+
+                {data.address ? (
+                    <div className="Block right address">
+                        {data.address.map((s, i) => (
+                            <p key={i}>{s}</p>
+                        ))}
+                    </div>
+                ) : null}
+
+                <div className="Block Url right">
+                    <a href={data.url}>{data.registry}</a>
+                </div>
             </div>
-            
-            <div className='Background'>
+
+            <div className="Background">
                 <canvas className="Flowers" ref={canvas} />
             </div>
         </div>
