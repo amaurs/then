@@ -47,6 +47,11 @@ if (host.length && host[0] === 'blog') {
                         />
 
                         <Route
+                            path="/invite"
+                            element={<Flyer />}
+                        />
+
+                        <Route
                             path="/calendar"
                             element={
                                 <ProtectedRoute>
@@ -92,7 +97,7 @@ if (host.length && host[0] === 'blog') {
             </div>
         </Router>
     )
-} else if (host.length && host[0] === 'flyer' || true) {
+} else if (host.length && host[0] === 'flyer') {
     root.render(
         <Router>
             <Flyer />

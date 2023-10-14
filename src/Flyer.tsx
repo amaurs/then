@@ -123,9 +123,9 @@ const Flyer = () => {
                 n+=0.005
 
                 magentaPass.uniforms['constant'].value = new THREE.Vector4(
-                    (Math.cos(n) + 1) / 2,
+                    Math.cos(n),
                     0,
-                    1,
+                    Math.sin(n),
                     0
                 )
 
