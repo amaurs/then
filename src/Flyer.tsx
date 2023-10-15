@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, Fragment } from 'react'
 import faunita from './assets/faunita-small-inverted.jpg'
-import poroto from './assets/poroto2.mp3'
 import * as THREE from 'three'
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
