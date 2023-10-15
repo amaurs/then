@@ -22,6 +22,18 @@
     font-size: 19px;
 }
 
+.Main a:link {
+    color: blue;
+}
+
+.Main a:visited {
+    color: blue;
+}
+
+.Main a:visited {
+    color: blue;
+}
+
 .Info {
     padding: 30px;
     position: absolute;

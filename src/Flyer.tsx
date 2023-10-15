@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, Fragment } from 'react'
 import faunita from './assets/faunita-small-inverted.jpg'
+import poroto from './assets/poroto2.mp3'
 import * as THREE from 'three'
 import { CopyShader } from 'three/examples/jsm/shaders/CopyShader.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
@@ -10,6 +11,8 @@ import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass.js'
 import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass.js'
 
 import { colorMatrixShader, ditherShader } from './util/three/shaders'
+
+import ReactMarkdown from 'react-markdown'
 
 import './Flyer.css'
 
@@ -33,6 +36,17 @@ const Flyer = () => {
     let canvas = useRef<HTMLCanvasElement>(document.createElement('canvas'))
 
     const [data, setData] = useState<Data | undefined>(undefined)
+/*
+    useEffect(() => {
+        const ctx = new AudioContext();
+        let audio;
+        fetch(poroto).then(
+            data => {
+                data.arrayBuffer()
+                debugger
+            })
+    }, [])
+*/
 
     useEffect(() => {
         let cancel = false
@@ -146,36 +160,22 @@ const Flyer = () => {
         <div className="Flyer">
             <div className="Info">
                 <div className="Main">
-                    {data.message.map((m, i) => (
-                        <p key={i}>{m}</p>
-                    ))}
+                    <ReactMarkdown children={data.message.join("\n\n")} />
                 </div>
 
                 <div className="Block">
                     <p>{data.closing}</p>
                     <p className="emphasis">{data.signature}</p>
                 </div>
-
-
-                {data.address ? (
-                    <div className="Block right">
-                        <p>{data.date}</p>
-                    </div>
-                ) : null}
                 
-
-
                 {data.address ? (
-                    <div className="Block right address">
+                    <div className="right address">
                         {data.address.map((s, i) => (
                             <p key={i}>{s}</p>
                         ))}
                     </div>
                 ) : null}
 
-                <div className="Block Url right">
-                    <a href={data.url}>{data.registry}</a>
-                </div>
             </div>
 
             <div className="Background">
