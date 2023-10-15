@@ -97,7 +97,7 @@ if (host.length && host[0] === 'blog') {
             </div>
         </Router>
     )
-} else if (host.length && host[0] === 'flyer') {
+} else if (host.length && host[0] === 'baby') {
     root.render(
         <Router>
             <Flyer />
