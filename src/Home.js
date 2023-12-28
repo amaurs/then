@@ -477,6 +477,16 @@ const Home = (props) => {
                         />
                     ))}
                 </Route>
+                {mapping && Object.entries(mapping).map(([key, value]) => (
+                        <Route
+                            path={`bit${key}`} 
+                            element={
+                                mapping[key] === undefined
+                                    ? null
+                                    : mapping[key].component
+                            }
+                        />
+                    ))}
             </Routes>
         </div>
     )
