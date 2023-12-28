@@ -16,6 +16,7 @@ import Calendar from './Calendar.tsx'
 import Album from './Album'
 import Login from './Login'
 import Flyer from './Flyer'
+import Days from './Days'
 import ProtectedRoute from './ProtectedRoute'
 import { AuthProvider } from './Hooks'
 
@@ -49,6 +50,11 @@ if (host.length && host[0] === 'blog') {
                         <Route
                             path="/invite"
                             element={<Flyer />}
+                        />
+
+                        <Route
+                            path="/days"
+                            element={<Days />}
                         />
 
                         <Route
