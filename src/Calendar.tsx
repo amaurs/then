@@ -101,7 +101,7 @@ const formatDate = (date: Date, separator: string): string => {
 
 const getColor = (index: undefined | number): string => {
     return index !== undefined && index > 0? 
-        (index > 1? (index > 2? "#3772FF": "#DF2935"): "#FDCA40"): "black" // "#080708"
+        (index > 1? (index > 2? (index > 3? (index > 4? (index > 5? (index > 6? "#7a0177": "#ae017e"): "#dd3497"): "#f768a1"): "#fa9fb5"): "#fcc5c0"): "#feebe2"): "black" // "#080708"
 }
 
 const paintCalendar = (
