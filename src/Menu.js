@@ -10,7 +10,7 @@ const Menu = (props) => {
                 return (
                     <li key={index}>
                         <Link
-                            to={`bit${element}`}
+                            to={`/bit${element}`}
                             onMouseEnter={() => {
                                 props.setIndexBackground(element)
                                 props.setIsCursorOnMenu(true)

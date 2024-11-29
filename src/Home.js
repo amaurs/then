@@ -24,6 +24,8 @@ import Penrose from './bits/penrose/Penrose.tsx'
 import TravelingSalesman from './bits/travelingsalesman/TravelingSalesman.tsx'
 
 import Then from './Then.tsx'
+import Navigation from './Navigation.tsx'
+import Blog from './Blog.tsx'
 
 import './Home.css'
 import './Blog.css'
@@ -54,6 +56,8 @@ import ReactGA from 'react-ga4'
 if (process.env.REACT_APP_GA_ID) {
     ReactGA.initialize(process.env.REACT_APP_GA_ID)
 }
+
+const banditHost = process.env.REACT_APP_API_HOST
 
 const presentationTime = 0
 
@@ -446,21 +450,84 @@ const Home = (props) => {
                     <Route
                         path="/"
                         element={
-                            <Fragment>
+                        
                                 <Then
                                     keys={Object.keys(mapping)}
                                     setIndexBackground={setIndexBackground}
                                     isCursorOnMenu={isCursorOnMenu}
                                 />
+                        }
+                    />
+                </Route>
+                <Route
+                    path="/bits"
+                    element={
+                        <Container
+                            background={
+                                indexBackground === null ||
+                                mapping[indexBackground] === undefined
+                                    ? null
+                                    : mapping[indexBackground].component
+                            }
+                        />
+                    }
+                >
+                    <Route
+                        path="/bits"
+                        element={
                                 <BitMenu
                                     mapping={mapping}
                                     setIndexBackground={setIndexBackground}
                                     setIsCursorOnMenu={setIsCursorOnMenu}
                                 />
-                            </Fragment>
                         }
                     />
-                    {props.masterData.codes.map((element, index) => (
+                    {mapping && Object.entries(mapping).map(([key, value]) => (
+                        <Route
+                            path={`/bits/bits${key}`} 
+                            element={
+                                mapping[key] === undefined
+                                    ? null
+                                    : mapping[key].component
+                            }
+                        />
+                    ))}
+                </Route>
+                <Route
+                    path="/bit"
+                    element={
+                        <Container
+                            background={
+                                indexBackground === null ||
+                                mapping[indexBackground] === undefined
+                                    ? null
+                                    : mapping[indexBackground].component
+                            }
+                        />
+                    }
+                >
+                    {mapping && Object.entries(mapping).map(([key, value]) => (
+                        <Route
+                            path={`/bit/${key}`} 
+                            element={
+                                mapping[key] === undefined
+                                    ? null
+                                    : mapping[key].component
+                            }
+                        />
+                    ))}
+                </Route>
+                <Route
+                            path="/blog" 
+                            element={
+                                <Blog
+                                    title={'Else'}
+                                    url={`${banditHost}/posts`}
+                                />
+                            }
+                        />
+                
+                {props.masterData.codes.map((element, index) => (
                         <Route
                             key={index}
                             path={element.code}
@@ -469,25 +536,15 @@ const Home = (props) => {
                                     replace
                                     to={
                                         element.redirect
-                                            ? `/bit/${element.redirect}`
+                                            ? `/bits/${element.redirect}`
                                             : '/'
                                     }
                                 />
                             }
                         />
                     ))}
-                </Route>
-                {mapping && Object.entries(mapping).map(([key, value]) => (
-                        <Route
-                            path={`bit${key}`} 
-                            element={
-                                mapping[key] === undefined
-                                    ? null
-                                    : mapping[key].component
-                            }
-                        />
-                    ))}
             </Routes>
+            <Navigation />
         </div>
     )
 }
