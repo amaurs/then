@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState, useContext } from 'react'
-import { Navigate, Routes, Route, Outlet } from 'react-router-dom'
+import { Navigate, Routes, Route, Outlet, useLocation } from 'react-router-dom'
 import Menu from './Menu.js'
 
 import Bolero from './bits/bolero/Bolero.tsx'
@@ -50,6 +50,7 @@ import stereo from './bits/stereo/Stereo.md'
 
 import { ThemeContext } from './ThemeContext.js'
 import Slider from './Slider.js'
+import ReactMarkdown from 'react-markdown'
 
 import ReactGA from 'react-ga4'
 
@@ -241,13 +242,22 @@ const BitMenu = (props) => {
     )
 }
 
+const markdown = `
+# this is a markdown header
+`
+
 const Home = (props) => {
     const [indexBackground, setIndexBackground] = useState(null)
     const [isCursorOnMenu, setIsCursorOnMenu] = useState(false)
     const theme = useContext(ThemeContext)
     const [mapping, setMapping] = useState(oldMapping)
+    const [markdownContent, setMardownContent] = useState("")
     const squareSampling = 100
     const numberColors = 500
+    const location = useLocation()
+
+
+
 
     let [konami, setKonami] = useState(0)
     let code = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]
@@ -271,6 +281,27 @@ const Home = (props) => {
             window.removeEventListener('keydown', handleKeyPress)
         }
     }, [konami])
+
+
+    useEffect(() => {
+        
+        const fetchMarkdown = async (key) => {
+            try {
+                const response = await fetch(mapping[key].content);
+                const text = await response.text();
+                setMardownContent(text);
+            } catch {
+                console.error("Error fecthing markdown.");
+            }
+        }
+        if (location && location.pathname.startsWith("/bit")) {
+            const bit = location.pathname.split("/bit")[1];
+            fetchMarkdown(bit);
+            setIndexBackground(bit);
+        }
+    }, [location])
+
+    
 
     useEffect(() => {
         let newMapping = {}
@@ -509,11 +540,7 @@ const Home = (props) => {
                     {mapping && Object.entries(mapping).map(([key, value]) => (
                         <Route
                             path={`/bit/${key}`} 
-                            element={
-                                mapping[key] === undefined
-                                    ? null
-                                    : mapping[key].component
-                            }
+                            element={<ReactMarkdown className="Description">{markdownContent}</ReactMarkdown>}
                         />
                     ))}
                 </Route>

@@ -18,3 +18,13 @@ body {
     position: fixed;
     justify-content: center;
 }
+
+
+.Description {
+    z-index: 10;
+    margin: 100px 100px;
+}
+
+.Description p {
+    color: black;
+}
