@@ -46,6 +46,18 @@ import anaglyph from './bits/anaglyph/Anaglyph.md'
 import penrose from './bits/penrose/Penrose.md'
 import travelingSalesman from './bits/travelingsalesman/TravelingSalesman.md'
 
+
+import floodFill from './bits/floodfill/FloodFill.md'
+import hamiltoniaCycle from './bits/hamiltoniacycle/HamiltoniaCycle.md'
+import hilbert from './bits/hilbert/Hilbert.md'
+import identity from './bits/identity/Identity.md'
+import morton from './bits/morton/Morton.md'
+import quadtree from './bits/quadtree/Quadtree.md'
+import random from './bits/random/Random.md'
+import simulatedAnnealing from './bits/simulatedannealing/SimulatedAnnealing.md'
+
+
+
 import stereo from './bits/stereo/Stereo.md'
 
 import { ThemeContext } from './ThemeContext.js'
@@ -61,6 +73,18 @@ if (process.env.REACT_APP_GA_ID) {
 const banditHost = process.env.REACT_APP_API_HOST
 
 const presentationTime = 0
+
+const dataMapping = {
+    "flood-fill": floodFill,            
+    "hamiltonian-cycle": hamiltoniaCycle,
+    "hilbert": hilbert,
+    "identity": identity,
+    "morton": morton,
+    "quadtree": quadtree,
+    "random": random,
+    "simulated-annealing": simulatedAnnealing,
+            
+}
 
 const oldMapping = {
     '/penrose': {
@@ -375,7 +399,7 @@ const Home = (props) => {
             let colorsDataMapping = props.masterData.colorsData.data.reduce(
                 (m, element) => {
                     m[`/${element.slug}`] = {
-                        content: quilt,
+                        content: dataMapping[element.slug],
                         component: (
                             <Animation
                                 title={element.slug}
