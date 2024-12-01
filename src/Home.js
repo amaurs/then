@@ -26,6 +26,7 @@ import TravelingSalesman from './bits/travelingsalesman/TravelingSalesman.tsx'
 import Then from './Then.tsx'
 import Navigation from './Navigation.tsx'
 import Blog from './Blog.tsx'
+import Post from './Post.tsx'
 
 import './Home.css'
 import './Blog.css'
@@ -537,16 +538,6 @@ const Home = (props) => {
                                 />
                         }
                     />
-                    {mapping && Object.entries(mapping).map(([key, value]) => (
-                        <Route
-                            path={`/bits/bits${key}`} 
-                            element={
-                                mapping[key] === undefined
-                                    ? null
-                                    : mapping[key].component
-                            }
-                        />
-                    ))}
                 </Route>
                 <Route
                     path="/bit"
@@ -561,39 +552,42 @@ const Home = (props) => {
                         />
                     }
                 >
-                    {mapping && Object.entries(mapping).map(([key, value]) => (
-                        <Route
-                            path={`/bit/${key}`} 
-                            element={<ReactMarkdown className="Description">{markdownContent}</ReactMarkdown>}
-                        />
-                    ))}
+                {mapping && Object.entries(mapping).map(([key, value]) => (
+                    <Route
+                        path={`/bit/${key}`} 
+                        element={<ReactMarkdown className="Description">{markdownContent}</ReactMarkdown>}
+                    />
+                ))}
                 </Route>
                 <Route
-                            path="/blog" 
-                            element={
-                                <Blog
-                                    title={'Else'}
-                                    url={`${banditHost}/posts`}
-                                />
-                            }
+                    path="/blog" 
+                    element={
+                        <Blog
+                            title={'Else'}
+                            url={`${banditHost}/posts`}
                         />
-                
+                    }
+                />
+                <Route
+                    path="/post/:slug"
+                    element={<Post url={`${banditHost}/post`} />}
+                />
                 {props.masterData.codes.map((element, index) => (
-                        <Route
-                            key={index}
-                            path={element.code}
-                            element={
-                                <Navigate
-                                    replace
-                                    to={
-                                        element.redirect
-                                            ? `/bits/${element.redirect}`
-                                            : '/'
-                                    }
-                                />
-                            }
-                        />
-                    ))}
+                    <Route
+                        key={index}
+                        path={element.code}
+                        element={
+                            <Navigate
+                                replace
+                                to={
+                                    element.redirect
+                                        ? `/bits/${element.redirect}`
+                                        : '/'
+                                }
+                            />
+                        }
+                    />
+                ))}
             </Routes>
             <Navigation />
         </div>
