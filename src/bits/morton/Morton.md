@@ -1,1 +1,7 @@
 # Morton
+
+As part of a collection that explores visually captivating representations of digital color spaces, this particular piece employs the Morton code algorithm. By interleaving the binary components of 24-bit colors and mapping them onto a 4096x4096 pixel canvas, the resulting image showcases a mesmerizing mosaic of over 16 million distinct colors. The Morton code's space-filling properties ensure each color combination is assigned a unique pixel location, creating an organized and visually appealing arrangement.
+
+And here's a description for the entire collection:
+
+This collection represents a fascinating exploration of digital color spaces through the lens of various algorithmic techniques. Each piece within the collection offers a unique perspective on mapping the multidimensional realm of color onto two-dimensional canvases. From space-filling curves like the Morton code to intricate mathematical transformations, these works harness the power of algorithms to create visually stunning and informative representations of the vast color spectrum. The collection not only celebrates the beauty of color but also highlights the ingenuity of computational methods in organizing and visualizing complex data. By bringing together diverse algorithmic approaches, this collection serves as a captivating intersection of art, mathematics, and computer science, inviting viewers to explore the intricate patterns and intricate relationships that exist within the digital world of color.
