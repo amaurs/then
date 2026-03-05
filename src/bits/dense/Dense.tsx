@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { useInterval, useTimeout } from '../../Hooks.js'
+import { useInterval, useTimeout } from "../../Hooks.jsx"
 
 import {
     intToColor,
@@ -10,11 +10,11 @@ import {
     getRandomIntegerArray,
     colorMatrix,
 } from '../../tools'
-import Loader from '../../Presentation.js'
+import Loader from "../../Presentation.jsx"
 import './Dense.css'
 import CSS from 'csstype'
 
-import { ThemeContext } from '../../ThemeContext.js'
+import { ThemeContext } from "../../ThemeContext.jsx"
 
 interface Props {
     title: string

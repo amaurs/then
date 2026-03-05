@@ -2,9 +2,9 @@ import React, { useRef, useState, useEffect, useContext } from 'react'
 import * as THREE from 'three'
 import AnaglyphSVGRenderer from './AnaglyphSVGRenderer.js'
 import './Anaglyph.css'
-import { useTimeout } from '../../Hooks.js'
-import Loader from '../../Presentation.js'
-import { ThemeContext } from '../../ThemeContext.js'
+import { useTimeout } from "../../Hooks.jsx"
+import Loader from "../../Presentation.jsx"
+import { ThemeContext } from "../../ThemeContext.jsx"
 
 import { Points } from '../../util/interface'
 

@@ -2,7 +2,7 @@ import { useState, useEffect, ChangeEvent } from 'react'
 import { useAuth } from './Hooks'
 import './Login.css'
 
-const banditHost = process.env.REACT_APP_API_HOST
+const banditHost = import.meta.env.VITE_API_HOST
 
 export const Login = () => {
     const { login, logout } = useAuth()

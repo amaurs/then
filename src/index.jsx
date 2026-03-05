@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import Scaffold from './Scaffold.js'
+import Scaffold from './Scaffold.jsx'
 import registerServiceWorker from './registerServiceWorker'
 import './fonts/LubalinGraphStd-Medium/font.woff'
 import './fonts/LubalinGraphStd-Medium/font.woff2'
@@ -12,19 +12,21 @@ import About from './About.tsx'
 import Blog from './Blog.tsx'
 import Names from './Names.tsx'
 import Post from './Post.tsx'
+import Julia from './bits/julia/Julia.tsx'
+import Penrose from './bits/penrose/Penrose.tsx'
 import Calendar from './Calendar.tsx'
 import Album from './Album'
 import Login from './Login'
 import Flyer from './Flyer'
 import Days from './Days'
-import ProtectedRoute from './ProtectedRoute'
-import { AuthProvider } from './Hooks'
+import ProtectedRoute from './ProtectedRoute.jsx'
+import { AuthProvider } from './Hooks.jsx'
 
 const root = createRoot(document.getElementById('root'))
 
 let host = window.location.host.split('.')
 
-const banditHost = process.env.REACT_APP_API_HOST
+const banditHost = import.meta.env.VITE_API_HOST
 
 if (host.length && host[0] === 'blog') {
     root.render(

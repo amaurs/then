@@ -6,10 +6,8 @@
         "@tensorflow-models/blazeface": "^0.0.7",
         "@tensorflow/tfjs": "^3.19.0",
         "@types/d3": "^6.2.0",
-        "@types/jest": "^26.0.15",
-        "@types/node": "^14.14.7",
-        "@types/react": "^18.0.15",
-        "@types/react-dom": "^18.0.6",
+        "@types/react": "^19.2.7",
+        "@types/react-dom": "^19.2.3",
         "color-blend": "^2.0.9",
         "d3": "^7.8.1",
         "d3-delaunay": "^4.1.5",
@@ -27,18 +25,21 @@
         "three": "^0.143.0"
     },
     "devDependencies": {
+        "@types/jest": "^26.0.15",
+        "@types/node": "^14.14.7",
         "@types/react-beautiful-dnd": "^13.1.4",
         "@types/three": "^0.143.0",
+        "@vitejs/plugin-react": "^4.3.4",
         "prettier": "2.8.7",
-        "react-scripts": "^5.0.1",
         "terser": "^5.14.2",
-        "typescript": "^4.7.4"
+        "typescript": "^5.9.3",
+        "vite": "^5.4.11"
     },
     "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test --env=jsdom",
-        "eject": "react-scripts eject",
+        "start": "vite",
+        "build": "vite build",
+        "test": "vitest",
+        "preview": "vite preview",
         "format": "prettier --write 'src/**' package.json README.md tsconfig.json"
     },
     "browserslist": [

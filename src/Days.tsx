@@ -4,7 +4,7 @@ interface Data {
     message: string
 }
 
-const banditHost = process.env.REACT_APP_API_HOST
+const banditHost = import.meta.env.VITE_API_HOST
 
 const Days = () => {
     const [data, setData] = useState<Data | undefined>(undefined)

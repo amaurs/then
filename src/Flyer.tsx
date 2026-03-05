@@ -26,7 +26,7 @@ interface Data {
     signature: string
 }
 
-const banditHost = process.env.REACT_APP_API_HOST
+const banditHost = import.meta.env.VITE_API_HOST
 
 const width = 512 * 3
 const height = 338 * 3

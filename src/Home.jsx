@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState, useContext } from 'react'
 import { Navigate, Routes, Route, Outlet, useLocation } from 'react-router-dom'
-import Menu from './Menu.js'
+import Menu from "./Menu.jsx"
 
 import Bolero from './bits/bolero/Bolero.tsx'
 import Quilt from './bits/quilt/Quilt.tsx'
@@ -61,17 +61,20 @@ import simulatedAnnealing from './bits/simulatedannealing/SimulatedAnnealing.md'
 
 import stereo from './bits/stereo/Stereo.md'
 
-import { ThemeContext } from './ThemeContext.js'
-import Slider from './Slider.js'
+import { ThemeContext } from "./ThemeContext.jsx"
+import Slider from "./Slider.jsx"
 import ReactMarkdown from 'react-markdown'
 
 import ReactGA from 'react-ga4'
 
-if (process.env.REACT_APP_GA_ID) {
-    ReactGA.initialize(process.env.REACT_APP_GA_ID)
+const GA_ID = import.meta.env.VITE_GA_ID
+const API_HOST = import.meta.env.VITE_API_HOST
+
+if (GA_ID) {
+    ReactGA.initialize(GA_ID)
 }
 
-const banditHost = process.env.REACT_APP_API_HOST
+const banditHost = API_HOST
 
 const presentationTime = 0
 

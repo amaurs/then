@@ -1,0 +1,10 @@
+{"utteranceId":"launch_frequent_utterance_001","utterance":"play adele", "customerId":"A2VFTRVR4M7WOP", "locale":"en-US"}
+{"utteranceId":"launch_frequent_utterance_002","utterance":"play bts", "customerId":"A2VFTRVR4M7WOP", "locale":"en-US"}
+{"utteranceId":"launch_frequent_utterance_003","utterance":"play bad bunny", "customerId":"A2VFTRVR4M7WOP", "locale":"en-US"}
+{"utteranceId":"launch_frequent_utterance_004","utterance":"play beyoncé", "customerId":"A2VFTRVR4M7WOP", "locale":"en-US"}
+{"utteranceId":"launch_frequent_utterance_005","utterance":"play billie eilish", "customerId":"A2VFTRVR4M7WOP", "locale":"en-US"}
+{"utteranceId":"launch_frequent_utterance_006","utterance":"play bob marley", "customerId":"A2VFTRVR4M7WOP", "locale":"en-US"}
+{"utteranceId":"launch_frequent_utterance_007","utterance":"play bones", "customerId":"A2VFTRVR4M7WOP", "locale":"en-US"}
+{"utteranceId":"launch_frequent_utterance_008","utterance":"play bruno mars", "customerId":"A2VFTRVR4M7WOP", "locale":"en-US"}
+{"utteranceId":"launch_frequent_utterance_009","utterance":"play chris stapleton", "customerId":"A2VFTRVR4M7WOP", "locale":"en-US"}
+{"utteranceId":"launch_frequent_utterance_010","utterance":"play cocomelon", "customerId":"A2VFTRVR4M7WOP", "locale":"en-US"}

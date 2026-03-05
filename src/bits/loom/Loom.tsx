@@ -1,9 +1,9 @@
 import React, { useState, useRef, useContext, useEffect } from 'react'
-import { useTimeout } from '../../Hooks.js'
-import Board from '../../Board.js'
+import { useTimeout } from "../../Hooks.jsx"
+import Board from "../../Board.jsx"
 import './Loom.css'
 import CSS from 'csstype'
-import { ThemeContext } from '../../ThemeContext.js'
+import { ThemeContext } from "../../ThemeContext.jsx"
 import { colorMatrix } from '../../tools'
 
 const canvasSize = 1000
