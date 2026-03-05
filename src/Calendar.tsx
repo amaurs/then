@@ -24,7 +24,7 @@ interface Color {
 }
 
 const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24
-const banditHost = process.env.REACT_APP_API_HOST
+const banditHost = import.meta.env.VITE_API_HOST
 
 const getWeek = (date: Date) => {
     const startOfYear = new Date(date.getFullYear(), 0, 1)

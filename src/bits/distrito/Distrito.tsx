@@ -9,12 +9,12 @@ import channelsFirst from '../../assets/first-channels-small.png'
 import channelsSecond from '../../assets/second-channels-small.png'
 import channelsThird from '../../assets/third-channels-small.png'
 import channelMask from '../../assets/mask-small.png'
-import { useTimeout } from '../../Hooks.js'
+import { useTimeout } from "../../Hooks.jsx"
 import { colorImageData } from '../../tools'
-import Loader from '../../Presentation.js'
+import Loader from "../../Presentation.jsx"
 import './Distrito.css'
 import CSS from 'csstype'
-import { ThemeContext } from '../../ThemeContext.js'
+import { ThemeContext } from "../../ThemeContext.jsx"
 
 import { getRandomInt } from '../../tools'
 

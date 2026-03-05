@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import { colorToString, invertColor, colorToGrey } from '../../tools'
-import { useTimeout } from '../../Hooks.js'
-import Loader from '../../Presentation.js'
+import { useTimeout } from "../../Hooks.jsx"
+import Loader from "../../Presentation.jsx"
 import CSS from 'csstype'
-import { ThemeContext } from '../../ThemeContext.js'
+import { ThemeContext } from "../../ThemeContext.jsx"
 import './Colors.css'
 
 interface Props {

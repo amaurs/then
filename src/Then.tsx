@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useState, useEffect } from 'react'
 import './Then.css'
-import { useInterval } from './Hooks.js'
-import { ThemeContext } from './ThemeContext.js'
+import { useInterval } from "./Hooks.jsx"
+import { ThemeContext } from "./ThemeContext.jsx"
 import CSS from 'csstype'
 /**
               <p className="pronunciation">/ <span className="underline">TH</span>en /</p>

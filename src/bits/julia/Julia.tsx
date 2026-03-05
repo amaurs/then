@@ -6,7 +6,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass.js'
-import './Corrupted.css'
+import './Julia.css'
 import escudo from '../../assets/escudo.png'
 import { useTimeout } from "../../Hooks.jsx"
 import Loader from "../../Presentation.jsx"
@@ -23,7 +23,7 @@ interface Props {
     height: number
 }
 
-const Corrupted = (props: Props) => {
+const Julia = (props: Props) => {
     let canvas = useRef<HTMLCanvasElement>(document.createElement('canvas'))
     const [presenting, setPresenting] = useState(props.delay > 0)
     const theme = useContext(ThemeContext)
@@ -104,7 +104,7 @@ const Corrupted = (props: Props) => {
     } else {
         return (
             <canvas
-                className="Corrupted"
+                className="Julia"
                 style={{ ...props.style, ...style }}
                 ref={canvas}
             />
@@ -112,4 +112,4 @@ const Corrupted = (props: Props) => {
     }
 }
 
-export default Corrupted
+export default Julia

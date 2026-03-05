@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { useTimeout } from '../../Hooks.js'
-import Loader from '../../Presentation.js'
+import { useTimeout } from "../../Hooks.jsx"
+import Loader from "../../Presentation.jsx"
 import './TravelingSalesman.css'
 
-import { ThemeContext } from '../../ThemeContext.js'
+import { ThemeContext } from "../../ThemeContext.jsx"
 
 import CSS from 'csstype'
 

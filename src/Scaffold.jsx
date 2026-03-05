@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useLocalStorage } from './Hooks.js'
-import Home from './Home.js'
+import { useLocalStorage } from "./Hooks.jsx"
+import Home from "./Home.jsx"
 import { getRandomIntegerArray } from './tools'
 
-import { ThemeContext, themes } from './ThemeContext.js'
+import { ThemeContext, themes } from "./ThemeContext.jsx"
 
-const banditHost = process.env.REACT_APP_API_HOST
+const banditHost = import.meta.env.VITE_API_HOST
 const squareSampling = 100
 const numberColors = 500
 

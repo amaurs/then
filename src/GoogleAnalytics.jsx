@@ -50,10 +50,10 @@ GoogleAnalytics.propTypes = {
 const RouteTracker = () => <Route component={GoogleAnalytics} />
 
 const init = (options = {}) => {
-    const isGAEnabled = process.env.NODE_ENV === 'production'
+    const isGAEnabled = import.meta.env.PROD
 
     if (isGAEnabled) {
-        ReactGA.initialize(process.env.REACT_APP_GA_ID)
+        ReactGA.initialize(import.meta.env.VITE_GA_ID)
     }
 
     return isGAEnabled

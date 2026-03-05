@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { useAuth } from './Hooks'
 import './Album.css'
 
-const banditHost = process.env.REACT_APP_API_HOST
+const banditHost = import.meta.env.VITE_API_HOST
 
 const Album = () => {
     const { year, month, day } = useParams()
