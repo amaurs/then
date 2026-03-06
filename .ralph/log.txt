@@ -24,3 +24,14 @@
 - Pre-existing errors remain (unused React import, unused `e` param, `user` type from useAuth)
 - Vite dev server returns 200 OK
 - Next step needed: Task 4 — Audit and remove unused dependencies
+
+## Iteration 4 - Audit and remove unused dependencies
+- Searched codebase for usage of suspect packages:
+  - `@tensorflow-models/blazeface` + `@tensorflow/tfjs` — USED in Nostalgia.tsx (kept)
+  - `react-redux` — NOT used anywhere → removed
+  - `history` — NOT used anywhere → removed
+  - `react-beautiful-dnd` — USED in Names.tsx (kept)
+- Ran `npm uninstall react-redux history --legacy-peer-deps` (peer dep conflict with @types/node required --legacy-peer-deps)
+- Fixed 2 stale imports from iteration 2 that were missed: Quilt.tsx and Voronoi.tsx still had `../../util.js` instead of `../../utils`
+- Build passes (`vite build` succeeds), dev server returns 200
+- Next step needed: Task 5 — Remove remaining CRA artifacts (evaluate registerServiceWorker.js)
