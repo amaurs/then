@@ -6,3 +6,13 @@
 - Pre-existing TS errors remain (unused vars, .md module declarations, react-ga types) — not related to this task
 - Note: rl/*.js files (Game.js, Arrows.js, agent.js, etc.) and registerServiceWorker.js, MaskPass.js, AnaglyphSVGRenderer.js, Home.test.js were NOT renamed — they are pure JS without JSX/TSX content or are legacy code in rl/ subdirectory
 - Next step needed: Task 2 — Deduplicate utility code (merge util.ts and tools.ts into single utils.ts)
+
+## Iteration 2 - Deduplicate utility code (merge util.ts + tools.ts → utils.ts)
+- Created `src/utils.ts` combining all exports from `util.ts` and `tools.ts`
+- Deleted `src/util.ts` and `src/tools.ts`
+- Updated 12 files with import path changes: Board.tsx, Scaffold.tsx, Animation.tsx, Distrito.tsx, Conway.tsx, Stereo.tsx, Quilt.tsx, Dense.tsx, Voronoi.tsx, Colors.tsx, Loom.tsx
+- Consolidated Distrito.tsx's two separate `../../tools` imports into one
+- Left `rl/util.tsx` untouched — it's a separate module with RL-specific components
+- No new TypeScript errors introduced; all pre-existing errors remain
+- Vite dev server returns 200 OK
+- Next step needed: Task 3 — Fix Calendar type safety (change `photos` from `any` to `Map<string, number>`)

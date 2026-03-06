@@ -20,6 +20,11 @@
 >    ```
 > 4. Only proceed to the next task once the `browser-inspector` agent confirms rendering is working.
 > 5. When committing, only `git add` the files you intentionally changed. Do not add debugging scripts, screenshots, or temporary files. Review `git status` before every commit.
+> 6. Commit messages must follow the emoji prefix convention used in this repo. Examples:
+>    - `🗑️ Remove unused dependencies.`
+>    - `🎨 Consolidate file extensions to .tsx.`
+>    - `♻️ Merge util.js and tools.ts into utils.ts.`
+>    - `🔧 Fix Calendar type safety.`
 
 ### 1. Consolidate file extensions (Est: 30 min)
 - Decide on `.tsx` for all files (type safety)

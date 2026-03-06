@@ -308,7 +308,7 @@ const _Calendar = (props: _CalendarProps) => {
 
 const Calendar = (props: Props) => {
     const [start, setStart] = useState<Date>()
-    const [photos, setPhotos] =  useState<any>()
+    const [photos, setPhotos] = useState<Map<string, number>>()
     const { user } = useAuth()
     const navigate = useNavigate()
 
@@ -347,7 +347,7 @@ const Calendar = (props: Props) => {
         }
     }, [])
 
-    if (start === undefined) {
+    if (start === undefined || photos === undefined) {
         return <div className="Calendar-loading">Loading...</div>
     }
     return (
