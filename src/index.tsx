@@ -2,7 +2,6 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import Scaffold from './Scaffold'
-import registerServiceWorker from './registerServiceWorker'
 import './fonts/LubalinGraphStd-Medium/font.woff'
 import './fonts/LubalinGraphStd-Medium/font.woff2'
 import { BrowserRouter as Router } from 'react-router-dom'
@@ -119,4 +118,6 @@ if (host.length && host[0] === 'blog') {
     )
 }
 
-registerServiceWorker()
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+}
