@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { colorToInt } from '../tools'
+import { colorToInt } from '../utils'
 import { useTimeout } from "../Hooks"
 import Loader from "../Presentation"
 import { ThemeContext } from "../ThemeContext"

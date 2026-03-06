@@ -12,16 +12,13 @@
 ## 📋 Next: Code Quality
 
 > **IMPORTANT:** Complete each task one at a time. After each task, verify the app still renders correctly:
-> 1. Confirm the Vite dev server at `http://localhost:5173/` is running (check with `curl`). If it crashed, restart with `npm start`.
-> 2. Delegate to the `browser-inspector` agent to connect to Chrome via DevTools on port 9222 and verify:
->    - Navigate to `http://localhost:5173/`
->    - Check the browser console for JavaScript errors
->    - Confirm the `#root` div has rendered content (is not empty)
+> 1. Confirm the Vite dev server at `http://localhost:5173/` is running. If it crashed, restart with `npm start`.
+> 2. **You MUST delegate to the `browser-inspector` agent** to verify rendering. Do NOT use `curl` or `fetch` — those only check the static HTML shell and cannot confirm the React app actually rendered. The `browser-inspector` agent uses Chrome DevTools MCP to execute JavaScript in a real browser and can confirm the `#root` div has content and check for console errors.
 > 3. If Chrome isn't available on port 9222, launch it first:
 >    ```
 >    /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug-profile --no-first-run http://localhost:5173/
 >    ```
-> 4. Only proceed to the next task once rendering is confirmed.
+> 4. Only proceed to the next task once the `browser-inspector` agent confirms rendering is working.
 > 5. When committing, only `git add` the files you intentionally changed. Do not add debugging scripts, screenshots, or temporary files. Review `git status` before every commit.
 
 ### 1. Consolidate file extensions (Est: 30 min)

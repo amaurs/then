@@ -10,13 +10,11 @@ import channelsSecond from '../../assets/second-channels-small.png'
 import channelsThird from '../../assets/third-channels-small.png'
 import channelMask from '../../assets/mask-small.png'
 import { useTimeout } from "../../Hooks"
-import { colorImageData } from '../../tools'
+import { colorImageData, getRandomInt } from '../../utils'
 import Loader from "../../Presentation"
 import './Distrito.css'
 import CSS from 'csstype'
 import { ThemeContext } from "../../ThemeContext"
-
-import { getRandomInt } from '../../tools'
 
 interface Props {
     title: string

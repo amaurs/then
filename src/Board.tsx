@@ -1,5 +1,4 @@
-import { mod } from './util'
-import { getRandomInt, intToColor } from './tools'
+import { mod, getRandomInt, intToColor } from './utils'
 const ALIVE = 1
 const DEAD = 0
 

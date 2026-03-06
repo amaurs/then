@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useContext } from 'react'
 import { useTimeout } from "../../Hooks"
 
 import { shuffle } from '../../util.js'
-import { getRandomInt } from '../../tools'
+import { getRandomInt } from '../../utils'
 
 import Loader from "../../Presentation"
 import CSS from 'csstype'

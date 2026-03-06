@@ -4,7 +4,7 @@ import Board from "../../Board"
 import './Loom.css'
 import CSS from 'csstype'
 import { ThemeContext } from "../../ThemeContext"
-import { colorMatrix } from '../../tools'
+import { colorMatrix } from '../../utils'
 
 const canvasSize = 1000
 const squareSize = 10

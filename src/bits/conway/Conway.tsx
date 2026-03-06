@@ -6,7 +6,7 @@ import React, {
     useEffect,
 } from 'react'
 import { useInterval, useTimeout } from "../../Hooks"
-import { colorMatrix } from '../../tools'
+import { colorMatrix } from '../../utils'
 import Board from "../../Board"
 import './Conway.css'
 import Loader from "../../Presentation"

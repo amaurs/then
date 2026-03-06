@@ -1,0 +1,8 @@
+## Iteration 1 - Consolidate file extensions (.jsx → .tsx, .js → .ts)
+- Renamed 17 files: index.jsx, Scaffold.jsx, Home.jsx, Hooks.jsx, ThemeContext.jsx, Board.jsx, Menu.jsx, Slider.jsx, NotFound.jsx, ProtectedRoute.jsx, Presentation.jsx, GoogleAnalytics.jsx, Loader.js, util.js, rl/Board.jsx, rl/util.jsx, rl/electronicLife.jsx
+- Updated all imports across ~48 files to remove explicit .jsx/.tsx/.js extensions (Vite resolves automatically)
+- Updated index.html entry point from index.jsx to index.tsx
+- Vite dev server returns 200 OK, no module resolution errors from the rename
+- Pre-existing TS errors remain (unused vars, .md module declarations, react-ga types) — not related to this task
+- Note: rl/*.js files (Game.js, Arrows.js, agent.js, etc.) and registerServiceWorker.js, MaskPass.js, AnaglyphSVGRenderer.js, Home.test.js were NOT renamed — they are pure JS without JSX/TSX content or are legacy code in rl/ subdirectory
+- Next step needed: Task 2 — Deduplicate utility code (merge util.ts and tools.ts into single utils.ts)
