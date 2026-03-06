@@ -5,6 +5,9 @@ export default defineConfig({
   plugins: [
     react(), 
   ],
+  server: {
+    host: true,
+  },
   base: '/',
   assetsInclude: ['**/*.md'],
   define: {
