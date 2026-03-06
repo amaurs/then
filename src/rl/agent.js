@@ -1,4 +1,4 @@
-import { argMax } from "./util.jsx"
+import { argMax } from "./util"
 
 export class Agent {
     constructor(numberOfActions, numberOfStates) {

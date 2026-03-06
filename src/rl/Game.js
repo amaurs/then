@@ -1,9 +1,9 @@
 import React from 'react'
-import Board from "./Board.jsx"
-import Arrows from './Arrows.js'
+import Board from "./Board"
+import Arrows from './Arrows'
 import { VictoryLine, VictoryLabel, VictoryChart, VictoryAxis } from 'victory'
-import { Agent } from './qLearningAgent.js'
-import { initGrid } from "./util.jsx"
+import { Agent } from './qLearningAgent'
+import { initGrid } from "./util"
 import './game.css'
 
 class Game extends React.Component {

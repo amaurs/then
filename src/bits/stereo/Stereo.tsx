@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import './Stereo.css'
-import Loader from "../../Presentation.jsx"
-import { useTimeout } from "../../Hooks.jsx"
+import Loader from "../../Presentation"
+import { useTimeout } from "../../Hooks"
 import { getRandomInt, colorImageData } from '../../tools'
 
 import left from '../../assets/2019/left.jpg'
 import right from '../../assets/2019/right.jpg'
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { ThemeContext } from "../../ThemeContext"
 
 import CSS from 'csstype'
 

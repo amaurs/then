@@ -1,5 +1,5 @@
 import { Agent } from './agent'
-import { randomElement, randomInt } from "./util.jsx"
+import { randomElement, randomInt } from "./util"
 
 class SarsaAgent extends Agent {
     constructor(numberOfActions, numberOfStates) {

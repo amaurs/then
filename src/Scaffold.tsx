@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useLocalStorage } from "./Hooks.jsx"
-import Home from "./Home.jsx"
+import { useLocalStorage } from "./Hooks"
+import Home from "./Home"
 import { getRandomIntegerArray } from './tools'
 
-import { ThemeContext, themes } from "./ThemeContext.jsx"
+import { ThemeContext, themes } from "./ThemeContext"
 
 const banditHost = import.meta.env.VITE_API_HOST
 const squareSampling = 100

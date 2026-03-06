@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { useTimeout } from "../../Hooks.jsx"
+import { useTimeout } from "../../Hooks"
 
 import { shuffle } from '../../util.js'
 import { getRandomInt } from '../../tools'
 
-import Loader from "../../Presentation.jsx"
+import Loader from "../../Presentation"
 import CSS from 'csstype'
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { ThemeContext } from "../../ThemeContext"
 import './Quilt.css'
 
 const squareSize = 500

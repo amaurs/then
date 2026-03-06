@@ -5,13 +5,13 @@ import React, {
     useContext,
     useEffect,
 } from 'react'
-import { useInterval, useTimeout } from "../../Hooks.jsx"
+import { useInterval, useTimeout } from "../../Hooks"
 import { colorMatrix } from '../../tools'
-import Board from "../../Board.jsx"
+import Board from "../../Board"
 import './Conway.css'
-import Loader from "../../Presentation.jsx"
+import Loader from "../../Presentation"
 
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { ThemeContext } from "../../ThemeContext"
 import CSS from 'csstype'
 
 interface Props {

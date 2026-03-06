@@ -7,13 +7,13 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass.js'
 import './Nostalgia.css'
 import boxer from '../../assets/boxer.jpg'
-import { useTimeout } from "../../Hooks.jsx"
-import Loader from "../../Presentation.jsx"
+import { useTimeout } from "../../Hooks"
+import Loader from "../../Presentation"
 
 import * as tf from '@tensorflow/tfjs'
 import * as blazeface from '@tensorflow-models/blazeface'
 
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { ThemeContext } from "../../ThemeContext"
 import CSS from 'csstype'
 
 import {
