@@ -1,4 +1,4 @@
-import { Environment } from './environment.js'
+import { Environment } from './environment'
 import Vector from '../util/vector'
 
 const ACTIONS = [

@@ -8,11 +8,11 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass.js'
 import './Corrupted.css'
 import escudo from '../../assets/escudo.png'
-import { useTimeout } from "../../Hooks.jsx"
-import Loader from "../../Presentation.jsx"
+import { useTimeout } from "../../Hooks"
+import Loader from "../../Presentation"
 import { colorMatrixShader } from '../../util/three/shaders'
 
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { ThemeContext } from "../../ThemeContext"
 import CSS from 'csstype'
 
 interface Props {

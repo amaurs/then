@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row } from './util.js'
+import { Row } from './util'
 
 class Board extends React.Component {
     render() {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import './Photography.css'
 
-import Loader from "../../Presentation.jsx"
+import Loader from "../../Presentation"
 
-import { useTimeout } from "../../Hooks.jsx"
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { useTimeout } from "../../Hooks"
+import { ThemeContext } from "../../ThemeContext"
 import { Image } from '../../util/interface'
 
 import CSS from 'csstype'

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { ThemeContext } from "../../ThemeContext"
 import './Bolero.css'
-import { useTimeout } from "../../Hooks.jsx"
-import Loader from "../../Presentation.jsx"
+import { useTimeout } from "../../Hooks"
+import Loader from "../../Presentation"
 import CSS from 'csstype'
 
 interface Props {

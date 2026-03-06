@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Game from './Game.js'
-import { Environment, map } from './windyGridworld.js'
+import Game from './Game'
+import { Environment, map } from './windyGridworld'
 import Controller from './controller'
-import { Agent } from './sarsaAgent.js'
+import { Agent } from './sarsaAgent'
 import './board.css'
 
 const environment = new Environment(

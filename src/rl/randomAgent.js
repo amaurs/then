@@ -1,5 +1,5 @@
-import { argMax, randomElement } from "./util.jsx"
-import { Agent } from './agent.js'
+import { argMax, randomElement } from "./util"
+import { Agent } from './agent'
 
 class RandomAgent extends Agent {
     /**

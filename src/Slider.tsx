@@ -1,7 +1,7 @@
 import React, { Component, useContext } from 'react'
 import './Slider.css'
 
-import { ThemeContext } from "./ThemeContext.jsx"
+import { ThemeContext } from "./ThemeContext"
 
 const Slider = () => {
     const theme = useContext(ThemeContext)

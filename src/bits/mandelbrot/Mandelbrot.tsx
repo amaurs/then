@@ -1,9 +1,9 @@
 import React, { useState, useRef, useContext, useEffect } from 'react'
-import { useTimeout } from "../../Hooks.jsx"
+import { useTimeout } from "../../Hooks"
 import './Mandelbrot.css'
-import Loader from "../../Presentation.jsx"
+import Loader from "../../Presentation"
 import myMandelbrot from '../../assets/mandelbrot-small.png'
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { ThemeContext } from "../../ThemeContext"
 
 import CSS from 'csstype'
 

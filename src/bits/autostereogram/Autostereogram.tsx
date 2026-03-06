@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import * as THREE from 'three'
-import Board from "../../Board.jsx"
+import Board from "../../Board"
 import './Autostereogram.css'
-import { useTimeout } from "../../Hooks.jsx"
-import Loader from "../../Presentation.jsx"
+import { useTimeout } from "../../Hooks"
+import Loader from "../../Presentation"
 import CSS from 'csstype'
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { ThemeContext } from "../../ThemeContext"
 
 interface Props {
     title: string

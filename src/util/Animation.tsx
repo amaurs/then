@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import { colorToInt } from '../tools'
-import { useTimeout } from "../Hooks.jsx"
-import Loader from "../Presentation.jsx"
-import { ThemeContext } from "../ThemeContext.jsx"
+import { useTimeout } from "../Hooks"
+import Loader from "../Presentation"
+import { ThemeContext } from "../ThemeContext"
 import './Animation.css'
 
 import CSS from 'csstype'

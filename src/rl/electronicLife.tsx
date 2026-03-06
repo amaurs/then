@@ -1,6 +1,6 @@
-import { Environment } from './environment.js'
+import { Environment } from './environment'
 import Vector from '../util/vector'
-import { randomElement } from './util.js'
+import { randomElement } from './util'
 
 const plan = [
     '#########################',

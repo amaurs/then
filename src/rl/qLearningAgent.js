@@ -1,5 +1,5 @@
 import { Agent } from './agent'
-import { argMax, randomElement } from "./util.jsx"
+import { argMax, randomElement } from "./util"
 
 class QLearningAgent extends Agent {
     /**

@@ -3,10 +3,10 @@ import { Environment, map } from '../../rl/windyGridworld.js'
 import Controller from '../../rl/controller'
 import { Agent } from '../../rl/sarsaAgent.js'
 import './Reinforcement.css'
-import { useTimeout } from "../../Hooks.jsx"
-import Loader from "../../Presentation.jsx"
+import { useTimeout } from "../../Hooks"
+import Loader from "../../Presentation"
 
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { ThemeContext } from "../../ThemeContext"
 
 import CSS from 'csstype'
 

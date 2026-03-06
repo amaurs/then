@@ -5,9 +5,9 @@ import { getRandomInt, getXYfromIndex, getBrightness } from '../../tools'
 import './Voronoi.css'
 import * as d3 from 'd3'
 import { Delaunay } from 'd3-delaunay'
-import { useTimeout } from "../../Hooks.jsx"
-import Loader from "../../Presentation.jsx"
-import { ThemeContext } from "../../ThemeContext.jsx"
+import { useTimeout } from "../../Hooks"
+import Loader from "../../Presentation"
+import { ThemeContext } from "../../ThemeContext"
 
 import './Voronoi.css'
 

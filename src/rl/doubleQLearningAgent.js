@@ -1,5 +1,5 @@
 import { Agent } from './agent'
-import { argMax, randomElement } from "./util.jsx"
+import { argMax, randomElement } from "./util"
 
 class DoubleQLearningAgent extends Agent {
     constructor(numberOfActions, numberOfStates) {

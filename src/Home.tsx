@@ -1,32 +1,32 @@
 import React, { Fragment, useEffect, useState, useContext } from 'react'
 import { Navigate, Routes, Route, Outlet, useLocation } from 'react-router-dom'
-import Menu from "./Menu.jsx"
+import Menu from "./Menu"
 
-import Bolero from './bits/bolero/Bolero.tsx'
-import Quilt from './bits/quilt/Quilt.tsx'
+import Bolero from './bits/bolero/Bolero'
+import Quilt from './bits/quilt/Quilt'
 
-import Autostereogram from './bits/autostereogram/Autostereogram.tsx'
-import Colors from './bits/colors/Colors.tsx'
-import Distrito from './bits/distrito/Distrito.tsx'
+import Autostereogram from './bits/autostereogram/Autostereogram'
+import Colors from './bits/colors/Colors'
+import Distrito from './bits/distrito/Distrito'
 
-import Conway from './bits/conway/Conway.tsx'
+import Conway from './bits/conway/Conway'
 import Animation from './util/Animation'
-import Loom from './bits/loom/Loom.tsx'
-import Mandelbrot from './bits/mandelbrot/Mandelbrot.tsx'
-import Photography from './bits/photography/Photography.tsx'
-import Voronoi from './bits/voronoi/Voronoi.tsx'
-import Reinforcement from './bits/reinforcement/Reinforcement.tsx'
-import Stereo from './bits/stereo/Stereo.tsx'
-import Nostalgia from './bits/nostalgia/Nostalgia.tsx'
-import Corrupted from './bits/corrupted/Corrupted.tsx'
-import Anaglyph from './bits/anaglyph/Anaglyph.tsx'
-import Penrose from './bits/penrose/Penrose.tsx'
-import TravelingSalesman from './bits/travelingsalesman/TravelingSalesman.tsx'
+import Loom from './bits/loom/Loom'
+import Mandelbrot from './bits/mandelbrot/Mandelbrot'
+import Photography from './bits/photography/Photography'
+import Voronoi from './bits/voronoi/Voronoi'
+import Reinforcement from './bits/reinforcement/Reinforcement'
+import Stereo from './bits/stereo/Stereo'
+import Nostalgia from './bits/nostalgia/Nostalgia'
+import Corrupted from './bits/corrupted/Corrupted'
+import Anaglyph from './bits/anaglyph/Anaglyph'
+import Penrose from './bits/penrose/Penrose'
+import TravelingSalesman from './bits/travelingsalesman/TravelingSalesman'
 
-import Then from './Then.tsx'
-import Navigation from './Navigation.tsx'
-import Blog from './Blog.tsx'
-import Post from './Post.tsx'
+import Then from './Then'
+import Navigation from './Navigation'
+import Blog from './Blog'
+import Post from './Post'
 
 import './Home.css'
 import './Blog.css'
@@ -61,8 +61,8 @@ import simulatedAnnealing from './bits/simulatedannealing/SimulatedAnnealing.md'
 
 import stereo from './bits/stereo/Stereo.md'
 
-import { ThemeContext } from "./ThemeContext.jsx"
-import Slider from "./Slider.jsx"
+import { ThemeContext } from "./ThemeContext"
+import Slider from "./Slider"
 import ReactMarkdown from 'react-markdown'
 
 import ReactGA from 'react-ga4'
