@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react'
 import './Stereo.css'
 import Loader from "../../Presentation"
 import { useTimeout } from "../../Hooks"
-import { getRandomInt, colorImageData } from '../../tools'
+import { getRandomInt, colorImageData } from '../../utils'
 
 import left from '../../assets/2019/left.jpg'
 import right from '../../assets/2019/right.jpg'

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import robot from '../../assets/our-lady.jpg'
 import { getCentroids } from '../../util.js'
-import { getRandomInt, getXYfromIndex, getBrightness } from '../../tools'
+import { getRandomInt, getXYfromIndex, getBrightness } from '../../utils'
 import './Voronoi.css'
 import * as d3 from 'd3'
 import { Delaunay } from 'd3-delaunay'

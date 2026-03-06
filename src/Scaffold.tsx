@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocalStorage } from "./Hooks"
 import Home from "./Home"
-import { getRandomIntegerArray } from './tools'
+import { getRandomIntegerArray } from './utils'
 
 import { ThemeContext, themes } from "./ThemeContext"
 

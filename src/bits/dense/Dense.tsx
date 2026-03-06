@@ -9,7 +9,7 @@ import {
     colorToString,
     getRandomIntegerArray,
     colorMatrix,
-} from '../../tools'
+} from '../../utils'
 import Loader from "../../Presentation"
 import './Dense.css'
 import CSS from 'csstype'
