@@ -16,3 +16,11 @@
 - No new TypeScript errors introduced; all pre-existing errors remain
 - Vite dev server returns 200 OK
 - Next step needed: Task 3 — Fix Calendar type safety (change `photos` from `any` to `Map<string, number>`)
+
+## Iteration 3 - Fix Calendar type safety
+- Changed `useState<any>()` to `useState<Map<string, number>>()` for `photos` state
+- Added `photos === undefined` to the loading guard (alongside existing `start === undefined` check) to fix TS2322 type mismatch
+- No new TypeScript errors introduced; resolved the `Type 'Map<string, number> | undefined' is not assignable to type 'Map<string, number>'` error
+- Pre-existing errors remain (unused React import, unused `e` param, `user` type from useAuth)
+- Vite dev server returns 200 OK
+- Next step needed: Task 4 — Audit and remove unused dependencies
