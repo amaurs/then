@@ -24,6 +24,12 @@ interface Color {
 }
 
 const MILLISECONDS_IN_A_DAY = 1000 * 60 * 60 * 24
+const DAYS_IN_A_WEEK = 7
+const OFFSET_WEEK = 5
+const OFFSET_DAY = 3
+const OFFSET_MONTH = 30
+const CELL_SIZE = 10
+const HEAT_MAP_COLORS = ["#feebe2", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177"]
 const banditHost = import.meta.env.VITE_API_HOST
 
 const getWeek = (date: Date) => {
@@ -100,8 +106,8 @@ const formatDate = (date: Date, separator: string): string => {
   }
 
 const getColor = (index: undefined | number): string => {
-    return index !== undefined && index > 0? 
-        (index > 1? (index > 2? (index > 3? (index > 4? (index > 5? (index > 6? "#7a0177": "#ae017e"): "#dd3497"): "#f768a1"): "#fa9fb5"): "#fcc5c0"): "#feebe2"): "black" // "#080708"
+    if (index === undefined || index <= 0) return "black"
+    return HEAT_MAP_COLORS[Math.min(index, HEAT_MAP_COLORS.length) - 1]
 }
 
 const paintCalendar = (
@@ -204,16 +210,11 @@ const _Calendar = (props: _CalendarProps) => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        let DAYS_IN_A_WEEK = 7
-        let offsetWeek = 5
-        let offsetDay = 3
-        let offsetMonth = 30
-        let size = 10
-        let offsetYear = DAYS_IN_A_WEEK * (size + offsetWeek) + 15
+        let offsetYear = DAYS_IN_A_WEEK * (CELL_SIZE + OFFSET_WEEK) + 15
         
         const context: CanvasRenderingContext2D = mount.current.getContext('2d')!
         context.imageSmoothingEnabled = false
-        context.canvas.width = (size + offsetWeek) * 54 - offsetWeek + 11 * offsetMonth
+        context.canvas.width = (CELL_SIZE + OFFSET_WEEK) * 54 - OFFSET_WEEK + 11 * OFFSET_MONTH
         context.canvas.height = (props.end.getFullYear() - props.start.getFullYear() + 1) * offsetYear - 15 - 17
 
         const offScreenContext = new OffscreenCanvas(context.canvas.width, context.canvas.height).getContext("2d")! // or webgl, etc.
@@ -269,12 +270,12 @@ const _Calendar = (props: _CalendarProps) => {
             offScreenContext,
             props.start.getTime() + 1000 * 60 * 60 * 12, // Adding 12 hours to avoid problems with daylight saving.
             props.end.getTime(),
-            offsetDay,
-            offsetWeek,
-            offsetMonth,
+            OFFSET_DAY,
+            OFFSET_WEEK,
+            OFFSET_MONTH,
             offsetYear,
-            size,
-            size,
+            CELL_SIZE,
+            CELL_SIZE,
             props.photos)
         mount.current.addEventListener('mousemove', handleMouseMove)
         mount.current.addEventListener('mouseout', handleMouseOut)
@@ -324,6 +325,10 @@ const Calendar = (props: Props) => {
                 }
 
                 let response = await fetch(url, payload)
+                if (response.status === 401) {
+                    navigate('/login')
+                    return
+                }
                 let json = await response.json()
 
                 if (!cancel) {
@@ -332,7 +337,6 @@ const Calendar = (props: Props) => {
                 }
             } catch (error) {
                 console.log(error)
-                navigate('/login')
             }
         }
 
@@ -344,7 +348,7 @@ const Calendar = (props: Props) => {
     }, [])
 
     if (start === undefined) {
-        return null
+        return <div className="Calendar-loading">Loading...</div>
     }
     return (
         <Fragment>
