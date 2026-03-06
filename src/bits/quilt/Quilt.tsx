@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import { useTimeout } from "../../Hooks"
 
-import { shuffle } from '../../util.js'
+import { shuffle } from '../../utils'
 import { getRandomInt } from '../../utils'
 
 import Loader from "../../Presentation"
