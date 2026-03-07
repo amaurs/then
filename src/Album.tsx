@@ -123,11 +123,30 @@ const Album = () => {
 
     // Preserve scroll position after prepending
     useEffect(() => {
-        if (scrollRestorationRef.current) {
-            const prevHeight = scrollRestorationRef.current.height
-            const newHeight = document.documentElement.scrollHeight
-            window.scrollTo(0, window.scrollY + (newHeight - prevHeight))
-            scrollRestorationRef.current = null
+        if (!scrollRestorationRef.current) return
+        const firstSection = document.querySelector('.Column > div:nth-child(2)') as HTMLElement | null
+        if (!firstSection) { scrollRestorationRef.current = null; return }
+        // Collapse prepended section so it has zero layout impact
+        firstSection.style.overflow = 'hidden'
+        firstSection.style.height = '0'
+        const reveal = () => {
+            requestAnimationFrame(() => {
+                // Measure the natural height, expand, and adjust scroll in one frame
+                firstSection.style.height = 'auto'
+                const addedHeight = firstSection.offsetHeight
+                firstSection.style.overflow = ''
+                firstSection.style.height = ''
+                window.scrollTo(0, window.scrollY + addedHeight)
+                scrollRestorationRef.current = null
+            })
+        }
+        const imgs = Array.from(firstSection.querySelectorAll('img'))
+        const unloaded = imgs.filter(img => !img.complete)
+        if (unloaded.length === 0) {
+            reveal()
+        } else {
+            let remaining = unloaded.length
+            unloaded.forEach(img => img.addEventListener('load', () => { if (--remaining === 0) reveal() }, { once: true }))
         }
     }, [sections])
 
