@@ -20,6 +20,7 @@ import Flyer from './Flyer'
 import Days from './Days'
 import ProtectedRoute from './ProtectedRoute'
 import { AuthProvider } from './Hooks'
+import { CalendarProvider } from './CalendarContext'
 
 const root = createRoot(document.getElementById('root'))
 
@@ -31,6 +32,7 @@ if (host.length && host[0] === 'blog') {
     root.render(
         <Router>
             <AuthProvider>
+                <CalendarProvider>
                 <div className="Blog">
                     <Routes>
                         <Route
@@ -79,6 +81,7 @@ if (host.length && host[0] === 'blog') {
                         <Route path="/login" element={<Login />} />
                     </Routes>
                 </div>
+                </CalendarProvider>
             </AuthProvider>
         </Router>
     )

@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, Fragment } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Calendar.css'
 import { useAuth } from './Hooks'
+import { useCalendarDates } from './CalendarContext'
 
 interface Props {
     width: number
@@ -311,6 +312,7 @@ const Calendar = (props: Props) => {
     const [photos, setPhotos] = useState<Map<string, number>>()
     const { user } = useAuth()
     const navigate = useNavigate()
+    const { setSortedDates } = useCalendarDates()
 
     useEffect(() => {
         let cancel = false
@@ -333,7 +335,9 @@ const Calendar = (props: Props) => {
 
                 if (!cancel) {
                     setStart(new Date(json.start.year, json.start.month - 1, json.start.day))
-                    setPhotos(new Map(json.photos))
+                    const photosMap = new Map<string, number>(json.photos)
+                    setPhotos(photosMap)
+                    setSortedDates([...photosMap.keys()].sort())
                 }
             } catch (error) {
                 console.log(error)
