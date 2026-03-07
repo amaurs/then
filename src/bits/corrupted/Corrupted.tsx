@@ -51,7 +51,7 @@ const Corrupted = (props: Props) => {
             const parameters = {
                 minFilter: THREE.LinearFilter,
                 magFilter: THREE.LinearFilter,
-                format: THREE.RGBFormat,
+                format: THREE.RGBAFormat,
                 stencilBuffer: true,
             }
 
