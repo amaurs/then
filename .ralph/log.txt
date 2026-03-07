@@ -35,3 +35,12 @@
 - Fixed 2 stale imports from iteration 2 that were missed: Quilt.tsx and Voronoi.tsx still had `../../util.js` instead of `../../utils`
 - Build passes (`vite build` succeeds), dev server returns 200
 - Next step needed: Task 5 — Remove remaining CRA artifacts (evaluate registerServiceWorker.js)
+
+## Iteration 5 - Create CalendarContext to share sorted dates list with Album
+- Created `src/CalendarContext.tsx` with `CalendarProvider` and `useCalendarDates` hook
+- Context stores `sortedDates: string[]` — the sorted keys from the photos map
+- Wrapped `CalendarProvider` around the blog routes in `index.tsx` (above both `/calendar` and `/calendar/:year/:month/:day`)
+- Updated `Calendar.tsx` to call `setSortedDates([...photosMap.keys()].sort())` after fetching calendar data
+- Build passes (vite build succeeds)
+- Key learning: Can't use per-route providers since Calendar and Album are sibling routes — need shared ancestor. Route state would be lost on direct URL access, so context + fallback fetch is the right approach.
+- Next step needed: Refactor Album.tsx to use infinite scroll — maintain ordered day sections, detect scroll position, fetch adjacent days

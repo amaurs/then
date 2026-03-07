@@ -6,3 +6,9 @@
 img {
     width: 100%;
 }
+
+.Album-loading {
+    text-align: center;
+    padding: 1rem;
+    color: #888;
+}
