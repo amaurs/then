@@ -557,6 +557,7 @@ const Home = (props) => {
                 >
                 {mapping && Object.entries(mapping).map(([key, value]) => (
                     <Route
+                        key={key}
                         path={`/bit/${key}`} 
                         element={<ReactMarkdown className="Description">{markdownContent}</ReactMarkdown>}
                     />
