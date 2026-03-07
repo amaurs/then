@@ -44,3 +44,23 @@
 - Build passes (vite build succeeds)
 - Key learning: Can't use per-route providers since Calendar and Album are sibling routes — need shared ancestor. Route state would be lost on direct URL access, so context + fallback fetch is the right approach.
 - Next step needed: Refactor Album.tsx to use infinite scroll — maintain ordered day sections, detect scroll position, fetch adjacent days
+
+## Iteration 6 - Refactor Album.tsx to infinite scroll
+
+- Rewrote Album.tsx with infinite scroll:
+  - Maintains `sections: DaySection[]` — ordered list of `{ date, photos }` objects
+  - Uses `useCalendarDates()` to get sorted dates list from CalendarContext
+  - `getAdjacentDate(date, direction)` computes next/prev day with content from sorted dates
+  - Top/bottom sentinel divs with IntersectionObserver trigger `loadPrev`/`loadNext`
+  - Scroll position preserved on prepend via `scrollRestorationRef` (records scrollHeight before, adjusts after)
+  - Date dividers have `data-date-divider` attribute with date string
+  - IntersectionObserver on dividers calls `replaceState` to update URL (not pushState — back button returns to calendar)
+  - Loading indicators at top/bottom while fetching
+  - `noMorePrev`/`noMoreNext` flags stop fetching at boundaries
+- Updated Album.css with `.Album-loading` style
+- Build passes (vite build succeeds)
+- Key learnings:
+  - Date format in sortedDates is `YYYY/MM/DD` (from Calendar's formatDate with '/' separator)
+  - API uses dashes: `/calendars/amaurs/YYYY-MM-DD` — Album converts with `.replace(/\//g, '-')`
+  - Route params give year/month/day separately, reconstructed as `year/month/day` to match sortedDates keys
+- Next step needed: Test the implementation — verify build, check for edge cases, ensure the CalendarContext fallback works when navigating directly to a day URL (sortedDates may be empty)

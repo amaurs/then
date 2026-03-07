@@ -27,11 +27,25 @@ const Album = () => {
     const [noMoreNext, setNoMoreNext] = useState(false)
     const navigate = useNavigate()
     const { user } = useAuth()
-    const { sortedDates } = useCalendarDates()
+    const { sortedDates, setSortedDates } = useCalendarDates()
     const topSentinelRef = useRef<HTMLDivElement>(null)
     const bottomSentinelRef = useRef<HTMLDivElement>(null)
     const dividerRefs = useRef<Map<string, HTMLElement>>(new Map())
     const scrollRestorationRef = useRef<{ height: number } | null>(null)
+
+    // Fallback: fetch calendar dates if not already loaded (direct URL navigation)
+    useEffect(() => {
+        if (sortedDates.length > 0) return
+        let cancel = false
+        fetch(`${banditHost}/calendar/amaurs`, {
+            headers: { 'Content-Type': 'application/json', 'Authorization': user.token },
+        }).then(r => r.json()).then(json => {
+            if (cancel) return
+            const dates = (json.photos as [string, number][]).map(([d]) => d).sort()
+            setSortedDates(dates)
+        }).catch(() => {})
+        return () => { cancel = true }
+    }, [sortedDates.length, user.token, setSortedDates])
 
     const fetchDay = useCallback(async (dateStr: string): Promise<string[] | null> => {
         try {
@@ -61,15 +75,20 @@ const Album = () => {
             if (cancel || !photos) return
             if (photos.length === 0) { navigate('/calendar'); return }
             setSections([{ date: currentDate, photos }])
-            // Check boundaries
-            if (sortedDates.length > 0) {
-                const idx = sortedDates.indexOf(currentDate)
-                if (idx <= 0) setNoMorePrev(true)
-                if (idx === -1 || idx >= sortedDates.length - 1) setNoMoreNext(true)
-            }
         })
         return () => { cancel = true }
     }, [currentDate])
+
+    // Update boundaries when sortedDates becomes available
+    useEffect(() => {
+        if (sortedDates.length === 0 || sections.length === 0) return
+        const firstDate = sections[0].date
+        const lastDate = sections[sections.length - 1].date
+        const firstIdx = sortedDates.indexOf(firstDate)
+        const lastIdx = sortedDates.indexOf(lastDate)
+        setNoMorePrev(firstIdx <= 0)
+        setNoMoreNext(lastIdx === -1 || lastIdx >= sortedDates.length - 1)
+    }, [sortedDates, sections])
 
     // Load next day (scroll down)
     const loadNext = useCallback(async () => {
