@@ -64,3 +64,12 @@
   - API uses dashes: `/calendars/amaurs/YYYY-MM-DD` — Album converts with `.replace(/\//g, '-')`
   - Route params give year/month/day separately, reconstructed as `year/month/day` to match sortedDates keys
 - Next step needed: Test the implementation — verify build, check for edge cases, ensure the CalendarContext fallback works when navigating directly to a day URL (sortedDates may be empty)
+
+## Iteration 7 - Add fallback calendar fetch + fix boundary calculation
+
+- Added fallback fetch in Album.tsx: when `sortedDates` is empty (direct URL navigation without visiting Calendar first), Album fetches `GET /calendar/amaurs` itself and populates the context
+- Separated boundary calculation (`noMorePrev`/`noMoreNext`) into its own `useEffect` that reacts to both `sortedDates` and `sections` changes — this ensures boundaries are correctly set even when sortedDates loads asynchronously after the initial day
+- Build passes (vite build succeeds)
+- All pre-existing TS errors remain unchanged (unused vars, react-markdown types, useAuth typing)
+- Key learning: Direct URL access to `/calendar/:year/:month/:day` bypasses Calendar.tsx entirely, so Album needs to self-bootstrap the dates list
+- Next step needed: Verify all success criteria are met, create .done file
