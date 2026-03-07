@@ -87,15 +87,23 @@ const Album = () => {
         const firstIdx = sortedDates.indexOf(firstDate)
         const lastIdx = sortedDates.indexOf(lastDate)
         setNoMorePrev(firstIdx <= 0)
-        setNoMoreNext(lastIdx === -1 || lastIdx >= sortedDates.length - 1)
-    }, [sortedDates, sections])
+        setNoMoreNext(lastIdx < 0 || lastIdx >= sortedDates.length - 1)
+    }, [sortedDates])
+
+    // Reset noMore flags when sections change so observers can re-trigger
+    useEffect(() => {
+        if (sortedDates.length === 0) {
+            setNoMorePrev(false)
+            setNoMoreNext(false)
+        }
+    }, [sections])
 
     // Load next day (scroll down)
     const loadNext = useCallback(async () => {
         if (loadingBottom || noMoreNext || sections.length === 0) return
         const lastDate = sections[sections.length - 1].date
         const nextDate = getAdjacentDate(lastDate, 1)
-        if (!nextDate) { setNoMoreNext(true); return }
+        if (!nextDate) { if (sortedDates.length > 0) setNoMoreNext(true); return }
         setLoadingBottom(true)
         const photos = await fetchDay(nextDate)
         if (photos) {
@@ -110,7 +118,7 @@ const Album = () => {
         if (loadingTop || noMorePrev || sections.length === 0) return
         const firstDate = sections[0].date
         const prevDate = getAdjacentDate(firstDate, -1)
-        if (!prevDate) { setNoMorePrev(true); return }
+        if (!prevDate) { if (sortedDates.length > 0) setNoMorePrev(true); return }
         setLoadingTop(true)
         scrollRestorationRef.current = { height: document.documentElement.scrollHeight }
         const photos = await fetchDay(prevDate)
