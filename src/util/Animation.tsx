@@ -86,7 +86,7 @@ const Animation = (props: Props) => {
                 // requestAnimationFrame.
                 timeoutId = setTimeout(function () {
                     const context: CanvasRenderingContext2D =
-                        canvas.current.getContext('2d')!
+                        canvas.current.getContext('2d', { willReadFrequently: true })!
                     context.imageSmoothingEnabled = false
                     let canvasWidth = canvas.current.width
                     let canvasHeight = canvas.current.height
