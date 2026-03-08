@@ -23,8 +23,8 @@
 }
 
 .StudioView-content {
-    background: #111;
-    color: white;
+    background: #fff;
+    color: #000;
     padding: 60px 10%;
     min-height: 40vh;
 }
@@ -44,7 +44,7 @@
 .StudioView-meta {
     margin-top: 40px;
     padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(0, 0, 0, 0.4);
 }
