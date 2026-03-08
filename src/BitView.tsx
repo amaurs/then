@@ -37,7 +37,7 @@ const BitView = ({ content, title, shortCode, mode, onToggle }) => {
                 className={`ModeToggle${mode === 'gallery' && !visible ? ' hidden' : ''}`}
                 onClick={onToggle}
             >
-                {mode === 'gallery' ? 'Studio' : 'Gallery'}
+                {mode === 'gallery' ? 'Catalog' : 'Exhibit'}
             </button>
             {mode === 'studio' && (
                 <div className="StudioView">
