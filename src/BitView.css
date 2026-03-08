@@ -35,10 +35,11 @@
 }
 
 .StudioView-content p {
-    font-family: 'LubalinGraphStd-Medium', serif;
+    font-family: Arial, sans-serif;
     font-size: 18px;
     line-height: 1.8;
     max-width: 700px;
+    text-transform: none;
 }
 
 .StudioView-meta {
