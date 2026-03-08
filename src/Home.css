@@ -19,18 +19,11 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    transition: height 0.3s ease;
 }
 
-
-.Description {
-    z-index: 10;
-    padding: 0 5%;
-    background-color: rgba(255, 255, 255, .7);
-}
-
-.Description p {
-    color: black;
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-
+.Background.studio {
+    position: relative;
+    height: 60vh;
+    width: 100%;
 }

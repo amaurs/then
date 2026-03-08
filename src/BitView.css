@@ -1,0 +1,46 @@
+.ModeToggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    transition: opacity 0.3s;
+    border-radius: 4px;
+}
+
+.ModeToggle:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.StudioView-content {
+    background: #111;
+    color: white;
+    padding: 60px 10%;
+    min-height: 40vh;
+}
+
+.StudioView-content h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.StudioView-content p {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.8;
+    max-width: 700px;
+}
+
+.StudioView-meta {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+}
