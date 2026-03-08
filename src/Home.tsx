@@ -585,7 +585,7 @@ const Home = (props) => {
                                 replace
                                 to={
                                     element.redirect
-                                        ? `/bits/${element.redirect}`
+                                        ? `/bit/${element.redirect}`
                                         : '/'
                                 }
                             />
