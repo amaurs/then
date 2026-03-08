@@ -64,6 +64,7 @@ import stereo from './bits/stereo/Stereo.md'
 import { ThemeContext } from "./ThemeContext"
 import Slider from "./Slider"
 import ReactMarkdown from 'react-markdown'
+import BitView from './BitView'
 
 import ReactGA from 'react-ga4'
 
@@ -250,7 +251,7 @@ const oldMapping = {
 const Container = (props) => {
     return (
         <Fragment>
-            <div className="Background">{props.background}</div>
+            <div className={`Background${props.viewMode === 'studio' ? ' studio' : ''}`}>{props.background}</div>
             <Outlet />
             <div className="Home-slider">
                 <Slider />
@@ -280,6 +281,7 @@ const Home = (props) => {
     const theme = useContext(ThemeContext)
     const [mapping, setMapping] = useState(oldMapping)
     const [markdownContent, setMardownContent] = useState("")
+    const [viewMode, setViewMode] = useState<'gallery' | 'studio'>('gallery')
     const squareSampling = 100
     const numberColors = 500
     const location = useLocation()
@@ -326,6 +328,7 @@ const Home = (props) => {
             const bit = location.pathname.split("/bit")[1];
             fetchMarkdown(bit);
             setIndexBackground(bit);
+            setViewMode('gallery');
         }
     }, [location])
 
@@ -552,16 +555,28 @@ const Home = (props) => {
                                     ? null
                                     : mapping[indexBackground].component
                             }
+                            viewMode={viewMode}
                         />
                     }
                 >
-                {mapping && Object.entries(mapping).map(([key, value]) => (
-                    <Route
-                        key={key}
-                        path={`/bit/${key}`} 
-                        element={<ReactMarkdown className="Description">{markdownContent}</ReactMarkdown>}
-                    />
-                ))}
+                {mapping && Object.entries(mapping).map(([key, value]) => {
+                    const codeEntry = props.masterData.codes?.find(c => c.redirect === key)
+                    return (
+                        <Route
+                            key={key}
+                            path={`/bit/${key}`} 
+                            element={
+                                <BitView
+                                    content={markdownContent}
+                                    title={key.slice(1).replace(/-/g, ' ')}
+                                    shortCode={codeEntry?.code || null}
+                                    mode={viewMode}
+                                    onToggle={() => setViewMode(m => m === 'gallery' ? 'studio' : 'gallery')}
+                                />
+                            }
+                        />
+                    )
+                })}
                 </Route>
                 <Route
                     path="/blog" 
