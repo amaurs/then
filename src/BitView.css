@@ -17,6 +17,11 @@
     background: rgba(0, 0, 0, 0.8);
 }
 
+.ModeToggle.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
 .StudioView-content {
     background: #111;
     color: white;
