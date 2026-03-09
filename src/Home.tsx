@@ -251,7 +251,7 @@ const oldMapping = {
 const Container = (props) => {
     return (
         <Fragment>
-            <div className={`Background${props.viewMode === 'studio' ? ' studio' : ''}`}>{props.background}</div>
+            <div className={`Background${props.viewMode === 'studio' ? ' studio' : ''}`} key={props.backgroundKey}>{props.background}</div>
             <Outlet />
             <div className="Home-slider">
                 <Slider />
@@ -500,6 +500,7 @@ const Home = (props) => {
                     path="/"
                     element={
                         <Container
+                            backgroundKey={indexBackground}
                             background={
                                 indexBackground === null ||
                                 mapping[indexBackground] === undefined
@@ -525,6 +526,7 @@ const Home = (props) => {
                     path="/bits"
                     element={
                         <Container
+                            backgroundKey={indexBackground}
                             background={
                                 indexBackground === null ||
                                 mapping[indexBackground] === undefined

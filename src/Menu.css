@@ -18,3 +18,19 @@
     text-decoration: inherit;
     text-transform: capitalize;
 }
+
+.Menu.coarse {
+    padding-top: calc(50vh - 45px);
+    padding-bottom: calc(50vh - 45px);
+    scroll-snap-type: y mandatory;
+}
+
+.Menu.coarse li {
+    scroll-snap-align: center;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+}
+
+.Menu.coarse li.active {
+    opacity: 1;
+}
