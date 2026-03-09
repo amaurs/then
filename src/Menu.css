@@ -20,21 +20,28 @@
 }
 
 .Menu.coarse a {
-    font-size: 50px;
+    font-size: 42px;
+    padding-left: 30px;
+    text-indent: -30px;
+    display: inline-block;
+    line-height: 0.8;
 }
 
 .Menu.coarse {
-    padding-top: calc(50vh - 45px);
-    padding-bottom: calc(50vh - 45px);
+    padding-top: 50vh;
+    padding-bottom: 50vh;
     scroll-snap-type: y mandatory;
 }
 
 .Menu.coarse li {
     scroll-snap-align: center;
-    opacity: 0.3;
+    opacity: 0.2;
     transition: opacity 0.2s;
+    margin-bottom: -10px;
 }
 
 .Menu.coarse li.active {
     opacity: 1;
+    transform: scale(1.25);
+    transform-origin: left center;
 }
