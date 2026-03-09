@@ -19,6 +19,10 @@
     text-transform: capitalize;
 }
 
+.Menu.coarse a {
+    font-size: 50px;
+}
+
 .Menu.coarse {
     padding-top: calc(50vh - 45px);
     padding-bottom: calc(50vh - 45px);

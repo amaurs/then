@@ -14,6 +14,10 @@ const useIsCoarse = () => {
     return coarse
 }
 
+const displayNames = {
+    '/autostereogram': 'magic eye',
+}
+
 const Menu = (props) => {
     const listRef = useRef<HTMLUListElement>(null)
     const isCoarse = useIsCoarse()
@@ -74,7 +78,7 @@ const Menu = (props) => {
                             },
                         })}
                     >
-                        {element.slice(1).replace('-', ' ')}
+                        {displayNames[element] || element.slice(1).replace('-', ' ')}
                     </Link>
                 </li>
             ))}
