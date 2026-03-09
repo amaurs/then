@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState, useContext } from 'react'
 import { Navigate, Routes, Route, Outlet, useLocation } from 'react-router-dom'
 import Menu from "./Menu"
+import { useViewport } from "./Hooks"
 
 import Bolero from './bits/bolero/Bolero'
 import Quilt from './bits/quilt/Quilt'
@@ -91,7 +92,7 @@ const dataMapping = {
             
 }
 
-const oldMapping = {
+const buildStaticMapping = (width, height) => ({
     '/penrose': {
         content: penrose,
         component: (
@@ -99,8 +100,8 @@ const oldMapping = {
                 title="penrose"
                 style={{}}
                 delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
@@ -112,8 +113,8 @@ const oldMapping = {
                 title="nostalgia"
                 style={{}}
                 delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
@@ -138,8 +139,8 @@ const oldMapping = {
                 title="mandelbrot"
                 style={{}}
                 delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
@@ -151,8 +152,8 @@ const oldMapping = {
                 title="voronoi"
                 style={{}}
                 delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
@@ -164,8 +165,8 @@ const oldMapping = {
                 title="stereo"
                 style={{}}
                 delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
@@ -175,10 +176,10 @@ const oldMapping = {
         component: (
             <Reinforcement
                 title="reinforcement learning"
-                style={{ height: window.innerHeight + 'px' }}
+                style={{ height: height + 'px' }}
                 delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
@@ -190,8 +191,8 @@ const oldMapping = {
                 title="conway"
                 style={{}}
                 delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
@@ -203,8 +204,8 @@ const oldMapping = {
                 title="1986"
                 style={{}}
                 delay={presentationTime}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
@@ -215,8 +216,8 @@ const oldMapping = {
                 title="autostereogram"
                 delay={presentationTime}
                 style={{}}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
@@ -228,8 +229,8 @@ const oldMapping = {
                 title="loom"
                 delay={presentationTime}
                 style={{}}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
@@ -241,12 +242,12 @@ const oldMapping = {
                 title="quilt"
                 delay={presentationTime}
                 style={{}}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={width}
+                height={height}
             />
         ),
     },
-}
+})
 
 const Container = (props) => {
     return (
@@ -279,7 +280,8 @@ const Home = (props) => {
     const [indexBackground, setIndexBackground] = useState(null)
     const [isCursorOnMenu, setIsCursorOnMenu] = useState(false)
     const theme = useContext(ThemeContext)
-    const [mapping, setMapping] = useState(oldMapping)
+    const viewport = useViewport()
+    const [mapping, setMapping] = useState(() => buildStaticMapping(viewport.width, viewport.height))
     const [markdownContent, setMardownContent] = useState("")
     const [viewMode, setViewMode] = useState<'gallery' | 'studio'>('gallery')
     const squareSampling = 100
@@ -335,13 +337,12 @@ const Home = (props) => {
     
 
     useEffect(() => {
-        let newMapping = {}
+        let newMapping = buildStaticMapping(viewport.width, viewport.height)
 
         if (
             props.masterData.anaglyph &&
             props.masterData.anaglyph.points &&
-            props.masterData.anaglyph.points.length &&
-            mapping['/anaglyph'] === undefined
+            props.masterData.anaglyph.points.length
         ) {
             newMapping['/anaglyph'] = {
                 content: anaglyph,
@@ -350,8 +351,8 @@ const Home = (props) => {
                         title="anaglyph"
                         style={{}}
                         delay={presentationTime}
-                        width={window.innerWidth}
-                        height={window.innerHeight}
+                        width={viewport.width}
+                        height={viewport.height}
                         anaglyphData={props.masterData.anaglyph}
                     />
                 ),
@@ -360,8 +361,7 @@ const Home = (props) => {
 
         if (
             props.masterData.bolero &&
-            props.masterData.bolero.length &&
-            mapping['/bolero'] === undefined
+            props.masterData.bolero.length
         ) {
             newMapping['/bolero'] = {
                 content: bolero,
@@ -370,8 +370,8 @@ const Home = (props) => {
                         title="bolero"
                         style={{}}
                         delay={presentationTime}
-                        width={window.innerWidth}
-                        height={window.innerHeight}
+                        width={viewport.width}
+                        height={viewport.height}
                         sentence={props.masterData.bolero}
                     />
                 ),
@@ -380,8 +380,7 @@ const Home = (props) => {
 
         if (
             props.masterData.travelingSalesmanColors &&
-            props.masterData.travelingSalesmanColors.length &&
-            mapping['/colors'] === undefined
+            props.masterData.travelingSalesmanColors.length
         ) {
             newMapping['/colors'] = {
                 content: travelingSalesman,
@@ -390,8 +389,8 @@ const Home = (props) => {
                         title="colors"
                         delay={presentationTime}
                         style={{}}
-                        width={window.innerWidth}
-                        height={window.innerHeight}
+                        width={viewport.width}
+                        height={viewport.height}
                         colors={props.masterData.travelingSalesmanColors}
                     />
                 ),
@@ -400,8 +399,7 @@ const Home = (props) => {
 
         if (
             props.masterData.colorsData &&
-            props.masterData.colorsData.data &&
-            !props.masterData.colorsData.used
+            props.masterData.colorsData.data
         ) {
             let colorsDataMapping = props.masterData.colorsData.data.reduce(
                 (m, element) => {
@@ -412,8 +410,8 @@ const Home = (props) => {
                                 title={element.slug}
                                 style={{}}
                                 delay={presentationTime}
-                                width={window.innerWidth}
-                                height={window.innerHeight}
+                                width={viewport.width}
+                                height={viewport.height}
                                 res={element.resolution}
                                 square={element.square}
                                 cube={element.cube}
@@ -425,17 +423,12 @@ const Home = (props) => {
                 {}
             )
 
-            props.masterData.colorsData.used = true
-
-            props.setMasterData(props.masterData)
-
             newMapping = { ...newMapping, ...colorsDataMapping }
         }
 
         if (
             props.masterData.photography &&
-            props.masterData.photography.length &&
-            mapping['/photography'] === undefined
+            props.masterData.photography.length
         ) {
             newMapping['/photography'] = {
                 content: photography,
@@ -444,8 +437,8 @@ const Home = (props) => {
                         title="photography"
                         style={{}}
                         delay={presentationTime}
-                        width={window.innerWidth}
-                        height={window.innerHeight}
+                        width={viewport.width}
+                        height={viewport.height}
                         data={props.masterData.photography}
                         rows={1}
                     />
@@ -456,8 +449,7 @@ const Home = (props) => {
         if (
             props.masterData.travelingSalesmanData &&
             props.masterData.travelingSalesmanData.cities &&
-            props.masterData.travelingSalesmanData.hasFetched &&
-            mapping['/traveling-salesman'] === undefined
+            props.masterData.travelingSalesmanData.hasFetched
         ) {
             newMapping['/traveling-salesman'] = {
                 content: travelingSalesman,
@@ -466,8 +458,8 @@ const Home = (props) => {
                         title="traveling salesman"
                         style={{}}
                         delay={presentationTime}
-                        width={window.innerWidth}
-                        height={window.innerHeight}
+                        width={viewport.width}
+                        height={viewport.height}
                         cities={props.masterData.travelingSalesmanData}
                         numberColors={numberColors}
                         squareSampling={squareSampling}
@@ -476,10 +468,8 @@ const Home = (props) => {
             }
         }
 
-        if (Object.keys(newMapping).length) {
-            setMapping({ ...mapping, ...newMapping })
-        }
-    }, [props.masterData, mapping])
+        setMapping(newMapping)
+    }, [props.masterData, viewport])
 
     if (props.masterData.codes === undefined) {
         return null
