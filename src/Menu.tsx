@@ -3,35 +3,20 @@ import { Link } from 'react-router-dom'
 
 import './Menu.css'
 
-const useIsCoarse = () => {
-    const [coarse, setCoarse] = useState(() => window.matchMedia('(pointer: coarse)').matches)
-    useEffect(() => {
-        const mq = window.matchMedia('(pointer: coarse)')
-        const handler = (e: MediaQueryListEvent) => setCoarse(e.matches)
-        mq.addEventListener('change', handler)
-        return () => mq.removeEventListener('change', handler)
-    }, [])
-    return coarse
-}
-
 const displayNames = {
     '/autostereogram': 'magic eye',
 }
 
 const Menu = (props) => {
     const listRef = useRef<HTMLUListElement>(null)
-    const isCoarse = useIsCoarse()
-    const [activeIndex, setActiveIndex] = useState(isCoarse ? 0 : -1)
+    const [activeIndex, setActiveIndex] = useState(0)
 
     useEffect(() => {
-        if (!isCoarse) return
-        setActiveIndex(0)
         props.setIndexBackground(props.options[0])
-        props.setIsCursorOnMenu(true)
-    }, [isCoarse])
+    }, [])
 
     useEffect(() => {
-        if (!isCoarse || !listRef.current) return
+        if (!listRef.current) return
 
         let ticking = false
         const handleScroll = () => {
@@ -59,25 +44,13 @@ const Menu = (props) => {
         const el = listRef.current
         el.addEventListener('scroll', handleScroll, { passive: true })
         return () => el.removeEventListener('scroll', handleScroll)
-    }, [isCoarse, activeIndex, props.options])
+    }, [activeIndex, props.options])
 
     return (
-        <ul className={`Menu ${isCoarse ? 'coarse' : ''}`} ref={listRef}>
+        <ul className="Menu" ref={listRef}>
             {props.options.map((element, index) => (
-                <li key={index} className={isCoarse && index === activeIndex ? 'active' : ''}>
-                    <Link
-                        to={`/bit${element}`}
-                        {...(!isCoarse && {
-                            onMouseEnter: () => {
-                                props.setIndexBackground(element)
-                                props.setIsCursorOnMenu(true)
-                            },
-                            onMouseLeave: () => {
-                                props.setIndexBackground(null)
-                                props.setIsCursorOnMenu(false)
-                            },
-                        })}
-                    >
+                <li key={index} className={index === activeIndex ? 'active' : ''}>
+                    <Link to={`/bit${element}`}>
                         {displayNames[element] || element.slice(1).replace('-', ' ')}
                     </Link>
                 </li>
