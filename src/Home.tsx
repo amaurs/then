@@ -267,7 +267,6 @@ const BitMenu = (props) => {
             options={Object.keys(props.mapping)}
             style={{ backgroundColor: 'transparent' }}
             setIndexBackground={props.setIndexBackground}
-            setIsCursorOnMenu={props.setIsCursorOnMenu}
         ></Menu>
     )
 }
@@ -278,7 +277,6 @@ const markdown = `
 
 const Home = (props) => {
     const [indexBackground, setIndexBackground] = useState(null)
-    const [isCursorOnMenu, setIsCursorOnMenu] = useState(false)
     const theme = useContext(ThemeContext)
     const viewport = useViewport()
     const [mapping, setMapping] = useState(() => buildStaticMapping(viewport.width, viewport.height))
@@ -507,7 +505,6 @@ const Home = (props) => {
                                 <Then
                                     keys={Object.keys(mapping)}
                                     setIndexBackground={setIndexBackground}
-                                    isCursorOnMenu={isCursorOnMenu}
                                 />
                         }
                     />
@@ -532,7 +529,6 @@ const Home = (props) => {
                                 <BitMenu
                                     mapping={mapping}
                                     setIndexBackground={setIndexBackground}
-                                    setIsCursorOnMenu={setIsCursorOnMenu}
                                 />
                         }
                     />
