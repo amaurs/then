@@ -167,35 +167,8 @@
 
 ## 💡 UX Ideas - Main App & Bits Menu
 
-### Idea 9: Mobile-First Bits Menu with Scroll-Based Preview
-**Problem**: Hover interaction doesn't work on mobile - menu is unusable  
-**Solution**: Scroll-based preview for mobile devices
-- Vertical scrollable list of project names
-- As user scrolls, detect which name is closest to center of screen
-- Load that project in background (same as hover on desktop)
-- Smooth transitions between projects as you scroll
-- Snap to center (optional) for better control
-- Keep hover interaction for desktop
-**Current**: Desktop hover works great, mobile broken  
-**New**: Scroll through list → preview updates → tap to open full project  
-**Impact**: Makes the unique preview interaction work on mobile  
-**Effort**: 2-3 hours  
-**Priority**: High - Critical for mobile experience
-
-**Technical Approach**:
-```javascript
-// Intersection Observer or scroll event
-// Calculate distance of each menu item from viewport center
-// Load project with minimum distance
-// Debounce for performance
-```
-
-**Design Considerations**:
-- Large touch targets (min 44px height)
-- Clear visual indicator of "active" item (centered)
-- Smooth background transitions
-- Consider snap scrolling for precision
-- Test on actual mobile devices
+### ~~Idea 9: Mobile-First Bits Menu with Scroll-Based Preview~~ ✅
+Implemented unified scroll-based menu for both mobile and desktop. CSS Scroll Snap, opacity dimming (0.2), scale pop (1.25× mobile / 1.4× desktop), hanging indent, reactive viewport dimensions. Desktop hover interaction replaced with scroll-based selection (see ADR `docs/decisions/002-desktop-menu-interaction.md`).
 
 ### Idea 10: Enhance Bits Menu with Visual Cues
 **Problem**: 27 text-only items hard to scan, no visual differentiation  
@@ -221,17 +194,8 @@
 **Effort**: 1 hour  
 **Priority**: Medium
 
-### Idea 12: Add Project Descriptions
-**Problem**: No context until you click into project  
-**Solution**: Enhance individual project pages
-- Title + one-line description at top
-- Show markdown content (already exists!)
-- "Back to Bits" navigation
-- Next/Previous project links
-- Share button with direct URL
-**Impact**: Better understanding of each project  
-**Effort**: 30 min per project (or create template)  
-**Priority**: Low - Nice to have
+### ~~Idea 12: Add Project Descriptions~~ ✅
+Implemented as Exhibit/Catalog mode (Option D) in BitView.tsx. Toggle between interactive view and curatorial description with auto-hide controls, keyboard shortcut (`i`), brutalist transitions. Descriptions in individual `.md` files at `src/bits/<project>/<Project>.md`.
 
 ### Idea 13: Admin-Only Video Recording for Portfolio Content
 **Problem**: Need video clips of projects for portfolio/social media  
@@ -277,16 +241,8 @@
 
 ## 💡 UX Ideas - Calendar & Album
 
-### Idea 1: Infinite Scroll in Album View
-**Problem**: Must return to calendar to navigate between dates - very tedious  
-**Solution**: Add prev/next navigation directly in Album view
-- Swipe left/right (mobile) or arrow keys (desktop) to move between days
-- Infinite scroll through time without leaving album view
-- Show floating date indicator as you navigate
-- Preload adjacent days for smooth transitions
-**Impact**: Eliminates the back-and-forth navigation flow  
-**Effort**: 1-2 hours  
-**Priority**: High - Biggest UX improvement
+### ~~Idea 1: Infinite Scroll in Album View~~ ✅
+Implemented infinite scroll with IntersectionObserver sentinels, URL updates via replaceState on date dividers, CalendarContext for adjacency, and fallback fetch for direct URL navigation.
 
 ### Idea 2: Fix Mobile Experience
 **Problem**: Calendar is completely broken/unusable on mobile  
