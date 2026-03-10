@@ -7,6 +7,7 @@
     padding-left: 25pt;
     list-style: none;
     overflow-y: auto;
+    overflow-x: hidden;
     padding-top: 50vh;
     padding-bottom: 50vh;
     scroll-snap-type: y mandatory;
