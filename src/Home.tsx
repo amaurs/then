@@ -1,28 +1,37 @@
-import React, { Fragment, useEffect, useState, useContext } from 'react'
+import React, {
+    Fragment,
+    useEffect,
+    useState,
+    useContext,
+    lazy,
+    Suspense,
+} from 'react'
 import { Navigate, Routes, Route, Outlet, useLocation } from 'react-router-dom'
-import Menu from "./Menu"
-import { useViewport } from "./Hooks"
+import Menu from './Menu'
+import { useViewport } from './Hooks'
 
-import Bolero from './bits/bolero/Bolero'
-import Quilt from './bits/quilt/Quilt'
-
-import Autostereogram from './bits/autostereogram/Autostereogram'
-import Colors from './bits/colors/Colors'
-import Distrito from './bits/distrito/Distrito'
-
-import Conway from './bits/conway/Conway'
-import Animation from './util/Animation'
-import Loom from './bits/loom/Loom'
-import Mandelbrot from './bits/mandelbrot/Mandelbrot'
-import Photography from './bits/photography/Photography'
-import Voronoi from './bits/voronoi/Voronoi'
-import Reinforcement from './bits/reinforcement/Reinforcement'
-import Stereo from './bits/stereo/Stereo'
-import Nostalgia from './bits/nostalgia/Nostalgia'
-import Corrupted from './bits/corrupted/Corrupted'
-import Anaglyph from './bits/anaglyph/Anaglyph'
-import Penrose from './bits/penrose/Penrose'
-import TravelingSalesman from './bits/travelingsalesman/TravelingSalesman'
+const Bolero = lazy(() => import('./bits/bolero/Bolero'))
+const Quilt = lazy(() => import('./bits/quilt/Quilt'))
+const Autostereogram = lazy(
+    () => import('./bits/autostereogram/Autostereogram')
+)
+const Colors = lazy(() => import('./bits/colors/Colors'))
+const Distrito = lazy(() => import('./bits/distrito/Distrito'))
+const Conway = lazy(() => import('./bits/conway/Conway'))
+const Animation = lazy(() => import('./util/Animation'))
+const Loom = lazy(() => import('./bits/loom/Loom'))
+const Mandelbrot = lazy(() => import('./bits/mandelbrot/Mandelbrot'))
+const Photography = lazy(() => import('./bits/photography/Photography'))
+const Voronoi = lazy(() => import('./bits/voronoi/Voronoi'))
+const Reinforcement = lazy(() => import('./bits/reinforcement/Reinforcement'))
+const Stereo = lazy(() => import('./bits/stereo/Stereo'))
+const Nostalgia = lazy(() => import('./bits/nostalgia/Nostalgia'))
+const Corrupted = lazy(() => import('./bits/corrupted/Corrupted'))
+const Anaglyph = lazy(() => import('./bits/anaglyph/Anaglyph'))
+const Penrose = lazy(() => import('./bits/penrose/Penrose'))
+const TravelingSalesman = lazy(
+    () => import('./bits/travelingsalesman/TravelingSalesman')
+)
 
 import Then from './Then'
 import Navigation from './Navigation'
@@ -48,7 +57,6 @@ import anaglyph from './bits/anaglyph/Anaglyph.md'
 import penrose from './bits/penrose/Penrose.md'
 import travelingSalesman from './bits/travelingsalesman/TravelingSalesman.md'
 
-
 import floodFill from './bits/floodfill/FloodFill.md'
 import hamiltoniaCycle from './bits/hamiltoniacycle/HamiltoniaCycle.md'
 import hilbert from './bits/hilbert/Hilbert.md'
@@ -58,12 +66,10 @@ import quadtree from './bits/quadtree/Quadtree.md'
 import random from './bits/random/Random.md'
 import simulatedAnnealing from './bits/simulatedannealing/SimulatedAnnealing.md'
 
-
-
 import stereo from './bits/stereo/Stereo.md'
 
-import { ThemeContext } from "./ThemeContext"
-import Slider from "./Slider"
+import { ThemeContext } from './ThemeContext'
+import Slider from './Slider'
 import ReactMarkdown from 'react-markdown'
 import BitView from './BitView'
 
@@ -81,15 +87,14 @@ const banditHost = API_HOST
 const presentationTime = 0
 
 const dataMapping = {
-    "flood-fill": floodFill,            
-    "hamiltonian-cycle": hamiltoniaCycle,
-    "hilbert": hilbert,
-    "identity": identity,
-    "morton": morton,
-    "quadtree": quadtree,
-    "random": random,
-    "simulated-annealing": simulatedAnnealing,
-            
+    'flood-fill': floodFill,
+    'hamiltonian-cycle': hamiltoniaCycle,
+    hilbert: hilbert,
+    identity: identity,
+    morton: morton,
+    quadtree: quadtree,
+    random: random,
+    'simulated-annealing': simulatedAnnealing,
 }
 
 const buildStaticMapping = (width, height) => ({
@@ -252,7 +257,14 @@ const buildStaticMapping = (width, height) => ({
 const Container = (props) => {
     return (
         <Fragment>
-            <div className={`Background${props.viewMode === 'studio' ? ' studio' : ''}`} key={props.backgroundKey}>{props.background}</div>
+            <div
+                className={`Background${
+                    props.viewMode === 'studio' ? ' studio' : ''
+                }`}
+                key={props.backgroundKey}
+            >
+                <Suspense fallback={null}>{props.background}</Suspense>
+            </div>
             <Outlet />
             <div className="Home-slider">
                 <Slider />
@@ -279,15 +291,14 @@ const Home = (props) => {
     const [indexBackground, setIndexBackground] = useState(null)
     const theme = useContext(ThemeContext)
     const viewport = useViewport()
-    const [mapping, setMapping] = useState(() => buildStaticMapping(viewport.width, viewport.height))
-    const [markdownContent, setMardownContent] = useState("")
+    const [mapping, setMapping] = useState(() =>
+        buildStaticMapping(viewport.width, viewport.height)
+    )
+    const [markdownContent, setMardownContent] = useState('')
     const [viewMode, setViewMode] = useState<'gallery' | 'studio'>('gallery')
     const squareSampling = 100
     const numberColors = 500
     const location = useLocation()
-
-
-
 
     let [konami, setKonami] = useState(0)
     let code = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]
@@ -312,27 +323,23 @@ const Home = (props) => {
         }
     }, [konami])
 
-
     useEffect(() => {
-        
         const fetchMarkdown = async (key) => {
             try {
-                const response = await fetch(mapping[key].content);
-                const text = await response.text();
-                setMardownContent(text);
+                const response = await fetch(mapping[key].content)
+                const text = await response.text()
+                setMardownContent(text)
             } catch {
-                console.error("Error fecthing markdown.");
+                console.error('Error fecthing markdown.')
             }
         }
-        if (location && location.pathname.startsWith("/bit")) {
-            const bit = location.pathname.split("/bit")[1];
-            fetchMarkdown(bit);
-            setIndexBackground(bit);
-            setViewMode('gallery');
+        if (location && location.pathname.startsWith('/bit')) {
+            const bit = location.pathname.split('/bit')[1]
+            fetchMarkdown(bit)
+            setIndexBackground(bit)
+            setViewMode('gallery')
         }
     }, [location])
-
-    
 
     useEffect(() => {
         let newMapping = buildStaticMapping(viewport.width, viewport.height)
@@ -357,10 +364,7 @@ const Home = (props) => {
             }
         }
 
-        if (
-            props.masterData.bolero &&
-            props.masterData.bolero.length
-        ) {
+        if (props.masterData.bolero && props.masterData.bolero.length) {
             newMapping['/bolero'] = {
                 content: bolero,
                 component: (
@@ -395,10 +399,7 @@ const Home = (props) => {
             }
         }
 
-        if (
-            props.masterData.colorsData &&
-            props.masterData.colorsData.data
-        ) {
+        if (props.masterData.colorsData && props.masterData.colorsData.data) {
             let colorsDataMapping = props.masterData.colorsData.data.reduce(
                 (m, element) => {
                     m[`/${element.slug}`] = {
@@ -501,11 +502,10 @@ const Home = (props) => {
                     <Route
                         path="/"
                         element={
-                        
-                                <Then
-                                    keys={Object.keys(mapping)}
-                                    setIndexBackground={setIndexBackground}
-                                />
+                            <Then
+                                keys={Object.keys(mapping)}
+                                setIndexBackground={setIndexBackground}
+                            />
                         }
                     />
                 </Route>
@@ -526,10 +526,10 @@ const Home = (props) => {
                     <Route
                         path="/bits"
                         element={
-                                <BitMenu
-                                    mapping={mapping}
-                                    setIndexBackground={setIndexBackground}
-                                />
+                            <BitMenu
+                                mapping={mapping}
+                                setIndexBackground={setIndexBackground}
+                            />
                         }
                     />
                 </Route>
@@ -547,32 +547,40 @@ const Home = (props) => {
                         />
                     }
                 >
-                {mapping && Object.entries(mapping).map(([key, value]) => {
-                    const codeEntry = props.masterData.codes?.find(c => c.redirect === key)
-                    return (
-                        <Route
-                            key={key}
-                            path={`/bit/${key}`} 
-                            element={
-                                <BitView
-                                    content={markdownContent}
-                                    title={key.slice(1).replace(/-/g, ' ')}
-                                    shortCode={codeEntry?.code || null}
-                                    mode={viewMode}
-                                    onToggle={() => setViewMode(m => m === 'gallery' ? 'studio' : 'gallery')}
+                    {mapping &&
+                        Object.entries(mapping).map(([key, value]) => {
+                            const codeEntry = props.masterData.codes?.find(
+                                (c) => c.redirect === key
+                            )
+                            return (
+                                <Route
+                                    key={key}
+                                    path={`/bit/${key}`}
+                                    element={
+                                        <BitView
+                                            content={markdownContent}
+                                            title={key
+                                                .slice(1)
+                                                .replace(/-/g, ' ')}
+                                            shortCode={codeEntry?.code || null}
+                                            mode={viewMode}
+                                            onToggle={() =>
+                                                setViewMode((m) =>
+                                                    m === 'gallery'
+                                                        ? 'studio'
+                                                        : 'gallery'
+                                                )
+                                            }
+                                        />
+                                    }
                                 />
-                            }
-                        />
-                    )
-                })}
+                            )
+                        })}
                 </Route>
                 <Route
-                    path="/blog" 
+                    path="/blog"
                     element={
-                        <Blog
-                            title={'Else'}
-                            url={`${banditHost}/posts`}
-                        />
+                        <Blog title={'Else'} url={`${banditHost}/posts`} />
                     }
                 />
                 <Route
