@@ -28,6 +28,8 @@
         "@types/react-beautiful-dnd": "^13.1.4",
         "@types/three": "^0.143.0",
         "@vitejs/plugin-react": "^4.3.4",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.4.0",
         "prettier": "2.8.7",
         "rollup-plugin-visualizer": "^7.0.1",
         "terser": "^5.14.2",
@@ -40,7 +42,11 @@
         "test": "vitest",
         "preview": "vite preview",
         "format": "prettier --write 'src/**' package.json README.md tsconfig.json",
-        "analyze": "ANALYZE=true vite build"
+        "analyze": "ANALYZE=true vite build",
+        "prepare": "husky"
+    },
+    "lint-staged": {
+        "*.{ts,tsx,js,jsx,css,json,md}": "prettier --write"
     },
     "browserslist": [
         ">0.2%",
