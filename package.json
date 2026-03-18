@@ -29,6 +29,7 @@
         "@types/three": "^0.143.0",
         "@vitejs/plugin-react": "^4.3.4",
         "prettier": "2.8.7",
+        "rollup-plugin-visualizer": "^7.0.1",
         "terser": "^5.14.2",
         "typescript": "^5.9.3",
         "vite": "^5.4.11"
@@ -38,7 +39,8 @@
         "build": "vite build",
         "test": "vitest",
         "preview": "vite preview",
-        "format": "prettier --write 'src/**' package.json README.md tsconfig.json"
+        "format": "prettier --write 'src/**' package.json README.md tsconfig.json",
+        "analyze": "ANALYZE=true vite build"
     },
     "browserslist": [
         ">0.2%",
