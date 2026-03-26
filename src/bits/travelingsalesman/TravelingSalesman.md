@@ -1,1 +1,5 @@
-# TravelingSalesman
+# Traveling Salesman
+
+The Traveling Salesman Problem asks: given a set of points, what is the shortest path that visits each one exactly once? It is among the most studied problems in combinatorial optimization — NP-hard, practically inexhaustible, and surprisingly beautiful when its solutions are drawn rather than computed.
+
+This piece uses a TSP solver to trace a single continuous path through a dense field of points confined within a square, producing line drawings that resemble hand-rendered stipple illustrations. The approach draws directly on the work of Adrian Secord, whose 2002 paper on weighted Voronoi stippling demonstrated that point distributions optimized for visual density could be connected by Hamiltonian paths to produce artwork of remarkable fidelity. For the artist, this paper was formative — encountered during university, it opened a door into the space where computational optimization and visual art converge. The piece is both a tribute to that influence and an extension of it: the algorithm as draftsman, the optimization as aesthetic act.

@@ -1,1 +1,5 @@
 # Voronoi
+
+Voronoi stippling replaces the uniform dot grids of traditional stipple illustration with a distribution that adapts to the tonal values of an image: denser where the image is dark, sparser where it is light. The technique uses Lloyd's relaxation algorithm to iteratively adjust point positions until each dot sits at the centroid of its Voronoi cell — the region of the plane closer to that point than to any other — weighted by the underlying image intensity.
+
+The result is a pointillist rendering that captures likeness through density, color, and scale — each dot varies in size and hue to enhance the illusion of tone and depth. The piece connects to a lineage of research at the intersection of computational geometry and non-photorealistic rendering — particularly the work presented at the Bridges conference on mathematics and art — and shares a deep kinship with the Traveling Salesman piece, which connects these same stipple points into a single continuous path. Where that work emphasizes the route, this one emphasizes the territory.

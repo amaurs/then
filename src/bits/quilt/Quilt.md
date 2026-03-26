@@ -1,0 +1,5 @@
+# Quilt
+
+A computational collaborator for a physical craft. This piece generates possible pattern combinations for a quilt being constructed in the real world — a joint work with the artist's partner, a quilt maker. The algorithm explores the combinatorial space of block arrangements, rotations, and color assignments within the constraints of the chosen pattern, producing candidate designs that could never be surveyed by hand.
+
+The visual language is unmistakably textile: bold geometric blocks in orange, black, and white, arranged in a grid that reads as both systematic and playful. Arrow-like forms point in competing directions; negative space shifts between figure and ground. The piece occupies the boundary between tool and artwork — it is useful, in the most literal sense, and yet the designs it generates possess a graphic force that exceeds their utility. The quilt that was eventually sewn from these possibilities carries within it the ghost of every pattern that was considered and discarded.

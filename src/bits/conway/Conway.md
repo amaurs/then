@@ -1,3 +1,3 @@
-# Coway
+# Conway
 
-An implementation of the classic Conway's Game of Life. Each cell in the grid can be in one of two states, alive or dead. A simple set of rules define the state of the cell in the future as a function of its negihbors.
+The Game of Life needs no introduction — it is perhaps the most implemented algorithm in the history of recreational computing. This version is here because every collection of computational sketches eventually arrives at Conway, and to pretend otherwise would be dishonest.
