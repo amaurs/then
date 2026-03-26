@@ -252,6 +252,19 @@ const buildStaticMapping = (width, height) => ({
             />
         ),
     },
+
+    '/anaglyph': {
+        content: anaglyph,
+        component: (
+            <Anaglyph
+                title="anaglyph"
+                style={{}}
+                delay={presentationTime}
+                width={width}
+                height={height}
+            />
+        ),
+    },
 })
 
 const Container = (props) => {
@@ -343,26 +356,6 @@ const Home = (props) => {
 
     useEffect(() => {
         let newMapping = buildStaticMapping(viewport.width, viewport.height)
-
-        if (
-            props.masterData.anaglyph &&
-            props.masterData.anaglyph.points &&
-            props.masterData.anaglyph.points.length
-        ) {
-            newMapping['/anaglyph'] = {
-                content: anaglyph,
-                component: (
-                    <Anaglyph
-                        title="anaglyph"
-                        style={{}}
-                        delay={presentationTime}
-                        width={viewport.width}
-                        height={viewport.height}
-                        anaglyphData={props.masterData.anaglyph}
-                    />
-                ),
-            }
-        }
 
         if (props.masterData.bolero && props.masterData.bolero.length) {
             newMapping['/bolero'] = {

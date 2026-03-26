@@ -13,16 +13,19 @@ class AnaglyphSVGRenderer {
             'http://www.w3.org/2000/svg',
             'svg'
         )
-        this._svg = document.createElementNS(
+        this._groupLeft = document.createElementNS(
             'http://www.w3.org/2000/svg',
-            'svg'
+            'g'
         )
-        this._svg_right = document.createElementNS(
+        this._groupRight = document.createElementNS(
             'http://www.w3.org/2000/svg',
-            'svg'
+            'g'
         )
+        this._groupLeft.setAttribute('style', 'opacity: 0.7')
+        this._groupRight.setAttribute('style', 'opacity: 0.7')
+        this._svg.appendChild(this._groupLeft)
+        this._svg.appendChild(this._groupRight)
         this.domElement.appendChild(this._svg)
-        this.domElement.appendChild(this._svg_right)
         this._stereo = new THREE.StereoCamera()
         this._camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
         this._clipBox = new THREE.Box2()
@@ -98,7 +101,8 @@ class AnaglyphSVGRenderer {
     }
 
     removeChildNodes() {
-        this.removeChildNodesGeneral(this._svg)
+        this.removeChildNodesGeneral(this._groupLeft)
+        this.removeChildNodesGeneral(this._groupRight)
     }
 
     removeChildNodesGeneral(container) {
@@ -153,7 +157,7 @@ class AnaglyphSVGRenderer {
             let material = element.material
 
             material.color = color
-            material.opacity = 0.8
+            material.opacity = 1.0
 
             if (material === undefined || material.opacity === 0) continue
 
@@ -218,9 +222,9 @@ class AnaglyphSVGRenderer {
             _elements,
             this._stereo.cameraL,
             this._leftColor,
-            this._svg
+            this._groupLeft
         )
-        this.flushPath(this._svg)
+        this.flushPath(this._groupLeft)
         let _renderDataR = this._projector.projectScene(
             scene,
             this._stereo.cameraR,
@@ -232,9 +236,9 @@ class AnaglyphSVGRenderer {
             _elements,
             this._stereo.cameraR,
             this._rightColor,
-            this._svg
+            this._groupRight
         )
-        this.flushPath(this._svg)
+        this.flushPath(this._groupRight)
 
         scene.traverseVisible(function (object) {
             if (object instanceof SVGObject) {
@@ -264,7 +268,7 @@ class AnaglyphSVGRenderer {
                 'fill:none;stroke:' +
                 this.getSvgColor(material.color, material.opacity) +
                 ';stroke-width:' +
-                5 +
+                1.5 +
                 ';stroke-linecap:' +
                 material.linecap
             if (material.isLineDashedMaterial) {
