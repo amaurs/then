@@ -463,10 +463,6 @@ const Home = (props) => {
         setMapping(newMapping)
     }, [props.masterData, viewport])
 
-    if (props.masterData.codes === undefined) {
-        return null
-    }
-
     return (
         <div
             className="Home"
@@ -580,22 +576,23 @@ const Home = (props) => {
                     path="/post/:slug"
                     element={<Post url={`${banditHost}/post`} />}
                 />
-                {props.masterData.codes.map((element, index) => (
-                    <Route
-                        key={index}
-                        path={element.code}
-                        element={
-                            <Navigate
-                                replace
-                                to={
-                                    element.redirect
-                                        ? `/bit/${element.redirect}`
-                                        : '/'
-                                }
-                            />
-                        }
-                    />
-                ))}
+                {props.masterData.codes &&
+                    props.masterData.codes.map((element, index) => (
+                        <Route
+                            key={index}
+                            path={element.code}
+                            element={
+                                <Navigate
+                                    replace
+                                    to={
+                                        element.redirect
+                                            ? `/bit/${element.redirect}`
+                                            : '/'
+                                    }
+                                />
+                            }
+                        />
+                    ))}
             </Routes>
             <Navigation />
         </div>
