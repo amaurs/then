@@ -1,6 +1,7 @@
 import React, {
     Fragment,
     useEffect,
+    useMemo,
     useState,
     useContext,
     lazy,
@@ -304,9 +305,6 @@ const Home = (props) => {
     const [indexBackground, setIndexBackground] = useState(null)
     const theme = useContext(ThemeContext)
     const viewport = useViewport()
-    const [mapping, setMapping] = useState(() =>
-        buildStaticMapping(viewport.width, viewport.height)
-    )
     const [markdownContent, setMardownContent] = useState('')
     const [viewMode, setViewMode] = useState<'gallery' | 'studio'>('gallery')
     const squareSampling = 100
@@ -354,7 +352,7 @@ const Home = (props) => {
         }
     }, [location])
 
-    useEffect(() => {
+    const mapping = useMemo(() => {
         let newMapping = buildStaticMapping(viewport.width, viewport.height)
 
         if (props.masterData.bolero && props.masterData.bolero.length) {
@@ -460,7 +458,7 @@ const Home = (props) => {
             }
         }
 
-        setMapping(newMapping)
+        return newMapping
     }, [props.masterData, viewport])
 
     return (

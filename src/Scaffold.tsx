@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { useLocalStorage } from "./Hooks"
-import Home from "./Home"
+import React, { useEffect, useMemo, useState } from 'react'
+import { useLocalStorage } from './Hooks'
+import Home from './Home'
 import { getRandomIntegerArray } from './utils'
 
-import { ThemeContext, themes } from "./ThemeContext"
+import { ThemeContext, themes } from './ThemeContext'
 
 const banditHost = import.meta.env.VITE_API_HOST
 const squareSampling = 100
@@ -307,8 +307,10 @@ const Then = () => {
         }
     }, [masterData])
 
+    const themeContextValue = useMemo(() => ({ theme, toggleTheme }), [theme])
+
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <ThemeContext.Provider value={themeContextValue}>
             <Home masterData={masterData} setMasterData={setMasterData} />
         </ThemeContext.Provider>
     )
