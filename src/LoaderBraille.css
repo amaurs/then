@@ -1,0 +1,12 @@
+.LoaderBraille {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.LoaderBraille-frame {
+    font-family: 'ocr-a-std', monospace;
+    font-size: 8rem;
+    color: magenta;
+}
