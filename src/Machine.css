@@ -1,0 +1,17 @@
+.Machine {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.Machine-label {
+    font-size: 8rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.Machine-label--loading {
+    cursor: default;
+    opacity: 0.4;
+}
