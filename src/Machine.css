@@ -9,9 +9,6 @@
     font-size: 8rem;
     cursor: pointer;
     user-select: none;
-}
-
-.Machine-label--loading {
-    cursor: default;
-    opacity: 0.4;
+    font-family: 'LubalinGraphStd-Medium', serif;
+    color: magenta;
 }
