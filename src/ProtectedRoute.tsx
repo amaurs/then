@@ -14,7 +14,7 @@ const hasRole = (roles: string[], requiredRole: string): boolean => {
 const ProtectedRoute = ({ children, requiredRole }: Props) => {
     const { user } = useAuth()
 
-    if (!user) return <Login />
+    if (!user || !Array.isArray(user.roles)) return <Login />
 
     if (requiredRole && !hasRole(user.roles ?? [], requiredRole)) {
         return (
