@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import * as THREE from 'three'
-import { AsciiEffect } from 'three/examples/js/effect/AsciiEffect.js'
+import { AsciiEffect } from 'three/examples/jsm/effects/AsciiEffect.js'
 import './Loader.css'
 
 const Loader = () => {
