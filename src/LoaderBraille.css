@@ -1,14 +1,12 @@
-.Machine {
+.LoaderBraille {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
 }
 
-.Machine-label {
+.LoaderBraille-frame {
+    font-family: 'ocr-a-std', monospace;
     font-size: 8rem;
-    cursor: pointer;
-    user-select: none;
-    font-family: 'LubalinGraphStd-Medium', serif;
     color: magenta;
 }

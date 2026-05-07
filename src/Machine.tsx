@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useAuth, useInterval } from './Hooks'
+import Spinner from './Spinner'
 import './Machine.css'
 
-type MachineState = 'running' | 'stopped' | 'pending' | 'stopping' | 'starting' | null
+type MachineState =
+    | 'running'
+    | 'stopped'
+    | 'pending'
+    | 'stopping'
+    | 'starting'
+    | null
 
 const TRANSITIONING: MachineState[] = ['pending', 'stopping', 'starting']
 
@@ -30,7 +37,7 @@ const Machine = () => {
 
     const isTransitioning = state !== null && TRANSITIONING.includes(state)
 
-    useInterval(fetchStatus, isTransitioning ? 5000 : null)
+    useInterval(fetchStatus, isTransitioning ? 2500 : null)
 
     const handleAction = async () => {
         if (state === 'running') {
@@ -49,17 +56,23 @@ const Machine = () => {
     }
 
     const label = () => {
+        if (isTransitioning || state === null) return <Spinner />
         if (state === 'running') return 'Stop'
-        if (state === 'stopped') return 'Start'
-        if (state) return `${state}...`
-        return '...'
+        return 'Start'
     }
 
     return (
         <div className="Machine">
             <span
-                className={`Machine-label${isTransitioning ? ' Machine-label--loading' : ''}`}
-                onClick={isTransitioning ? undefined : handleAction}
+                className="Machine-label"
+                onClick={
+                    isTransitioning || state === null ? undefined : handleAction
+                }
+                style={
+                    isTransitioning || state === null
+                        ? { cursor: 'default' }
+                        : undefined
+                }
             >
                 {label()}
             </span>
