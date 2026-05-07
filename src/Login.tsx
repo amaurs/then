@@ -1,60 +1,33 @@
-import { useState, useEffect, ChangeEvent } from 'react'
+import { useGoogleOneTapLogin } from '@react-oauth/google'
 import { useAuth } from './Hooks'
-import './Login.css'
 
 const banditHost = import.meta.env.VITE_API_HOST
 
-export const Login = () => {
-    const { login, logout } = useAuth()
-    let [password, setPassword] = useState<string>('')
+const Login = () => {
+    const { login } = useAuth()
 
-    const handleClick = () => {
-        const getToken = async (url: string) => {
+    useGoogleOneTapLogin({
+        onSuccess: async (credentialResponse) => {
             try {
-                let payload = {
+                const response = await fetch(`${banditHost}/login`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        password: password,
+                        credential: credentialResponse.credential,
                     }),
-                }
-
-                let response = await fetch(url, payload)
-                let json = await response.json()
-
+                })
+                const json = await response.json()
                 if (json.token) {
-                    console.log(json.token)
-                    login({
-                        token: json.token,
-                    })
+                    login({ token: json.token, roles: json.roles })
                 }
-                
-
-                
             } catch (error) {
                 console.log(error)
             }
-        }
+        },
+        onError: () => console.log('Google login failed'),
+    })
 
-        getToken(banditHost + '/login')
-    }
-
-    const handleLogout = () => {
-        logout()
-    }
-
-    const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value)
-    }
-
-    return (
-        <div className="Login">
-            <input type="password" id="password" onChange={handleOnChange}></input>
-            <button onClick={handleClick}>login</button>
-        </div>
-    )
+    return null
 }
 
 export default Login

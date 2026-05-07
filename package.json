@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@react-oauth/google": "^0.13.5",
         "@tensorflow-models/blazeface": "^0.0.7",
         "@tensorflow/tfjs": "^3.19.0",
         "@types/d3": "^6.2.0",
