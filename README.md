@@ -105,7 +105,7 @@ VITE_GOOGLE_CLIENT_ID=  # Google OAuth client ID (needed for blog/machine auth)
 Add the following to `/etc/hosts` to enable subdomain routing locally:
 
 ```
-127.0.0.1 blog.localhost calendar.localhost into.localhost poroto.localhost baby.localhost machine.localhost
+127.0.0.1 blog.localhost calendar.localhost into.localhost poroto.localhost machine.localhost
 ```
 
 Run the dev server:
@@ -120,8 +120,7 @@ Subdomains are accessible at:
 -   `http://blog.localhost:5173` — blog + calendar
 -   `http://calendar.localhost:5173` — calendar
 -   `http://into.localhost:5173` — about
--   `http://poroto.localhost:5173` — names
--   `http://baby.localhost:5173` — flyer
+-   `http://poroto.localhost:5173` — poroto (requires owner auth): names, flyer
 -   `http://machine.localhost:5173` — machine (requires owner auth)
 
 ---

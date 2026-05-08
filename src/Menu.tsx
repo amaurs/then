@@ -7,12 +7,22 @@ const displayNames = {
     '/autostereogram': 'magic eye',
 }
 
-const Menu = (props) => {
+const defaultLinkTo = (option: string) => `/bit${option}`
+const noop = () => {}
+
+const Menu = (props: {
+    options: string[]
+    setIndexBackground?: (key: string) => void
+    linkTo?: (option: string) => string
+    style?: React.CSSProperties
+}) => {
     const listRef = useRef<HTMLUListElement>(null)
     const [activeIndex, setActiveIndex] = useState(0)
+    const setIndexBackground = props.setIndexBackground ?? noop
+    const linkTo = props.linkTo ?? defaultLinkTo
 
     useEffect(() => {
-        props.setIndexBackground(props.options[0])
+        setIndexBackground(props.options[0])
     }, [])
 
     useEffect(() => {
@@ -24,18 +34,24 @@ const Menu = (props) => {
             ticking = true
             requestAnimationFrame(() => {
                 const items = listRef.current?.querySelectorAll('li')
-                if (!items) { ticking = false; return }
+                if (!items) {
+                    ticking = false
+                    return
+                }
                 const center = window.innerHeight / 2
                 let closest = 0
                 let minDist = Infinity
                 items.forEach((li, i) => {
                     const rect = li.getBoundingClientRect()
                     const dist = Math.abs(rect.top + rect.height / 2 - center)
-                    if (dist < minDist) { minDist = dist; closest = i }
+                    if (dist < minDist) {
+                        minDist = dist
+                        closest = i
+                    }
                 })
                 if (closest !== activeIndex) {
                     setActiveIndex(closest)
-                    props.setIndexBackground(props.options[closest])
+                    setIndexBackground(props.options[closest])
                 }
                 ticking = false
             })
@@ -47,11 +63,15 @@ const Menu = (props) => {
     }, [activeIndex, props.options])
 
     return (
-        <ul className="Menu" ref={listRef}>
+        <ul className="Menu" ref={listRef} style={props.style}>
             {props.options.map((element, index) => (
-                <li key={index} className={index === activeIndex ? 'active' : ''}>
-                    <Link to={`/bit${element}`}>
-                        {displayNames[element] || element.slice(1).replace('-', ' ')}
+                <li
+                    key={index}
+                    className={index === activeIndex ? 'active' : ''}
+                >
+                    <Link to={linkTo(element)}>
+                        {displayNames[element] ||
+                            element.slice(1).replace('-', ' ')}
                     </Link>
                 </li>
             ))}
