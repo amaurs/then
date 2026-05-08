@@ -10,7 +10,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 const Scaffold = lazy(() => import('./Scaffold'))
 const About = lazy(() => import('./About'))
 const Blog = lazy(() => import('./Blog'))
-const Names = lazy(() => import('./Names'))
+const Poroto = lazy(() => import('./Poroto'))
 const Post = lazy(() => import('./Post'))
 const Calendar = lazy(() => import('./Calendar'))
 const Album = lazy(() => import('./Album'))
@@ -118,21 +118,17 @@ if (host.length && host[0] === 'blog') {
     )
 } else if (host.length && host[0] === 'poroto') {
     root.render(
-        <Router>
-            <Suspense fallback={<Spinner />}>
-                <div className="Blog">
-                    <Names />
-                </div>
-            </Suspense>
-        </Router>
-    )
-} else if (host.length && host[0] === 'baby') {
-    root.render(
-        <Router>
-            <Suspense fallback={<Spinner />}>
-                <Flyer />
-            </Suspense>
-        </Router>
+        <GoogleOAuthProvider clientId={googleClientId}>
+            <Router>
+                <Suspense fallback={<Spinner />}>
+                    <AuthProvider>
+                        <ProtectedRoute requiredRole="owner">
+                            <Poroto />
+                        </ProtectedRoute>
+                    </AuthProvider>
+                </Suspense>
+            </Router>
+        </GoogleOAuthProvider>
     )
 } else {
     root.render(
