@@ -76,15 +76,6 @@ if (host.length && host[0] === 'blog') {
                                             </ProtectedRoute>
                                         }
                                     />
-
-                                    <Route
-                                        path="/machine"
-                                        element={
-                                            <ProtectedRoute requiredRole="owner">
-                                                <Machine />
-                                            </ProtectedRoute>
-                                        }
-                                    />
                                 </Routes>
                             </div>
                         </CalendarProvider>
@@ -111,13 +102,15 @@ if (host.length && host[0] === 'blog') {
             </Suspense>
         </Router>
     )
-} else if (host.length && host[0] === 'do') {
+} else if (host.length && host[0] === 'machine') {
     root.render(
         <GoogleOAuthProvider clientId={googleClientId}>
             <Router>
                 <Suspense fallback={<Spinner />}>
                     <AuthProvider>
-                        <About />
+                        <ProtectedRoute requiredRole="owner">
+                            <Machine />
+                        </ProtectedRoute>
                     </AuthProvider>
                 </Suspense>
             </Router>
