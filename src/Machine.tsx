@@ -11,13 +11,29 @@ type MachineState =
     | 'starting'
     | null
 
+type MachineInfo = {
+    publicIp: string
+    instanceType: string
+    launchTime: Date
+}
+
 const TRANSITIONING: MachineState[] = ['pending', 'stopping', 'starting']
 
 const banditHost = import.meta.env.VITE_API_HOST
 
+const formatUptime = (launchTime: Date): string => {
+    const totalMinutes = Math.floor((Date.now() - launchTime.getTime()) / 60000)
+    const hours = Math.floor(totalMinutes / 60)
+    const minutes = totalMinutes % 60
+    if (hours === 0) return `${minutes}m`
+    return `${hours}h ${minutes}m`
+}
+
 const Machine = () => {
     const { user } = useAuth()
     const [state, setState] = useState<MachineState>(null)
+    const [info, setInfo] = useState<MachineInfo | null>(null)
+    const [, setTick] = useState(0)
 
     const fetchStatus = async () => {
         try {
@@ -26,6 +42,15 @@ const Machine = () => {
             })
             const json = await response.json()
             setState(json.state)
+            if (json.state === 'running' && json.public_ip) {
+                setInfo({
+                    publicIp: json.public_ip,
+                    instanceType: json.instance_type,
+                    launchTime: new Date(json.launch_time),
+                })
+            } else {
+                setInfo(null)
+            }
         } catch (error) {
             console.log(error)
         }
@@ -38,10 +63,12 @@ const Machine = () => {
     const isTransitioning = state !== null && TRANSITIONING.includes(state)
 
     useInterval(fetchStatus, isTransitioning ? 2500 : null)
+    useInterval(() => setTick((t) => t + 1), state === 'running' ? 60000 : null)
 
     const handleAction = async () => {
         if (state === 'running') {
             setState('stopping')
+            setInfo(null)
             await fetch(`${banditHost}/machine/stop`, {
                 method: 'POST',
                 headers: { Authorization: user.token },
@@ -64,18 +91,24 @@ const Machine = () => {
     return (
         <div className="Machine">
             <span
-                className="Machine-label"
+                className={`Machine-label${
+                    isTransitioning || state === null
+                        ? ' Machine-label--disabled'
+                        : ''
+                }`}
                 onClick={
                     isTransitioning || state === null ? undefined : handleAction
-                }
-                style={
-                    isTransitioning || state === null
-                        ? { cursor: 'default' }
-                        : undefined
                 }
             >
                 {label()}
             </span>
+            {state === 'running' && info && (
+                <div className="Machine-info">
+                    <span>{info.publicIp}</span>
+                    <span>{info.instanceType}</span>
+                    <span>{formatUptime(info.launchTime)}</span>
+                </div>
+            )}
         </div>
     )
 }
