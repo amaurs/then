@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useAuth, useInterval } from './Hooks'
 import Spinner from './Spinner'
 import './Machine.css'
@@ -35,10 +35,22 @@ const Machine = () => {
     const [info, setInfo] = useState<MachineInfo | null>(null)
     const [, setTick] = useState(0)
 
+    const [copied, setCopied] = useState(false)
+    const copyTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    const handleCopyIp = () => {
+        if (!info?.publicIp) return
+        navigator.clipboard.writeText(info.publicIp)
+        setCopied(true)
+        if (copyTimeout.current) clearTimeout(copyTimeout.current)
+        copyTimeout.current = setTimeout(() => setCopied(false), 1500)
+    }
+
     const fetchStatus = async () => {
         try {
             const response = await fetch(`${banditHost}/machine/status`, {
                 headers: { Authorization: user.token },
+                cache: 'no-store',
             })
             const json = await response.json()
             setState(json.state)
@@ -62,7 +74,7 @@ const Machine = () => {
 
     const isTransitioning = state !== null && TRANSITIONING.includes(state)
 
-    useInterval(fetchStatus, isTransitioning ? 2500 : null)
+    useInterval(fetchStatus, state !== null ? 2500 : null)
     useInterval(() => setTick((t) => t + 1), state === 'running' ? 60000 : null)
 
     const handleAction = async () => {
@@ -104,7 +116,13 @@ const Machine = () => {
             </span>
             {state === 'running' && info && (
                 <div className="Machine-info">
-                    <span>{info.publicIp}</span>
+                    <span
+                        className="Machine-info-ip"
+                        onDoubleClick={handleCopyIp}
+                        title="Double-click to copy"
+                    >
+                        {copied ? 'copied!' : info.publicIp}
+                    </span>
                     <span>{info.instanceType}</span>
                     <span>{formatUptime(info.launchTime)}</span>
                 </div>

@@ -28,3 +28,8 @@
     opacity: 0.6;
     user-select: none;
 }
+
+.Machine-info-ip {
+    user-select: text;
+    cursor: copy;
+}
