@@ -1,24 +1,26 @@
-const cacheName = "v1";
+const cacheName = 'v1'
 
 // Install a service worker
-self.addEventListener("install", (event) => {
-    console.log("Service Workers: Installed");
-});
+self.addEventListener('install', (event) => {
+    console.log('Service Workers: Installed')
+})
 
 // Cache and return requests
-self.addEventListener("fetch", (event) => {
-    if (event.request.method !== 'GET') return;
+self.addEventListener('fetch', (event) => {
+    if (event.request.method !== 'GET') return
+    // Never cache cross-origin API requests — only cache same-origin static assets
+    if (new URL(event.request.url).origin !== self.location.origin) return
     event.respondWith(
         fetch(event.request)
             .then((res) => {
                 //Make clone of response
-                const resClone = res.clone();
+                const resClone = res.clone()
                 // Open cache
                 caches.open(cacheName).then((cache) => {
                     // Add response to the cache
-                    cache.put(event.request, resClone);
-                });
-                return res;
+                    cache.put(event.request, resClone)
+                })
+                return res
             })
             .catch((err) =>
                 caches
@@ -26,20 +28,20 @@ self.addEventListener("fetch", (event) => {
                     .then((res) => res)
                     .catch((err) => console.error(err))
             )
-    );
-});
+    )
+})
 
 // Update a service worker
-self.addEventListener("activate", (event) => {
+self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cache) => {
                     if (cache !== cacheName) {
-                        return caches.delete(cache);
+                        return caches.delete(cache)
                     }
                 })
-            );
+            )
         })
-    );
-});
+    )
+})
