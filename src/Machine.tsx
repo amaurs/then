@@ -117,11 +117,13 @@ const Machine = () => {
             {state === 'running' && info && (
                 <div className="Machine-info">
                     <span
-                        className="Machine-info-ip"
+                        className={`Machine-info-ip${
+                            copied ? ' Machine-info-ip--copied' : ''
+                        }`}
                         onDoubleClick={handleCopyIp}
                         title="Double-click to copy"
                     >
-                        {copied ? 'copied!' : info.publicIp}
+                        {info.publicIp}
                     </span>
                     <span>{info.instanceType}</span>
                     <span>{formatUptime(info.launchTime)}</span>
