@@ -133,13 +133,17 @@ Significant design decisions are recorded in `docs/decisions/`. Add a new ADR th
 
 ### Commits
 
-Single-line, emoji-prefixed. The emoji should reflect the nature of the change — no strict taxonomy, but keep it honest.
+Single-line, emoji-prefixed. The emoji should reflect the nature of the change — no strict taxonomy, but keep it honest and thematic.
 
 ```
-🎨 Description of visual or style change
-🐛 Description of bug fix
-📝 Description of docs or copy change
-⚡ Description of performance change
-🔐 Description of auth or security change
-📱 Description of mobile or PWA change
+✨ New feature or noticeable improvement
+🎨 Visual or style change
+🐛 Bug fix
+🔧 Tooling, config, or wiring
+🧹 Cleanup or refactor
+📝 Docs or copy change
+⚡ Performance change
+🔐 Auth or security change
+📱 Mobile or PWA change
+🔄 Sync, update, or refresh
 ```
