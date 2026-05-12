@@ -40,7 +40,6 @@ import Blog from './Blog'
 import Post from './Post'
 
 import './Home.css'
-import './Blog.css'
 
 import autostereogram from './bits/autostereogram/Autostereogram.md'
 import distrito from './bits/distrito/Distrito.md'

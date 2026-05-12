@@ -1,8 +1,8 @@
-import React, { Fragment, useContext, useState, useEffect } from 'react'
-import CSS from 'csstype'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 import ReactMarkdown from 'react-markdown'
+import './prose.css'
 
 interface Props {
     url: string
@@ -43,9 +43,9 @@ const Post = (props: Props) => {
     }, [props.url])
 
     return (
-        <Fragment>
-            <ReactMarkdown children={content} />
-        </Fragment>
+        <div className="Prose">
+            <ReactMarkdown>{content}</ReactMarkdown>
+        </div>
     )
 }
 

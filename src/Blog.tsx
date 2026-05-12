@@ -1,8 +1,9 @@
-import React, { useEffect, useState, Fragment } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Post } from './util/interface'
+import Spinner from './Spinner'
 
-import './Menu.css'
+import './prose.css'
 
 interface Props {
     title: string
@@ -39,11 +40,11 @@ const Blog = (props: Props) => {
     }, [props.url])
 
     if (posts === undefined) {
-        return <h1>{props.title}</h1>
+        return <Spinner />
     }
 
     return (
-        <Fragment>
+        <div className="Prose">
             <h1>{props.title}</h1>
             <ul>
                 {posts.map((element, index) => {
@@ -58,7 +59,7 @@ const Blog = (props: Props) => {
                     )
                 })}
             </ul>
-        </Fragment>
+        </div>
     )
 }
 

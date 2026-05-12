@@ -1,0 +1,39 @@
+.Prose {
+    background: #fff;
+    color: #000;
+    padding: 60px 10%;
+}
+
+.Prose h1,
+.Prose h2,
+.Prose h3,
+.Prose h4 {
+    color: magenta;
+    margin-bottom: 10px;
+}
+
+.Prose h1 {
+    font-size: 48px;
+}
+
+.Prose p {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.8;
+    max-width: 700px;
+}
+
+.Prose a {
+    color: magenta;
+    text-decoration: none;
+}
+
+.Prose ul {
+    list-style-type: none;
+}
+
+.Prose ul li {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.8;
+}

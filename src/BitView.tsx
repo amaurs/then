@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import ReactMarkdown from 'react-markdown'
 import './BitView.css'
+import './prose.css'
 
 const HIDE_DELAY = 10000
 
@@ -22,9 +23,12 @@ const BitView = ({ content, title, shortCode, mode, onToggle }) => {
         }
     }, [mode])
 
-    const handleKey = useCallback((e) => {
-        if (e.key === 'i') onToggle()
-    }, [onToggle])
+    const handleKey = useCallback(
+        (e) => {
+            if (e.key === 'i') onToggle()
+        },
+        [onToggle]
+    )
 
     useEffect(() => {
         window.addEventListener('keydown', handleKey)
@@ -34,17 +38,21 @@ const BitView = ({ content, title, shortCode, mode, onToggle }) => {
     return (
         <>
             <button
-                className={`ModeToggle${mode === 'gallery' && !visible ? ' hidden' : ''}`}
+                className={`ModeToggle${
+                    mode === 'gallery' && !visible ? ' hidden' : ''
+                }`}
                 onClick={onToggle}
             >
                 {mode === 'gallery' ? 'Catalog' : 'Exhibit'}
             </button>
             {mode === 'studio' && (
                 <div className="StudioView">
-                    <div className="StudioView-content">
+                    <div className="StudioView-content Prose">
                         <ReactMarkdown>{content}</ReactMarkdown>
                         {shortCode && (
-                            <div className="StudioView-meta">Code: {shortCode}</div>
+                            <div className="StudioView-meta">
+                                Code: {shortCode}
+                            </div>
                         )}
                     </div>
                 </div>
