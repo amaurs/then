@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Menu from './Menu'
 import Spinner from './Spinner'
+import './Poroto.css'
 
 const Names = lazy(() => import('./Names'))
 const Flyer = lazy(() => import('./Flyer'))
