@@ -177,11 +177,11 @@ const buildStaticMapping = (width, height) => ({
         ),
     },
 
-    '/reinforcement-learning': {
+    '/gridworld': {
         content: reinforcement,
         component: (
             <Reinforcement
-                title="reinforcement learning"
+                title="gridworld"
                 style={{ height: height + 'px' }}
                 delay={presentationTime}
                 width={width}
