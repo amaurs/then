@@ -17,7 +17,7 @@
     scroll-snap-align: center;
     opacity: 0.2;
     transition: opacity 0.2s;
-    margin-bottom: -10px;
+    margin-bottom: -7px;
 }
 
 .Menu li.active {
