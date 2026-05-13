@@ -1,12 +1,9 @@
-import React from 'react';
+import React from 'react'
 import { Link } from 'react-router-dom'
 
-import './Navigation.css';
-
-
+import './Navigation.css'
 
 const Navigation = () => {
-
     return (
         <nav className="Navigation">
             <ul>
@@ -16,12 +13,12 @@ const Navigation = () => {
                 <Link to="/bits" className="nav-link">
                     <span>Bits</span>
                 </Link>
-                <Link to="/blog" className="nav-link">
+                <Link to="/posts" className="nav-link">
                     <span>Blog</span>
                 </Link>
             </ul>
         </nav>
-        );
+    )
 }
 
 export default Navigation

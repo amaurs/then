@@ -563,16 +563,8 @@ const Home = (props) => {
                             )
                         })}
                 </Route>
-                <Route
-                    path="/blog"
-                    element={
-                        <Blog title={'Else'} url={`${banditHost}/posts`} />
-                    }
-                />
-                <Route
-                    path="/post/:slug"
-                    element={<Post url={`${banditHost}/post`} />}
-                />
+                <Route path="/posts" element={<Blog />} />
+                <Route path="/posts/:slug" element={<Post />} />
                 {props.masterData.codes &&
                     props.masterData.codes.map((element, index) => (
                         <Route

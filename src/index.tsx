@@ -38,21 +38,10 @@ if (host.length && host[0] === 'blog') {
                         <CalendarProvider>
                             <div className="Blog">
                                 <Routes>
+                                    <Route path="/" element={<Blog />} />
                                     <Route
-                                        path="/"
-                                        element={
-                                            <Blog
-                                                title={'Else'}
-                                                url={`${banditHost}/posts`}
-                                            />
-                                        }
-                                    />
-
-                                    <Route
-                                        path="/post/:slug"
-                                        element={
-                                            <Post url={`${banditHost}/post`} />
-                                        }
+                                        path="/posts/:slug"
+                                        element={<Post />}
                                     />
 
                                     <Route path="/invite" element={<Flyer />} />

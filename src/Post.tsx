@@ -1,46 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-
 import ReactMarkdown from 'react-markdown'
+import posts from './posts'
 import './prose.css'
 
-interface Props {
-    url: string
-}
-
-const Post = (props: Props) => {
-    const [content, setContent] = useState('')
+const Post = () => {
     const { slug } = useParams()
+    const [content, setContent] = useState('')
 
     useEffect(() => {
-        let cancel = false
-        const fetchPost = async (url: string) => {
-            try {
-                let payload = {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-                let response = await fetch(url, payload)
-                let json = await response.json()
-
-                if (!cancel) {
-                    console.log(json['url'])
-
-                    fetch(json['url'])
-                        .then((res) => res.text())
-                        .then((text) => setContent(text))
-                }
-            } catch (error) {
-                console.log('Call to post endpoint failed.', error)
-            }
-        }
-        fetchPost(`${props.url}/${slug}`)
-        return () => {
-            cancel = true
-        }
-    }, [props.url])
+        const post = posts.find((p) => p.slug === slug)
+        if (!post) return
+        fetch(post.url)
+            .then((res) => res.text())
+            .then(setContent)
+    }, [slug])
 
     return (
         <div className="Prose">
