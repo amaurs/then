@@ -1,0 +1,19 @@
+.Days {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Days h2 {
+    font-size: 64px;
+    text-align: center;
+    color: magenta;
+}
+
+@media only screen and (min-width: 600px) {
+    .Days h2 {
+        font-size: 120px;
+    }
+}

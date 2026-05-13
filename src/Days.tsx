@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import './Days.css'
 
 interface Data {
     message: string
@@ -39,7 +40,7 @@ const Days = () => {
     }
 
     return (
-        <div className="Flyer">
+        <div className="Days">
             <h2>{data.message}</h2>
         </div>
     )
