@@ -30,7 +30,6 @@
 }
 
 .Machine-info-ip {
-    user-select: text;
     cursor: copy;
     transition: color 0.1s ease, opacity 0.3s ease;
 }
