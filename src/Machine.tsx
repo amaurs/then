@@ -37,13 +37,23 @@ const Machine = () => {
 
     const [copied, setCopied] = useState(false)
     const copyTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-    const handleCopyIp = () => {
+    const handlePressStart = () => {
         if (!info?.publicIp) return
-        navigator.clipboard.writeText(info.publicIp)
-        setCopied(true)
-        if (copyTimeout.current) clearTimeout(copyTimeout.current)
-        copyTimeout.current = setTimeout(() => setCopied(false), 1500)
+        longPressTimer.current = setTimeout(() => {
+            navigator.clipboard.writeText(info.publicIp)
+            setCopied(true)
+            if (copyTimeout.current) clearTimeout(copyTimeout.current)
+            copyTimeout.current = setTimeout(() => setCopied(false), 500)
+        }, 1000)
+    }
+
+    const handlePressEnd = () => {
+        if (longPressTimer.current) {
+            clearTimeout(longPressTimer.current)
+            longPressTimer.current = null
+        }
     }
 
     const fetchStatus = async () => {
@@ -120,8 +130,15 @@ const Machine = () => {
                         className={`Machine-info-ip${
                             copied ? ' Machine-info-ip--copied' : ''
                         }`}
-                        onDoubleClick={handleCopyIp}
-                        title="Double-click to copy"
+                        onMouseDown={(e) => {
+                            e.preventDefault()
+                            handlePressStart()
+                        }}
+                        onMouseUp={handlePressEnd}
+                        onMouseLeave={handlePressEnd}
+                        onTouchStart={handlePressStart}
+                        onTouchEnd={handlePressEnd}
+                        title="Hold to copy"
                     >
                         {info.publicIp}
                     </span>
