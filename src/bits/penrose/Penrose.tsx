@@ -1,8 +1,13 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import * as THREE from 'three'
-import { useTimeout } from "../../Hooks"
-import Loader from "../../Presentation"
-import { ThemeContext } from "../../ThemeContext"
+import { CopyShader } from 'three/examples/jsm/shaders/CopyShader.js'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { useTimeout } from '../../Hooks'
+import Loader from '../../Presentation'
+import { ThemeContext } from '../../ThemeContext'
+import { colorMatrixShader } from '../../util/three/shaders'
 import { PenroseBufferGeometry } from '../../util/three/PenroseBufferGeometry'
 import './Penrose.css'
 
@@ -72,7 +77,7 @@ const Penrose = (props: Props) => {
                 return mesh
             })
 
-            let renderer = new THREE.WebGLRenderer({
+            const renderer = new THREE.WebGLRenderer({
                 canvas: canvas.current,
                 antialias: true,
             })
@@ -81,25 +86,28 @@ const Penrose = (props: Props) => {
             renderer.setSize(width, height)
             renderer.setClearColor(0xffffff, 0.0)
 
-            const renderScene = () => {
-                renderer.render(scene, camera)
-            }
+            const colorPass = new ShaderPass(
+                colorMatrixShader(theme.theme.colorMatrix)
+            )
+            const copyPass = new ShaderPass(CopyShader)
+            copyPass.renderToScreen = true
+
+            const composer = new EffectComposer(renderer)
+            composer.addPass(new RenderPass(scene, camera))
+            composer.addPass(colorPass)
+            composer.addPass(copyPass)
 
             let timeoutId: any
             let i: number = 0
 
             const animate = () => {
-                // Wrapping the animation function wiht a timeout makes it
-                // possible to control the fps, without losing the benefits of
-                // requestAnimationFrame.
-
                 timeoutId = setTimeout(function () {
                     objects.forEach((object, index) => {
                         object.visible =
                             index == Math.floor(i / 24) % objects.length
                         object.rotation.z -= 0.01
                     })
-                    renderScene()
+                    composer.render()
                     frameId = requestAnimationFrame(animate)
                     i++
                 }, 1000 / 40)
@@ -117,6 +125,7 @@ const Penrose = (props: Props) => {
                     geometry.dispose()
                 })
                 material.dispose()
+                renderer.dispose()
             }
         }
     }, [data, props.width, props.height, presenting, theme])
