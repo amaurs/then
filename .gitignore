@@ -3,6 +3,9 @@
 # fonts
 /src/fonts/
 
+# book assets (packed into then-assets S3 bucket, injected at build time)
+/public/books/
+
 # dependencies
 /node_modules
 
