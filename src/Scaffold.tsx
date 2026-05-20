@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocalStorage } from './Hooks'
 import Home from './Home'
 import { getRandomIntegerArray } from './utils'
@@ -13,12 +13,21 @@ const Then = () => {
     localStorage.clear()
     const [theme, setTheme] = useLocalStorage('theme', themes.light)
     const [masterData, setMasterData] = useState({})
+    const toggleTimestamps = useRef<number[]>([])
 
     const toggleTheme = (themeName) => {
         if (themeName === 'konami') {
             setTheme(themes.konami)
         } else {
-            setTheme(theme.name !== 'light' ? themes.light : themes.dark)
+            const now = Date.now()
+            const timestamps = [...toggleTimestamps.current, now].slice(-6)
+            toggleTimestamps.current = timestamps
+            if (timestamps.length === 6 && now - timestamps[0] < 3000) {
+                toggleTimestamps.current = []
+                setTheme(themes.konami)
+            } else {
+                setTheme(theme.name !== 'light' ? themes.light : themes.dark)
+            }
         }
     }
 
