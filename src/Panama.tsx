@@ -5,6 +5,7 @@ import React, {
     useRef,
     useMemo,
 } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import './Panama.css'
 
 interface Token {
@@ -43,8 +44,13 @@ const SNAP_RATIO = 0.3
 const BOOK_BASE = '/books/panama'
 
 const Panama = () => {
+    const { page: pageParam } = useParams<{ page?: string }>()
+    const navigate = useNavigate()
     const [manifest, setManifest] = useState<Manifest | null>(null)
-    const [current, setCurrent] = useState(0)
+    const [current, setCurrent] = useState(() => {
+        const n = parseInt(pageParam ?? '1', 10)
+        return isNaN(n) || n < 1 ? 0 : n - 1
+    })
     const [centerSlot, setCenterSlot] = useState(1)
     const [activeKey, setActiveKey] = useState<string | null>(null)
     const [progress, setProgress] = useState(0)
@@ -65,12 +71,19 @@ const Panama = () => {
         fetch(`${BOOK_BASE}/de.json`)
             .then((r) => r.json())
             .then((data: Manifest) => {
-                if (!cancel) setManifest(data)
+                if (!cancel) {
+                    setManifest(data)
+                    setCurrent((c) => Math.min(c, data.pages.length - 1))
+                }
             })
         return () => {
             cancel = true
         }
     }, [])
+
+    useEffect(() => {
+        navigate(`/panama/${current + 1}`, { replace: true })
+    }, [current])
 
     const page: Page | null = manifest?.pages[current] ?? null
 
