@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import './BitView.css'
 import './prose.css'
@@ -35,15 +36,25 @@ const BitView = ({ content, title, shortCode, mode, onToggle }) => {
         return () => window.removeEventListener('keydown', handleKey)
     }, [handleKey])
 
+    const hidden = mode === 'gallery' && !visible
+
     return (
         <>
-            <button
-                className={`ModeToggle${
-                    mode === 'gallery' && !visible ? ' hidden' : ''
-                }`}
-                onClick={onToggle}
+            <Link
+                to="/"
+                className={`BackButton${hidden ? ' hidden' : ''}`}
+                aria-label="Back to menu"
             >
-                {mode === 'gallery' ? 'Catalog' : 'Exhibit'}
+                <span className="Chevron" />
+            </Link>
+            <button
+                className={`ModeToggle${hidden ? ' hidden' : ''}`}
+                onClick={onToggle}
+                aria-label={mode === 'gallery' ? 'Open studio' : 'Close studio'}
+            >
+                <span
+                    className={`Cross${mode === 'studio' ? ' rotated' : ''}`}
+                />
             </button>
             {mode === 'studio' && (
                 <div className="StudioView">
