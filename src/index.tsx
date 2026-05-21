@@ -39,6 +39,15 @@ if (host.length && host[0] === 'blog') {
                                 <Routes>
                                     <Route path="/" element={<Blog />} />
                                     <Route
+                                        path="/posts/Confines-Of-Existence"
+                                        element={
+                                            <About
+                                                title="Confines of Existence"
+                                                url="/posts/Confines-Of-Existence"
+                                            />
+                                        }
+                                    />
+                                    <Route
                                         path="/posts/:slug"
                                         element={<Post />}
                                     />
@@ -75,16 +84,6 @@ if (host.length && host[0] === 'blog') {
         <Router>
             <Suspense fallback={<Spinner />}>
                 <Calendar />
-            </Suspense>
-        </Router>
-    )
-} else if (host.length && host[0] === 'into') {
-    root.render(
-        <Router>
-            <Suspense fallback={<Spinner />}>
-                <div className="Blog">
-                    <About />
-                </div>
             </Suspense>
         </Router>
     )
