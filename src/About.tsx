@@ -16,6 +16,7 @@ import r2022 from './assets/2022/right.jpg'
 import r2023 from './assets/2023/left.jpg'
 import l2023 from './assets/2023/right.jpg'
 
+import './prose.css'
 import './About.css'
 
 interface Props {
@@ -115,20 +116,19 @@ const About = (props: Props) => {
     }
 
     return (
-        <div className="Column">
+        <div className="Prose">
             <h1>Confines of Existence</h1>
 
             <p>
                 On the day of my thirtieth birthday, as I wandered through the
                 streets of Havana, I unexpectedly came across the Necropolis of
-                Colon. Armed with a stereoscopic camera crafted from a
-                couple of disposable cameras, I captured images of the exquisite
+                Colon. Armed with a stereoscopic camera crafted from a couple of
+                disposable cameras, I captured images of the exquisite
                 statues.The following year, during a hike in the crater of an
                 inactive volcano situated to the east of my hometown, Mexico
-                City, I found a tomb, this time better prepared with a
-                proper stereoscopic camera. These two moments would lay the
-                foundation of a personal ritual that I would follow in the years
-                to come.
+                City, I found a tomb, this time better prepared with a proper
+                stereoscopic camera. These two moments would lay the foundation
+                of a personal ritual that I would follow in the years to come.
             </p>
             <p>
                 This tradition strengthened my bond with photography as a
@@ -148,13 +148,13 @@ const About = (props: Props) => {
                 enduring passion, acting as a vehicle to recollect intricate
                 details of my own reflection year over year.
             </p>
-            
-            <p className='right noPadding'>
-                <a className='signature' href="https://instagram.com/_amaurs">Amaury Acosta</a>
+
+            <p className="right noPadding">
+                <a className="signature" href="https://instagram.com/_amaurs">
+                    Amaury Acosta
+                </a>
             </p>
-            <p className='right'>
-                San Francisco 2023
-            </p>
+            <p className="right">San Francisco 2023</p>
 
             <div>
                 {info.map((photoProps, i) =>
