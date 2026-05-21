@@ -65,6 +65,10 @@ const Panama = () => {
     const isAnimating = useRef(false)
     const snapCallbackRef = useRef<(() => void) | null>(null)
     const touchHandledRef = useRef(false)
+    const isAutoAdvanceRef = useRef(true)
+    const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null
+    )
 
     useEffect(() => {
         let cancel = false
@@ -162,12 +166,28 @@ const Panama = () => {
         setActiveKey(null)
         setProgress(0)
         setScrubbed(false)
+        if (autoAdvanceTimerRef.current) {
+            clearTimeout(autoAdvanceTimerRef.current)
+            autoAdvanceTimerRef.current = null
+        }
         const audio = audioRef.current
-        if (!audio) return
-        audio.pause()
-        audio.currentTime = 0
-        if (page?.audio) {
-            audio.play().catch(() => {})
+        if (audio) {
+            audio.pause()
+            audio.currentTime = 0
+        }
+        if (page?.audio && isAutoAdvanceRef.current) {
+            audio?.play().catch(() => {})
+        } else if (isAutoAdvanceRef.current) {
+            autoAdvanceTimerRef.current = setTimeout(() => {
+                autoAdvanceTimerRef.current = null
+                goNext()
+            }, 2000)
+        }
+        return () => {
+            if (autoAdvanceTimerRef.current) {
+                clearTimeout(autoAdvanceTimerRef.current)
+                autoAdvanceTimerRef.current = null
+            }
         }
     }, [current, page?.audio])
 
@@ -194,8 +214,17 @@ const Panama = () => {
     const togglePlay = () => {
         const audio = audioRef.current
         if (!audio || !page?.audio) return
-        if (audio.paused) audio.play().catch(() => {})
-        else audio.pause()
+        if (audio.paused) {
+            isAutoAdvanceRef.current = true
+            audio.play().catch(() => {})
+        } else {
+            isAutoAdvanceRef.current = false
+            audio.pause()
+        }
+    }
+
+    const onAudioEnded = () => {
+        if (manifest && current < manifest.pages.length - 1) goNext()
     }
 
     useEffect(() => {
@@ -245,6 +274,11 @@ const Panama = () => {
         }
         isDragging.current = false
         touchStartX.current = null
+        isAutoAdvanceRef.current = false
+        if (autoAdvanceTimerRef.current) {
+            clearTimeout(autoAdvanceTimerRef.current)
+            autoAdvanceTimerRef.current = null
+        }
         const offset = dragOffsetRef.current
         const W = window.innerWidth
         if (
@@ -413,13 +447,12 @@ const Panama = () => {
                     })}
                 </div>
             </div>
-            {page.audio && (
-                <audio
-                    ref={audioRef}
-                    src={`${BOOK_BASE}/${page.audio}`}
-                    onTimeUpdate={onTimeUpdate}
-                />
-            )}
+            <audio
+                ref={audioRef}
+                src={page.audio ? `${BOOK_BASE}/${page.audio}` : undefined}
+                onTimeUpdate={onTimeUpdate}
+                onEnded={onAudioEnded}
+            />
             <div className="Panama-subtitle">
                 {activeSentenceInfo && (
                     <span
