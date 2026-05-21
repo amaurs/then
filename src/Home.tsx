@@ -6,6 +6,8 @@ import React, {
     useContext,
     lazy,
     Suspense,
+    useCallback,
+    useRef,
 } from 'react'
 import { Navigate, Routes, Route, Outlet, useLocation } from 'react-router-dom'
 import Menu from './Menu'
@@ -33,9 +35,6 @@ const Penrose = lazy(() => import('./bits/penrose/Penrose'))
 const TravelingSalesman = lazy(
     () => import('./bits/travelingsalesman/TravelingSalesman')
 )
-
-import Then from './Then'
-import Navigation from './Navigation'
 
 import './Home.css'
 
@@ -290,6 +289,8 @@ const BitMenu = (props) => {
             options={Object.keys(props.mapping)}
             style={{ backgroundColor: 'transparent' }}
             setIndexBackground={props.setIndexBackground}
+            screensaver={props.screensaver}
+            onScroll={props.onScroll}
         ></Menu>
     )
 }
@@ -304,6 +305,10 @@ const Home = (props) => {
     const viewport = useViewport()
     const [markdownContent, setMardownContent] = useState('')
     const [viewMode, setViewMode] = useState<'gallery' | 'studio'>('gallery')
+    const [screensaverMode, setScreensaverMode] = useState(false)
+    const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null
+    )
     const squareSampling = 100
     const numberColors = 500
     const location = useLocation()
@@ -311,7 +316,42 @@ const Home = (props) => {
     let [konami, setKonami] = useState(0)
     let code = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]
 
-    // let debouncedShowMenu = useDebounce(showMenu, 5000);
+    const resetInactivityTimer = useCallback(() => {
+        setScreensaverMode(false)
+        if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
+        inactivityTimerRef.current = setTimeout(
+            () => setScreensaverMode(true),
+            10_000
+        )
+    }, [])
+
+    useEffect(() => {
+        const events = [
+            'mousemove',
+            'mousedown',
+            'keydown',
+            'touchstart',
+            'wheel',
+        ]
+        events.forEach((e) =>
+            window.addEventListener(e, resetInactivityTimer, { passive: true })
+        )
+        document.addEventListener('scroll', resetInactivityTimer, {
+            passive: true,
+            capture: true,
+        })
+        resetInactivityTimer()
+        return () => {
+            events.forEach((e) =>
+                window.removeEventListener(e, resetInactivityTimer)
+            )
+            document.removeEventListener('scroll', resetInactivityTimer, {
+                capture: true,
+            })
+            if (inactivityTimerRef.current)
+                clearTimeout(inactivityTimerRef.current)
+        }
+    }, [resetInactivityTimer])
 
     useEffect(() => {
         const handleKeyPress = (event) => {
@@ -486,37 +526,19 @@ const Home = (props) => {
                     <Route
                         path="/"
                         element={
-                            <Then
-                                keys={Object.keys(mapping)}
-                                setIndexBackground={setIndexBackground}
-                            />
-                        }
-                    />
-                </Route>
-                <Route
-                    path="/bits"
-                    element={
-                        <Container
-                            backgroundKey={indexBackground}
-                            background={
-                                indexBackground === null ||
-                                mapping[indexBackground] === undefined
-                                    ? null
-                                    : mapping[indexBackground].component
-                            }
-                        />
-                    }
-                >
-                    <Route
-                        path="/bits"
-                        element={
                             <BitMenu
                                 mapping={mapping}
                                 setIndexBackground={setIndexBackground}
+                                screensaver={{
+                                    active: screensaverMode,
+                                    rotationInterval: 10_000,
+                                }}
+                                onScroll={resetInactivityTimer}
                             />
                         }
                     />
                 </Route>
+                <Route path="/bits" element={<Navigate replace to="/" />} />
                 <Route
                     path="/bit"
                     element={
@@ -579,7 +601,6 @@ const Home = (props) => {
                         />
                     ))}
             </Routes>
-            <Navigation />
         </div>
     )
 }
