@@ -21,7 +21,7 @@ const Poroto = () => (
             <Route path="/names" element={<Names />} />
             <Route path="/flyer" element={<Flyer />} />
             <Route path="/days" element={<Days />} />
-            <Route path="/panama" element={<Panama />} />
+            <Route path="/panama/:page?" element={<Panama />} />
         </Routes>
     </Suspense>
 )

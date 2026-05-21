@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, {
+    useState,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useMemo,
+} from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import './Panama.css'
 
 interface Token {
@@ -33,34 +40,74 @@ interface Manifest {
     pages: Page[]
 }
 
-const SWIPE_THRESHOLD = 50
-const TAP_THRESHOLD = 10
+const SNAP_RATIO = 0.3
 const BOOK_BASE = '/books/panama'
 
 const Panama = () => {
+    const { page: pageParam } = useParams<{ page?: string }>()
+    const navigate = useNavigate()
     const [manifest, setManifest] = useState<Manifest | null>(null)
-    const [current, setCurrent] = useState(0)
+    const [current, setCurrent] = useState(() => {
+        const n = parseInt(pageParam ?? '1', 10)
+        return isNaN(n) || n < 1 ? 0 : n - 1
+    })
+    const [centerSlot, setCenterSlot] = useState(1)
     const [activeKey, setActiveKey] = useState<string | null>(null)
     const [progress, setProgress] = useState(0)
     const [scrubbed, setScrubbed] = useState(false)
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const scrubRef = useRef<HTMLDivElement | null>(null)
+    const containerRef = useRef<HTMLDivElement | null>(null)
+    const dragOffsetRef = useRef(0)
     const touchStartX = useRef<number | null>(null)
-    const swipedRef = useRef(false)
+    const touchStartY = useRef<number | null>(null)
+    const isDragging = useRef(false)
+    const isAnimating = useRef(false)
+    const snapCallbackRef = useRef<(() => void) | null>(null)
+    const touchHandledRef = useRef(false)
+    const isAutoAdvanceRef = useRef(true)
+    const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null
+    )
 
     useEffect(() => {
         let cancel = false
         fetch(`${BOOK_BASE}/de.json`)
             .then((r) => r.json())
             .then((data: Manifest) => {
-                if (!cancel) setManifest(data)
+                if (!cancel) {
+                    setManifest(data)
+                    setCurrent((c) => Math.min(c, data.pages.length - 1))
+                }
             })
         return () => {
             cancel = true
         }
     }, [])
 
+    useEffect(() => {
+        navigate(`/panama/${current + 1}`, { replace: true })
+    }, [current])
+
     const page: Page | null = manifest?.pages[current] ?? null
+
+    // Which page each slot shows, relative to centerSlot:
+    //   rel 0 → current, rel 1 → next, rel 2 → prev
+    const slotRelative = (slot: number) => (((slot - centerSlot) % 3) + 3) % 3
+
+    const slotPage = (slot: number): Page | null => {
+        if (!manifest) return null
+        const rel = slotRelative(slot)
+        const idx = rel === 0 ? current : rel === 1 ? current + 1 : current - 1
+        return manifest.pages[idx] ?? null
+    }
+
+    const slotLeft = (slot: number): string => {
+        const rel = slotRelative(slot)
+        if (rel === 0) return '0%'
+        if (rel === 1) return '100%'
+        return '-100%'
+    }
 
     const flatTokens = useMemo(() => {
         if (!page) return []
@@ -108,7 +155,9 @@ const Panama = () => {
                         b.type === 'image'
                 )
                 .forEach((b) => {
-                    new Image().src = `${BOOK_BASE}/images/${b.src}`
+                    const img = new Image()
+                    img.src = `${BOOK_BASE}/images/${b.src}`
+                    img.decode().catch(() => {})
                 })
         })
     }, [current, manifest])
@@ -117,26 +166,65 @@ const Panama = () => {
         setActiveKey(null)
         setProgress(0)
         setScrubbed(false)
+        if (autoAdvanceTimerRef.current) {
+            clearTimeout(autoAdvanceTimerRef.current)
+            autoAdvanceTimerRef.current = null
+        }
         const audio = audioRef.current
-        if (!audio) return
-        audio.pause()
-        audio.currentTime = 0
-        if (page?.audio) {
-            audio.play().catch(() => {})
+        if (audio) {
+            audio.pause()
+            audio.currentTime = 0
+        }
+        if (page?.audio && isAutoAdvanceRef.current) {
+            audio?.play().catch(() => {})
+        } else if (isAutoAdvanceRef.current) {
+            autoAdvanceTimerRef.current = setTimeout(() => {
+                autoAdvanceTimerRef.current = null
+                goNext()
+            }, 2000)
+        }
+        return () => {
+            if (autoAdvanceTimerRef.current) {
+                clearTimeout(autoAdvanceTimerRef.current)
+                autoAdvanceTimerRef.current = null
+            }
         }
     }, [current, page?.audio])
 
+    const applyTransform = (offset: number, animated: boolean) => {
+        const container = containerRef.current
+        if (!container) return
+        dragOffsetRef.current = offset
+        container.style.transition = animated
+            ? 'transform 0.3s ease-out'
+            : 'none'
+        container.style.transform = `translateX(${offset}px)`
+    }
+
     const goNext = () => {
         if (!manifest) return
+        setCenterSlot((cs) => (cs + 1) % 3)
         setCurrent((c) => Math.min(c + 1, manifest.pages.length - 1))
     }
-    const goPrev = () => setCurrent((c) => Math.max(c - 1, 0))
+    const goPrev = () => {
+        setCenterSlot((cs) => (cs + 2) % 3)
+        setCurrent((c) => Math.max(c - 1, 0))
+    }
 
     const togglePlay = () => {
         const audio = audioRef.current
         if (!audio || !page?.audio) return
-        if (audio.paused) audio.play().catch(() => {})
-        else audio.pause()
+        if (audio.paused) {
+            isAutoAdvanceRef.current = true
+            audio.play().catch(() => {})
+        } else {
+            isAutoAdvanceRef.current = false
+            audio.pause()
+        }
+    }
+
+    const onAudioEnded = () => {
+        if (manifest && current < manifest.pages.length - 1) goNext()
     }
 
     useEffect(() => {
@@ -153,24 +241,91 @@ const Panama = () => {
     }, [manifest])
 
     const onTouchStart = (e: React.TouchEvent) => {
+        if (isAnimating.current) return
         touchStartX.current = e.touches[0].clientX
-        swipedRef.current = false
+        touchStartY.current = e.touches[0].clientY
+        isDragging.current = false
+        touchHandledRef.current = false
     }
-    const onTouchEnd = (e: React.TouchEvent) => {
-        if (touchStartX.current === null) return
-        const dx = e.changedTouches[0].clientX - touchStartX.current
-        if (dx > SWIPE_THRESHOLD) {
-            swipedRef.current = true
-            goPrev()
-        } else if (dx < -SWIPE_THRESHOLD) {
-            swipedRef.current = true
-            goNext()
+
+    const onTouchMove = (e: React.TouchEvent) => {
+        if (touchStartX.current === null || touchStartY.current === null) return
+        const dx = e.touches[0].clientX - touchStartX.current
+        const dy = e.touches[0].clientY - touchStartY.current
+        if (!isDragging.current) {
+            if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return
+            if (Math.abs(dy) >= Math.abs(dx)) return
+            isDragging.current = true
         }
-        touchStartX.current = null
+        let offset = dx
+        if (!manifest) return
+        if (dx > 0 && current === 0) offset = Math.min(dx * 0.25, 40)
+        else if (dx < 0 && current === manifest.pages.length - 1)
+            offset = Math.max(dx * 0.25, -40)
+        applyTransform(offset, false)
     }
+
+    const onTouchEnd = () => {
+        touchHandledRef.current = true
+        if (!isDragging.current) {
+            touchStartX.current = null
+            togglePlay()
+            return
+        }
+        isDragging.current = false
+        touchStartX.current = null
+        isAutoAdvanceRef.current = false
+        if (autoAdvanceTimerRef.current) {
+            clearTimeout(autoAdvanceTimerRef.current)
+            autoAdvanceTimerRef.current = null
+        }
+        const offset = dragOffsetRef.current
+        const W = window.innerWidth
+        if (
+            offset < -W * SNAP_RATIO &&
+            manifest &&
+            current < manifest.pages.length - 1
+        ) {
+            snapCallbackRef.current = goNext
+            isAnimating.current = true
+            applyTransform(-W, true)
+        } else if (offset > W * SNAP_RATIO && current > 0) {
+            snapCallbackRef.current = goPrev
+            isAnimating.current = true
+            applyTransform(W, true)
+        } else {
+            isAnimating.current = true
+            applyTransform(0, true)
+        }
+    }
+
+    const onTransitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+        if (e.target !== containerRef.current || e.propertyName !== 'transform')
+            return
+        const cb = snapCallbackRef.current
+        snapCallbackRef.current = null
+        if (cb) {
+            cb() // centerSlot + current update; useLayoutEffect resets container
+        } else {
+            applyTransform(0, false)
+            isAnimating.current = false
+        }
+    }
+
+    // After navigation, the slot that was already showing the destination page
+    // becomes the new center — React reuses its DOM elements (same img src, no
+    // redecode). We only reset the container offset here.
+    useLayoutEffect(() => {
+        const container = containerRef.current
+        if (!container) return
+        container.style.transition = 'none'
+        container.style.transform = 'translateX(0)'
+        isAnimating.current = false
+    }, [centerSlot])
+
     const onContentClick = () => {
-        if (swipedRef.current) {
-            swipedRef.current = false
+        if (touchHandledRef.current) {
+            touchHandledRef.current = false
             return
         }
         togglePlay()
@@ -221,6 +376,35 @@ const Panama = () => {
         }
     }
 
+    const renderBlocks = (
+        p: Page,
+        ak: string | null,
+        asi: { bi: number; start: number; end: number } | null
+    ) =>
+        p.blocks.map((block, bi) =>
+            block.type === 'image' ? (
+                <img
+                    key={bi}
+                    className="Panama-image"
+                    src={`${BOOK_BASE}/images/${block.src}`}
+                    alt=""
+                    decoding="sync"
+                />
+            ) : (
+                <TextBlock
+                    key={bi}
+                    block={block}
+                    blockIndex={bi}
+                    activeKey={ak}
+                    sentenceRange={
+                        asi?.bi === bi
+                            ? { start: asi.start, end: asi.end }
+                            : null
+                    }
+                />
+            )
+        )
+
     if (!manifest || !page) return null
 
     return (
@@ -229,44 +413,46 @@ const Panama = () => {
                 {current + 1} / {manifest.pages.length}
             </div>
             <div
-                className="Panama-content"
-                onTouchStart={onTouchStart}
-                onTouchEnd={onTouchEnd}
+                className="Panama-viewport"
                 onClick={onContentClick}
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
             >
-                {page.blocks.map((block, bi) =>
-                    block.type === 'image' ? (
-                        <img
-                            key={bi}
-                            className="Panama-image"
-                            src={`${BOOK_BASE}/images/${block.src}`}
-                            alt=""
-                        />
-                    ) : (
-                        <TextBlock
-                            key={bi}
-                            block={block}
-                            blockIndex={bi}
-                            activeKey={activeKey}
-                            sentenceRange={
-                                activeSentenceInfo?.bi === bi
-                                    ? {
-                                          start: activeSentenceInfo.start,
-                                          end: activeSentenceInfo.end,
-                                      }
-                                    : null
-                            }
-                        />
-                    )
-                )}
+                <div
+                    ref={containerRef}
+                    className="Panama-container"
+                    onTransitionEnd={onTransitionEnd}
+                >
+                    {[0, 1, 2].map((slot) => {
+                        const p = slotPage(slot)
+                        const isCenter = slot === centerSlot
+                        return (
+                            <div
+                                key={slot}
+                                className="Panama-slide"
+                                style={{ left: slotLeft(slot) }}
+                            >
+                                {p && (
+                                    <div className="Panama-content">
+                                        {renderBlocks(
+                                            p,
+                                            isCenter ? activeKey : null,
+                                            isCenter ? activeSentenceInfo : null
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        )
+                    })}
+                </div>
             </div>
-            {page.audio && (
-                <audio
-                    ref={audioRef}
-                    src={`${BOOK_BASE}/${page.audio}`}
-                    onTimeUpdate={onTimeUpdate}
-                />
-            )}
+            <audio
+                ref={audioRef}
+                src={page.audio ? `${BOOK_BASE}/${page.audio}` : undefined}
+                onTimeUpdate={onTimeUpdate}
+                onEnded={onAudioEnded}
+            />
             <div className="Panama-subtitle">
                 {activeSentenceInfo && (
                     <span
@@ -284,6 +470,7 @@ const Panama = () => {
                 onPointerMove={onScrubMove}
                 onPointerUp={onScrubUp}
                 onPointerCancel={onScrubUp}
+                onTouchStart={(e) => e.stopPropagation()}
             >
                 <div
                     className="Panama-scrubFill"
