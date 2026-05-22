@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import { colorToString, invertColor, colorToGrey } from '../../utils'
-import { useTimeout } from "../../Hooks"
-import Loader from "../../Presentation"
+import { useTimeout } from '../../Hooks'
+import Loader from '../../Presentation'
 import CSS from 'csstype'
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 import './Colors.css'
 
 interface Props {
@@ -47,14 +47,20 @@ const Colors = (props: Props) => {
                     context.save()
                     context.clearRect(0, 0, width, height)
                     if (theme.theme.name === 'konami') {
-                        let grey = colorToGrey(color[0], color[1], color[2])
+                        let luminance = colorToGrey(
+                            color[0],
+                            color[1],
+                            color[2]
+                        )
 
-                        console.log(`grey: ${grey}`)
-
-                        context.fillStyle = colorToString(255, grey, 255)
+                        context.fillStyle = colorToString(255, luminance, 255)
 
                         context.fillRect(0, 0, width, height)
-                        context.fillStyle = colorToString(255, 255 - grey, 255)
+                        context.fillStyle = colorToString(
+                            255,
+                            255 - luminance,
+                            255
+                        )
                         context.fillRect(
                             (width * (1 - Math.sqrt(2) / 2)) / 2,
                             (height * (1 - Math.sqrt(2) / 2)) / 2,

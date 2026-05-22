@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { colorToInt } from '../utils'
-import { useTimeout } from "../Hooks"
-import Loader from "../Presentation"
-import { ThemeContext } from "../ThemeContext"
+import { colorToInt, colorToGrey } from '../utils'
+import { useTimeout } from '../Hooks'
+import Loader from '../Presentation'
+import { ThemeContext } from '../ThemeContext'
 import './Animation.css'
 
 import CSS from 'csstype'
@@ -86,7 +86,9 @@ const Animation = (props: Props) => {
                 // requestAnimationFrame.
                 timeoutId = setTimeout(function () {
                     const context: CanvasRenderingContext2D =
-                        canvas.current.getContext('2d', { willReadFrequently: true })!
+                        canvas.current.getContext('2d', {
+                            willReadFrequently: true,
+                        })!
                     context.imageSmoothingEnabled = false
                     let canvasWidth = canvas.current.width
                     let canvasHeight = canvas.current.height
@@ -109,8 +111,13 @@ const Animation = (props: Props) => {
                         let j = colorToInt(r, g, b)
 
                         if (theme.theme.name == 'konami') {
+                            let luminance = colorToGrey(
+                                color!.data[i * 4 + 0],
+                                color!.data[i * 4 + 1],
+                                color!.data[i * 4 + 2]
+                            )
                             frame.data[j * 4 + 0] = 255
-                            frame.data[j * 4 + 1] = i * 4
+                            frame.data[j * 4 + 1] = luminance
                             frame.data[j * 4 + 2] = 255
                             frame.data[j * 4 + 3] = 255
                         } else if (theme.theme.name == 'light') {
