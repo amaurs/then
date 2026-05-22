@@ -36,8 +36,6 @@ const TravelingSalesman = lazy(
 
 import Then from './Then'
 import Navigation from './Navigation'
-import Blog from './Blog'
-import Post from './Post'
 
 import './Home.css'
 
@@ -563,8 +561,6 @@ const Home = (props) => {
                             )
                         })}
                 </Route>
-                <Route path="/posts" element={<Blog />} />
-                <Route path="/posts/:slug" element={<Post />} />
                 {props.masterData.codes &&
                     props.masterData.codes.map((element, index) => (
                         <Route

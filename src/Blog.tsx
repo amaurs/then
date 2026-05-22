@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import posts from './posts'
 
+import './index.css'
 import './prose.css'
 
 const Blog = () => {
