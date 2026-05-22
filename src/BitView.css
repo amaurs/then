@@ -1,23 +1,102 @@
-.ModeToggle {
+.ModeToggle,
+.BackButton {
     position: fixed;
     top: 20px;
-    right: 20px;
     z-index: 200;
     background: none;
     color: inherit;
     border: none;
     padding: 0;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 24px;
     font-family: 'LubalinGraphStd-Medium', serif;
-    text-transform: capitalize;
+    text-decoration: none;
+    outline: none;
 }
 
-.ModeToggle:hover {
-    text-decoration: underline;
+.ModeToggle:hover,
+.ModeToggle:focus,
+.ModeToggle:active,
+.BackButton:hover,
+.BackButton:focus,
+.BackButton:active,
+.BackButton:visited {
+    text-decoration: none;
 }
 
-.ModeToggle.hidden {
+.ModeToggle {
+    right: 20px;
+    line-height: 0;
+}
+
+.Cross {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    position: relative;
+}
+
+.Cross::before,
+.Cross::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+}
+
+.Cross::before {
+    left: 9.5px;
+    top: 0;
+    width: 3px;
+    height: 22px;
+}
+
+.Cross::after {
+    top: 9.5px;
+    left: 0;
+    height: 3px;
+    width: 22px;
+}
+
+.Cross.rotated {
+    transform: rotate(45deg);
+}
+
+.BackButton {
+    left: 20px;
+    line-height: 0;
+}
+
+.Chevron {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    position: relative;
+    transform: rotate(-45deg);
+}
+
+.Chevron::before,
+.Chevron::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+}
+
+.Chevron::before {
+    left: 4px;
+    top: 4px;
+    width: 3px;
+    height: 14px;
+}
+
+.Chevron::after {
+    top: 4px;
+    left: 4px;
+    height: 3px;
+    width: 14px;
+}
+
+.ModeToggle.hidden,
+.BackButton.hidden {
     opacity: 0;
     pointer-events: none;
 }
