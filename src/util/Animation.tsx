@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { colorToInt, colorToGrey } from '../utils'
+import { colorToInt, colorToGrayscale } from '../utils'
 import { useTimeout } from '../Hooks'
 import Loader from '../Presentation'
 import { ThemeContext } from '../ThemeContext'
@@ -111,7 +111,7 @@ const Animation = (props: Props) => {
                         let j = colorToInt(r, g, b)
 
                         if (theme.theme.name == 'konami') {
-                            let luminance = colorToGrey(
+                            let luminance = colorToGrayscale(
                                 color!.data[i * 4 + 0],
                                 color!.data[i * 4 + 1],
                                 color!.data[i * 4 + 2]

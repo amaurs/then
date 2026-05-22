@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { colorToString, invertColor, colorToGrey } from '../../utils'
+import { colorToString, invertColor, colorToGrayscale } from '../../utils'
 import { useTimeout } from '../../Hooks'
 import Loader from '../../Presentation'
 import CSS from 'csstype'
@@ -47,7 +47,7 @@ const Colors = (props: Props) => {
                     context.save()
                     context.clearRect(0, 0, width, height)
                     if (theme.theme.name === 'konami') {
-                        let luminance = colorToGrey(
+                        let luminance = colorToGrayscale(
                             color[0],
                             color[1],
                             color[2]

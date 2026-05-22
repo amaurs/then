@@ -78,7 +78,7 @@ export const getBrightness = (
     return (red * 0.3 + green * 0.59 + blue * 0.11) / 255.0
 }
 
-export const colorToGrey = (
+export const colorToGrayscale = (
     red: number,
     green: number,
     blue: number
