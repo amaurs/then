@@ -262,6 +262,134 @@ const buildStaticMapping = (width, height) => ({
             />
         ),
     },
+
+    '/flood-fill': {
+        content: dataMapping['flood-fill'],
+        component: (
+            <Animation
+                title="flood-fill"
+                style={{}}
+                delay={presentationTime}
+                width={width}
+                height={height}
+                res="64"
+                square="/colors/flood-fill/64/square.png"
+                cube="/colors/flood-fill/64/cube.png"
+            />
+        ),
+    },
+
+    '/hamiltonian-cycle': {
+        content: dataMapping['hamiltonian-cycle'],
+        component: (
+            <Animation
+                title="hamiltonian-cycle"
+                style={{}}
+                delay={presentationTime}
+                width={width}
+                height={height}
+                res="512"
+                square="/colors/hamiltonian-cycle/512/square.png"
+                cube="/colors/hamiltonian-cycle/512/cube.png"
+            />
+        ),
+    },
+
+    '/hilbert': {
+        content: dataMapping['hilbert'],
+        component: (
+            <Animation
+                title="hilbert"
+                style={{}}
+                delay={presentationTime}
+                width={width}
+                height={height}
+                res="512"
+                square="/colors/hilbert/512/square.png"
+                cube="/colors/hilbert/512/cube.png"
+            />
+        ),
+    },
+
+    '/identity': {
+        content: dataMapping['identity'],
+        component: (
+            <Animation
+                title="identity"
+                style={{}}
+                delay={presentationTime}
+                width={width}
+                height={height}
+                res="512"
+                square="/colors/identity/512/square.png"
+                cube="/colors/identity/512/cube.png"
+            />
+        ),
+    },
+
+    '/morton': {
+        content: dataMapping['morton'],
+        component: (
+            <Animation
+                title="morton"
+                style={{}}
+                delay={presentationTime}
+                width={width}
+                height={height}
+                res="512"
+                square="/colors/morton/512/square.png"
+                cube="/colors/morton/512/cube.png"
+            />
+        ),
+    },
+
+    '/quadtree': {
+        content: dataMapping['quadtree'],
+        component: (
+            <Animation
+                title="quadtree"
+                style={{}}
+                delay={presentationTime}
+                width={width}
+                height={height}
+                res="512"
+                square="/colors/quadtree/512/square.png"
+                cube="/colors/quadtree/512/cube.png"
+            />
+        ),
+    },
+
+    '/random': {
+        content: dataMapping['random'],
+        component: (
+            <Animation
+                title="random"
+                style={{}}
+                delay={presentationTime}
+                width={width}
+                height={height}
+                res="512"
+                square="/colors/random/512/square.png"
+                cube="/colors/random/512/cube.png"
+            />
+        ),
+    },
+
+    '/simulated-annealing': {
+        content: dataMapping['simulated-annealing'],
+        component: (
+            <Animation
+                title="simulated-annealing"
+                style={{}}
+                delay={presentationTime}
+                width={width}
+                height={height}
+                res="512"
+                square="/colors/simulated-annealing/512/square.png"
+                cube="/colors/simulated-annealing/512/cube.png"
+            />
+        ),
+    },
 })
 
 const Container = (props) => {
@@ -425,32 +553,6 @@ const Home = (props) => {
                     />
                 ),
             }
-        }
-
-        if (props.masterData.colorsData && props.masterData.colorsData.data) {
-            let colorsDataMapping = props.masterData.colorsData.data.reduce(
-                (m, element) => {
-                    m[`/${element.slug}`] = {
-                        content: dataMapping[element.slug],
-                        component: (
-                            <Animation
-                                title={element.slug}
-                                style={{}}
-                                delay={presentationTime}
-                                width={viewport.width}
-                                height={viewport.height}
-                                res={element.resolution}
-                                square={element.square}
-                                cube={element.cube}
-                            />
-                        ),
-                    }
-                    return m
-                },
-                {}
-            )
-
-            newMapping = { ...newMapping, ...colorsDataMapping }
         }
 
         if (
