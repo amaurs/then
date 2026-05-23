@@ -35,51 +35,6 @@ const Then = () => {
         let cancel = false
         const fetchCodes = async (url) => {
             try {
-                let response = await fetch(url)
-                let json = await response.json()
-
-                if (!cancel) {
-                    let projects = json.colors.map((element) => {
-                        let final = element.resolutions.filter(
-                            (e) => e.resolution == element.default
-                        )
-                        let finalElement
-                        if (final.length === 0) {
-                            finalElement = element.resolutions[0]
-                        } else {
-                            finalElement = final[0]
-                        }
-
-                        return {
-                            slug: element.slug,
-                            description: element.description,
-                            ...finalElement,
-                        }
-                    })
-
-                    setMasterData({
-                        ...masterData,
-                        colorsData: { data: projects, used: false },
-                    })
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
-        if (masterData.colorsData === undefined) {
-            fetchCodes(`${banditHost}/colors`)
-        }
-
-        return () => {
-            cancel = true
-        }
-    }, [masterData])
-
-    useEffect(() => {
-        let cancel = false
-        const fetchCodes = async (url) => {
-            try {
                 console.log('Fetching codes.')
                 let response = await fetch(url)
                 let json = await response.json()
