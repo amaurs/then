@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import './Stereo.css'
-import Loader from "../../Presentation"
-import { useTimeout } from "../../Hooks"
+import Loader from '../../Presentation'
+import { useTimeout, useAnimationLoop } from '../../Hooks'
 import { getRandomInt, colorImageData } from '../../utils'
 
 import left from '../../assets/2019/left.jpg'
 import right from '../../assets/2019/right.jpg'
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 
 import CSS from 'csstype'
 
@@ -82,42 +82,21 @@ const Stereo = (props: Props) => {
         }
     }, [theme])
 
+    const tickRef = useRef(0)
     useEffect(() => {
-        if (frames !== undefined && !presenting) {
-            // This constants come from the execution of the image,
-            // need to figure out how to pass this down in a more
-            // dynamic way.
-
-            let tick = 0
-
-            let timeoutId: any
-            const animate = () => {
-                // Wrapping the animation function wiht a timeout makes it
-                // possible to control the fps, without losing the benefits of
-                // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
-                    let canvas = mount.current
-
-                    canvas.width = frames[0].width
-                    canvas.height = frames[0].height
-                    const context: CanvasRenderingContext2D =
-                        mount.current.getContext('2d')!
-                    context.putImageData(frames[tick % frames.length], 0, 0)
-                    tick = tick + 1
-
-                    frameId = requestAnimationFrame(animate)
-                }, 1000 / 8)
-            }
-
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                // It is important to clean up after the component unmounts.
-                clearTimeout(timeoutId)
-                frameId = null
-            }
-        }
+        tickRef.current = 0
     }, [frames, presenting])
+
+    const stereoRunning = frames !== undefined && !presenting
+    useAnimationLoop(stereoRunning ? 8 : null, () => {
+        let canvas = mount.current
+        canvas.width = frames![0].width
+        canvas.height = frames![0].height
+        const context: CanvasRenderingContext2D =
+            mount.current.getContext('2d')!
+        context.putImageData(frames![tickRef.current % frames!.length], 0, 0)
+        tickRef.current += 1
+    })
 
     let style = {}
     if (props.width > 0 && props.height > 0) {

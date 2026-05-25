@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useContext } from 'react'
 import * as THREE from 'three'
 import AnaglyphSVGRenderer from './AnaglyphSVGRenderer.js'
+import { useAnimationLoop } from '../../Hooks'
 import './Anaglyph.css'
 import { ThemeContext } from '../../ThemeContext'
 
@@ -16,6 +17,7 @@ const Anaglyph = (props: Props) => {
     const div = useRef<HTMLDivElement>(document.createElement('div'))
     const theme = useContext(ThemeContext)
 
+    const tickRef = useRef(() => {})
     useEffect(() => {
         if (props.width <= 0 || props.height <= 0) return
 
@@ -55,29 +57,24 @@ const Anaglyph = (props: Props) => {
         const line = new THREE.LineSegments(edges, material)
         scene.add(line)
 
-        let frameId: number
-        let timeoutId: any
-
-        const animate = () => {
-            timeoutId = setTimeout(() => {
-                line.rotation.x += 0.01
-                line.rotation.y += 0.01
-                renderer.render(scene, camera)
-                frameId = requestAnimationFrame(animate)
-            }, 1000 / 60)
+        tickRef.current = () => {
+            line.rotation.x += 0.01
+            line.rotation.y += 0.01
+            renderer.render(scene, camera)
         }
 
-        frameId = requestAnimationFrame(animate)
-
         return () => {
-            cancelAnimationFrame(frameId)
-            clearTimeout(timeoutId)
+            tickRef.current = () => {}
             scene.remove(line)
             edges.dispose()
             curve.dispose()
             material.dispose()
         }
     }, [props.width, props.height, theme])
+
+    useAnimationLoop(props.width > 0 && props.height > 0 ? 60 : null, () =>
+        tickRef.current()
+    )
 
     return <div className="Anaglyph" style={{ ...props.style }} ref={div}></div>
 }

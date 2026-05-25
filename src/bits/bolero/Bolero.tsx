@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef, useContext } from 'react'
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 import './Bolero.css'
-import { useTimeout } from "../../Hooks"
-import Loader from "../../Presentation"
+import { useTimeout, useAnimationLoop } from '../../Hooks'
+import Loader from '../../Presentation'
 import CSS from 'csstype'
 
 interface Props {
@@ -25,29 +25,17 @@ export default function Bolero(props: Props) {
         setDelay(100)
     }, props.delay)
 
+    const nRef = useRef(0)
     useEffect(() => {
-        if (props.sentence.length > 0 && !presenting) {
-            let n = 0
-            let timeoutId: any
-
-            const animate = () => {
-                timeoutId = setTimeout(function () {
-                    console.log(props.sentence.slice(0, n))
-                    div.current.innerHTML = props.sentence.slice(0, n)
-                    n += 1
-                    frameId = requestAnimationFrame(animate)
-                }, 1000 / 5)
-            }
-
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                // It is important to clean up after the component unmounts.
-                clearTimeout(timeoutId)
-                frameId = null
-            }
-        }
+        nRef.current = 0
     }, [props.sentence, presenting])
+
+    const boleroRunning = props.sentence.length > 0 && !presenting
+    useAnimationLoop(boleroRunning ? 5 : null, () => {
+        console.log(props.sentence.slice(0, nRef.current))
+        div.current.innerHTML = props.sentence.slice(0, nRef.current)
+        nRef.current += 1
+    })
 
     let style: CSS.Properties = {
         color: theme.theme.middleground,

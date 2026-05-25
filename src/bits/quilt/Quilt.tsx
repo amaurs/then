@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { useTimeout } from "../../Hooks"
+import { useTimeout, useAnimationLoop } from '../../Hooks'
 
 import { shuffle } from '../../utils'
 import { getRandomInt } from '../../utils'
 
-import Loader from "../../Presentation"
+import Loader from '../../Presentation'
 import CSS from 'csstype'
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 import './Quilt.css'
 
 const squareSize = 500
@@ -82,78 +82,59 @@ const Quilt: React.FC<Props> = (props: Props) => {
         setPresenting(false)
     }, props.delay)
 
-    useEffect(() => {
-        if (!presenting && canvas && canvas.current) {
-            let timeoutId: any
+    useAnimationLoop(presenting ? null : 5, () => {
+        const context: CanvasRenderingContext2D =
+            canvas.current.getContext('2d')!
+        const width = canvas.current.width
+        const height = canvas.current.height
 
-            const animate = () => {
-                timeoutId = setTimeout(function () {
-                    const context: CanvasRenderingContext2D =
-                        canvas.current.getContext('2d')!
-                    const width = canvas.current.width
-                    const height = canvas.current.height
+        context.fillStyle = theme.quilt[3]
+        context.fillRect(0, 0, width, height)
 
-                    context.fillStyle = theme.quilt[3]
-                    context.fillRect(0, 0, width, height)
+        let allObjects = shuffle([
+            o1,
+            o1,
+            o1,
+            o1,
+            o1,
+            o1,
+            o2,
+            o2,
+            o2,
+            o2,
+            o2,
+            o2,
+            o3,
+            o3,
+            o3,
+            o3,
+            o4,
+            o4,
+            o4,
+            o4,
+        ])
 
-                    let allObjects = shuffle([
-                        o1,
-                        o1,
-                        o1,
-                        o1,
-                        o1,
-                        o1,
-                        o2,
-                        o2,
-                        o2,
-                        o2,
-                        o2,
-                        o2,
-                        o3,
-                        o3,
-                        o3,
-                        o3,
-                        o4,
-                        o4,
-                        o4,
-                        o4,
-                    ])
+        for (let j = 0; j < 4; j++) {
+            for (let i = 0; i < 5; i++) {
+                const o = allObjects[5 * j + i]
+                context.fillStyle = o.color
+                context.beginPath()
+                context.translate(
+                    i * (squareSize * 2) + squareSize,
+                    j * (squareSize * 2) + squareSize
+                )
+                context.rotate((getRandomInt(0, 4) * Math.PI) / 2)
+                context.moveTo(o.points[0][0], o.points[0][1])
 
-                    for (let j = 0; j < 4; j++) {
-                        for (let i = 0; i < 5; i++) {
-                            const o = allObjects[5 * j + i]
-                            context.fillStyle = o.color
-                            context.beginPath()
-                            context.translate(
-                                i * (squareSize * 2) + squareSize,
-                                j * (squareSize * 2) + squareSize
-                            )
-                            context.rotate((getRandomInt(0, 4) * Math.PI) / 2)
-                            context.moveTo(o.points[0][0], o.points[0][1])
+                for (let k = 1; k < o.points.length; k++) {
+                    context.lineTo(o.points[k][0], o.points[k][1])
+                }
 
-                            for (let k = 1; k < o.points.length; k++) {
-                                context.lineTo(o.points[k][0], o.points[k][1])
-                            }
-
-                            context.resetTransform()
-                            context.fill()
-                        }
-                    }
-
-                    allObjects.forEach((o: Patch) => {})
-
-                    frameId = requestAnimationFrame(animate)
-                }, 1000 / 5)
-            }
-
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                clearTimeout(timeoutId)
-                frameId = null
+                context.resetTransform()
+                context.fill()
             }
         }
-    }, [presenting, theme])
+    })
 
     let style = {}
 

@@ -1,5 +1,6 @@
 import React, { useRef, useContext, useEffect } from 'react'
 import ColorBoard from '../../ColorBoard'
+import { useAnimationLoop } from '../../Hooks'
 import './Loom.css'
 import CSS from 'csstype'
 import { ThemeContext } from '../../ThemeContext'
@@ -165,8 +166,8 @@ const Loom = (props: Props) => {
     let canvas = useRef<HTMLCanvasElement>(document.createElement('canvas'))
     const theme = useContext(ThemeContext)
 
+    const tickRef = useRef(() => {})
     useEffect(() => {
-        let timeoutId: any
         let step = 0
         const cycleEvery = 100
 
@@ -273,88 +274,73 @@ const Loom = (props: Props) => {
 
         let currentPat = randomCombo()
 
-        const animate = () => {
-            timeoutId = setTimeout(function () {
-                const context = canvas.current.getContext('2d')!
-                context.clearRect(
-                    0,
-                    0,
-                    canvas.current.width,
-                    canvas.current.height
+        tickRef.current = () => {
+            const context = canvas.current.getContext('2d')!
+            context.clearRect(0, 0, canvas.current.width, canvas.current.height)
+
+            if (step > 0 && step % cycleEvery === 0) {
+                currentPat = randomCombo()
+            }
+
+            const pat = currentPat
+            const gridSize = canvasSize / squareSize
+            const weaveWidth = gridSize - pat.treadles
+            const weaveHeight = gridSize - pat.shafts
+
+            const shiftedPat = {
+                ...pat,
+                threading: pat.threading.map(
+                    (s) => (s + Math.floor(step / 5)) % pat.shafts
+                ),
+                treadling: pat.treadling.map(
+                    (t) => (t + Math.floor(step / 3)) % pat.treadles
+                ),
+            }
+
+            if (Math.random() < 0.1) {
+                const idx = Math.floor(
+                    Math.random() * shiftedPat.threading.length
                 )
-
-                if (step > 0 && step % cycleEvery === 0) {
-                    currentPat = randomCombo()
-                }
-
-                const pat = currentPat
-                const gridSize = canvasSize / squareSize
-                const weaveWidth = gridSize - pat.treadles
-                const weaveHeight = gridSize - pat.shafts
-
-                const shiftedPat = {
-                    ...pat,
-                    threading: pat.threading.map(
-                        (s) => (s + Math.floor(step / 5)) % pat.shafts
-                    ),
-                    treadling: pat.treadling.map(
-                        (t) => (t + Math.floor(step / 3)) % pat.treadles
-                    ),
-                }
-
-                if (Math.random() < 0.1) {
-                    const idx = Math.floor(
-                        Math.random() * shiftedPat.threading.length
-                    )
-                    shiftedPat.threading[idx] = Math.floor(
-                        Math.random() * pat.shafts
-                    )
-                }
-
-                const threading = buildThreading(
-                    shiftedPat,
-                    weaveWidth,
-                    warpColors
+                shiftedPat.threading[idx] = Math.floor(
+                    Math.random() * pat.shafts
                 )
-                const treadling = buildTreadling(
-                    shiftedPat,
-                    weaveHeight,
-                    weftColors
-                )
-                const tieup = buildTieup(pat, tieupColor)
+            }
 
-                const weave = treadling
-                    .multiply(tieup.transpose())
-                    .multiply(threading)
+            const threading = buildThreading(shiftedPat, weaveWidth, warpColors)
+            const treadling = buildTreadling(
+                shiftedPat,
+                weaveHeight,
+                weftColors
+            )
+            const tieup = buildTieup(pat, tieupColor)
 
-                threading.printContextOffset(context, squareSize, 0, 0)
-                treadling.printContextOffset(
-                    context,
-                    squareSize,
-                    gridSize - pat.treadles,
-                    pat.shafts
-                )
-                tieup.printContextOffset(
-                    context,
-                    squareSize,
-                    gridSize - pat.treadles,
-                    0
-                )
-                weave.printContextOffset(context, squareSize, 0, pat.shafts)
+            const weave = treadling
+                .multiply(tieup.transpose())
+                .multiply(threading)
 
-                step++
+            threading.printContextOffset(context, squareSize, 0, 0)
+            treadling.printContextOffset(
+                context,
+                squareSize,
+                gridSize - pat.treadles,
+                pat.shafts
+            )
+            tieup.printContextOffset(
+                context,
+                squareSize,
+                gridSize - pat.treadles,
+                0
+            )
+            weave.printContextOffset(context, squareSize, 0, pat.shafts)
 
-                frameId = requestAnimationFrame(animate)
-            }, 1000 / 10)
+            step++
         }
-
-        let frameId: number | null = requestAnimationFrame(animate)
         return () => {
-            cancelAnimationFrame(frameId!)
-            clearTimeout(timeoutId)
-            frameId = null
+            tickRef.current = () => {}
         }
     }, [theme])
+
+    useAnimationLoop(10, () => tickRef.current())
 
     let style = {}
     if (props.width > 0 && props.height > 0) {

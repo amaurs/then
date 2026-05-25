@@ -1,9 +1,9 @@
 import React, { useState, useRef, useContext, useEffect } from 'react'
-import { useTimeout } from "../../Hooks"
+import { useTimeout, useAnimationLoop } from '../../Hooks'
 import './Mandelbrot.css'
-import Loader from "../../Presentation"
+import Loader from '../../Presentation'
 import myMandelbrot from '../../assets/mandelbrot-small.png'
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 
 import CSS from 'csstype'
 
@@ -144,79 +144,52 @@ const Mandelbrot = (props: Props) => {
         }
     }, [props.width, props.height, presenting])
 
+    const tickRef = useRef(0)
     useEffect(() => {
-        if (imageData !== undefined) {
-            let tick = 0
-            let timeoutId: any
-
-            // TODO: Move this declaration to the Theme file when that is ported to typescript.
-
-            if (theme.theme.name === 'light') {
-                colors = wikipedia
-            } else if (theme.theme.name === 'dark') {
-                colors = apple
-            } else if (theme.theme.name === 'konami') {
-                colors = magentaToWhite
-            }
-
-            const animate = () => {
-                // Wrapping the animation function wiht a timeout makes it
-                // possible to control the fps, without losing the benefits of
-                // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
-                    let canvas = mount.current
-
-                    canvas.width = imageData!.width
-                    canvas.height = imageData!.height
-                    const context2: CanvasRenderingContext2D =
-                        mount.current.getContext('2d')!
-                    let frame = context2.createImageData(imageData!)
-                    for (
-                        let i = 0;
-                        i < imageData!.width * imageData!.height * 4;
-                        i += 4
-                    ) {
-                        let n = imageData!.data[i]
-
-                        // This should not be a constant, this value is the module
-                        // of the complex number after it just escaped to infinity.
-
-                        let module = Math.sqrt(5)
-                        let logAbs = Math.log(module)
-                        let logTwo = Math.log(2.0)
-                        let aux = Math.log(logAbs) / logTwo
-                        let continuous = 1.0 + n * 1.0 - aux
-                        let index = Math.floor(continuous)
-                        let a: Array<number> | undefined = colors.get(
-                            (index + tick) % colors.size
-                        )
-                        let b: Array<number> | undefined = colors.get(
-                            (index + 1 + tick) % colors.size
-                        )
-                        let p = 1 - (continuous - index)
-                        let red = Math.floor(p * a![0] + (1 - p) * b![0])
-                        let green = Math.floor(p * a![1] + (1 - p) * b![1])
-                        let blue = Math.floor(p * a![2] + (1 - p) * b![2])
-                        frame.data[i] = red
-                        frame.data[i + 1] = green
-                        frame.data[i + 2] = blue
-                        frame.data[i + 3] = 255
-                    }
-                    context2.putImageData(frame, 0, 0)
-                    tick = tick + 1
-                    frameId = requestAnimationFrame(animate)
-                }, 1000 / 8)
-            }
-
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                // It is important to clean up after the component unmounts.
-                clearTimeout(timeoutId)
-                frameId = null
-            }
-        }
+        tickRef.current = 0
     }, [imageData, theme])
+
+    useAnimationLoop(imageData !== undefined ? 8 : null, () => {
+        if (theme.theme.name === 'light') {
+            colors = wikipedia
+        } else if (theme.theme.name === 'dark') {
+            colors = apple
+        } else if (theme.theme.name === 'konami') {
+            colors = magentaToWhite
+        }
+
+        let canvas = mount.current
+        canvas.width = imageData!.width
+        canvas.height = imageData!.height
+        const context2: CanvasRenderingContext2D =
+            mount.current.getContext('2d')!
+        let frame = context2.createImageData(imageData!)
+        for (let i = 0; i < imageData!.width * imageData!.height * 4; i += 4) {
+            let n = imageData!.data[i]
+            let module = Math.sqrt(5)
+            let logAbs = Math.log(module)
+            let logTwo = Math.log(2.0)
+            let aux = Math.log(logAbs) / logTwo
+            let continuous = 1.0 + n * 1.0 - aux
+            let index = Math.floor(continuous)
+            let a: Array<number> | undefined = colors.get(
+                (index + tickRef.current) % colors.size
+            )
+            let b: Array<number> | undefined = colors.get(
+                (index + 1 + tickRef.current) % colors.size
+            )
+            let p = 1 - (continuous - index)
+            let red = Math.floor(p * a![0] + (1 - p) * b![0])
+            let green = Math.floor(p * a![1] + (1 - p) * b![1])
+            let blue = Math.floor(p * a![2] + (1 - p) * b![2])
+            frame.data[i] = red
+            frame.data[i + 1] = green
+            frame.data[i + 2] = blue
+            frame.data[i + 3] = 255
+        }
+        context2.putImageData(frame, 0, 0)
+        tickRef.current += 1
+    })
 
     let style = {}
     if (props.width > 0 && props.height > 0) {

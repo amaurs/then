@@ -5,9 +5,9 @@ import { getRandomInt, getXYfromIndex, getBrightness } from '../../utils'
 import './Voronoi.css'
 import * as d3 from 'd3'
 import { Delaunay } from 'd3-delaunay'
-import { useTimeout } from "../../Hooks"
-import Loader from "../../Presentation"
-import { ThemeContext } from "../../ThemeContext"
+import { useTimeout, useAnimationLoop } from '../../Hooks'
+import Loader from '../../Presentation'
+import { ThemeContext } from '../../ThemeContext'
 
 import './Voronoi.css'
 
@@ -43,6 +43,7 @@ const Voronoi = (props: Props) => {
     const [canvasWidth, setCanvasWidth] = useState(0)
     const [canvasHeight, setCanvasHeight] = useState(0)
     const [presenting, setPresenting] = useState(props.delay > 0)
+    const [done, setDone] = useState(false)
 
     useTimeout(() => {
         setPresenting(false)
@@ -126,109 +127,91 @@ const Voronoi = (props: Props) => {
         }
     }, [props.width, props.height])
 
+    const updatesRef = useRef(0)
+    const citiesCopyRef = useRef<Cities | undefined>(undefined)
     useEffect(() => {
-        if (cities !== undefined && !presenting) {
-            const getRadius = (d: City) => {
-                return 2 + 1 * getBrightness(d.r, d.g, d.b)
-            }
-
-            const sitesUpdate = (
-                sites: Array<City>,
-                imageData: Array<City>,
-                width: number,
-                height: number
-            ): Array<City> => {
-                const delaunay = Delaunay.from(
-                    sites,
-                    function (d) {
-                        return d.x
-                    },
-                    function (d) {
-                        return d.y
-                    }
-                )
-                const voronoi = delaunay.voronoi([0, 0, width, height])
-                const diagram = voronoi.cellPolygons()
-                let newSites: Array<City> = getCentroids(diagram).map(function (
-                    centroid,
-                    index
-                ) {
-                    let closestIndex =
-                        Math.floor(centroid[1]) * width +
-                        Math.floor(centroid[0])
-                    let closestPixel = imageData[closestIndex]
-
-                    const newCity: City = {
-                        x: centroid[0],
-                        y: centroid[1],
-                        r: closestPixel.r,
-                        g: closestPixel.g,
-                        b: closestPixel.b,
-                    }
-                    return newCity
-                })
-                return newSites
-            }
-
-            let updates = 0
-            let timeoutId: any
-            let citiesCopy = JSON.parse(JSON.stringify(cities))
-
-            const animate = () => {
-                // Wrapping the animation function wiht a timeout makes it
-                // possible to control the fps, without losing the benefits of
-                // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
-                    const context: CanvasRenderingContext2D =
-                        canvas.current.getContext('2d')!
-                    let canvasWidth = canvas.current.width
-                    let canvasHeight = canvas.current.height
-                    context.clearRect(0, 0, canvasWidth, canvasHeight)
-
-                    citiesCopy.sites.forEach(function (d: City) {
-                        context.beginPath()
-                        if (theme.theme.name === 'light') {
-                            context.fillStyle = `${d3.rgb(+d.r, +d.g, +d.b)}`
-                        } else if (theme.theme.name === 'dark') {
-                            context.fillStyle = `${d3.rgb(
-                                255 - +d.r,
-                                255 - +d.g,
-                                255 - +d.b
-                            )}`
-                        } else {
-                            context.fillStyle = `rgba(255, 0, 255, ${getBrightness(
-                                +d.r,
-                                +d.g,
-                                +d.b
-                            )})`
-                        }
-                        let x = (+d.x / citiesCopy.imageWidth) * canvasWidth
-                        let y = (+d.y / citiesCopy.imageHeight) * canvasHeight
-                        let r = (getRadius(d) * canvasWidth) / 800
-                        context.arc(x, y, r, 0, 2 * Math.PI)
-                        context.fill()
-                    })
-                    if (updates < 10) {
-                        citiesCopy.sites = sitesUpdate(
-                            citiesCopy.sites,
-                            citiesCopy.totalData,
-                            citiesCopy.imageWidth,
-                            citiesCopy.imageHeight
-                        )
-                        updates += 1
-                        frameId = requestAnimationFrame(animate)
-                    }
-                }, 1000 / 10)
-            }
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                // It is important to clean up after the component unmounts.
-                clearTimeout(timeoutId)
-                frameId = null
-            }
-        }
+        updatesRef.current = 0
+        citiesCopyRef.current = cities
+            ? JSON.parse(JSON.stringify(cities))
+            : undefined
+        setDone(false)
     }, [cities, presenting, theme])
+
+    const voronoiRunning = cities !== undefined && !presenting && !done
+    useAnimationLoop(voronoiRunning ? 10 : null, () => {
+        const getRadius = (d: City) => {
+            return 2 + 1 * getBrightness(d.r, d.g, d.b)
+        }
+
+        const sitesUpdate = (
+            sites: Array<City>,
+            imageData: Array<City>,
+            width: number,
+            height: number
+        ): Array<City> => {
+            const delaunay = Delaunay.from(
+                sites,
+                (d) => d.x,
+                (d) => d.y
+            )
+            const voronoi = delaunay.voronoi([0, 0, width, height])
+            const diagram = voronoi.cellPolygons()
+            return getCentroids(diagram).map((centroid) => {
+                let closestIndex =
+                    Math.floor(centroid[1]) * width + Math.floor(centroid[0])
+                let closestPixel = imageData[closestIndex]
+                return {
+                    x: centroid[0],
+                    y: centroid[1],
+                    r: closestPixel.r,
+                    g: closestPixel.g,
+                    b: closestPixel.b,
+                }
+            })
+        }
+
+        const citiesCopy = citiesCopyRef.current!
+        const context: CanvasRenderingContext2D =
+            canvas.current.getContext('2d')!
+        let canvasWidth = canvas.current.width
+        let canvasHeight = canvas.current.height
+        context.clearRect(0, 0, canvasWidth, canvasHeight)
+
+        citiesCopy.sites.forEach(function (d: City) {
+            context.beginPath()
+            if (theme.theme.name === 'light') {
+                context.fillStyle = `${d3.rgb(+d.r, +d.g, +d.b)}`
+            } else if (theme.theme.name === 'dark') {
+                context.fillStyle = `${d3.rgb(
+                    255 - +d.r,
+                    255 - +d.g,
+                    255 - +d.b
+                )}`
+            } else {
+                context.fillStyle = `rgba(255, 0, 255, ${getBrightness(
+                    +d.r,
+                    +d.g,
+                    +d.b
+                )})`
+            }
+            let x = (+d.x / citiesCopy.imageWidth) * canvasWidth
+            let y = (+d.y / citiesCopy.imageHeight) * canvasHeight
+            let r = (getRadius(d) * canvasWidth) / 800
+            context.arc(x, y, r, 0, 2 * Math.PI)
+            context.fill()
+        })
+        if (updatesRef.current < 10) {
+            citiesCopy.sites = sitesUpdate(
+                citiesCopy.sites,
+                citiesCopy.totalData,
+                citiesCopy.imageWidth,
+                citiesCopy.imageHeight
+            )
+            updatesRef.current += 1
+        } else {
+            setDone(true)
+        }
+    })
 
     let isVertical = props.height / props.width < 1
 

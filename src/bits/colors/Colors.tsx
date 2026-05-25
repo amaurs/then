@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import { colorToString, invertColor, colorToGrayscale } from '../../utils'
-import { useTimeout } from '../../Hooks'
+import { useTimeout, useAnimationLoop } from '../../Hooks'
 import Loader from '../../Presentation'
 import CSS from 'csstype'
 import { ThemeContext } from '../../ThemeContext'
@@ -24,83 +24,51 @@ const Colors = (props: Props) => {
         setPresenting(false)
     }, props.delay)
 
+    const nRef = useRef(0)
     useEffect(() => {
-        if (props.colors.length > 0 && !presenting) {
-            let n = 0
-            let timeoutId: any
-
-            const animate = () => {
-                // Wrapping the animation function wiht a timeout makes it
-                // possible to control the fps, without losing the benefits of
-                // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
-                    let color = [
-                        props.colors[(n % (props.colors.length / 3)) * 3],
-                        props.colors[(n % (props.colors.length / 3)) * 3 + 1],
-                        props.colors[(n % (props.colors.length / 3)) * 3 + 2],
-                    ]
-
-                    const context: CanvasRenderingContext2D =
-                        canvas.current.getContext('2d')!
-                    const width = canvas.current.width
-                    const height = canvas.current.height
-                    context.save()
-                    context.clearRect(0, 0, width, height)
-                    if (theme.theme.name === 'konami') {
-                        let luminance = colorToGrayscale(
-                            color[0],
-                            color[1],
-                            color[2]
-                        )
-
-                        context.fillStyle = colorToString(255, luminance, 255)
-
-                        context.fillRect(0, 0, width, height)
-                        context.fillStyle = colorToString(
-                            255,
-                            255 - luminance,
-                            255
-                        )
-                        context.fillRect(
-                            (width * (1 - Math.sqrt(2) / 2)) / 2,
-                            (height * (1 - Math.sqrt(2) / 2)) / 2,
-                            width / Math.sqrt(2),
-                            height / Math.sqrt(2)
-                        )
-                    } else {
-                        context.fillStyle = colorToString(
-                            color[0],
-                            color[1],
-                            color[2]
-                        )
-                        context.fillRect(0, 0, width, height)
-                        context.fillStyle = invertColor(
-                            color[0],
-                            color[1],
-                            color[2]
-                        )
-                        context.fillRect(
-                            (width * (1 - Math.sqrt(2) / 2)) / 2,
-                            (height * (1 - Math.sqrt(2) / 2)) / 2,
-                            width / Math.sqrt(2),
-                            height / Math.sqrt(2)
-                        )
-                    }
-
-                    n += 1
-                    frameId = requestAnimationFrame(animate)
-                }, 1000 / 10)
-            }
-
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                // It is important to clean up after the component unmounts.
-                clearTimeout(timeoutId)
-                frameId = null
-            }
-        }
+        nRef.current = 0
     }, [props.colors, presenting, theme])
+
+    const colorsRunning = props.colors.length > 0 && !presenting
+    useAnimationLoop(colorsRunning ? 10 : null, () => {
+        const n = nRef.current
+        let color = [
+            props.colors[(n % (props.colors.length / 3)) * 3],
+            props.colors[(n % (props.colors.length / 3)) * 3 + 1],
+            props.colors[(n % (props.colors.length / 3)) * 3 + 2],
+        ]
+
+        const context: CanvasRenderingContext2D =
+            canvas.current.getContext('2d')!
+        const width = canvas.current.width
+        const height = canvas.current.height
+        context.save()
+        context.clearRect(0, 0, width, height)
+        if (theme.theme.name === 'konami') {
+            let luminance = colorToGrayscale(color[0], color[1], color[2])
+            context.fillStyle = colorToString(255, luminance, 255)
+            context.fillRect(0, 0, width, height)
+            context.fillStyle = colorToString(255, 255 - luminance, 255)
+            context.fillRect(
+                (width * (1 - Math.sqrt(2) / 2)) / 2,
+                (height * (1 - Math.sqrt(2) / 2)) / 2,
+                width / Math.sqrt(2),
+                height / Math.sqrt(2)
+            )
+        } else {
+            context.fillStyle = colorToString(color[0], color[1], color[2])
+            context.fillRect(0, 0, width, height)
+            context.fillStyle = invertColor(color[0], color[1], color[2])
+            context.fillRect(
+                (width * (1 - Math.sqrt(2) / 2)) / 2,
+                (height * (1 - Math.sqrt(2) / 2)) / 2,
+                width / Math.sqrt(2),
+                height / Math.sqrt(2)
+            )
+        }
+
+        nRef.current += 1
+    })
 
     let style = {}
 
