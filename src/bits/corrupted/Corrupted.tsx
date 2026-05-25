@@ -8,11 +8,11 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass.js'
 import './Corrupted.css'
 import escudo from '../../assets/escudo.png'
-import { useTimeout } from "../../Hooks"
-import Loader from "../../Presentation"
+import { useTimeout } from '../../Hooks'
+import Loader from '../../Presentation'
 import { colorMatrixShader } from '../../util/three/shaders'
 
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 import CSS from 'csstype'
 
 interface Props {
@@ -36,6 +36,7 @@ const Corrupted = (props: Props) => {
         if (!presenting) {
             const renderer = new THREE.WebGLRenderer({
                 canvas: canvas.current,
+                preserveDrawingBuffer: true,
             })
             renderer.setPixelRatio(window.devicePixelRatio)
             renderer.setClearColor(0x000000)
