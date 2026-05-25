@@ -4,7 +4,7 @@ import { CopyShader } from 'three/examples/jsm/shaders/CopyShader.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { useTimeout } from '../../Hooks'
+import { useTimeout, useAnimationLoop } from '../../Hooks'
 import Loader from '../../Presentation'
 import { ThemeContext } from '../../ThemeContext'
 import { colorMatrixShader } from '../../util/three/shaders'
@@ -30,106 +30,89 @@ const Penrose = (props: Props) => {
         setPresenting(false)
     }, props.delay)
 
+    const tickRef = useRef(() => {})
     useEffect(() => {
-        if (props.width > 0 && props.height > 0 && !presenting) {
-            let width, height
-            if (props.width < props.height) {
-                width = props.width
-                height = props.width
-            } else {
-                width = props.height
-                height = props.height
+        if (!(props.width > 0 && props.height > 0 && !presenting)) return
+        let width, height
+        if (props.width < props.height) {
+            width = props.width
+            height = props.width
+        } else {
+            width = props.height
+            height = props.height
+        }
+
+        const material = new THREE.MeshPhongMaterial({
+            vertexColors: true,
+            side: THREE.DoubleSide,
+        })
+
+        let geometries: Array<PenroseBufferGeometry> = [4, 5, 6, 7].map(
+            (i) => new PenroseBufferGeometry(200, i)
+        )
+
+        const scene = new THREE.Scene()
+
+        const light = new THREE.DirectionalLight(0xffffff, 1)
+        light.position.set(0, 0, -10)
+        scene.add(light)
+
+        const camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000)
+        camera.position.z = 100
+
+        let objects = geometries.map((geometry, i) => {
+            let mesh = new THREE.Mesh(geometry, material)
+            if (i > 0) {
+                mesh.visible = false
             }
+            scene.add(mesh)
+            return mesh
+        })
 
-            const material = new THREE.MeshPhongMaterial({
-                vertexColors: true,
-                side: THREE.DoubleSide,
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas.current,
+            antialias: true,
+            preserveDrawingBuffer: true,
+        })
+
+        renderer.setPixelRatio(window.devicePixelRatio)
+        renderer.setSize(width, height)
+        renderer.setClearColor(0xffffff, 0.0)
+
+        const colorPass = new ShaderPass(
+            colorMatrixShader(theme.theme.colorMatrix)
+        )
+        const copyPass = new ShaderPass(CopyShader)
+        copyPass.renderToScreen = true
+
+        const composer = new EffectComposer(renderer)
+        composer.addPass(new RenderPass(scene, camera))
+        composer.addPass(colorPass)
+        composer.addPass(copyPass)
+
+        let i = 0
+        tickRef.current = () => {
+            objects.forEach((object, index) => {
+                object.visible = index == Math.floor(i / 24) % objects.length
+                object.rotation.z -= 0.01
             })
+            composer.render()
+            i++
+        }
 
-            let geometries: Array<PenroseBufferGeometry> = [4, 5, 6, 7].map(
-                (i) => {
-                    return new PenroseBufferGeometry(200, i)
-                }
-            )
-
-            const scene = new THREE.Scene()
-
-            const color = 0xffffff
-            const intensity = 1
-            const light = new THREE.DirectionalLight(color, intensity)
-            light.position.set(0, 0, -10)
-            scene.add(light)
-
-            const camera = new THREE.PerspectiveCamera(
-                70,
-                width / height,
-                1,
-                1000
-            )
-            camera.position.z = 100
-
-            let objects = geometries.map((geometry, i) => {
-                let mesh = new THREE.Mesh(geometry, material)
-                if (i > 0) {
-                    mesh.visible = false
-                }
-                scene.add(mesh)
-                return mesh
-            })
-
-            const renderer = new THREE.WebGLRenderer({
-                canvas: canvas.current,
-                antialias: true,
-                preserveDrawingBuffer: true,
-            })
-
-            renderer.setPixelRatio(window.devicePixelRatio)
-            renderer.setSize(width, height)
-            renderer.setClearColor(0xffffff, 0.0)
-
-            const colorPass = new ShaderPass(
-                colorMatrixShader(theme.theme.colorMatrix)
-            )
-            const copyPass = new ShaderPass(CopyShader)
-            copyPass.renderToScreen = true
-
-            const composer = new EffectComposer(renderer)
-            composer.addPass(new RenderPass(scene, camera))
-            composer.addPass(colorPass)
-            composer.addPass(copyPass)
-
-            let timeoutId: any
-            let i: number = 0
-
-            const animate = () => {
-                timeoutId = setTimeout(function () {
-                    objects.forEach((object, index) => {
-                        object.visible =
-                            index == Math.floor(i / 24) % objects.length
-                        object.rotation.z -= 0.01
-                    })
-                    composer.render()
-                    frameId = requestAnimationFrame(animate)
-                    i++
-                }, 1000 / 40)
-            }
-
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                frameId = null
-                clearTimeout(timeoutId)
-                objects.forEach((mesh) => {
-                    scene.remove(mesh)
-                })
-                geometries.forEach((geometry) => {
-                    geometry.dispose()
-                })
-                material.dispose()
-                renderer.dispose()
-            }
+        return () => {
+            tickRef.current = () => {}
+            objects.forEach((mesh) => scene.remove(mesh))
+            geometries.forEach((geometry) => geometry.dispose())
+            material.dispose()
+            renderer.dispose()
         }
     }, [data, props.width, props.height, presenting, theme])
+
+    useAnimationLoop(
+        props.width > 0 && props.height > 0 && !presenting ? 40 : null,
+        () => tickRef.current()
+    )
 
     if (presenting) {
         return <Loader title={props.title} />

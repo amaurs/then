@@ -8,7 +8,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass.js'
 import './Corrupted.css'
 import escudo from '../../assets/escudo.png'
-import { useTimeout } from '../../Hooks'
+import { useTimeout, useAnimationLoop } from '../../Hooks'
 import Loader from '../../Presentation'
 import { colorMatrixShader } from '../../util/three/shaders'
 
@@ -32,71 +32,59 @@ const Corrupted = (props: Props) => {
         setPresenting(false)
     }, props.delay)
 
+    const tickRef = useRef(() => {})
     useEffect(() => {
-        if (!presenting) {
-            const renderer = new THREE.WebGLRenderer({
-                canvas: canvas.current,
-                preserveDrawingBuffer: true,
-            })
-            renderer.setPixelRatio(window.devicePixelRatio)
-            renderer.setClearColor(0x000000)
+        if (presenting) return
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas.current,
+            preserveDrawingBuffer: true,
+        })
+        renderer.setPixelRatio(window.devicePixelRatio)
+        renderer.setClearColor(0x000000)
 
-            const glitchPass = new GlitchPass()
-            glitchPass.goWild = false
-            const magentaPass = new ShaderPass(
-                colorMatrixShader(theme.theme.colorMatrix)
-            )
+        const glitchPass = new GlitchPass()
+        glitchPass.goWild = false
+        const magentaPass = new ShaderPass(
+            colorMatrixShader(theme.theme.colorMatrix)
+        )
 
-            const copyPass = new ShaderPass(CopyShader)
-            copyPass.renderToScreen = true
-            const parameters = {
-                minFilter: THREE.LinearFilter,
-                magFilter: THREE.LinearFilter,
-                format: THREE.RGBAFormat,
-                stencilBuffer: true,
-            }
+        const copyPass = new ShaderPass(CopyShader)
+        copyPass.renderToScreen = true
+        const parameters = {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            format: THREE.RGBAFormat,
+            stencilBuffer: true,
+        }
 
-            let renderTarget
+        renderer.setSize(props.width, props.width)
+        const renderTarget = new THREE.WebGLRenderTarget(
+            props.width,
+            props.width,
+            parameters
+        )
 
-            renderer.setSize(props.width, props.width)
-            renderTarget = new THREE.WebGLRenderTarget(
-                props.width,
-                props.width,
-                parameters
-            )
+        const composer = new EffectComposer(renderer, renderTarget)
 
-            const composer = new EffectComposer(renderer, renderTarget)
+        const texture = new THREE.TextureLoader().load(escudo)
 
-            const texture = new THREE.TextureLoader().load(escudo)
+        const texturePass = new TexturePass(texture)
 
-            const texturePass = new TexturePass(texture)
+        composer.addPass(texturePass)
+        composer.addPass(glitchPass)
+        composer.addPass(glitchPass)
+        composer.addPass(magentaPass)
+        composer.addPass(copyPass)
 
-            composer.addPass(texturePass)
-            composer.addPass(glitchPass)
-            composer.addPass(glitchPass)
-            composer.addPass(magentaPass)
-            composer.addPass(copyPass)
-
-            let timeoutId: any
-
-            const animate = () => {
-                // Wrapping the animation function wiht a timeout makes it
-                // possible to control the fps, without losing the benefits of
-                // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
-                    composer.render()
-                    frameId = requestAnimationFrame(animate)
-                }, 0)
-            }
-
-            let frameId: number | null = requestAnimationFrame(animate)
-
-            return () => {
-                cancelAnimationFrame(frameId!)
-                frameId = null
-            }
+        tickRef.current = () => {
+            composer.render()
+        }
+        return () => {
+            tickRef.current = () => {}
         }
     }, [props.width, props.height, presenting, theme])
+
+    useAnimationLoop(presenting ? null : 60, () => tickRef.current())
 
     let style = {}
 

@@ -44,6 +44,33 @@ export function useRequestAnimationFrame(animateCallback) {
     }, [animateCallback])
 }
 
+// Frame-aligned animation loop capped at `fps`. Pass fps=null to pause.
+export function useAnimationLoop(fps, callback) {
+    const savedCallback = useRef(callback)
+
+    useEffect(() => {
+        savedCallback.current = callback
+    }, [callback])
+
+    useEffect(() => {
+        if (fps == null) return
+        const interval = 1000 / fps
+        let frameId = null
+        let timeoutId = null
+        const tick = () => {
+            timeoutId = setTimeout(() => {
+                savedCallback.current()
+                frameId = requestAnimationFrame(tick)
+            }, interval)
+        }
+        frameId = requestAnimationFrame(tick)
+        return () => {
+            if (frameId != null) cancelAnimationFrame(frameId)
+            if (timeoutId != null) clearTimeout(timeoutId)
+        }
+    }, [fps])
+}
+
 export function useTimeout(callback, delay) {
     const savedCallback = useRef()
     const timeoutRef = useRef()

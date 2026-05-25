@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import { colorToInt, colorToGrayscale } from '../utils'
-import { useTimeout } from '../Hooks'
+import { useTimeout, useAnimationLoop } from '../Hooks'
 import Loader from '../Presentation'
 import { ThemeContext } from '../ThemeContext'
 import './Animation.css'
@@ -75,79 +75,59 @@ const Animation = (props: Props) => {
         }
     }, [props.res])
 
+    const countRef = useRef(0)
     useEffect(() => {
-        if (color !== undefined && position !== undefined && !presenting) {
-            let count = 0
-            let timeoutId: any
+        countRef.current = 0
+    }, [color, position, presenting, theme])
 
-            const animate = () => {
-                // Wrapping the animation function wiht a timeout makes it
-                // possible to control the fps, without losing the benefits of
-                // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
-                    const context: CanvasRenderingContext2D =
-                        canvas.current.getContext('2d', {
-                            willReadFrequently: true,
-                        })!
-                    context.imageSmoothingEnabled = false
-                    let canvasWidth = canvas.current.width
-                    let canvasHeight = canvas.current.height
-                    context.clearRect(0, 0, canvasWidth, canvasHeight)
-                    let frame = context.getImageData(
-                        0,
-                        0,
-                        canvasWidth,
-                        canvasHeight
-                    )
+    const ready = color !== undefined && position !== undefined && !presenting
+    useAnimationLoop(ready ? 10 : null, () => {
+        const context: CanvasRenderingContext2D = canvas.current.getContext(
+            '2d',
+            { willReadFrequently: true }
+        )!
+        context.imageSmoothingEnabled = false
+        let canvasWidth = canvas.current.width
+        let canvasHeight = canvas.current.height
+        context.clearRect(0, 0, canvasWidth, canvasHeight)
+        let frame = context.getImageData(0, 0, canvasWidth, canvasHeight)
 
-                    let l = frame.data.length / 4
+        let l = frame.data.length / 4
 
-                    for (let i = 0; i < l; i++) {
-                        let index = (i + count) % l
+        for (let i = 0; i < l; i++) {
+            let index = (i + countRef.current) % l
 
-                        let r = position!.data[index * 4 + 0]
-                        let g = position!.data[index * 4 + 1]
-                        let b = position!.data[index * 4 + 2]
-                        let j = colorToInt(r, g, b)
+            let r = position!.data[index * 4 + 0]
+            let g = position!.data[index * 4 + 1]
+            let b = position!.data[index * 4 + 2]
+            let j = colorToInt(r, g, b)
 
-                        if (theme.theme.name == 'konami') {
-                            let luminance = colorToGrayscale(
-                                color!.data[i * 4 + 0],
-                                color!.data[i * 4 + 1],
-                                color!.data[i * 4 + 2]
-                            )
-                            frame.data[j * 4 + 0] = 255
-                            frame.data[j * 4 + 1] = luminance
-                            frame.data[j * 4 + 2] = 255
-                            frame.data[j * 4 + 3] = 255
-                        } else if (theme.theme.name == 'light') {
-                            frame.data[j * 4 + 0] = 255 - color!.data[i * 4 + 0]
-                            frame.data[j * 4 + 1] = 255 - color!.data[i * 4 + 1]
-                            frame.data[j * 4 + 2] = 255 - color!.data[i * 4 + 2]
-                            frame.data[j * 4 + 3] = 255
-                        } else {
-                            frame.data[j * 4 + 0] = color!.data[i * 4 + 0]
-                            frame.data[j * 4 + 1] = color!.data[i * 4 + 1]
-                            frame.data[j * 4 + 2] = color!.data[i * 4 + 2]
-                            frame.data[j * 4 + 3] = 255
-                        }
-                    }
-                    context.putImageData(frame, 0, 0)
-
-                    frameId = requestAnimationFrame(animate)
-                    count += 512
-                }, 1000 / 10)
-            }
-
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                // It is important to clean up after the component unmounts.
-                clearTimeout(timeoutId)
-                frameId = null
+            if (theme.theme.name == 'konami') {
+                let luminance = colorToGrayscale(
+                    color!.data[i * 4 + 0],
+                    color!.data[i * 4 + 1],
+                    color!.data[i * 4 + 2]
+                )
+                frame.data[j * 4 + 0] = 255
+                frame.data[j * 4 + 1] = luminance
+                frame.data[j * 4 + 2] = 255
+                frame.data[j * 4 + 3] = 255
+            } else if (theme.theme.name == 'light') {
+                frame.data[j * 4 + 0] = 255 - color!.data[i * 4 + 0]
+                frame.data[j * 4 + 1] = 255 - color!.data[i * 4 + 1]
+                frame.data[j * 4 + 2] = 255 - color!.data[i * 4 + 2]
+                frame.data[j * 4 + 3] = 255
+            } else {
+                frame.data[j * 4 + 0] = color!.data[i * 4 + 0]
+                frame.data[j * 4 + 1] = color!.data[i * 4 + 1]
+                frame.data[j * 4 + 2] = color!.data[i * 4 + 2]
+                frame.data[j * 4 + 3] = 255
             }
         }
-    }, [color, position, presenting, theme])
+        context.putImageData(frame, 0, 0)
+
+        countRef.current += 512
+    })
 
     let style = {}
     if (props.width > 0 && props.height > 0) {

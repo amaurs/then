@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { useTimeout } from "../../Hooks"
-import Loader from "../../Presentation"
+import { useTimeout, useAnimationLoop } from '../../Hooks'
+import Loader from '../../Presentation'
 import './TravelingSalesman.css'
 
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 
 import CSS from 'csstype'
 
@@ -30,75 +30,9 @@ const TravelingSalesman = (props: Props) => {
         setPresenting(false)
     }, props.delay)
 
+    const nRef = useRef(0)
     useEffect(() => {
-        if (props.cities.cities.length > 0 && !presenting) {
-            let n = 0
-            let timeoutId: any
-
-            const animate = () => {
-                // Wrapping the animation function wiht a timeout makes it
-                // possible to control the fps, without losing the benefits of
-                // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
-                    const maxBound = (time: number, size: number) => {
-                        let t = time % (2 * size)
-                        if (t < size) {
-                            return t
-                        } else {
-                            return size
-                        }
-                    }
-                    const minBound = (time: number, size: number) => {
-                        let t = time % (2 * size)
-                        if (t < size) {
-                            return 0
-                        } else {
-                            return time % size
-                        }
-                    }
-                    let min = minBound(n, props.numberColors + 1)
-                    let max = maxBound(n, props.numberColors + 1)
-                    let citiesToDraw = props.cities.cities.slice(
-                        min * 2,
-                        max * 2
-                    )
-
-                    const context: CanvasRenderingContext2D =
-                        canvas.current.getContext('2d')!
-                    const width = canvas.current.width
-                    const height = canvas.current.height
-                    context.save()
-                    context.clearRect(0, 0, width, height)
-                    context.fillStyle = theme.theme.background
-                    context.fillRect(0, 0, width, height)
-                    context.beginPath()
-                    context.strokeStyle = theme.theme.middleground
-                    context.lineWidth = 5
-                    for (let i = 0; i < citiesToDraw.length; i += 2) {
-                        context.lineTo(
-                            Math.floor(
-                                (width * citiesToDraw[i]) / props.squareSampling
-                            ),
-                            Math.floor(
-                                (height * citiesToDraw[i + 1]) /
-                                    props.squareSampling
-                            )
-                        )
-                    }
-                    context.stroke()
-                    n += 1
-                    frameId = requestAnimationFrame(animate)
-                }, 1000 / 60)
-            }
-
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                // It is important to clean up after the component unmounts.
-                clearTimeout(timeoutId)
-                frameId = null
-            }
-        }
+        nRef.current = 0
     }, [
         props.cities,
         props.squareSampling,
@@ -106,6 +40,44 @@ const TravelingSalesman = (props: Props) => {
         presenting,
         theme,
     ])
+
+    const tspRunning = props.cities.cities.length > 0 && !presenting
+    useAnimationLoop(tspRunning ? 60 : null, () => {
+        const maxBound = (time: number, size: number) => {
+            let t = time % (2 * size)
+            return t < size ? t : size
+        }
+        const minBound = (time: number, size: number) => {
+            let t = time % (2 * size)
+            return t < size ? 0 : time % size
+        }
+        const n = nRef.current
+        let min = minBound(n, props.numberColors + 1)
+        let max = maxBound(n, props.numberColors + 1)
+        let citiesToDraw = props.cities.cities.slice(min * 2, max * 2)
+
+        const context: CanvasRenderingContext2D =
+            canvas.current.getContext('2d')!
+        const width = canvas.current.width
+        const height = canvas.current.height
+        context.save()
+        context.clearRect(0, 0, width, height)
+        context.fillStyle = theme.theme.background
+        context.fillRect(0, 0, width, height)
+        context.beginPath()
+        context.strokeStyle = theme.theme.middleground
+        context.lineWidth = 5
+        for (let i = 0; i < citiesToDraw.length; i += 2) {
+            context.lineTo(
+                Math.floor((width * citiesToDraw[i]) / props.squareSampling),
+                Math.floor(
+                    (height * citiesToDraw[i + 1]) / props.squareSampling
+                )
+            )
+        }
+        context.stroke()
+        nRef.current += 1
+    })
 
     let style = {}
 

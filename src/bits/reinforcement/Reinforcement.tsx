@@ -3,10 +3,10 @@ import { Environment, map } from '../../rl/windyGridworld.js'
 import Controller from '../../rl/controller'
 import { Agent } from '../../rl/sarsaAgent.js'
 import './Reinforcement.css'
-import { useTimeout } from "../../Hooks"
-import Loader from "../../Presentation"
+import { useTimeout, useAnimationLoop } from '../../Hooks'
+import Loader from '../../Presentation'
 
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 
 import CSS from 'csstype'
 
@@ -61,33 +61,16 @@ export default function Reinforcement(props: Props) {
     }
 
     const [board, setBoard] = useState(controller.toBoard())
-    const requestRef = useRef<number | undefined>()
     const [presenting, setPresenting] = useState(props.delay > 0)
 
     useTimeout(() => {
         setPresenting(false)
     }, props.delay)
 
-    useEffect(() => {
-        let timeoutId: any
-        let n = 0
-        if (!presenting && board !== null) {
-            const animate = () => {
-                timeoutId = setTimeout(function () {
-                    controller.tick()
-                    setBoard(controller.toBoard())
-                    n += 1
-                    requestRef.current = requestAnimationFrame(animate)
-                }, 1000 / 24)
-            }
-            requestRef.current = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(requestRef.current!)
-                // It is important to clean up after the component unmounts.
-                clearTimeout(timeoutId)
-            }
-        }
-    }, [presenting, board])
+    useAnimationLoop(!presenting && board !== null ? 24 : null, () => {
+        controller.tick()
+        setBoard(controller.toBoard())
+    })
 
     if (presenting) {
         return <Loader title={props.title} />

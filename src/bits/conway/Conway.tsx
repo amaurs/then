@@ -5,13 +5,13 @@ import React, {
     useContext,
     useEffect,
 } from 'react'
-import { useInterval, useTimeout } from "../../Hooks"
+import { useAnimationLoop, useTimeout } from '../../Hooks'
 import { colorMatrix } from '../../utils'
-import Board from "../../Board"
+import Board from '../../Board'
 import './Conway.css'
-import Loader from "../../Presentation"
+import Loader from '../../Presentation'
 
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 import CSS from 'csstype'
 
 interface Props {
@@ -45,48 +45,18 @@ const Conway = (props: Props) => {
         setPresenting(false)
     }, props.delay)
 
-    useEffect(() => {
-        if (!presenting) {
-            let timeoutId: any
-
-            const animate = () => {
-                // Wrapping the animation function wiht a timeout makes it
-                // possible to control the fps, without losing the benefits of
-                // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
-                    board = board.getNextGeneration()
-                    let canvas = ref.current
-                    const context: CanvasRenderingContext2D =
-                        canvas.getContext('2d')!
-
-                    context.clearRect(0, 0, canvas.width, canvas.height)
-                    //context.fillStyle = theme.theme.foreground;
-                    //let color = board.getColor(context, squareSize, position[0] / squareSize,
-                    //                                     position[1] / squareSize,
-                    //                                     square[0] / squareSize,
-                    //                                     square[1] / squareSize);
-                    let colorProcessed = colorMatrix(
-                        baseColor,
-                        theme.theme.colorMatrix
-                    )
-                    board.printContext(
-                        context,
-                        squareSize,
-                        `rgba(${colorProcessed[0]}, ${colorProcessed[1]}, ${colorProcessed[2]}, ${colorProcessed[3]})`
-                    )
-                    frameId = requestAnimationFrame(animate)
-                }, 1000 / 60)
-            }
-
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                // It is important to clean up after the component unmounts.
-                clearTimeout(timeoutId)
-                frameId = null
-            }
-        }
-    }, [presenting, theme])
+    useAnimationLoop(presenting ? null : 60, () => {
+        board = board.getNextGeneration()
+        let canvas = ref.current
+        const context: CanvasRenderingContext2D = canvas.getContext('2d')!
+        context.clearRect(0, 0, canvas.width, canvas.height)
+        let colorProcessed = colorMatrix(baseColor, theme.theme.colorMatrix)
+        board.printContext(
+            context,
+            squareSize,
+            `rgba(${colorProcessed[0]}, ${colorProcessed[1]}, ${colorProcessed[2]}, ${colorProcessed[3]})`
+        )
+    })
 
     const handleOnMouseDown = (e: MouseEvent) => {
         let rect = ref.current.getBoundingClientRect()

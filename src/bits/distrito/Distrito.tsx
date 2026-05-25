@@ -9,12 +9,12 @@ import channelsFirst from '../../assets/first-channels-small.png'
 import channelsSecond from '../../assets/second-channels-small.png'
 import channelsThird from '../../assets/third-channels-small.png'
 import channelMask from '../../assets/mask-small.png'
-import { useTimeout } from "../../Hooks"
+import { useTimeout, useAnimationLoop } from '../../Hooks'
 import { colorImageData, getRandomInt } from '../../utils'
-import Loader from "../../Presentation"
+import Loader from '../../Presentation'
 import './Distrito.css'
 import CSS from 'csstype'
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 
 interface Props {
     title: string
@@ -189,108 +189,80 @@ const Distrito = (props: Props) => {
         })
     }, [])
 
-    useEffect(() => {
-        if (multiImage !== undefined && !presenting) {
-            let timeoutId: any
+    const distritoRunning = multiImage !== undefined && !presenting
+    useAnimationLoop(distritoRunning ? 6 : null, () => {
+        const realContext: CanvasRenderingContext2D =
+            mount.current.getContext('2d')!
+        let canvasWidth = mount.current.width
+        let canvasHeight = mount.current.height
+        realContext.clearRect(0, 0, canvasWidth, canvasHeight)
+        realContext.filter =
+            'brightness(1) saturate(100%) contrast(100%) opacity(1)'
 
-            const animate = () => {
-                // Wrapping the animation function wiht a timeout makes it
-                // possible to control the fps, without losing the benefits of
-                // requestAnimationFrame.
-                timeoutId = setTimeout(function () {
-                    const realContext: CanvasRenderingContext2D =
-                        mount.current.getContext('2d')!
-                    let canvasWidth = mount.current.width
-                    let canvasHeight = mount.current.height
-                    realContext.clearRect(0, 0, canvasWidth, canvasHeight)
-                    realContext.filter =
-                        'brightness(1) saturate(100%) contrast(100%) opacity(1)'
+        const offscreen: HTMLCanvasElement = document.createElement('canvas')
+        offscreen.width = mount.current.width
+        offscreen.height = mount.current.height
 
-                    const offscreen: HTMLCanvasElement =
-                        document.createElement('canvas')
-                    offscreen.width = mount.current.width
-                    offscreen.height = mount.current.height
+        let context: CanvasRenderingContext2D = offscreen.getContext('2d')!
+        context.clearRect(0, 0, canvasWidth, canvasHeight)
 
-                    let context: CanvasRenderingContext2D =
-                        offscreen.getContext('2d')!
-                    context.clearRect(0, 0, canvasWidth, canvasHeight)
-
-                    multiImage!.channels.forEach(
-                        (channel: Uint8ClampedArray, index: number) => {
-                            context.putImageData(
-                                colorImageData(
-                                    multiImage!.getGrayImageData(index),
-                                    theme.theme.colorMatrix
-                                ),
-                                index * multiImage!.width,
-                                0
-                            )
-                        }
-                    )
-
-                    let mapRows: Array<Array<Map>> = []
-
-                    for (let i = 0; i < 2; i++) {
-                        let row: Array<Map> = []
-                        let positions = selectRandomFrom(
-                            [0, 1, 2, 3, 4, 5, 6],
-                            3
-                        )
-                        console.log(positions)
-                        let colors = selectRandomFrom(
-                            [Color.RED, Color.GREEN, Color.BLUE],
-                            3
-                        )
-                        for (let j = 0; j < 3; j++) {
-                            row.push({
-                                position: positions[j],
-                                color: colors[j],
-                            })
-                        }
-                        mapRows.push(row)
-                    }
-
-                    mapRows!.forEach((mapRow: Array<Map>, index: number) => {
-                        let mergedBands = [-1, -1, -1]
-
-                        mapRow.forEach((map: Map) => {
-                            let bands = [-1, -1, -1]
-                            bands[map.color] = map.position
-                            mergedBands[map.color] = map.position
-                            context.putImageData(
-                                colorImageData(
-                                    multiImage!.getMixImageData(bands),
-                                    theme.theme.colorMatrix
-                                ),
-                                map.position * multiImage!.width,
-                                (1 + index) * multiImage!.height
-                            )
-                        })
-
-                        context.putImageData(
-                            colorImageData(
-                                multiImage!.getMixImageData(mergedBands),
-                                theme.theme.colorMatrix
-                            ),
-                            multiImage!.channels.length * multiImage!.width,
-                            (1 + index) * multiImage!.height
-                        )
-                    })
-                    realContext.drawImage(offscreen, 0, 0)
-
-                    frameId = requestAnimationFrame(animate)
-                }, 1000 / 6)
+        multiImage!.channels.forEach(
+            (channel: Uint8ClampedArray, index: number) => {
+                context.putImageData(
+                    colorImageData(
+                        multiImage!.getGrayImageData(index),
+                        theme.theme.colorMatrix
+                    ),
+                    index * multiImage!.width,
+                    0
+                )
             }
+        )
 
-            let frameId: number | null = requestAnimationFrame(animate)
-            return () => {
-                cancelAnimationFrame(frameId!)
-                // It is important to clean up after the component unmounts.
-                clearTimeout(timeoutId)
-                frameId = null
+        let mapRows: Array<Array<Map>> = []
+
+        for (let i = 0; i < 2; i++) {
+            let row: Array<Map> = []
+            let positions = selectRandomFrom([0, 1, 2, 3, 4, 5, 6], 3)
+            console.log(positions)
+            let colors = selectRandomFrom(
+                [Color.RED, Color.GREEN, Color.BLUE],
+                3
+            )
+            for (let j = 0; j < 3; j++) {
+                row.push({ position: positions[j], color: colors[j] })
             }
+            mapRows.push(row)
         }
-    }, [multiImage, presenting, theme])
+
+        mapRows!.forEach((mapRow: Array<Map>, index: number) => {
+            let mergedBands = [-1, -1, -1]
+
+            mapRow.forEach((map: Map) => {
+                let bands = [-1, -1, -1]
+                bands[map.color] = map.position
+                mergedBands[map.color] = map.position
+                context.putImageData(
+                    colorImageData(
+                        multiImage!.getMixImageData(bands),
+                        theme.theme.colorMatrix
+                    ),
+                    map.position * multiImage!.width,
+                    (1 + index) * multiImage!.height
+                )
+            })
+
+            context.putImageData(
+                colorImageData(
+                    multiImage!.getMixImageData(mergedBands),
+                    theme.theme.colorMatrix
+                ),
+                multiImage!.channels.length * multiImage!.width,
+                (1 + index) * multiImage!.height
+            )
+        })
+        realContext.drawImage(offscreen, 0, 0)
+    })
 
     let style = { width: props.width + 'px' }
 
