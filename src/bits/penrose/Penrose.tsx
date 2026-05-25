@@ -80,6 +80,7 @@ const Penrose = (props: Props) => {
             const renderer = new THREE.WebGLRenderer({
                 canvas: canvas.current,
                 antialias: true,
+                preserveDrawingBuffer: true,
             })
 
             renderer.setPixelRatio(window.devicePixelRatio)

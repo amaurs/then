@@ -8,8 +8,9 @@ const Names = lazy(() => import('./Names'))
 const Flyer = lazy(() => import('./Flyer'))
 const Days = lazy(() => import('./Days'))
 const Panama = lazy(() => import('./Panama'))
+const Recorder = lazy(() => import('./Recorder'))
 
-const options = ['/names', '/flyer', '/days', '/panama']
+const options = ['/names', '/flyer', '/days', '/panama', '/record']
 const linkTo = (option: string) => option
 
 const PorotoMenu = () => <Menu options={options} linkTo={linkTo} />
@@ -22,6 +23,7 @@ const Poroto = () => (
             <Route path="/flyer" element={<Flyer />} />
             <Route path="/days" element={<Days />} />
             <Route path="/panama/:page?" element={<Panama />} />
+            <Route path="/record" element={<Recorder />} />
         </Routes>
     </Suspense>
 )
