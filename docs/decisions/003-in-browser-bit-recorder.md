@@ -91,6 +91,14 @@ The bottom-of-screen progress bar copies Panama's `scrub`/`scrubFill` styling (3
 
 We briefly tried a pulsing-disc animation on the record button during recording. Reverted to a simple disabled-state opacity dim — consistent with the rest of the chrome and with the project's "no smooth transitions" convention. The bottom progress bar carries all timing feedback.
 
+### Animation speed control via `BitSpeedContext` + `useAnimationLoop`
+
+Speed is exposed in the recorder as a 0–3× slider (default 1, 0 pauses) and scales the rate of every bit's animation loop without per-bit prop plumbing. A `BitSpeedContext` (defaulting to 1) is read inside a shared `useAnimationLoop(fps, callback)` hook that all bits use for their throttled animation. The recorder wraps its bit host in a provider with the chosen speed; the hook multiplies the bit's declared fps by the context value.
+
+This required first extracting `useAnimationLoop` from the repeated `setTimeout + rAF` idiom that every bit was hand-rolling (PR #27). That cleanup left a single seam to thread speed through. The alternative — adding a `speed` prop to each bit's interface — would have meant per-bit edits and ~15 lines of `speed={1}` plumbing in `Home.tsx`. Context kept the change to two files: the hook and the recorder (PR #28).
+
+When the target rate (`fps × speed`) exceeds the display refresh, the hook batches multiple callbacks per `requestAnimationFrame` fire. Without this, high-fps bits (Conway, traveling-salesman) would plateau at the rAF ceiling and "3×" would silently mean "1×" for them.
+
 ## Consequences
 
 -   A new owner-gated route at `poroto.<host>/record`.
@@ -98,10 +106,10 @@ We briefly tried a pulsing-disc animation on the record button during recording.
 -   Two Three.js bits now create renderers with `preserveDrawingBuffer: true`. This has a minor performance cost — required for capture.
 -   A new `src/recorder/` directory with the registry, the recording hook, and the backend-fed wrappers. Recorder UI is `src/Recorder.tsx` / `src/Recorder.css`.
 -   The `RecordableBit` interface is the canonical list of "things we want to share on social." When new bits are added, they should be registered here (or explicitly excluded).
+-   `BitSpeedContext` (in `Hooks.tsx`) is the contract between any animation-loop consumer and a speed-aware wrapper. The recorder is the only current producer; all other call sites get the default value of 1.
 
 ## Out of Scope (Future)
 
--   **Animation speed control.** Each bit owns its own timing primitives (rAF + setTimeout throttles, internal accumulators, Three.js clocks). Adding a uniform `speed` prop requires per-bit changes and was deferred — flagged for a follow-up.
 -   **Audio capture.** Bits don't have audio yet.
 -   **Custom durations beyond 5/10/15/30 seconds.**
 -   **Stories/Reels-specific presets** beyond square and portrait.

@@ -44,31 +44,44 @@ export function useRequestAnimationFrame(animateCallback) {
     }, [animateCallback])
 }
 
+// Multiplier applied to every useAnimationLoop call's fps. 1 = normal, 0 = paused.
+export const BitSpeedContext = createContext(1)
+
 // Frame-aligned animation loop capped at `fps`. Pass fps=null to pause.
+// Effective rate is `fps * speed`, where speed comes from BitSpeedContext.
 export function useAnimationLoop(fps, callback) {
     const savedCallback = useRef(callback)
+    const speed = useContext(BitSpeedContext)
 
     useEffect(() => {
         savedCallback.current = callback
     }, [callback])
 
     useEffect(() => {
-        if (fps == null) return
-        const interval = 1000 / fps
+        if (fps == null || speed <= 0) return
+        const stepMs = 1000 / (fps * speed)
+        // If the target rate exceeds display refresh, batch multiple callbacks
+        // per fire instead of trying to fire faster than the screen can paint.
+        const FRAME_MS = 16
+        const callsPerFire =
+            stepMs < FRAME_MS ? Math.ceil(FRAME_MS / stepMs) : 1
+        const fireDelay = Math.max(stepMs, 1)
         let frameId = null
         let timeoutId = null
         const tick = () => {
             timeoutId = setTimeout(() => {
-                savedCallback.current()
+                for (let i = 0; i < callsPerFire; i++) {
+                    savedCallback.current()
+                }
                 frameId = requestAnimationFrame(tick)
-            }, interval)
+            }, fireDelay)
         }
         frameId = requestAnimationFrame(tick)
         return () => {
             if (frameId != null) cancelAnimationFrame(frameId)
             if (timeoutId != null) clearTimeout(timeoutId)
         }
-    }, [fps])
+    }, [fps, speed])
 }
 
 export function useTimeout(callback, delay) {
