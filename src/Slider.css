@@ -40,6 +40,10 @@ input:checked + .slider {
     background-color: #f0a5a3;
 }
 
+input:checked + .slider[data-theme='konami'] {
+    background-color: magenta;
+}
+
 input:checked + .slider:before {
     transform: translateX(26px);
 }

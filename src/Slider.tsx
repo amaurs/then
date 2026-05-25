@@ -1,7 +1,7 @@
 import React, { Component, useContext } from 'react'
 import './Slider.css'
 
-import { ThemeContext } from "./ThemeContext"
+import { ThemeContext } from './ThemeContext'
 
 const Slider = () => {
     const theme = useContext(ThemeContext)
@@ -24,7 +24,10 @@ const Slider = () => {
                     onChange={(e) => theme.toggleTheme()}
                     checked={theme.theme.slider}
                 />
-                <div className="slider round"></div>
+                <div
+                    className="slider round"
+                    data-theme={theme.theme.name}
+                ></div>
             </label>
         </div>
     )
