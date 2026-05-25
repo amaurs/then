@@ -1,6 +1,7 @@
 import React, { useRef, useState, Suspense } from 'react'
 import { recordableBits } from './recorder/bitRegistry'
 import { useRecording } from './recorder/useRecording'
+import { BitSpeedContext } from './Hooks'
 import './Recorder.css'
 
 const FORMATS = {
@@ -18,6 +19,7 @@ const Recorder = () => {
     const [bitSlug, setBitSlug] = useState(recordableBits[0].slug)
     const [format, setFormat] = useState<Format>('square')
     const [duration, setDuration] = useState<number>(10)
+    const [speed, setSpeed] = useState<number>(1)
     const [recordingKey, setRecordingKey] = useState(0)
 
     const bitContainerRef = useRef<HTMLDivElement>(null)
@@ -88,6 +90,20 @@ const Recorder = () => {
                     ))}
                 </div>
             </div>
+            <div className="Recorder-speedRow">
+                <input
+                    type="range"
+                    min={0}
+                    max={3}
+                    step={0.05}
+                    value={speed}
+                    onChange={(e) => setSpeed(Number(e.target.value))}
+                    disabled={controlsDisabled}
+                    className="Recorder-speedSlider"
+                    aria-label="speed"
+                />
+                <span className="Recorder-speedValue">{speed.toFixed(2)}×</span>
+            </div>
 
             <div className="Recorder-stage">
                 <div className={`Recorder-frame Recorder-frame-${format}`}>
@@ -100,23 +116,25 @@ const Recorder = () => {
                 </div>
             </div>
 
-            <div
-                ref={bitContainerRef}
-                className="Recorder-bitHost"
-                style={{ width, height }}
-            >
-                <Suspense fallback={null}>
-                    <BitComponent
-                        key={`${bitSlug}-${recordingKey}`}
-                        title={bit.name}
-                        delay={0}
-                        style={{}}
-                        width={width}
-                        height={height}
-                        {...(bit.extraProps ?? {})}
-                    />
-                </Suspense>
-            </div>
+            <BitSpeedContext.Provider value={speed}>
+                <div
+                    ref={bitContainerRef}
+                    className="Recorder-bitHost"
+                    style={{ width, height }}
+                >
+                    <Suspense fallback={null}>
+                        <BitComponent
+                            key={`${bitSlug}-${recordingKey}`}
+                            title={bit.name}
+                            delay={0}
+                            style={{}}
+                            width={width}
+                            height={height}
+                            {...(bit.extraProps ?? {})}
+                        />
+                    </Suspense>
+                </div>
+            </BitSpeedContext.Provider>
 
             <div className="Recorder-footer">
                 <button

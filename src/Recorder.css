@@ -66,6 +66,60 @@
     cursor: not-allowed;
 }
 
+.Recorder-speedRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px 12px;
+}
+
+.Recorder-speedValue {
+    font-family: inherit;
+    font-size: 12px;
+    color: #161011;
+    opacity: 0.6;
+    min-width: 40px;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+
+.Recorder-speedSlider {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    height: 3px;
+    background: rgba(255, 0, 255, 0.12);
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.Recorder-speedSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: magenta;
+    cursor: pointer;
+    border: none;
+}
+
+.Recorder-speedSlider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: magenta;
+    cursor: pointer;
+    border: none;
+}
+
+.Recorder-speedSlider:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
 .Recorder-stage {
     flex: 1;
     display: flex;

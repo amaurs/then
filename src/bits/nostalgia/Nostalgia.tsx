@@ -7,13 +7,13 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { TexturePass } from 'three/examples/jsm/postprocessing/TexturePass.js'
 import './Nostalgia.css'
 import boxer from '../../assets/boxer.jpg'
-import { useTimeout } from "../../Hooks"
-import Loader from "../../Presentation"
+import { useTimeout, useAnimationLoop } from '../../Hooks'
+import Loader from '../../Presentation'
 
 import * as tf from '@tensorflow/tfjs'
 import * as blazeface from '@tensorflow-models/blazeface'
 
-import { ThemeContext } from "../../ThemeContext"
+import { ThemeContext } from '../../ThemeContext'
 import CSS from 'csstype'
 
 import {
@@ -83,88 +83,82 @@ const Nostalgia = (props: Props) => {
             })
     }, [])
 
+    const tickRef = useRef(() => {})
     useEffect(() => {
-        if (!presenting && predictions.length > 0) {
-            let cancel = false
-            const renderer = new THREE.WebGLRenderer({
-                canvas: canvas.current,
-            })
-            renderer.setPixelRatio(window.devicePixelRatio)
-            renderer.setClearColor(0x000000)
+        if (presenting || predictions.length === 0) return
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas.current,
+            preserveDrawingBuffer: true,
+        })
+        renderer.setPixelRatio(window.devicePixelRatio)
+        renderer.setClearColor(0x000000)
 
-            let aspectRatioImage = height / width
-            let aspectRatioFrame = props.height / props.width
-            let isVertical = aspectRatioFrame > 1
-            let style
+        let aspectRatioImage = height / width
+        let aspectRatioFrame = props.height / props.width
+        let isVertical = aspectRatioFrame > 1
 
-            const parameters = {
-                minFilter: THREE.LinearFilter,
-                magFilter: THREE.LinearFilter,
-                format: THREE.RGBAFormat,
-                stencilBuffer: true,
-            }
+        const parameters = {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            format: THREE.RGBAFormat,
+            stencilBuffer: true,
+        }
 
-            let renderTarget
+        let renderTarget
 
-            if (isVertical) {
-                renderer.setSize(props.width, props.width * aspectRatioImage)
-                renderTarget = new THREE.WebGLRenderTarget(
-                    props.width,
-                    props.width * aspectRatioImage,
-                    parameters
-                )
-            } else {
-                renderer.setSize(props.height / aspectRatioImage, props.height)
-                renderTarget = new THREE.WebGLRenderTarget(
-                    props.height / aspectRatioImage,
-                    props.height,
-                    parameters
-                )
-            }
-
-            const magentaPass = new ShaderPass(
-                colorMatrixShader(theme.theme.colorMatrix)
-            )
-            const myMaskPass = new MaskPass(
-                32,
+        if (isVertical) {
+            renderer.setSize(props.width, props.width * aspectRatioImage)
+            renderTarget = new THREE.WebGLRenderTarget(
                 props.width,
+                props.width * aspectRatioImage,
+                parameters
+            )
+        } else {
+            renderer.setSize(props.height / aspectRatioImage, props.height)
+            renderTarget = new THREE.WebGLRenderTarget(
+                props.height / aspectRatioImage,
                 props.height,
-                width,
-                height,
-                predictions
+                parameters
             )
-            myMaskPass.goWild = false
+        }
 
-            const texture = new THREE.TextureLoader().load(boxer)
-            texture.minFilter = THREE.LinearFilter
-            const texturePass = new TexturePass(texture)
+        const magentaPass = new ShaderPass(
+            colorMatrixShader(theme.theme.colorMatrix)
+        )
+        const myMaskPass = new MaskPass(
+            32,
+            props.width,
+            props.height,
+            width,
+            height,
+            predictions
+        )
+        myMaskPass.goWild = false
 
-            const dotScreenPass = new DotScreenPass(
-                new THREE.Vector2(0.5, 0.5),
-                1.57,
-                0.8
-            )
-            const copyPass = new ShaderPass(CopyShader)
-            copyPass.renderToScreen = true
-            const composer = new EffectComposer(renderer, renderTarget)
+        const texture = new THREE.TextureLoader().load(boxer)
+        texture.minFilter = THREE.LinearFilter
+        const texturePass = new TexturePass(texture)
 
-            composer.addPass(texturePass)
-            composer.addPass(dotScreenPass)
-            composer.addPass(myMaskPass)
-            composer.addPass(magentaPass)
-            composer.addPass(copyPass)
+        const dotScreenPass = new DotScreenPass(
+            new THREE.Vector2(0.5, 0.5),
+            1.57,
+            0.8
+        )
+        const copyPass = new ShaderPass(CopyShader)
+        copyPass.renderToScreen = true
+        const composer = new EffectComposer(renderer, renderTarget)
 
-            const animate = () => {
-                requestAnimationFrame(animate)
-                composer.render()
-            }
+        composer.addPass(texturePass)
+        composer.addPass(dotScreenPass)
+        composer.addPass(myMaskPass)
+        composer.addPass(magentaPass)
+        composer.addPass(copyPass)
 
-            let frameId: number | null = requestAnimationFrame(animate)
-
-            return () => {
-                cancelAnimationFrame(frameId!)
-                frameId = null
-            }
+        tickRef.current = () => {
+            composer.render()
+        }
+        return () => {
+            tickRef.current = () => {}
         }
     }, [
         props.width,
@@ -175,6 +169,9 @@ const Nostalgia = (props: Props) => {
         width,
         height,
     ])
+
+    const nostalgiaRunning = !presenting && predictions.length > 0
+    useAnimationLoop(nostalgiaRunning ? 60 : null, () => tickRef.current())
 
     if (presenting) {
         return <Loader title={props.title} />
