@@ -53,24 +53,6 @@ if (host.length && host[0] === 'blog') {
                                     />
 
                                     <Route path="/invite" element={<Flyer />} />
-
-                                    <Route
-                                        path="/calendar"
-                                        element={
-                                            <ProtectedRoute requiredRole="family">
-                                                <Calendar />
-                                            </ProtectedRoute>
-                                        }
-                                    />
-
-                                    <Route
-                                        path="/calendar/:year/:month/:day"
-                                        element={
-                                            <ProtectedRoute requiredRole="family">
-                                                <Album />
-                                            </ProtectedRoute>
-                                        }
-                                    />
                                 </Routes>
                             </div>
                         </CalendarProvider>
