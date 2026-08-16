@@ -16,6 +16,8 @@ const Calendar = lazy(() => import('./Calendar'))
 const Album = lazy(() => import('./Album'))
 const Flyer = lazy(() => import('./Flyer'))
 const Machine = lazy(() => import('./Machine'))
+const Privacy = lazy(() => import('./Privacy'))
+const Terms = lazy(() => import('./Terms'))
 import ProtectedRoute from './ProtectedRoute'
 import { AuthProvider } from './Hooks'
 import { CalendarProvider } from './CalendarContext'
@@ -53,6 +55,12 @@ if (host.length && host[0] === 'blog') {
                                     />
 
                                     <Route path="/invite" element={<Flyer />} />
+
+                                    <Route
+                                        path="/privacy"
+                                        element={<Privacy />}
+                                    />
+                                    <Route path="/terms" element={<Terms />} />
                                 </Routes>
                             </div>
                         </CalendarProvider>

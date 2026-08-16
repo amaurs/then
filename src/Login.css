@@ -1,24 +1,49 @@
 .Login {
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    background: #fff;
+    color: #000;
+    font-family: 'LubalinGraphStd-Medium', serif;
 }
 
-.Login button, .Login input {
-    margin: 0 10px;
-    padding: 10px;
+.Login-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.Login-title {
+    font-size: 48px;
+    margin: 0;
+    color: magenta;
+}
+
+.Login-tagline {
+    font-family: Arial, sans-serif;
     font-size: 16px;
+    color: #333;
+    margin: 0;
 }
 
-.Login input[type='password'] {
-    font-family: Verdana;
+.Login-button {
+    margin: 10px 0;
 }
 
-.Login button {
-    background-color: magenta;
-    color: white;
-    border: none;
-    cursor: pointer;
+.Login-footer {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #666;
+}
+
+.Login-footer a {
+    color: magenta;
+    text-decoration: none;
+}
+
+.Login-error {
+    font-size: 4rem;
+    color: magenta;
 }
